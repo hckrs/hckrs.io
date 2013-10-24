@@ -12,16 +12,29 @@
 </head>
 
 <body>
-  <!-- include the frontpage template below -->
-  {{> frontpage}}
+  {{#if currentUser}}
+    {{! show the hackers page when user is logged in }}
+    {{> hackers}}
+  {{else}}
+    {{! show the frontpage/loginpage when user isn't logged in yet }}
+    {{> frontpage}}
+  {{/if}}
 </body>
+
 
 <template name="frontpage">
   <div class="wrapper">
     <div class="main">
       <div class="header">
+        
+        <div style="position:absolute;top: 0px;">
+          <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
+          <a href="#" id="signupWithGithub">Signup with Github</a> |
+          <a href="#" id="signupWithTwitter">Signup with Twitter</a>
+        </div>
+        
         <a href="http://www.hackerswelcome.com"><img src="img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-        <a href="#" id="signup"><img src="img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
+        <a href="#"><img src="img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
       </div>
       <div class="content">
         <H1>Lyon has <b>4</b> hackers yet.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker ?</H1>
@@ -30,3 +43,17 @@
   </div>
 </template>
 
+
+<template name="hackers">
+  <div class="wrapper">
+    <div class="main">
+      <div class="header">
+        <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
+        Welcome {{currentUser.profile.name}}
+      </div>
+      <div class="content">
+        list of hackers can be placed here...
+      </div>
+    </div>
+  </div>
+</template>
