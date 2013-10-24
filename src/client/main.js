@@ -8,24 +8,24 @@ var loginCompleted = function (err) {
   if (err)
     console.log('Login ERROR', err.reason || 'Unknown error');
   else
-    console.log("Succesful logged in");
+    console.log("Logged in as user:", Meteor.userId());
 }
 
 // login using facebook
 var loginWithFacebook = function() {
-  var options = { requestPermissions: [ /* no permission */ ] };
+  var options = { requestPermissions: [ 'email', 'user_birthday' ] };
   Meteor.loginWithFacebook(options, loginCompleted);
 }
 
 // login using github
 var loginWithGithub = function() {
-  var options = { requestPermissions: [ /* no permission */ ] };
+  var options = { requestPermissions: [ 'user:email' /* XXX not working??? */ ] };
   Meteor.loginWithGithub(options, loginCompleted);
 }
 
 // login using twitter
 var loginWithTwitter = function() {
-  var options = { requestPermissions: [ /* no permission */ ] };
+  var options = { requestPermissions: [ /* no permission available */ ] };
   Meteor.loginWithTwitter(options, loginCompleted);
 }
 
@@ -46,5 +46,23 @@ Template.frontpage.events({
 Template.hackers.events({
   "click #signOutButton": logout
 });
+
+
+
+
+/* HACKERS list */
+
+// get a list of all hackers
+var getAllHackers = function() {
+  return Meteor.users.find().fetch();
+}
+
+// bind data of the hackers list to the template
+Template.hackers.helpers({
+  "hackers": getAllHackers
+});
+
+
+
 
 

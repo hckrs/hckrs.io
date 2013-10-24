@@ -40,3 +40,39 @@ if(!twitterConfigured) {
   });
 }
 
+
+
+// When an user account is created (when user is logging in through a service)
+// collect the user's information that is provided by the service and store 
+// the most important information in the user's document/entry
+
+Accounts.onCreateUser(function (options, user) {
+  user.profile = options.profile;
+  user.profile.social = {};
+
+  var facebook = user.services.facebook;
+  var github = user.services.github;
+  var twitter = user.services.twitter;
+  
+  if (github) {
+    user.profile.social.github   = github.username ? "http://github.com/" + github.username : "";
+    if (github.email) 
+      user.emails                = [{ address: github.email, verified: true }];
+  } else if (facebook) {
+    user.profile.social.facebook = facebook.link || "";
+    user.profile.gender          = facebook.gender || "";
+    user.profile.lang            = facebook.locale ? facebook.locale.substr(0,2) : "";
+    if (facebook.email)
+      user.emails                = [{ address: facebook.email, verified: true }];
+  } else if (twitter) {
+    user.profile.social.twitter  = twitter.screenName ? "http://twitter.com/" + twitter.screenName : "";
+    user.profile.avatar          = twitter.profile_image_url || "";
+    user.profile.lang            = twitter.lang || "";
+    /* twitter don't provide an e-mailaddress of the user */ 
+  }
+
+  return user;
+});
+
+
+

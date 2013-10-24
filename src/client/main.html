@@ -52,7 +52,25 @@
         Welcome {{currentUser.profile.name}}
       </div>
       <div class="content">
-        list of hackers can be placed here...
+
+        <h1>List of hackers</h1>
+        {{#each hackers}}
+        <div class="hackers" style="border:1px solid gray;float:left;">
+          <img src="{{profile.avatar}}" class="avatar" alt="" />
+          <div class="name">{{profile.name}}</div>
+          <div class="age">{{profile.age}}</div>
+          {{#if profile.social.facebook}}
+            <a href="{{profile.social.facebook}}" class="social social-facebook" target="_blank">Facebook</a>
+          {{/if}}
+          {{#if profile.social.github}}
+            <a href="{{profile.social.github}}" class="social social-github" target="_blank">Github</a>
+          {{/if}}
+          {{#if profile.social.twitter}}
+            <a href="{{profile.social.twitter}}" class="social social-twitter" target="_blank">Twitter</a>
+          {{/if}}
+        </div>
+        {{/each}}
+
       </div>
     </div>
   </div>
