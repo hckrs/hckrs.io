@@ -41,10 +41,41 @@ if(!twitterConfigured) {
 }
 
 
+// Manually creating OAuth requests to the external services.
+// In this manner you can obtain all information about a user
+// Don't forget to set requestPermission that the user must accept.
+
+// @param service String (facebook, github, twitter, etc.)
+// @param method String (GET, POST, etc.)
+// @param url String (url of the resource you request)
+// @param params {Object} (data send with the request)
+var oauthCall = function(service, method, url, params) {
+  var user = Meteor.user();
+  var config = Accounts.loginServiceConfiguration.findOne({service: service});
+
+  if (!config)
+    throw new Meteor.Error(500, "Service unknow: " + service);
+
+  if (!user || !user.services[service])
+    throw new Meteor.Error(500, "User unknow");
+
+  if (!user.services[service] || !user.services[service].accessToken)
+    throw new Meteor.Error(500, "User not (yet) authenticated for this service.");
+
+  var oauth = new OAuth1Binding(config);
+  oauth.accessToken = user.services[service].accessToken;
+  oauth.accessTokenSecret = user.services[service].accessTokenSecret;
+      
+  var headers = oauth._buildHeader(_.extend({oauth_token: oauth.accessToken}, params));
+
+  return oauth._call(method, url, headers, params);
+}
+
 
 // When an user account is created (after user is logging in for the first time)
 // extract the important user information and return a new user object where this
 // information is associated in user's profile.
+// XXX TODO: also update user's profile when user logged in in the future.
 
 Accounts.onCreateUser(function (options, user) {
   user.profile = options.profile;
@@ -147,6 +178,7 @@ var addServiceToCurrentUser = function(token, service) {
 
 // define methods that can be called from the client-side
 Meteor.methods({
-  "addServiceToUser": addServiceToCurrentUser
+  "addServiceToUser": addServiceToCurrentUser,
+  "oauthCall": oauthCall
 });
 
