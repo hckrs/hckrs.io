@@ -12,72 +12,83 @@
 </head>
 
 <body>
-  {{#if currentUser}}
-    {{! show the hackers page when user is logged in }}
-    {{> hackers}}
-  {{else}}
-    {{! show the frontpage/loginpage when user isn't logged in yet }}
-    {{> frontpage}}
-  {{/if}}
+  {{> main}}
 </body>
 
 
-<template name="frontpage">
+<template name="main">
   <div class="wrapper">
     <div class="main">
-      <div class="header">
-        
-        <div style="position:absolute;top: 0px;z-index:11;">
-          <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
-          <a href="#" id="signupWithGithub">Signup with Github</a> |
-          <a href="#" id="signupWithTwitter">Signup with Twitter</a>
+      
+      {{#if currentUser}}
+       
+        <div class="header">
+          {{> header}}
         </div>
-        
-        <a href="http://www.hackerswelcome.com"><img src="img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-        <a href="#"><img src="img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
-      </div>
-      <div class="content">
-        <H1>Lyon has <b>4</b> hackers yet.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker ?</H1>
-      </div>
+        <div class="content">
+          {{> hackers}}
+          {{> profile}}
+        </div>
+
+      {{else}}
+    
+        <div class="header">
+          {{> frontpageHeader}}
+        </div>
+        <div class="content">
+          {{> frontpage}}
+        </div>
+    
+      {{/if}}
+    
     </div>
   </div>
 </template>
 
 
-<template name="hackers">
-  <div class="wrapper">
-    <div class="main">
-      <div class="header">
-        <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
-        Welcome {{currentUser.profile.name}}
-      </div>
-      <div class="content">
-
-        <h3>List of hackers</h3>
-        {{#each hackers}}
-        <div class="hackers" style="border:1px solid gray;float:left;">
-          <img src="{{profile.avatar}}" class="avatar" alt="" />
-          <div class="name">{{profile.name}}</div>
-          <div class="age">{{profile.age}}</div>
-          {{#if profile.social.facebook}}
-            <a href="{{profile.social.facebook}}" class="social social-facebook" target="_blank">Facebook</a>
-          {{/if}}
-          {{#if profile.social.github}}
-            <a href="{{profile.social.github}}" class="social social-github" target="_blank">Github</a>
-          {{/if}}
-          {{#if profile.social.twitter}}
-            <a href="{{profile.social.twitter}}" class="social social-twitter" target="_blank">Twitter</a>
-          {{/if}}
-        </div>
-        {{/each}}
-        <div style="clear:both;"></div>
-
-        {{! temporary insert the user's profile below for quick development }}
-        {{> profile}}
-
-      </div>
-    </div>
+<template name="frontpageHeader">
+  <div style="position:absolute;top: 0px;z-index:11;">
+    <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
+    <a href="#" id="signupWithGithub">Signup with Github</a> |
+    <a href="#" id="signupWithTwitter">Signup with Twitter</a>
   </div>
+  <a href="http://www.hackerswelcome.com"><img src="img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
+  <a href="#"><img src="img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
+</template>
+
+
+<template name="header">
+  <a href="http://www.hackerswelcome.com"><img src="img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
+  <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
+</template>
+
+
+<template name="frontpage">    
+  <H1>Lyon has <b>4</b> hackers yet.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker ?</H1>
+</template>
+
+
+<template name="hackers">
+  <h3>List of hackers</h3>
+ 
+  {{#each hackers}}
+  <div class="hackers" style="border:1px solid gray;float:left;">
+    <img src="{{profile.avatar}}" class="avatar" alt="" />
+    <div class="name">{{profile.name}}</div>
+    <div class="age">{{profile.age}}</div>
+    {{#if profile.social.facebook}}
+      <a href="{{profile.social.facebook}}" class="social social-facebook" target="_blank">Facebook</a>
+    {{/if}}
+    {{#if profile.social.github}}
+      <a href="{{profile.social.github}}" class="social social-github" target="_blank">Github</a>
+    {{/if}}
+    {{#if profile.social.twitter}}
+      <a href="{{profile.social.twitter}}" class="social social-twitter" target="_blank">Twitter</a>
+    {{/if}}
+  </div>
+  {{/each}}
+ 
+  <div style="clear:both;"></div>
 </template>
 
 

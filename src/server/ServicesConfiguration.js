@@ -72,6 +72,14 @@ var oauthCall = function(service, method, url, params) {
 }
 
 
+// fetch user information from external service
+
+var fetchServiceData = function(service) {
+  // XXX TODO: use this function to manually fetch 
+  // all important user information for each service
+}
+
+
 // When an user account is created (after user is logging in for the first time)
 // extract the important user information and return a new user object where this
 // information is associated in user's profile.
@@ -179,6 +187,6 @@ var addServiceToCurrentUser = function(token, service) {
 // define methods that can be called from the client-side
 Meteor.methods({
   "addServiceToUser": addServiceToCurrentUser,
-  "oauthCall": oauthCall
+  "oauth": oauthCall
 });
 
