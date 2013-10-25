@@ -90,3 +90,13 @@ h2 {
 #target{
   color:#FFF;
 }
+
+.skill {
+  color: white;
+  text-align: left;
+  cursor: pointer;
+}
+.skill.active {
+  color: green;
+  font-weight: bold;
+}

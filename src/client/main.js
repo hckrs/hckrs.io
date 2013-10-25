@@ -1,11 +1,36 @@
+
 /* HACKERS list */
 
-// get a list of all hackers
-var getAllHackers = function() {
-  return Meteor.users.find().fetch();
+// bind hackers to template
+Template.hackers.helpers({
+  "hackers": function() { return Meteor.users.find().fetch(); }
+});
+
+
+
+/* SKILLS */
+
+// check if user has the given skill
+var userHasSkill = function(skill) {
+  return _.contains(Meteor.user().profile.skills, skill.name);
 }
 
-// bind data of the hackers list to the template
-Template.hackers.helpers({
-  "hackers": getAllHackers
+// update user's profile by adding or removing the given skill
+var toggleSkill = function(skill) {
+  if (userHasSkill(skill)) // remove
+    Meteor.users.update(Meteor.userId(), {$pull: {"profile.skills": skill.name}});
+  else // add
+    Meteor.users.update(Meteor.userId(), {$push: {"profile.skills": skill.name}});
+}
+
+// events
+Template.skills.events({
+  "click .skill": function() { toggleSkill(this); }
 });
+
+// bind skills to template
+Template.skills.helpers({
+  "skills": SKILLS, 
+  "active": function() { return userHasSkill(this) ? 'active' : ''; }
+});
+

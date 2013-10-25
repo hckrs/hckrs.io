@@ -28,6 +28,7 @@
         <div class="content">
           {{> hackers}}
           {{> profile}}
+          {{> skills}}
         </div>
 
       {{else}}
@@ -147,3 +148,12 @@
 
 </template>
 
+
+<template name="skills">
+  <h3>Skills</h3>
+  <ul>
+    {{#each skills}}
+    <li class="skill {{active}}">{{name}}</li>
+    {{/each}}
+  </ul>
+</template>
