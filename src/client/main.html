@@ -27,7 +27,7 @@
     <div class="main">
       <div class="header">
         
-        <div style="position:absolute;top: 0px;">
+        <div style="position:absolute;top: 0px;z-index:11;">
           <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
           <a href="#" id="signupWithGithub">Signup with Github</a> |
           <a href="#" id="signupWithTwitter">Signup with Twitter</a>
@@ -53,7 +53,7 @@
       </div>
       <div class="content">
 
-        <h1>List of hackers</h1>
+        <h3>List of hackers</h3>
         {{#each hackers}}
         <div class="hackers" style="border:1px solid gray;float:left;">
           <img src="{{profile.avatar}}" class="avatar" alt="" />
@@ -70,8 +70,69 @@
           {{/if}}
         </div>
         {{/each}}
+        <div style="clear:both;"></div>
+
+        {{! temporary insert the user's profile below for quick development }}
+        {{> profile}}
 
       </div>
     </div>
   </div>
 </template>
+
+
+<template name="profile">
+  <h3>My Profile</h3>
+
+  {{#with currentUser.profile}}
+    <dl style="text-align:left;">
+      <dt>name</dt>
+      <dd>{{name}}</dd>
+
+      <dt>gender</dt>
+      <dd>{{gender}}</dd>
+
+      <dt>birthdate</dt>
+      <dd>{{birthdate}}</dd>
+
+      <dt>language</dt>
+      <dd>{{lang}}</dd>
+
+      <dt>e-mailaddresses</dt>
+      <dd>
+        {{#each currentUser.emails}}
+          <a href="mailto:{{address}}">{{address}}</a><br/>
+        {{/each}}
+      </dd>
+
+      <dt>facebook</dt>
+      <dd>
+        {{#if social.facebook}}
+          <a href="{{social.facebook}}" target="_blank">{{social.facebook}}</a>
+        {{else}}
+          <a href="#" id="addFacebookButton">add facebook</a>
+        {{/if}}
+      </dd>
+
+      <dt>github</dt>
+      <dd>
+        {{#if social.github}}
+          <a href="{{social.github}}" target="_blank">{{social.github}}</a>
+        {{else}}
+          <a href="#" id="addGithubButton">add github</a>
+        {{/if}}
+      </dd>
+
+      <dt>twitter</dt>
+      <dd>
+        {{#if social.twitter}}
+          <a href="{{social.twitter}}" target="_blank">{{social.twitter}}</a>
+        {{else}}
+          <a href="#" id="addTwitterButton">add twitter</a>
+        {{/if}}
+      </dd>
+    </dl>
+  {{/with}}
+
+</template>
+

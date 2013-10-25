@@ -1,38 +1,27 @@
 
 
+var facebookOptions = { requestPermissions: [ 'email', 'user_birthday' /* XXX birthday not given by meteor? */ ] };
+var githubOptions = { requestPermissions: [ 'user:email' /* XXX not working??? */ ] };
+var twitterOptions = { requestPermissions: [ /* no permission available */ ] };
+
+
+
 /* LOGIN functionality */
 
-
-// after the user has logged in, this function will be called
-var loginCompleted = function (err) {
-  if (err)
-    console.log('Login ERROR', err.reason || 'Unknown error');
-  else
-    console.log("Logged in as user:", Meteor.userId());
+// after user tries to login, check if login succeed
+var loginCompleted = function(err) {
+  if (err) {
+    // XXX TODO: handle the case when login fails
+  }
 }
 
-// login using facebook
-var loginWithFacebook = function() {
-  var options = { requestPermissions: [ 'email', 'user_birthday' ] };
-  Meteor.loginWithFacebook(options, loginCompleted);
-}
+// login by using a external service
+var loginWithFacebook = function() { Meteor.loginWithFacebook(facebookOptions, loginCompleted); }
+var loginWithGithub = function() { Meteor.loginWithGithub(githubOptions, loginCompleted); }
+var loginWithTwitter = function() { Meteor.loginWithTwitter(twitterOptions, loginCompleted); }
 
-// login using github
-var loginWithGithub = function() {
-  var options = { requestPermissions: [ 'user:email' /* XXX not working??? */ ] };
-  Meteor.loginWithGithub(options, loginCompleted);
-}
-
-// login using twitter
-var loginWithTwitter = function() {
-  var options = { requestPermissions: [ /* no permission available */ ] };
-  Meteor.loginWithTwitter(options, loginCompleted);
-}
-
-// sign out the current logged in user
-var logout = function() {
-  Meteor.logout();
-}
+// log out the current user
+var logout = function() { Meteor.logout(); }
 
 
 // bind the sign up buttons to the corresponding actions
@@ -64,5 +53,31 @@ Template.hackers.helpers({
 
 
 
+/* MY PROFILE */
+
+// add an external service to current user's account
+var addService = function(service, Service, options) {
+
+  // request a token from the external service
+  Service.requestCredential(options, function(token) {
+
+    // send the token to our server-side method, which will handle 
+    // updating the user with the new service information
+    Meteor.call("addServiceToUser", token, service, function(err, res) {
+      if (err) throw new Meteor.Error(500, err.reason);    
+    });       
+  });
+}
+
+// adding one of the external services to user's account
+var addFacebook = function() { addService('facebook', Facebook, facebookOptions); }
+var addGithub = function() { addService('github', Github, githubOptions); }
+var addTwitter = function() { addService('twitter', Twitter, twitterOptions); }
+
+Template.profile.events({
+  "click #addFacebookButton": addFacebook,
+  "click #addGithubButton":   addGithub,
+  "click #addTwitterButton":  addTwitter
+});
 
 
