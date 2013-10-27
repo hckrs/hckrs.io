@@ -1,4 +1,13 @@
 
+/* FRONTPAGE */
+
+// bind total number of hackers to template
+Template.frontpage.helpers({
+  "totalHackers": function() { return Meteor.users.find().count(); }
+})
+
+
+
 /* HACKERS list */
 
 // bind hackers to template
