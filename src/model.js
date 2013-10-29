@@ -15,16 +15,18 @@
   createdAt: Date,      // automatic filled in by meteor
 
   profile: {            // user's public profile (visible for other users)
-    name: String,       // (optional) full name of the user
-    birthdate: Date,    // (optional) date of birth
-    avatar: String,     // (optional) url of an avatar for this user
-    gender: String,     // (optional) male|female
-    lang: String        // (optional) language e.a. 'en', 'nl' or 'fr'
+    name: String,       // full name of the user
+    birthdate: Date,    // date of birth
+    avatar: String,     // url of an avatar for this user
+    gender: String,     // male|female
+    lang: String        // language e.a. 'en', 'nl' or 'fr'
     social: {
-      facebook: String, // (optional) url to user's facebook profile
-      github: String,   // (optional) url to user's github profile
-      twitter: String   // (optional) url to user's twitter profile
-    }
+      facebook: String, // url to user's facebook profile
+      github: String,   // url to user's github profile
+      twitter: String   // url to user's twitter profile
+    },
+    skills: [ String ],           // array of skill name
+    favoriteSkills: [ String ]    // (optional) skills that are also marked as favorite
   },
 
   services: {           // meteor stores login information here...

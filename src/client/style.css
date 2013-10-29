@@ -91,12 +91,30 @@ h2 {
   color:#FFF;
 }
 
+
+#skills ul {
+  list-style-type: none;
+  float: left;
+}
 .skill {
   color: white;
   text-align: left;
+}
+.skill:hover {
+  color: aqua;
+}
+.skill .text {
+  padding-left: 10px;
+}
+.skill .rollover {
+  visibility: hidden;
+  float: left;
+  margin-right: 5px;
+}
+.skill:hover .rollover {
+  visibility: visible;
+}
+.toggle-favorite, .toggle-skill {
   cursor: pointer;
 }
-.skill.active {
-  color: green;
-  font-weight: bold;
-}
+
