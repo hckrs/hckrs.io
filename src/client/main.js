@@ -15,11 +15,6 @@ Template.hackers.helpers({
 });
 
 
-/* HACKER */
-
-Template.hacker.helpers({
-  'hacker': function() { return Meteor.users.findOne(this.route._id); }
-})
 
 
 

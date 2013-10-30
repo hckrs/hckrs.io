@@ -25,7 +25,7 @@ var afterLogin = function() {
 // when user becomes logged out
 var afterLogout = function() {
   log('becomes logged OUT')
-  // Router.go('frontpage');
+  Router.go('frontpage');
 }
 
 // when logging in is in progress
@@ -91,14 +91,14 @@ var logout = function() {
 
 
 // bind the sign up buttons to the corresponding actions
-Template.frontpage.events({
+Template.main.events({
   "click #signupWithFacebook": loginWithFacebook,
   "click #signupWithGithub":   loginWithGithub,
   "click #signupWithTwitter":  loginWithTwitter
 });
 
 // bind the sign out button to the sign out action
-Template.header.events({
+Template.main.events({
   "click #signOutButton": logout
 });
 

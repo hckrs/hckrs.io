@@ -4,16 +4,22 @@ if (Meteor.isClient) {
   // ROUTES 
 
   Router.map(function () {
+    
     this.route('frontpage', { path: '/' });
+    
     this.route('hackers', { path: '/hackers' });
-    this.route('hacker', { path: 'hacker/:_id'});
+    
+    this.route('hacker', { path: '/hacker/:_id', data: function() {
+      return Meteor.users.findOne(this.params._id); 
+    }});
+
+    this.route('skills', { path: '/skills' }); // XXX TEMPORARY
+
   });
 
 
 
-
   /* custom functionality */
-
 
   // when login is required, render the frontpage
   var loginRequired = function() {
@@ -28,16 +34,7 @@ if (Meteor.isClient) {
 
   // global router configuration
   Router.configure({
-    template: 'main', //all routes load the 'main' template
-    data: function() { //parse for all routes the template name and parameters to the template
-      return { route: _.extend({template: this.options.route.name}, this.params) };
-    }
+    autoRender: false
   });
-
-  // template helper to check if the current route match the given template name
-  Handlebars.registerHelper('route', function(templateName) {
-    return this.route.template == templateName;
-  });
-
 }
 
