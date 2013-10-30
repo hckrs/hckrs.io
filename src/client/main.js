@@ -15,6 +15,13 @@ Template.hackers.helpers({
 });
 
 
+/* HACKER */
+
+// bind hackers to template
+Template.hacker.helpers({
+  "hacker": function() { return Meteor.users.findOne(this._id); }
+});
+
 
 
 

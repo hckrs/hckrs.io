@@ -4,17 +4,10 @@ if (Meteor.isClient) {
   // ROUTES 
 
   Router.map(function () {
-    
     this.route('frontpage', { path: '/' });
-    
     this.route('hackers', { path: '/hackers' });
-    
-    this.route('hacker', { path: '/hacker/:_id', data: function() {
-      return Meteor.users.findOne(this.params._id); 
-    }});
-
-    this.route('skills', { path: '/skills' }); // XXX TEMPORARY
-
+    this.route('hacker', { path: '/hacker/:_id', data: function() { return this.params; } });
+    this.route('skills', { path: '/skills' });
   });
 
 
