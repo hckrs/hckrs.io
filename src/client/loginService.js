@@ -1,3 +1,6 @@
+Session.setDefault('currentLoginState', 'loggedOut');
+Session.setDefault('subscriptionsReady', true); //XXX TODO: set to false when using subscriptions
+
 
 
 var facebookOptions = { requestPermissions: [ 'email', 'user_birthday' /* XXX birthday not given by meteor? */ ] };
@@ -5,34 +8,97 @@ var githubOptions = { requestPermissions: [ 'user:email' /* XXX not working??? *
 var twitterOptions = { requestPermissions: [ /* no permission available */ ] };
 
 
+/* LOGIN EVENT handlers */
+
+// when user is logged in by filling in its credentials
+var manuallyLoggedIn = function() {
+  log('manually logged IN')
+}
+
+// when user becomes logged in
+var afterLogin = function() {
+  log('becomes logged IN')
+  if (Router._currentController.route.name == 'frontpage')
+    Router.go('hackers');
+}
+
+// when user becomes logged out
+var afterLogout = function() {
+  log('becomes logged OUT')
+  // Router.go('frontpage');
+}
+
+// when logging in is in progress
+var loggingInInProgress = function() {
+  log('signing in....')
+}
+
+
+
+
+/* OBSERVE when user becomes logged in */
+
+// observer changes of the current login state
+var loginStateChanges = function(c) {
+  var state = Session.get('currentLoginState');
+  if (c.firstRun) return;
+  switch(state) {
+    case 'loggedIn': afterLogin(); break;
+    case 'loggingIn': loggingInInProgress(); break;
+    case 'loggedOut': afterLogout(); break;
+  }
+}
+
+// keep updating the currentLoginState when user is loggin in or out
+var updateLoginState = function() {
+  if (Meteor.userId() && Session.get('subscriptionsReady'))
+    Session.set('currentLoginState', 'loggedIn');
+  else if (Meteor.loggingIn() || (Meteor.userId() && !Session.get('subscriptionsReady')))
+    Session.set('currentLoginState', 'loggingIn');
+  else 
+    Session.set('currentLoginState', 'loggedOut');
+}
+
+// keep track of the login session
+Meteor.startup(function() {
+  Deps.autorun(loginStateChanges);
+  Deps.autorun(updateLoginState);
+});
+
+
+
 
 /* LOGIN functionality */
 
-// after user tries to login, check if login succeed
-var loginCompleted = function(err) {
+// after user tries to login, check if an error occured
+var loginCallback = function(err) {
   if (err) {
     // XXX TODO: handle the case when login fails
+  } else {
+    manuallyLoggedIn();
   }
 }
 
 // login by using a external service
-var loginWithFacebook = function() { Meteor.loginWithFacebook(facebookOptions, loginCompleted); }
-var loginWithGithub = function() { Meteor.loginWithGithub(githubOptions, loginCompleted); }
-var loginWithTwitter = function() { Meteor.loginWithTwitter(twitterOptions, loginCompleted); }
+var loginWithFacebook = function() { Meteor.loginWithFacebook(facebookOptions, loginCallback); }
+var loginWithGithub = function() { Meteor.loginWithGithub(githubOptions, loginCallback); }
+var loginWithTwitter = function() { Meteor.loginWithTwitter(twitterOptions, loginCallback); }
 
 // log out the current user
-var logout = function() { Meteor.logout(); }
+var logout = function() { 
+  Meteor.logout(); 
+}
 
 
 // bind the sign up buttons to the corresponding actions
-Template.main.events({
+Template.frontpage.events({
   "click #signupWithFacebook": loginWithFacebook,
   "click #signupWithGithub":   loginWithGithub,
   "click #signupWithTwitter":  loginWithTwitter
 });
 
 // bind the sign out button to the sign out action
-Template.main.events({
+Template.header.events({
   "click #signOutButton": logout
 });
 
@@ -59,7 +125,7 @@ var addFacebook = function() { addService('facebook', Facebook, facebookOptions)
 var addGithub = function() { addService('github', Github, githubOptions); }
 var addTwitter = function() { addService('twitter', Twitter, twitterOptions); }
 
-Template.profile.events({
+Template.hacker.events({
   "click #addFacebookButton": addFacebook,
   "click #addGithubButton":   addGithub,
   "click #addTwitterButton":  addTwitter

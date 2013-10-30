@@ -11,61 +11,49 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
 </head>
 
-<body>
-  {{> main}}
-</body>
-
 
 <template name="main">
   <div class="wrapper">
     <div class="main">
-      
-      {{#if currentUser}}
-       
-        <div class="header">
-          {{> header}}
-        </div>
-        <div class="content">
-          {{> hackers}}
-          {{> profile}}
-          {{> skills}}
-        </div>
-
+      {{#if route "frontpage"}}
+        {{> frontpage}}
       {{else}}
-    
-        <div class="header">
-          {{> frontpageHeader}}
-        </div>
+        {{> header}}
         <div class="content">
-          {{> frontpage}}
+          {{#if route "hackers"}}
+            {{> hackers}}
+          {{/if}}
+          {{#if route "hacker"}}
+            {{> hacker}}
+          {{/if}}
         </div>
-    
-      {{/if}}
-    
+      {{/if}}  
     </div>
   </div>
 </template>
 
 
-<template name="frontpageHeader">
-  <div style="position:absolute;top: 0px;z-index:11;">
-    <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
-    <a href="#" id="signupWithGithub">Signup with Github</a> |
-    <a href="#" id="signupWithTwitter">Signup with Twitter</a>
-  </div>
-  <a href="http://www.hackerswelcome.com"><img src="img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-  <a href="#"><img src="img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
-</template>
-
-
 <template name="header">
-  <a href="http://www.hackerswelcome.com"><img src="img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-  <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
+  <div class="header">
+    <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
+    <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
+  </div>
 </template>
 
 
 <template name="frontpage">    
-  <H1>Lyon has <b>{{totalHackers}}</b> hackers yet.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker ?</H1>
+  <div class="header">
+    <div style="position:absolute;top: 0px;z-index:11;">
+      <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
+      <a href="#" id="signupWithGithub">Signup with Github</a> |
+      <a href="#" id="signupWithTwitter">Signup with Twitter</a>
+    </div>
+    <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
+    <a href="#"><img src="/img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
+  </div>
+  <div class="content">
+    <H1>Lyon has <b>{{totalHackers}}</b> hackers yet.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker ?</H1>
+  </div>
 </template>
 
 
@@ -73,9 +61,9 @@
   <h3>List of hackers</h3>
  
   {{#each hackers}}
-  <div class="hackers" style="border:1px solid gray;float:left;">
-    <img src="{{profile.avatar}}" class="avatar" alt="" />
-    <div class="name">{{profile.name}}</div>
+  <div class="hacker" style="border:1px solid gray;float:left;">
+    <a href="{{pathFor 'hacker'}}"><img src="{{profile.avatar}}" class="avatar" alt="" /></a>
+    <a href="{{pathFor 'hacker'}}" class="name">{{profile.name}}</a>
     <div class="age">{{profile.age}}</div>
     {{#if profile.social.facebook}}
       <a href="{{profile.social.facebook}}" class="social social-facebook" target="_blank">Facebook</a>
@@ -93,10 +81,14 @@
 </template>
 
 
-<template name="profile">
-  <h3>My Profile</h3>
+<template name="hacker">
 
-  {{#with currentUser.profile}}
+  <a href="{{pathFor 'hackers'}}">&laquo; terug</a>
+  
+  {{#with hacker.profile}}
+
+    <h3>Profile of {{name}}</h3>
+
     <dl style="text-align:left;">
       <dt>name</dt>
       <dd>{{name}}</dd>
@@ -175,3 +167,5 @@
     </ul>
   </div>
 </template>
+
+

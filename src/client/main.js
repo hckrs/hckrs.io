@@ -7,13 +7,19 @@ Template.frontpage.helpers({
 })
 
 
-
 /* HACKERS list */
 
 // bind hackers to template
 Template.hackers.helpers({
   "hackers": function() { return Meteor.users.find().fetch(); }
 });
+
+
+/* HACKER */
+
+Template.hacker.helpers({
+  'hacker': function() { return Meteor.users.findOne(this.route._id); }
+})
 
 
 
@@ -59,4 +65,12 @@ Template.skills.helpers({
   "userSkills": function() { return _.filter(SKILLS, userHasSkill); },
   "favorite": function() { return isFavoriteSkill(this); }
 });
+
+
+
+
+
+
+
+
 
