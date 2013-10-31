@@ -79,25 +79,3 @@
     }
   });
 }(jQuery));
-
-$(document).ready(function(){
-  $('#target').teletype({
-    text: [
-      'node.js',
-      'Arduino',
-      'design',
-      'meteor',
-      'UX',
-      'hardware',
-      'life',
-      'backbone.js',
-      'mobile'
-    ]
-  });
-
-  $('#cursor').teletype({
-    text: [' ', ' '],
-    delay: 0,
-    pause: 500
-  });
-});

@@ -6,6 +6,33 @@ Template.frontpage.helpers({
   "totalHackers": function() { return Meteor.users.find().count(); }
 })
 
+// 
+Template.frontpage.rendered = function(){
+  $('#target').teletype({
+    text: [
+      'hardware',
+      'UX',
+      'Arduino',
+      'node.js',
+      'night time',
+      'UI',
+      'backbone.js',
+      'objects',
+      'design',
+      'meteor',
+      'life',
+      'mobile'
+    ]
+  });
+
+  $('#cursor').teletype({
+    text: [' ', ' '],
+    delay: 0,
+    pause: 500
+  });
+};
+
+
 
 /* HACKERS list */
 
