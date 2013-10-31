@@ -4,7 +4,6 @@ html {
 }
 body {
   background: #84a3c0;
-  padding: 0;
   text-align: center;
   font-family: 'open sans';
   position: relative;
@@ -16,6 +15,9 @@ body {
   -moz-background-size: cover;    /* Mozilla*/
   -o-background-size: cover;      /* Opera*/
   background-size: cover;         /* Generic*/
+  background-attachment:fixed;
+  padding: 24px;  
+
 }
 
 .wrapper {
@@ -27,8 +29,15 @@ body {
 a {
   text-decoration: none;
   color: #FFF;
+  margin: 0px 2px 0px 2px;
 }
 
+a:hover{
+  text-decoration: none;
+  color: yellow;
+  border-bottom: 2px dotted yellow;
+  margin-bottom: -5px;
+}
 
 h1, h2 {
   width: 100%;
@@ -56,11 +65,16 @@ h2 {
 }
 
 .header {
-  position: relative;
-  z-index: 10;
-  padding-top: 70px;
   margin: 0 auto 0;
-  max-width: 980px;
+  height: 120px; /* temporary fix */
+}
+
+.menu{
+  float: left;
+  clear: left;
+  padding-top: 48px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .content{
@@ -95,26 +109,34 @@ h2 {
 #skills ul {
   list-style-type: none;
   float: left;
+  display: inline;
+  margin: 0px;
 }
 .skill {
-  color: white;
+  color: #333;
   text-align: left;
+  padding: 4px;
+  font-weight: 700;
+  float: left;
 }
 .skill:hover {
-  color: aqua;
+  color: black;
 }
 .skill .text {
-  padding-left: 10px;
+  padding: 2px 12px 2px 12px;
+  background-color: rgba(225,225,225, 0.2);
+  border-radius: 12px;
 }
 .skill .rollover {
   visibility: hidden;
   float: left;
-  margin-right: 5px;
+  background-color: rgba(0,0,0, 0.8);
 }
 .skill:hover .rollover {
   visibility: visible;
 }
 .toggle-favorite, .toggle-skill {
   cursor: pointer;
+  background-color: rgba(0,0,0, 0.5);
 }
 
