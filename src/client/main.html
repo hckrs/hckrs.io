@@ -65,17 +65,17 @@
  
   {{#each hackers}}
   <div class="hacker" style="border:1px solid gray;float:left;">
-    <a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="picture" alt="" /></a>
-    <a href="{{pathFor 'hacker'}}" class="name">{{profile.name}}</a>
-    <div class="age">{{profile.age}}</div>
+    <a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="hackers-picture" alt="" /></a>
+    <a href="{{pathFor 'hacker'}}" class="hackers-name">{{profile.name}}</a>
+    <!--<div class="age">{{profile.age}}</div>-->
     {{#if profile.social.facebook}}
-      <a href="{{profile.social.facebook}}" class="social social-facebook" target="_blank">Facebook</a>
+      <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
     {{/if}}
     {{#if profile.social.github}}
-      <a href="{{profile.social.github}}" class="social social-github" target="_blank">Github</a>
+      <a href="{{profile.social.github}}" class="hackers-social social-github" target="_blank">Github</a>
     {{/if}}
     {{#if profile.social.twitter}}
-      <a href="{{profile.social.twitter}}" class="social social-twitter" target="_blank">Twitter</a>
+      <a href="{{profile.social.twitter}}" class="hackers-social social-twitter" target="_blank">Twitter</a>
     {{/if}}
   </div>
   {{/each}}
