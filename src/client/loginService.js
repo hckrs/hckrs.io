@@ -3,7 +3,7 @@ Session.setDefault('subscriptionsReady', true); //XXX TODO: set to false when us
 
 
 
-var facebookOptions = { requestPermissions: [ 'email', 'user_birthday' /* XXX birthday not given by meteor? */ ] };
+var facebookOptions = { requestPermissions: [ 'email', 'user_location' /*, 'user_birthday'*/ ] };
 var githubOptions = { requestPermissions: [ 'user:email' /* XXX not working??? */ ] };
 var twitterOptions = { requestPermissions: [ /* no permission available */ ] };
 
@@ -141,7 +141,7 @@ var TESTING_ON = false;
 
 // test something when clicked on the "test something" button
 test = function() {
-  Meteor.call("oauth", "twitter", "GET", "https://api.twitter.com/1.1/account/verify_credentials.json", {}, function(err, res) {
+  Meteor.call("test", function(err, res) {
     if (err) throw new Meteor.Error(500, err.reason); 
     else console.log(res);
   });

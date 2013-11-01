@@ -15,10 +15,9 @@
   createdAt: Date,      // automatic filled in by meteor
 
   profile: {            // user's public profile (visible for other users)
+    picture: String,    // url of an avatar for this user
     name: String,       // full name of the user
-    birthdate: Date,    // date of birth
-    avatar: String,     // url of an avatar for this user
-    gender: String,     // male|female
+    city: String,       // location/city    
     lang: String        // language e.a. 'en', 'nl' or 'fr'
     social: {
       facebook: String, // url to user's facebook profile
@@ -26,7 +25,7 @@
       twitter: String   // url to user's twitter profile
     },
     skills: [ String ],           // array of skill name
-    favoriteSkills: [ String ]    // (optional) skills that are also marked as favorite
+    favoriteSkills: [ String ]    // skills that are also marked as favorite
   },
 
   services: {           // meteor stores login information here...
@@ -37,6 +36,7 @@
   }
 }
 */
+
 
 
 // In the future we can define new collections below
