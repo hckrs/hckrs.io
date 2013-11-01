@@ -4,7 +4,6 @@ html {
 }
 body {
   background: #84a3c0;
-  text-align: center;
   font-family: 'open sans';
   position: relative;
   margin: 0;
@@ -19,7 +18,9 @@ body {
   padding: 24px;  
 
 }
-
+.clear {
+  clear: both;
+}
 .wrapper {
 	height: 100% !important;
 	height: 100%;
@@ -97,6 +98,10 @@ h2 {
   margin-top: 20px;
 }
 
+#frontpage {
+  text-align: center;
+}
+
 #cursor{
   font-weight: 100;
 }
@@ -109,15 +114,12 @@ h2 {
   max-width: 200px;
 }
 
-#skills ul {
+#skills ul.floating-skills {
   list-style-type: none;
-  float: left;
-  display: inline;
   margin: 0px;
 }
 .skill {
   color: #333;
-  text-align: left;
   padding: 4px;
   font-weight: 700;
   float: left;
@@ -143,3 +145,6 @@ h2 {
   background-color: rgba(0,0,0, 0.5);
 }
 
+.input-skills {
+  width: 100%;
+}
