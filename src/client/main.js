@@ -41,11 +41,27 @@ Template.hackers.helpers({
 
 /* HACKER */
 
+// when user starts typing in an input field
+// directly update the user info in the database  
+var updateField = function(event) {
+  var $elm = $(event.currentTarget); //input element
+  var field = $elm.attr('name');
+  var value = $elm.val();
+
+  var modifier = {};
+  modifier[field] = value;
+  Meteor.users.update(Meteor.userId(), {$set: modifier});
+}
+
+// events
+Template.edit.events({
+  "keyup input": updateField
+});
+
 // bind hackers to template
 Template.hacker.helpers({
   "hacker": function() { return Meteor.users.findOne(this._id); }
 });
-
 
 
 
@@ -80,18 +96,24 @@ var removeFavorite = function(skill) {
 
 
 // events
-Template.skills.events({
+Template.editSkills.events({
   "click .toggle-skill": function() { userHasSkill(this) ? removeSkill(this) : addSkill(this); },
   "click .toggle-favorite": function() { isFavoriteSkill(this) ? removeFavorite(this) : addFavorite(this); }
 });
 
-// bind skills to template
+// bind skills to template 'skills'
 Template.skills.helpers({
-  "restSkills": function() { return _.reject(SKILLS, userHasSkill); },
-  "userSkills": function() { return _.filter(SKILLS, userHasSkill); },
+  "skills": function() { return _.filter(SKILLS, userHasSkill); },
   "favorite": function() { return isFavoriteSkill(this); }
 });
 
+// bind skills to the template 'editSkills'
+Template.editSkills.helpers({
+  "allSkills": SKILLS,
+  "skills": function() { return _.filter(SKILLS, userHasSkill); },
+  "hasSkill": function() { return userHasSkill(this); },
+  "favorite": function() { return isFavoriteSkill(this); }
+})
 
 
 

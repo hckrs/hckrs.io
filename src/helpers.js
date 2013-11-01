@@ -13,3 +13,12 @@ omitNull = function(obj) {
     if (_.isNull(val)) delete obj[key];
   }); return obj;
 }
+
+
+if (Meteor.isClient) {
+
+  Handlebars.registerHelper('equals', function(val1, val2) {
+    return val1 == val2;
+  });
+
+}
