@@ -87,7 +87,7 @@ var updateSkills = function(skillNames) {
 
 // skills that arn't in user's skills list can be marked as favorite, clean!
 var cleanFavorites = function() {
-  var profile = Meteor.user().profile.favoriteSkills;
+  var profile = Meteor.user().profile;
   var favorites = _.intersection(profile.skills, profile.favoriteSkills);
   Meteor.users.update(Meteor.userId(), {$set: {"profile.favoriteSkills": favorites }});
 }
