@@ -10,17 +10,14 @@ Template.frontpage.helpers({
 Template.frontpage.rendered = function(){
   $('#target').teletype({
     text: [
-      'hardware',
-      'UX',
-      'Arduino',
       'node.js',
-      'night time',
-      'UI',
-      'backbone.js',
-      'objects',
+      'Arduino',
       'design',
       'meteor',
+      'UX',
+      'hardware',
       'life',
+      'backbone.js',
       'mobile'
     ]
   });
