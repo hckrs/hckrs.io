@@ -4,30 +4,15 @@
 // bind total number of hackers to template
 Template.frontpage.helpers({
   "totalHackers": function() { return Meteor.users.find().count(); }
-})
+});
 
-// 
-Template.frontpage.rendered = function(){
-  $('#target').teletype({
-    text: [
-      'node.js',
-      'Arduino',
-      'design',
-      'meteor',
-      'UX',
-      'hardware',
-      'life',
-      'backbone.js',
-      'mobile'
-    ]
-  });
-
-  $('#cursor').teletype({
-    text: [' ', ' '],
-    delay: 0,
-    pause: 500
-  });
-};
+// typer text on frontpage
+Template.frontpage.rendered = function() {
+  var texts = ['node.js','Arduino','design','meteor','UX',
+               'hardware','life','backbone.js','mobile'];
+  $('#target').teletype({ text: texts }); 
+  $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
+}
 
 
 
@@ -113,7 +98,7 @@ Template.editSkills.helpers({
   "skills": function() { return _.filter(SKILLS, userHasSkill); },
   "hasSkill": function() { return userHasSkill(this); },
   "favorite": function() { return isFavoriteSkill(this); }
-})
+});
 
 
 
