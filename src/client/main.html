@@ -65,7 +65,7 @@
  
   {{#each hackers}}
   <div class="hacker" style="border:1px solid gray;float:left;">
-    <a href="{{pathFor 'hacker'}}"><img src="{{profile.avatar}}" class="avatar" alt="" /></a>
+    <a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="picture" alt="" /></a>
     <a href="{{pathFor 'hacker'}}" class="name">{{profile.name}}</a>
     <div class="age">{{profile.age}}</div>
     {{#if profile.social.facebook}}
@@ -88,34 +88,34 @@
 
   <a href="{{pathFor 'hackers'}}">&laquo; terug</a>
   
-  {{#with hacker.profile}}
+  {{#with hacker}}
 
-    <h3>Profile of {{name}}</h3>
+    <h3>Profile of {{profile.name}}</h3>
 
     <dl style="text-align:left;">
+      <dt>picture</dt>
+      <dd><img src="{{profile.picture}}" class="picture" alt="" /></dd>
+
       <dt>name</dt>
-      <dd>{{name}}</dd>
+      <dd>{{profile.name}}</dd>
 
-      <dt>gender</dt>
-      <dd>{{gender}}</dd>
-
-      <dt>birthdate</dt>
-      <dd>{{birthdate}}</dd>
+      <dt>city</dt>
+      <dd>{{profile.city}}</dd>
 
       <dt>language</dt>
-      <dd>{{lang}}</dd>
+      <dd>{{profile.lang}}</dd>
 
       <dt>e-mailaddresses</dt>
       <dd>
-        {{#each currentUser.emails}}
+        {{#each emails}}
           <a href="mailto:{{address}}">{{address}}</a><br/>
         {{/each}}
       </dd>
 
       <dt>facebook</dt>
       <dd>
-        {{#if social.facebook}}
-          <a href="{{social.facebook}}" target="_blank">{{social.facebook}}</a>
+        {{#if profile.social.facebook}}
+          <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
         {{else}}
           <a href="#" id="addFacebookButton">add facebook</a>
         {{/if}}
@@ -123,8 +123,8 @@
 
       <dt>github</dt>
       <dd>
-        {{#if social.github}}
-          <a href="{{social.github}}" target="_blank">{{social.github}}</a>
+        {{#if profile.social.github}}
+          <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
         {{else}}
           <a href="#" id="addGithubButton">add github</a>
         {{/if}}
@@ -132,8 +132,8 @@
 
       <dt>twitter</dt>
       <dd>
-        {{#if social.twitter}}
-          <a href="{{social.twitter}}" target="_blank">{{social.twitter}}</a>
+        {{#if profile.social.twitter}}
+          <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
         {{else}}
           <a href="#" id="addTwitterButton">add twitter</a>
         {{/if}}

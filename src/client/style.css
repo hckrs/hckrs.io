@@ -105,6 +105,9 @@ h2 {
   color:#FFF;
 }
 
+.picture {
+  max-width: 200px;
+}
 
 #skills ul {
   list-style-type: none;
