@@ -29,7 +29,7 @@
 
 <template name="header">
   {{#unless currentUser}}
-    <div class="header">
+    <div class="a">
       <div style="position:absolute;top: 0px;z-index:11;">
         <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
         <a href="#" id="signupWithGithub">Signup with Github</a> |
@@ -40,12 +40,14 @@
     </div>
   {{else}}
     <div class="header">
-      <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-      <a href="{{pathFor 'hackers'}}">hackers</a> |
-      <a href="{{pathFor 'skills'}}">skills</a> |
-      {{#with currentUser}}
-        <a href="{{pathFor 'hacker'}}">my profile</a> |
-      {{/with}}
+      <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
+      <div class="menu">
+        <a href="{{pathFor 'hackers'}}">hackers</a> •
+        <a href="{{pathFor 'skills'}}">skills</a> •
+        {{#with currentUser}}
+          <a href="{{pathFor 'hacker'}}">profile</a>
+        {{/with}}
+      </div>
       <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
     </div>
   {{/unless}}
@@ -54,7 +56,7 @@
 
 <template name="frontpage">
   <div class="content">
-    <H1>Lyon has <b>{{totalHackers}}</b> hackers yet.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker ?</H1>
+    <H1>Lyon has <b>{{totalHackers}}</b> hackers.</H1>
   </div>
 </template>
 
