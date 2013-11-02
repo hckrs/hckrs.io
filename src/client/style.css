@@ -110,15 +110,14 @@ h2 {
   color:#FFF;
 }
 
-<<<<<<< HEAD
 #skills ul {
-=======
+}
+
 .picture {
   max-width: 200px;
 }
 
 #skills ul.floating-skills {
->>>>>>> f7a900409b5beff722eb322c19ec1c5bc1020684
   list-style-type: none;
   margin: 0px;
 }
@@ -149,10 +148,11 @@ h2 {
   background-color: rgba(0,0,0, 0.5);
 }
 
-<<<<<<< HEAD
+/* HEAD */
 .hacker{
   float:left;
   width: 260px;
+  text-align: center;
 }
 
 DIV.hacker-circle {
@@ -189,8 +189,7 @@ A.hackers-social{
   font-weight: 700;
   font-size: 140%; 
 }
-=======
+
 .input-skills {
   width: 100%;
 }
->>>>>>> f7a900409b5beff722eb322c19ec1c5bc1020684
