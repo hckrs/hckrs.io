@@ -28,7 +28,7 @@
 
 
 <template name="header">
-  {{#unless currentUser}}
+  {{#unless loggedIn}}
     <div class="a">
       <div style="position:absolute;top: 0px;z-index:11;">
         <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
@@ -43,8 +43,7 @@
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
       <div class="menu">
         <a href="{{pathFor 'hackers'}}">hackers</a> •
-        <a href="{{pathFor 'skills'}}">skills</a> •
-        {{#with currentUser}}
+        {{#with _currentUser}}
           <a href="{{pathFor 'hacker'}}">profile</a>
         {{/with}}
       </div>
@@ -55,7 +54,7 @@
 
 
 <template name="frontpage">
-  <div class="content">
+  <div id="frontpage">
     <H1>Lyon has <b>{{totalHackers}}</b> hackers.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker?</H1>
   </div>
 </template>
@@ -87,7 +86,7 @@
   {{#with hacker}}
     <h3>Profile of {{profile.name}}</h3>
 
-    {{#if equals hacker._id currentUser._id}}
+    {{#if equals hacker._id _currentUser._id}}
       (<a href="{{pathFor 'edit'}}">edit</a>)
     {{/if}}
 
@@ -150,25 +149,30 @@
 
 
 <template name="edit">
-  {{#with currentUser}}
+  
     <h3>Edit my profile</h3>
     
-    (<a href="{{pathFor 'hacker'}}">view</a>)
+    {{#with _currentUser}}  
+      (<a href="{{pathFor 'hacker'}}">view</a>)
+    {{/with}}
 
     <div class="row row-fluid">
       <div class="span6">
-        <dl style="text-align:left;">
+
+        {{#isolate}}
+        {{#with currentUser}}
+        <dl>
           <dt>picture</dt>
           <dd><img src="{{profile.picture}}" class="picture" alt="" /></dd>
 
           <dt>name</dt>
-          <dd><input type="text" name="profile.name" value="{{profile.name}}" /></dd>
+          <dd><input type="text" name="profile.name" class="autosave" value="{{profile.name}}" /></dd>
 
           <dt>city</dt>
-          <dd><input type="text" name="profile.city" value="{{profile.city}}" /></dd>
+          <dd><input type="text" name="profile.city" class="autosave" value="{{profile.city}}" /></dd>
 
           <dt>language</dt>
-          <dd><input type="text" name="profile.lang" value="{{profile.lang}}" maxlength="2" style="width: 20px;" /></dd>
+          <dd><input type="text" name="profile.lang" class="autosave" value="{{profile.lang}}" maxlength="2" style="width: 20px;" /></dd>
 
           <dt>e-mailaddresses</dt>
           <dd>
@@ -204,26 +208,27 @@
             {{/if}}
           </dd>
         </dl>
+        {{/with}}
+        {{/isolate}}
+
       </div>
       <div class="span6">
         {{> editSkills}}
       </div>
     </div>
-  {{/with}}
 </template>
 
 <template name="skills">
   <div id="skills">
     <h3>Skills</h3>
-    <ul>
-      {{#each skills}}
+    <ul class="floating-skills">
+      {{#each userSkills}}
       <li class="skill">
-        <span class="rollover label label-important toggle-skill">
-          <span class="icon-trash icon-white"></span>
-        </span>
-        <span class="label {{#if favorite}}label-info{{else}}rollover{{/if}} toggle-favorite">
-          <span class="icon-star icon-white"></span>
-        </span>
+        {{#if favorite}}
+          <span class="label label-info">
+            <span class="icon-star icon-white"></span>
+          </span>
+        {{/if}}
         <span class="text">{{name}}</span>
       </li>
       {{/each}}
@@ -234,30 +239,31 @@
 
 <template name="editSkills">
   <div id="skills">
+
+    <h3>Add Skills</h3>
+    {{#constant}}
+    <select class="chosen-select input-skills" multiple data-placeholder="Add your language skills" >
+      {{#each allSkills}}
+        <option {{#if hasSkill}}selected{{/if}}>{{name}}</option>
+      {{/each}}
+    </select>
+    {{/constant}}
+
     <h3>My Skills</h3>
-    <ul>
-      {{#each skills}}
+    <ul class="floating-skills">
+      {{#isolate}}
+      {{#each userSkills}}
       <li class="skill">
-        <span class="rollover label label-important toggle-skill">
-          <span class="icon-trash icon-white"></span>
-        </span>
         <span class="label {{#if favorite}}label-info{{else}}rollover{{/if}} toggle-favorite">
           <span class="icon-star icon-white"></span>
         </span>
         <span class="text">{{name}}</span>
       </li>
       {{/each}}
+      {{/isolate}}
     </ul>
-    
-    <h3>Add Skills</h3>
-    <ul>
-      {{#each allSkills}}
-      <li class="skill">
-        <span class="rollover label label-success toggle-skill">add</span>
-        <span class="text">{{name}}</span>
-      </li>
-      {{/each}}
-    </ul>
+    <div class="clear"></div>
+
   </div>
 </template>
 

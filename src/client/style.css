@@ -4,7 +4,6 @@ html {
 }
 body {
   background: #84a3c0;
-  text-align: center;
   font-family: 'open sans';
   position: relative;
   margin: 0;
@@ -19,7 +18,9 @@ body {
   padding: 24px;  
 
 }
-
+.clear {
+  clear: both;
+}
 .wrapper {
 	height: 100% !important;
 	height: 100%;
@@ -97,6 +98,10 @@ h2 {
   margin-top: 20px;
 }
 
+#frontpage {
+  text-align: center;
+}
+
 #cursor{
   font-weight: 100;
 }
@@ -105,15 +110,20 @@ h2 {
   color:#FFF;
 }
 
+<<<<<<< HEAD
 #skills ul {
+=======
+.picture {
+  max-width: 200px;
+}
+
+#skills ul.floating-skills {
+>>>>>>> f7a900409b5beff722eb322c19ec1c5bc1020684
   list-style-type: none;
-  float: left;
-  display: inline;
   margin: 0px;
 }
 .skill {
   color: #333;
-  text-align: left;
   padding: 4px;
   font-weight: 700;
   float: left;
@@ -139,6 +149,7 @@ h2 {
   background-color: rgba(0,0,0, 0.5);
 }
 
+<<<<<<< HEAD
 .hacker{
   float:left;
   width: 260px;
@@ -178,3 +189,8 @@ A.hackers-social{
   font-weight: 700;
   font-size: 140%; 
 }
+=======
+.input-skills {
+  width: 100%;
+}
+>>>>>>> f7a900409b5beff722eb322c19ec1c5bc1020684

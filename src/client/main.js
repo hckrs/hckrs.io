@@ -4,30 +4,15 @@
 // bind total number of hackers to template
 Template.frontpage.helpers({
   "totalHackers": function() { return Meteor.users.find().count(); }
-})
+});
 
-// 
-Template.frontpage.rendered = function(){
-  $('#target').teletype({
-    text: [
-      'node.js',
-      'Arduino',
-      'design',
-      'meteor',
-      'UX',
-      'hardware',
-      'life',
-      'backbone.js',
-      'mobile'
-    ]
-  });
-
-  $('#cursor').teletype({
-    text: [' ', ' '],
-    delay: 0,
-    pause: 500
-  });
-};
+// typer text on frontpage
+Template.frontpage.rendered = function() {
+  var texts = ['node.js','Arduino','design','meteor','UX',
+               'hardware','life','backbone.js','mobile'];
+  $('#target').teletype({ text: texts }); 
+  $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
+}
 
 
 
@@ -35,7 +20,7 @@ Template.frontpage.rendered = function(){
 
 // bind hackers to template
 Template.hackers.helpers({
-  "hackers": function() { return Meteor.users.find().fetch(); }
+  "hackers": function() { return Meteor.users.find({}, {reactive: false}).fetch(); }
 });
 
 
@@ -55,12 +40,13 @@ var updateField = function(event) {
 
 // events
 Template.edit.events({
-  "keyup input": updateField
+  "keyup input.autosave": updateField
 });
 
 // bind hackers to template
 Template.hacker.helpers({
-  "hacker": function() { return Meteor.users.findOne(this._id); }
+  "hacker": function() { 
+    return Meteor.users.findOne(this._id, {reactive: false}); }
 });
 
 
@@ -94,28 +80,45 @@ var removeFavorite = function(skill) {
   Meteor.users.update(Meteor.userId(), {$pull: {"profile.favoriteSkills": skill.name}}); // remove
 }
 
+// replace all user's skills by the values entered in the chosen-select input field
+var updateSkills = function(skillNames) {
+  Meteor.users.update(Meteor.userId(), {$set: {"profile.skills": skillNames}});
+  cleanFavorites();
+}
+
+// skills that arn't in user's skills list can be marked as favorite, clean!
+var cleanFavorites = function() {
+  var profile = Meteor.user().profile;
+  var favorites = _.intersection(profile.skills, profile.favoriteSkills);
+  Meteor.users.update(Meteor.userId(), {$set: {"profile.favoriteSkills": favorites }});
+}
 
 // events
 Template.editSkills.events({
-  "click .toggle-skill": function() { userHasSkill(this) ? removeSkill(this) : addSkill(this); },
   "click .toggle-favorite": function() { isFavoriteSkill(this) ? removeFavorite(this) : addFavorite(this); }
 });
 
 // bind skills to template 'skills'
 Template.skills.helpers({
-  "skills": function() { return _.filter(SKILLS, userHasSkill); },
+  "userSkills": function() { return _.filter(SKILLS, userHasSkill); },
   "favorite": function() { return isFavoriteSkill(this); }
 });
 
 // bind skills to the template 'editSkills'
 Template.editSkills.helpers({
   "allSkills": SKILLS,
-  "skills": function() { return _.filter(SKILLS, userHasSkill); },
+  "userSkills": function() { return _.filter(SKILLS, userHasSkill); },
   "hasSkill": function() { return userHasSkill(this); },
   "favorite": function() { return isFavoriteSkill(this); }
-})
+});
 
-
+// after templates is loaded
+Template.editSkills.rendered = function() {
+  $(".input-skills").chosen().change(function(event) {
+    var values = $(event.currentTarget).val();
+    updateSkills(values);
+  });
+}
 
 
 
