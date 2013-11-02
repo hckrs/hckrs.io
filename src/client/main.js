@@ -20,7 +20,7 @@ Template.frontpage.rendered = function() {
 
 // bind hackers to template
 Template.hackers.helpers({
-  "hackers": function() { return Meteor.users.find().fetch(); }
+  "hackers": function() { return Meteor.users.find({}, {reactive: false}).fetch(); }
 });
 
 
@@ -45,7 +45,8 @@ Template.edit.events({
 
 // bind hackers to template
 Template.hacker.helpers({
-  "hacker": function() { return Meteor.users.findOne(this._id); }
+  "hacker": function() { 
+    return Meteor.users.findOne(this._id, {reactive: false}); }
 });
 
 

@@ -28,7 +28,7 @@
 
 
 <template name="header">
-  {{#unless currentUser}}
+  {{#unless loggedIn}}
     <div class="a">
       <div style="position:absolute;top: 0px;z-index:11;">
         <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
@@ -43,7 +43,7 @@
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
       <div class="menu">
         <a href="{{pathFor 'hackers'}}">hackers</a> •
-        {{#with currentUser}}
+        {{#with _currentUser}}
           <a href="{{pathFor 'hacker'}}">profile</a>
         {{/with}}
       </div>
@@ -87,7 +87,7 @@
   {{#with hacker}}
     <h3>Profile of {{profile.name}}</h3>
 
-    {{#if equals hacker._id currentUser._id}}
+    {{#if equals hacker._id _currentUser._id}}
       (<a href="{{pathFor 'edit'}}">edit</a>)
     {{/if}}
 
@@ -150,14 +150,19 @@
 
 
 <template name="edit">
-  {{#with currentUser}}
+  
     <h3>Edit my profile</h3>
     
-    (<a href="{{pathFor 'hacker'}}">view</a>)
+    {{#with _currentUser}}  
+      (<a href="{{pathFor 'hacker'}}">view</a>)
+    {{/with}}
 
     <div class="row row-fluid">
       <div class="span6">
-        <dl style="text-align:left;">
+
+        {{#isolate}}
+        {{#with currentUser}}
+        <dl>
           <dt>picture</dt>
           <dd><img src="{{profile.picture}}" class="picture" alt="" /></dd>
 
@@ -204,12 +209,14 @@
             {{/if}}
           </dd>
         </dl>
+        {{/with}}
+        {{/isolate}}
+
       </div>
       <div class="span6">
         {{> editSkills}}
       </div>
     </div>
-  {{/with}}
 </template>
 
 <template name="skills">
@@ -245,6 +252,7 @@
 
     <h3>My Skills</h3>
     <ul class="floating-skills">
+      {{#isolate}}
       {{#each userSkills}}
       <li class="skill">
         <span class="label {{#if favorite}}label-info{{else}}rollover{{/if}} toggle-favorite">
@@ -253,6 +261,7 @@
         <span class="text">{{name}}</span>
       </li>
       {{/each}}
+      {{/isolate}}
     </ul>
     <div class="clear"></div>
 
