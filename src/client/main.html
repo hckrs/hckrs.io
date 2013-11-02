@@ -61,12 +61,11 @@
 </template>
 
 <template name="hackers">
-  <h3>List of hackers</h3>
+  <h3>hackers in Lyon</h3>
  
   {{#each hackers}}
-  <div class="hacker" style="border:1px solid gray;float:left;">
-    <a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="hackers-picture" alt="" /></a>
-    <a href="{{pathFor 'hacker'}}" class="hackers-name">{{profile.name}}</a>
+  <div class="hacker">
+    <a href="{{pathFor 'hacker'}}"><div class="hacker-circle" style="background: url({{profile.picture}}) no-repeat; margin:auto;"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></div></a><br/><a class="hackers-name" href="{{pathFor 'hacker'}}">{{profile.name}}</a>
     <!--<div class="age">{{profile.age}}</div>-->
     {{#if profile.social.facebook}}
       <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
@@ -96,7 +95,7 @@
       <div class="span6">
         <dl style="text-align:left;">
           <dt>picture</dt>
-          <dd><img src="{{profile.picture}}" class="picture" alt="" /></dd>
+          <dd><a href="{{pathFor 'hacker'}}" class=""><div class="hacker-circle" style="background: url({{profile.picture}}) no-repeat;"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></div></a></dd>
 
           <dt>name</dt>
           <dd>{{profile.name}}</dd>

@@ -105,10 +105,6 @@ h2 {
   color:#FFF;
 }
 
-.picture {
-  max-width: 200px;
-}
-
 #skills ul {
   list-style-type: none;
   float: left;
@@ -143,3 +139,42 @@ h2 {
   background-color: rgba(0,0,0, 0.5);
 }
 
+.hacker{
+  float:left;
+  width: 260px;
+}
+
+DIV.hacker-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 90px;
+  -webkit-border-radius: 90px;
+  -moz-border-radius: 90px;
+  min-width: 180px;
+  min-height: 180px;
+  line-height: 180px;
+  font-size: 90px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+DIV.hacker-circle:hover {
+  text-decoration: none;
+}
+
+IMG.hacker-picture {
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+A.hackers-social{
+  text-align: center;
+  line-height: 32px;
+}
+
+.hackers-name{
+  font-weight: 700;
+  font-size: 140%; 
+}
