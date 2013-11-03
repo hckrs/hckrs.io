@@ -1,4 +1,86 @@
-SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
+
+/* SKILLS */
+
+
+// helper function to check if user has the given skill
+var userHasSkill = function(skill) {
+  return _.contains(Meteor.user().profile.skills, skill.name);
+}
+
+// helper function to check if user has marked the given skill als favorite
+var isFavoriteSkill = function(skill) {
+  return _.contains(Meteor.user().profile.favoriteSkills, skill.name);
+}
+
+// update user's profile by adding or removing the given (favorite)skill
+var addSkill = function(skill) {
+  Meteor.users.update(Meteor.userId(), {$addToSet: {"profile.skills": skill.name}}); // add
+}
+var removeSkill = function(skill) {
+  Meteor.users.update(Meteor.userId(), {$pull: {"profile.skills": skill.name}}); // remove
+  removeFavorite(skill);
+}
+var addFavorite = function(skill) {
+  Meteor.users.update(Meteor.userId(), {$addToSet: {"profile.favoriteSkills": skill.name}}); // add
+  addSkill(skill);
+}
+var removeFavorite = function(skill) {
+  Meteor.users.update(Meteor.userId(), {$pull: {"profile.favoriteSkills": skill.name}}); // remove
+}
+
+// replace all user's skills by the values entered in the chosen-select input field
+var updateSkills = function(skillNames) {
+  Meteor.users.update(Meteor.userId(), {$set: {"profile.skills": skillNames}});
+  cleanFavorites();
+}
+
+// skills that arn't in user's skills list can be marked as favorite, clean!
+var cleanFavorites = function() {
+  var profile = Meteor.user().profile;
+  var favorites = _.intersection(profile.skills, profile.favoriteSkills);
+  Meteor.users.update(Meteor.userId(), {$set: {"profile.favoriteSkills": favorites }});
+}
+
+
+
+// EVENTS
+
+Template.editSkills.events({
+  "click .toggle-favorite": function() { isFavoriteSkill(this) ? removeFavorite(this) : addFavorite(this); }
+});
+
+
+
+// TEMPLATE DATA
+
+Template.skills.helpers({
+  "userSkills": function() { return _.filter(SKILLS, userHasSkill); },
+  "favorite": function() { return isFavoriteSkill(this); }
+});
+
+Template.editSkills.helpers({
+  "allSkills": function() { return SKILLS; },
+  "userSkills": function() { return _.filter(SKILLS, userHasSkill); },
+  "hasSkill": function() { return userHasSkill(this); },
+  "favorite": function() { return isFavoriteSkill(this); }
+});
+
+
+
+// REDERING 
+
+Template.editSkills.rendered = function() {
+  $(".input-skills").chosen().change(function(event) {
+    var values = $(event.currentTarget).val();
+    updateSkills(values);
+  });
+}
+
+
+
+// CONSTANTS 
+
+var SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"ActionScript"},{"name":"Ada"},{"name":"Android"},
 {"name":"Apache"},{"name":"ApacheConf"},{"name":"Apex"},
 {"name":"AppleScript"},{"name":"Arc"},{"name":"Arduino"},
@@ -68,3 +150,4 @@ SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"XSLT"},{"name":"Xtend"},{"name":"YAML"},{"name":"Zend"},
 {"name":"eC"},{"name":"edn"},{"name":"fish"},{"name":"jQuery"},
 {"name":"mupad"},{"name":"ooc"},{"name":"reStructuredText"}];
+

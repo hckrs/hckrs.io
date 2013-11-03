@@ -59,6 +59,8 @@ h2 {
   margin-bottom: 10px;
 }
 
+
+
 .main {
   float: left;
   width: 100%;
@@ -110,43 +112,13 @@ h2 {
   color:#FFF;
 }
 
-#skills ul {
-}
+
 
 .picture {
   max-width: 200px;
 }
 
-#skills ul.floating-skills {
-  list-style-type: none;
-  margin: 0px;
-}
-.skill {
-  color: #333;
-  padding: 4px;
-  font-weight: 700;
-  float: left;
-}
-.skill:hover {
-  color: black;
-}
-.skill .text {
-  padding: 2px 12px 2px 12px;
-  background-color: rgba(225,225,225, 0.2);
-  border-radius: 12px;
-}
-.skill .rollover {
-  visibility: hidden;
-  float: left;
-  background-color: rgba(0,0,0, 0.8);
-}
-.skill:hover .rollover {
-  visibility: visible;
-}
-.toggle-favorite, .toggle-skill {
-  cursor: pointer;
-  background-color: rgba(0,0,0, 0.5);
-}
+
 
 /* HEAD */
 .hacker{
@@ -190,6 +162,33 @@ A.hackers-social{
   font-size: 140%; 
 }
 
-.input-skills {
-  width: 100%;
+
+
+/* BEGIN input elements */
+
+input.text {
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  border-radius: 15px;
+  padding: 3px 10px;
+  color: white;
 }
+input.text:hover {
+  border: 1px dashed white;
+  background-color: rgba(255,255,255,0.1);
+}
+input.text:focus {
+  border: 1px solid white;
+  background-color: rgba(255,255,255,0.1);
+}
+input.text.saved {
+  border: 1px solid #00ff00;
+}
+input.text::-webkit-input-placeholder { /* WebKit browsers */ color: #bbb; }
+input.text:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #bbb; }
+input.text::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #bbb; }
+input.text:-ms-input-placeholder { /* Internet Explorer 10+ */ color: #bbb; }
+/* END input elements */
+
+

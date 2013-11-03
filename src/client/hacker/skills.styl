@@ -1,0 +1,46 @@
+@import 'nib'
+
+#skills {
+
+  ul.floating-skills {
+    list-style-type: none;
+    margin: 0px;
+  }
+
+  .skill {
+    color: #333;
+    padding: 4px;
+    font-weight: 700;
+    float: left;
+
+    .text {
+      padding: 2px 12px 2px 12px;
+      background-color: rgba(225,225,225, 0.2);
+      border-radius: 12px;
+    }
+
+    .rollover {
+      visibility: hidden;
+      float: left;
+      background-color: rgba(0,0,0, 0.8);
+    }
+
+    .toggle-favorite, 
+    .toggle-skill {
+      cursor: pointer;
+      background-color: rgba(0,0,0, 0.5);
+    }
+  }
+
+  .skill:hover {
+    color: black;  
+
+    .rollover {
+      visibility: visible;
+    }
+  }
+
+  .input-skills {
+    width: 100%;
+  }
+}

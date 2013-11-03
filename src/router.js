@@ -7,7 +7,6 @@ if (Meteor.isClient) {
     this.route('frontpage', { path: '/' });
     this.route('hackers', { path: '/hackers' });
     this.route('hacker', { path: '/hacker/:_id', data: function() { return this.params; } });
-    this.route('edit', { path: '/edit' });
   });
 
 
