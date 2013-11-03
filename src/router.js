@@ -6,7 +6,18 @@ if (Meteor.isClient) {
   Router.map(function () {
     this.route('frontpage', { path: '/' });
     this.route('hackers', { path: '/hackers' });
-    this.route('hacker', { path: '/hacker/:_id', data: function() { return this.params; } });
+    
+    this.route('hacker', { 
+      path: '/hacker/:_id', 
+      before: function() { 
+        var hackerId = this.params._id;
+        Session.set('hackerId', hackerId);
+        Deps.autorun(function() {
+          Session.set('hacker', Meteor.users.findOne(hackerId));
+        });
+      }
+    });
+
   });
 
 

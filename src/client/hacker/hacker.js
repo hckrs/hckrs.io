@@ -1,10 +1,16 @@
 
 /* HACKER */
 
+// get the information of the hacker on the current page
+// this session variable 'hacker' is setted in the router
+var hacker = function () { return Session.get('hacker'); }
+var hackerId = function () { return Session.get('hackerId'); }
+
+
 
 // when user starts typing in an input field
 // directly update the user info in the database  
-var updateField = function(event) {
+var saveChangedField = function(event) {
   var $elm = $(event.currentTarget); //input element
   var field = $elm.attr('name');
   var value = $elm.val();
@@ -20,8 +26,8 @@ var updateField = function(event) {
   }, 1400);
 }
 
-// lose focus when user types the ESCAPE or RETURN within an input field
-var checkForBlurEvent = function(event) {
+// the editing mode will be exited if user press the ESCAPE or RETURN button
+var fieldChanged = function(event) {
   var $elm = $(event.currentTarget)
   var keyCode = event.which;
   var ESC = '27', RET = '13';
@@ -33,20 +39,14 @@ var checkForBlurEvent = function(event) {
 // EVENTS
 
 Template.hackerEdit.events({
-  "keyup input.autosave": updateField,
-  "blur input.save": updateField,
-  "keyup input": checkForBlurEvent
+  "blur input.save": saveChangedField,
+  "keyup input.save": fieldChanged
 });
 
 
 // TEMPLATE DATA
 
 Template.hacker.helpers({
-  "hacker": function() { return Meteor.users.findOne(this._id, {reactive: false}); }
-});
-Template.hackerEdit.helpers({
-  "hacker": function() { return Meteor.users.findOne(this._id, {reactive: false}); }
-});
-Template.hackerView.helpers({
-  "hacker": function() { return Meteor.users.findOne(this._id, {reactive: false}); }
+  "hackerIsCurrentUser": function() { return Meteor.userId() == hackerId(); },
+  "hacker": function() { return hacker(); }
 });

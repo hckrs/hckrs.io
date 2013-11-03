@@ -2,11 +2,13 @@
 <template name="hacker">
   {{! view a hacker's profile and include editing functionality when visiting your own profile }}
 
-  {{#if hacker._id _currentUser._id}}
-    {{> hackerEdit}}
-  {{else}}
-    {{> hackerView}}
-  {{/if}}
+  {{#with hacker}}
+    {{#if hackerIsCurrentUser}}
+      {{> hackerEdit}}
+    {{else}}
+      {{> hackerView}}
+    {{/if}}
+  {{/with}}
 </template>
 
 <template name="hackerEdit">
@@ -14,8 +16,6 @@
   <div class="row row-fluid">
     
     <div class="span6">
-      {{#isolate}}
-      {{#with hacker}}
       <dl>
         <dt>picture</dt>
         <dd><img src="{{profile.picture}}" class="picture" alt="" /></dd>
@@ -63,8 +63,6 @@
           {{/if}}
         </dd>
       </dl>
-      {{/with}}
-      {{/isolate}}
     </div>
 
     <div class="span6">
@@ -79,7 +77,6 @@
   <div class="row row-fluid">
 
     <div class="span6">
-      {{#with hacker}}
       <dl style="text-align:left;">
         <dt>picture</dt>
         <dd><a href="{{pathFor 'hacker'}}" class=""><div class="hacker-circle" style="background: url({{profile.picture}}) no-repeat;"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></div></a></dd>
@@ -127,7 +124,6 @@
           {{/if}}
         </dd>
       </dl>
-      {{/with}}
     </div>
 
     <div class="span6">

@@ -4,9 +4,9 @@
   <div id="skills">
     <h3>Skills</h3>
     <ul class="floating-skills">
-      {{#each userSkills}}
+      {{#each hackerSkills}}
       <li class="skill">
-        {{#if favorite}}
+        {{#if isFavorite}}
           <span class="label label-info">
             <span class="icon-star icon-white"></span>
           </span>
@@ -34,9 +34,9 @@
     <h3>My Skills</h3>
     <ul class="floating-skills">
       {{#isolate}}
-      {{#each userSkills}}
+      {{#each hackerSkills}}
       <li class="skill">
-        <span class="label {{#if favorite}}label-info{{else}}rollover{{/if}} toggle-favorite">
+        <span class="label {{#if isFavorite}}label-info{{else}}rollover{{/if}} toggle-favorite">
           <span class="icon-star icon-white"></span>
         </span>
         <span class="text">{{name}}</span>
