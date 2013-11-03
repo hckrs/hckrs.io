@@ -17,8 +17,8 @@ var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'tw
 if(!facebookConfigured) {
   Accounts.loginServiceConfiguration.insert({
     service: "facebook",
-    appId: "609216679124014",
-    secret: "fd5a223e32c042aeeddb98c115b3e6a3"
+    appId: SETTINGS.FACEBOOK.appId,
+    secret: SETTINGS.FACEBOOK.secret
   });
 }
 
@@ -26,8 +26,8 @@ if(!facebookConfigured) {
 if(!githubConfigured) {
   Accounts.loginServiceConfiguration.insert({
     service: "github",
-    clientId: "de739c0911eca800a0fb",
-    secret: "2d10760b04a24bca2f82c823d8e112a9585f3400"
+    clientId: SETTINGS.GITHUB.clientId,
+    secret: SETTINGS.GITHUB.secret
   });
 }
 
@@ -35,8 +35,8 @@ if(!githubConfigured) {
 if(!twitterConfigured) {
   Accounts.loginServiceConfiguration.insert({
     service: "twitter",
-    consumerKey: "zZzPfXGKfu523POv6xrFPA",
-    secret: "CJMdzdwCCKxhmeEpsum8Mqf1P5R7L0ksq4h0Qp16hOo"
+    consumerKey: SETTINGS.TWITTER.consumerKey,
+    secret: SETTINGS.TWITTER.secret
   });
 }
 

@@ -13,7 +13,7 @@
 
 <template name="hackerEdit">
   <h3>My Profile</h3>
-  <div class="row row-fluid">
+  <div id="hacker" class="row row-fluid">
     
     <div class="span6">
       <dl>
@@ -28,6 +28,12 @@
 
         <dt>language</dt>
         <dd><input type="text" name="profile.lang" class="text save" value="{{profile.lang}}" maxlength="2" style="width: 20px;" placeholder="EN" /></dd>
+
+        <dt>address</dt>
+        <dd>
+          <input type="text" name="address" class="text addresspicker" value="{{profile.address.text}}" placeholder="address" />
+          <div id="map"></div>
+        </dd>
 
         <dt>e-mailaddresses</dt>
         <dd>
@@ -74,7 +80,7 @@
 
 <template name="hackerView">
   <h3>Profile of {{profile.name}}</h3>
-  <div class="row row-fluid">
+  <div id="hacker" class="row row-fluid">
 
     <div class="span6">
       <dl style="text-align:left;">

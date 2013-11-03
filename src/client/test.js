@@ -1,6 +1,6 @@
 
 var TEST_BUTTON = false;          // activate test button
-var TEMPLATE_RENDER_LOGS = true;  // show rendered templates in console
+var TEMPLATE_RENDER_LOGS = false;  // show rendered templates in console
 
 
 // test something (when clicked on the "test something" button)
@@ -36,7 +36,7 @@ if (TEMPLATE_RENDER_LOGS) {
         Template[key].rendered = function() {
           var currentDate = '[' + new Date().toUTCString() + '] ';
           console.log(currentDate, "--> " + key);
-          original();
+          original.call(this);
         }
       }
     });  
