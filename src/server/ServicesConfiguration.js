@@ -13,32 +13,36 @@ var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'tw
 // this must be stored seperately, for example in a settings file or 
 // exported as environment variables.
 
-// register facebook
-if(!facebookConfigured) {
-  Accounts.loginServiceConfiguration.insert({
-    service: "facebook",
-    appId: SETTINGS.FACEBOOK.appId,
-    secret: SETTINGS.FACEBOOK.secret
-  });
-}
+Meteor.startup(function() {
 
-// register github app
-if(!githubConfigured) {
-  Accounts.loginServiceConfiguration.insert({
-    service: "github",
-    clientId: SETTINGS.GITHUB.clientId,
-    secret: SETTINGS.GITHUB.secret
-  });
-}
+  // register facebook
+  if(!facebookConfigured) {
+    Accounts.loginServiceConfiguration.insert({
+      service: "facebook",
+      appId: SETTINGS.FACEBOOK.appId,
+      secret: SETTINGS.FACEBOOK.secret
+    });
+  }
 
-// register twitter app
-if(!twitterConfigured) {
-  Accounts.loginServiceConfiguration.insert({
-    service: "twitter",
-    consumerKey: SETTINGS.TWITTER.consumerKey,
-    secret: SETTINGS.TWITTER.secret
-  });
-}
+  // register github app
+  if(!githubConfigured) {
+    Accounts.loginServiceConfiguration.insert({
+      service: "github",
+      clientId: SETTINGS.GITHUB.clientId,
+      secret: SETTINGS.GITHUB.secret
+    });
+  }
+
+  // register twitter app
+  if(!twitterConfigured) {
+    Accounts.loginServiceConfiguration.insert({
+      service: "twitter",
+      consumerKey: SETTINGS.TWITTER.consumerKey,
+      secret: SETTINGS.TWITTER.secret
+    });
+  }
+  
+});
 
 
 // Manually creating OAuth requests to the external services.
