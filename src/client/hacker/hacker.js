@@ -22,7 +22,7 @@ var initializeAddressPicker = function($addressInputField) {
   // including a overridden bootstrap-typeahead.js file
   // see reference: https://github.com/elmariachi111/jquery-addresspicker
 
-  var center = new google.maps.LatLng(5.764043, 4.835659); // Lyon
+  var center = new google.maps.LatLng(45.764043, 4.835659); // Lyon
   
   $addressInputField.addresspicker({
     map:      "#map",
