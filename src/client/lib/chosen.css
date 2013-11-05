@@ -21,7 +21,7 @@
   width: 100%;
   border: 1px solid #aaa;
   border-top: 0;
-  background: #fff;
+  background: rgba(255,255,255,0.9);
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 }
 .chosen-container.chosen-with-drop .chosen-drop {
@@ -197,17 +197,13 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
+  padding: 2px 0px 2px 0px; 
   width: 100%;
   height: auto !important;
   height: 1%;
   border: 1px solid #aaa;
-  background-color: #fff;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
-  background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
-  background-image: -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
-  background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
-  background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
+  background-color:  rgba(255,255,255,0.2);
+  border-radius: 4px;
   cursor: text;
 }
 .chosen-container-multi .chosen-choices li {
@@ -290,7 +286,7 @@
 }
 .chosen-container-multi .chosen-drop .result-selected {
   display: list-item;
-  color: #ccc;
+  color: green;
   cursor: default;
 }
 

@@ -16,7 +16,6 @@ body {
   background-size: cover;         /* Generic*/
   background-attachment:fixed;
   padding: 24px;  
-
 }
 .clear {
   clear: both;
@@ -81,27 +80,46 @@ h2 {
 }
 
 .content{
-  bottom: 0;
-  height: 300px;
-  left: 0;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 900px;
+  margin-top: 48px;
 }
 
 .logo{
   float: left;
 }
 
-.facebook-connect{
+
+
+/* SOCIAL LOGIN*/
+
+.header-social-container{
   float: right;
   margin-top: 20px;
+  padding: 8px;
+  padding-left: 14px;
+  padding-top: 9px;
+  background-color: rgba(255,255,255,1);
+  color: #666;
 }
+
+a.header-social {
+  text-decoration: none;
+  color: #888;
+  font-weight: 700;
+  padding: 6px;
+}
+
+a.header-social:hover{
+  text-decoration: none;
+  color: black;
+  border: 0px;
+}
+
+
+
 
 #frontpage {
   text-align: center;
+  margin-top: 260px;
 }
 
 #cursor{
@@ -120,48 +138,49 @@ h2 {
 
 
 
-/* HEAD */
 .hacker{
   float:left;
   width: 260px;
+  margin-top: 24px;
   text-align: center;
 }
 
-DIV.hacker-circle {
+IMG.hacker-picture {
+  transition-property: all;
+  transition-duration: 100ms;
+  transition-timing-function: ease-in-out;
   width: 180px;
   height: 180px;
   border-radius: 90px;
   -webkit-border-radius: 90px;
   -moz-border-radius: 90px;
-  min-width: 180px;
-  min-height: 180px;
   line-height: 180px;
   font-size: 90px;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  /*filter: url(filters.svg#grayscale);*/ /* Firefox 3.5+ */
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+  margin-bottom: 8px;
 }
 
-DIV.hacker-circle:hover {
-  text-decoration: none;
-}
-
-IMG.hacker-picture {
-  opacity: 0;
-  filter: alpha(opacity=0);
+IMG.hacker-picture:hover {
+  filter: none;
+  -webkit-filter: grayscale(0);
+  box-shadow: 0px 0px 7px rgba(0,0,0,0.4); 
 }
 
 A.hackers-social{
   text-align: center;
-  line-height: 32px;
 }
 
 .hackers-name{
   font-weight: 700;
-  font-size: 140%; 
+  font-size: 140%;
+  line-height: 35px;
 }
-
 
 
 /* BEGIN input elements */
@@ -183,7 +202,9 @@ input.text:focus {
   background-color: rgba(255,255,255,0.1);
 }
 input.text.saved {
-  border: 1px solid #00ff00;
+  border: 1px solid rgba(0,0,0,0);
+  color: #111;
+  background-color: rgba(0,0,0,0.1);
 }
 input.text::-webkit-input-placeholder { /* WebKit browsers */ color: #bbb; }
 input.text:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #bbb; }

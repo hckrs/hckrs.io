@@ -35,24 +35,26 @@
 <template name="header">
   {{#unless loggedIn}}
     <div class="a">
-      <div style="position:absolute;top: 0px;z-index:11;">
-        <a href="#" id="signupWithFacebook">Signup with Facebook</a> |
-        <a href="#" id="signupWithGithub">Signup with Github</a> |
-        <a href="#" id="signupWithTwitter">Signup with Twitter</a>
-      </div>
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-      <a href="#"><img src="/img/facebook-connect.png" alt="Facebook Connect" class="facebook-connect"></a>
+      <div class="header-social-container">connect or register&nbsp;
+        <a href="#" class="header-social" id="signupWithFacebook">Facebook</a> •
+        <a href="#" class="header-social" id="signupWithTwitter">Twitter</a> •
+        <a href="#" class="header-social" id="signupWithGithub">Github</a>
+      </div>
     </div>
   {{else}}
+
     <div class="header">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
-      <div class="menu">
-        <a href="{{pathFor 'hackers'}}">hackers</a> •
-        {{#with _currentUser}}
-          <a href="{{pathFor 'hacker'}}">profile</a>
-        {{/with}}
+      <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>&nbsp;
+        <a href="#" class="header-social" id="signupWithFacebook">Facebook</a> •
+        <a href="#" class="header-social" id="signupWithTwitter">Twitter</a> •
+        <a href="#" class="header-social" id="signupWithGithub">Github</a>
       </div>
-      <a href="#" id="signOutButton" style="position:absolute;top: 0px;right: 0px;">SignOut</a>
+      {{#with _currentUser}}<div class="menu">
+        <a href="{{pathFor 'hackers'}}">hackers</a> •
+        <a href="{{pathFor 'hacker'}}">profile</a>
+      </div>{{/with}}
     </div>
   {{/unless}}
 </template>
@@ -65,11 +67,10 @@
 </template>
 
 <template name="hackers">
-  <h3>hackers in Lyon</h3>
- 
+
   {{#each hackers}}
   <div class="hacker">
-    <a href="{{pathFor 'hacker'}}"><div class="hacker-circle" style="background: url({{profile.picture}}) no-repeat; margin:auto;"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></div></a><br/><a class="hackers-name" href="{{pathFor 'hacker'}}">{{profile.name}}</a>
+    <a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></a><br/><a class="hackers-name" href="{{pathFor 'hacker'}}">{{profile.name}}</a><br/>
     <!--<div class="age">{{profile.age}}</div>-->
     {{#if profile.social.facebook}}
       <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
