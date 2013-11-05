@@ -19,10 +19,22 @@
     name: String,       // full name of the user
     city: String,       // location/city    
     lang: String        // language e.a. 'en', 'nl' or 'fr'
+    address: {
+      text: String,          // formatted address that includes all address parts
+      city: String,
+      zipcode: String,
+      country: String,
+      latitude: Number,
+      longitude: Number,
+      region1: String,       // this is called 'provintie' in The Netherlands
+      region2: String,       // this is called 'gemeente' in The Netherlands
+      street: String,        // street name
+      streetNumber: String
+    },
     social: {
-      facebook: String, // url to user's facebook profile
-      github: String,   // url to user's github profile
-      twitter: String   // url to user's twitter profile
+      facebook: String,      // url to user's facebook profile
+      github: String,        // url to user's github profile
+      twitter: String        // url to user's twitter profile
     },
     skills: [ String ],           // array of skill name
     favoriteSkills: [ String ]    // skills that are also marked as favorite

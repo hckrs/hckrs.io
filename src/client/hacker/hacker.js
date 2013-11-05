@@ -14,6 +14,68 @@ var hackerId = function () { return Session.get('hackerId'); }
 
 
 
+// autocomplete address field
+// and handles the event when user is selecting an address
+var initializeAddressPicker = function($addressInputField) {
+
+  // using a jquery-addresspicker plug-in
+  // including a overridden bootstrap-typeahead.js file
+  // see reference: https://github.com/elmariachi111/jquery-addresspicker
+
+  var center = new google.maps.LatLng(5.764043, 4.835659); // Lyon
+  
+  $addressInputField.addresspicker({
+    map:      "#map",
+    typeaheaddelay: 300,
+    draggableMarker: false,
+    // regionBias: "fr",
+    mapOptions: { // see google maps api reference for possible options
+      zoom: 13,
+      center: center,
+      scrollwheel: false,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+  });
+
+  // helper function to extract useful information from google's response
+  var parseGeocodeResult = function(data) {
+    var result = { //basic properties
+      longitude: data.geometry.location.lng(),
+      latitude: data.geometry.location.lat(),
+      text: data.formatted_address
+    };
+    var mapping = { //additional properties
+      'street_number': 'streetNumber',
+      'route': 'street',
+      'postal_code': 'zipcode',
+      'locality': 'city',
+      'country': 'country',
+      'administrative_area_level_1': 'region1',
+      'administrative_area_level_2': 'region2'
+    };
+    _.each(data.address_components, function(component) {
+      _.each(component.types, function(type) {
+        if (_.contains(_.keys(mapping), type))
+          result[mapping[type]] = component.long_name;
+      });
+    });
+    return result;
+  }
+
+  // show that the current value isn't valid when user starts editing.
+  // only when the user clicks on an address it becomes valid.
+  $addressInputField.on('keydown', function() {
+    $addressInputField.addClass('invalid');
+  });
+
+  // handle event when user is selecting an address
+  $addressInputField.on("addressChanged", function(evt, data) {
+    $addressInputField.removeClass('invalid');
+    var address = parseGeocodeResult(data);
+    saveAddress(address);
+  });
+}
+
 
 // when user starts typing in an input field
 // directly update the user info in the database  
@@ -42,41 +104,19 @@ var fieldChanged = function(event) {
     $elm.blur()
 }
 
-// when address loses focus, check for completness
-// if the value isn't complete, clear the input
-var addressLosesFocus = function(event) {
-  var $elm = $(event.currentTarget)
 
-  // if the return value is an array of jquery elements than there is no match
-  // check if we get the correct result by checking the existence of property 'geometry'
-  if (!$elm.addresspicker('selected').geometry) { 
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.address': null}});
-    $elm.val('');
-  }
-}
-
-// save a completed address
-var saveAddress = function(rawData, data) {
-  var address = {};
-  
-  if (data.country)       address.country = data.country;
-  if (data.locality)      address.city = data.locality;
-  if (data.route)         address.street = data.route;
-  if (data.street_number) address.streetNumber = data.street_number;
-  if (data.lat)           address.latitude = data.lat();
-  if (data.lng)           address.longitude = data.lng();
-  if (rawData.value)      address.text = rawData.value;
-
+// save user's address
+var saveAddress = function(address) {
   Meteor.users.update(Meteor.userId(), {$set: {'profile.address': address}});
 }
+
 
 
 // EVENTS
 
 Template.hackerEdit.events({
   "blur input.save": saveChangedField,
-  "keyup input.save": fieldChanged,
-  'blur input.addresspicker': addressLosesFocus
+  "keyup input.save": fieldChanged
 });
 
 
@@ -93,25 +133,8 @@ Template.hacker.helpers({
 
 
 Template.hackerEdit.rendered = function() {
-  var options = {
-    appendAddressString: "",
-    draggableMarker: true,
-    regionBias: null, // search results order influenced by current location 'nl', 'fr', etc.
-    componentsFilter: '', // only return specific results, e.a. 'country:FR'
-    updateCallback: saveAddress,
-    reverseGeocode: false,
-    autocomplete: 'default', // could be autocomplete: "bootstrap" to use bootstrap typeahead autocomplete instead of jQueryUI
-    mapOptions: {
-      zoom: 12,
-      center: new google.maps.LatLng(45.764043, 4.835659),
-      scrollwheel: false,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    },
-    elements: {
-      map: "#map",
-    }
-  };
-  $addressInput = $(this.find('.addresspicker'));
-  $addressInput.addresspicker(options);
+  // initialize autocomplete address field
+  var addressInputField = $(this.find('.addresspicker'));
+  initializeAddressPicker(addressInputField);
 }
 

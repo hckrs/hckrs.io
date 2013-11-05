@@ -29,8 +29,10 @@
 
         <dt>address</dt>
         <dd>
-          <input type="text" name="address" class="text addresspicker" value="{{profile.address.text}}" placeholder="address" />
+          {{#constant}}
+          <input type="text" class="text addresspicker" value="{{profile.address.text}}" placeholder="address" autocomplete="off"  />
           <div id="map"></div>
+          {{/constant}}
         </dd>
 
         <dt>e-mailaddresses</dt>
