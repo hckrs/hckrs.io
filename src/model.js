@@ -16,29 +16,34 @@
 
   profile: {            // user's public profile (visible for other users)
     picture: String,    // url of an avatar for this user
-    name: String,       // full name of the user
-    city: String,       // location/city    
-    lang: String        // language e.a. 'en', 'nl' or 'fr'
+    name: String,       // full name of the user    
+    email: String,      // e-mailadress
+    lang: String,       // language e.a. 'en', 'nl' or 'fr'
     address: {
-      text: String,          // formatted address that includes all address parts
+      latitude: Number,
+      longitude: Number,
+      street: String, 
+      streetNumber: String,
       city: String,
       zipcode: String,
       country: String,
-      latitude: Number,
-      longitude: Number,
-      region1: String,       // this is called 'provintie' in The Netherlands
-      region2: String,       // this is called 'gemeente' in The Netherlands
-      street: String,        // street name
-      streetNumber: String
+      region1: String,   // this is called 'provintie' in The Netherlands
+      region2: String,   // this is called 'gemeente' in The Netherlands
+      text: String       // formatted address that includes all address parts
     },
     social: {
-      facebook: String,      // url to user's facebook profile
-      github: String,        // url to user's github profile
-      twitter: String        // url to user's twitter profile
+      facebook: String,  // url to user's facebook profile
+      github: String,    // url to user's github profile
+      twitter: String    // url to user's twitter profile
     },
     skills: [ String ],           // array of skill name
     favoriteSkills: [ String ]    // skills that are also marked as favorite
   },
+
+  emails: [ {           // user can have multiple e-mailaddressen (internal use only)
+    address: String,    // e-mailadress
+    verified: Bool      // e-mailadress is verified by clicking the link in enrollment mail
+  } ], 
 
   services: {           // meteor stores login information here...
     resume: ...
@@ -53,3 +58,28 @@
 
 // In the future we can define new collections below
 // ....
+
+
+
+/*
+  LOCAL COLLECTIONS
+
+  This are collections that only exist on the client and will not
+  be synced with the server. This collections are used to store session state.
+  Instead yoy can using the Session object provided by meteor, but the local collections
+  allow you to query/modify the data in an easy way.
+*/
+
+
+// Dynamic classes are used to define additional classes to HTML elements.
+// Adding a class to an element can be done by calling the addDynamicClass() helper function.
+// In general this approach is easier than setting classes directly through jquery, because
+// this method preserve the classNames on the elements when the template render again.
+DynamicClasses = new Meteor.Collection(null); //local collection only (session)
+/*
+{
+  elementId: String,
+  className: String
+}
+*/
+

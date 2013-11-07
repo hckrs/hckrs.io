@@ -73,6 +73,7 @@ var initializeAddressPicker = function($addressInputField) {
     $addressInputField.removeClass('invalid');
     var address = parseGeocodeResult(data);
     saveAddress(address);
+    addDynamicClass($addressInputField.attr('id'), 'saved'); // show feedback on input element
   });
 }
 
@@ -81,7 +82,7 @@ var initializeAddressPicker = function($addressInputField) {
 // directly update the user info in the database  
 var saveChangedField = function(event) {
   var $elm = $(event.currentTarget); //input element
-  var field = $elm.attr('name');
+  var field = $elm.data('field');
   var value = $elm.val();
 
   var modifier = {};
@@ -89,10 +90,7 @@ var saveChangedField = function(event) {
   Meteor.users.update(Meteor.userId(), {$set: modifier});
 
   // show feedback on input element
-  $elm.addClass('saved');
-  Meteor.setTimeout(function() {
-    $elm.removeClass('saved');
-  }, 1400);
+  addDynamicClass($elm.attr('id'), 'saved');
 }
 
 // the editing mode will be exited if user press the ESCAPE or RETURN button
@@ -129,12 +127,18 @@ Template.hacker.helpers({
 
 
 
+
+
 // RENDERING
 
 
 Template.hackerEdit.rendered = function() {
-  // initialize autocomplete address field
-  var addressInputField = $(this.find('.addresspicker'));
-  initializeAddressPicker(addressInputField);
+  if (!this.initialized) {
+    // initialize autocomplete address field
+    var addressInputField = $(this.find('.addresspicker'));
+    initializeAddressPicker(addressInputField);
+  }
+
+  this.initialized = true;
 }
 

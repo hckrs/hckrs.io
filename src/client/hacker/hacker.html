@@ -12,65 +12,70 @@
 </template>
 
 <template name="hackerEdit">
+  <h3>Profile of {{profile.name}}</h3>
   <div id="hacker" class="row row-fluid">
     <div class="span6">
-      <dl>
-        <dt>picture</dt>
-        <dd><img src="{{profile.picture}}" class="picture" alt="" /></dd>
+      
+      <form class="form-horizontal">
 
-        <dt>name</dt>
-        <dd><input type="text" name="profile.name" class="text save" value="{{profile.name}}" placeholder="full name" /></dd>
+        <img src="{{profile.picture}}" class="hacker-picture" alt="" />    
+    
+        <div class="control-group">
+          <label class="control-label" for="inputName">Name</label>
+          <div class="controls">
+            <input type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Email</label>
+          <div class="controls">
+            <input type="email" name="email" data-field="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputAddress">Address</label>
+          <div class="controls">
+              <input type="text" class="text addresspicker" value="{{profile.address.text}}" placeholder="address" autocomplete="off" id="inputAddress" />
+              {{#constant}}
+              <div id="map"></div>
+              {{/constant}}  
+          </div>
+        </div>
+  
+        <div class="control-group">
+          <label class="control-label">Facebook</label>
+          <div class="controls">
+            {{#if profile.social.facebook}}
+              <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
+            {{else}}
+              <a href="#" id="addFacebookButton">add facebook</a>
+            {{/if}}
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Github</label>
+          <div class="controls">
+            {{#if profile.social.github}}
+              <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
+            {{else}}
+              <a href="#" id="addGithubButton">add github</a>
+            {{/if}}
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Twitter</label>
+          <div class="controls">
+            {{#if profile.social.twitter}}
+              <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
+            {{else}}
+              <a href="#" id="addTwitterButton">add twitter</a>
+            {{/if}}
+          </div>
+        </div>
 
-        <dt>city</dt>
-        <dd><input type="text" name="profile.city" class="text save" value="{{profile.city}}" placeholder="city" /></dd>
-
-        <dt>language</dt>
-        <dd><input type="text" name="profile.lang" class="text save" value="{{profile.lang}}" maxlength="2" style="width: 20px;" placeholder="EN" /></dd>
-
-        <dt>address</dt>
-        <dd>
-          {{#constant}}
-          <input type="text" class="text addresspicker" value="{{profile.address.text}}" placeholder="address" autocomplete="off"  />
-          <div id="map"></div>
-          {{/constant}}
-        </dd>
-
-        <dt>e-mailaddresses</dt>
-        <dd>
-          {{#each emails}}
-            <a href="mailto:{{address}}">{{address}}</a><br/>
-          {{/each}}
-        </dd>
-
-        <dt>facebook</dt>
-        <dd>
-          {{#if profile.social.facebook}}
-            <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
-          {{else}}
-            <a href="#" id="addFacebookButton">add facebook</a>
-          {{/if}}
-        </dd>
-
-        <dt>github</dt>
-        <dd>
-          {{#if profile.social.github}}
-            <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
-          {{else}}
-            <a href="#" id="addGithubButton">add github</a>
-          {{/if}}
-        </dd>
-
-        <dt>twitter</dt>
-        <dd>
-          {{#if profile.social.twitter}}
-            <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
-          {{else}}
-            <a href="#" id="addTwitterButton">add twitter</a>
-          {{/if}}
-        </dd>
-      </dl>
+      </form>
+    
     </div>
-
     <div class="span6">
       {{> editSkills}}
     </div>
@@ -90,45 +95,31 @@
         <dt>name</dt>
         <dd>{{profile.name}}</dd>
 
-        <dt>city</dt>
-        <dd>{{profile.city}}</dd>
-
-        <dt>language</dt>
-        <dd>{{profile.lang}}</dd>
-
         <dt>e-mailaddresses</dt>
         <dd>
-          {{#each emails}}
-            <a href="mailto:{{address}}">{{address}}</a><br/>
-          {{/each}}
+          <a href="mailto:{{profile.email}}">{{profile.email}}</a>
         </dd>
 
-        <dt>facebook</dt>
-        <dd>
-          {{#if profile.social.facebook}}
+        {{#if profile.social.facebook}}
+          <dt>facebook</dt>
+          <dd>
             <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
-          {{else}}
-            <a href="#" id="addFacebookButton">add facebook</a>
-          {{/if}}
-        </dd>
+          </dd>
+        {{/if}}
 
-        <dt>github</dt>
-        <dd>
-          {{#if profile.social.github}}
+        {{#if profile.social.github}}
+          <dt>github</dt>
+          <dd>
             <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
-          {{else}}
-            <a href="#" id="addGithubButton">add github</a>
-          {{/if}}
-        </dd>
+          </dd>
+        {{/if}}
 
-        <dt>twitter</dt>
-        <dd>
-          {{#if profile.social.twitter}}
+        {{#if profile.social.twitter}}
+          <dt>twitter</dt>
+          <dd>
             <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
-          {{else}}
-            <a href="#" id="addTwitterButton">add twitter</a>
-          {{/if}}
-        </dd>
+          </dd>
+        {{/if}}
       </dl>
     </div>
 

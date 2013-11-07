@@ -6,7 +6,6 @@
 standard-app-packages
 autopublish
 insecure
-preserve-inputs
 jquery
 accounts-facebook
 accounts-github
@@ -19,3 +18,4 @@ twitter
 oauth1
 iron-router
 stylus
+preserve-inputs

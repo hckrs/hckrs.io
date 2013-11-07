@@ -17,6 +17,27 @@ omitNull = function(obj) {
 
 if (Meteor.isClient) {
 
+  // adding a class to a html element for a specified duration (in ms)
+  addDynamicClass = function(id, className, duration) {
+    duration = duration || 1000;
+    
+    var setupTimer = function(err, docId) {
+      if(duration !== -1) {
+        Meteor.setTimeout(function() {
+          DynamicClasses.remove(docId);
+        }, duration);  
+      }
+    }
+
+    DynamicClasses.insert({ elementId: id, className: className }, setupTimer);
+  }
+
+  // dynamic class helper that returns additional classes that 
+  // are setted on the html element specified by its id
+  Handlebars.registerHelper('dynamicClass', function(elementId) {
+    return _.pluck(DynamicClasses.find({ elementId: elementId }).fetch(), 'className').join(' ');
+  });
+
   Handlebars.registerHelper('loggedIn', function() {
     return !!Meteor.userId();
   });
