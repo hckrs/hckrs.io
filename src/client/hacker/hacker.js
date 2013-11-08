@@ -98,7 +98,7 @@ var fieldChanged = function(event) {
   var $elm = $(event.currentTarget)
   var keyCode = event.which;
   var ESC = '27', RET = '13';
-  if (keyCode == ESC || keyCode == RET)
+  if (keyCode == RET)
     $elm.blur()
 }
 
