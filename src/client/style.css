@@ -187,14 +187,13 @@ A.hackers-social{
 
 input.text {
   background: transparent;
-  border: 1px solid transparent;
+  border: 1px dashed transparent;
   box-shadow: none;
   border-radius: 15px;
   padding: 3px 10px;
   color: white;
 }
 input.text:hover {
-  border-style: dashed;
   border-color: white;
   background-color: rgba(255,255,255,0.1);
 }
