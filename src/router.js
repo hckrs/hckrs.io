@@ -26,7 +26,7 @@ if (Meteor.isClient) {
 
   // when login is required, render the frontpage
   var loginRequired = function() {
-    if(!Meteor.user()) {
+    if(!isLoggedIn()) {
       this.render('frontpage');
       this.stop();
     }

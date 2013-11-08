@@ -17,6 +17,11 @@ omitNull = function(obj) {
 
 if (Meteor.isClient) {
 
+  // check if user is logged in
+  isLoggedIn = function() {
+    return Session.equals('currentLoginState', 'loggedIn');
+  }
+
   // adding a class to a html element for a specified duration (in ms)
   addDynamicClass = function(id, className, duration) {
     duration = duration || 1000;
@@ -39,7 +44,7 @@ if (Meteor.isClient) {
   });
 
   Handlebars.registerHelper('loggedIn', function() {
-    return !!Meteor.userId();
+    return isLoggedIn();
   });
 
   // _currentUser helper that only contains the user id

@@ -1,36 +1,55 @@
-Session.setDefault('currentLoginState', 'loggedOut');
-Session.setDefault('subscriptionsReady', true); //XXX TODO: set to false when using subscriptions
-
-
 
 var facebookOptions = { requestPermissions: [ 'email', 'user_location' /*, 'user_birthday'*/ ] };
 var githubOptions = { requestPermissions: [ 'user:email' /* XXX not working??? */ ] };
 var twitterOptions = { requestPermissions: [ /* no permission available */ ] };
 
 
+
+// check if user's profile information is complete
+var isUserProfileComplete = function() {
+  var requiredFields = ['name', 'email', 'address'];
+  var user = Meteor.users.findOne(Meteor.userId(), {reactive: false});
+  if (!user) return false;
+  var userFields = _.pick(user.profile, requiredFields);
+  return _.size(userFields) == requiredFields.length && _.every(userFields, _.identity);
+}
+
+
+
 /* LOGIN EVENT handlers */
 
 // when user is logged in by filling in its credentials
 var manuallyLoggedIn = function() {
-  log('manually logged IN')
+  /* do nothing */
 }
 
 // when user becomes logged in
 var afterLogin = function() {
-  log('becomes logged IN')
-  if (Router._currentController.route.name == 'frontpage')
-    Router.go('hackers');
+  var route = Router._currentController.route.name; //current route
+  var noRoute = route == 'frontpage';
+  
+  if (noRoute) {
+    // if no route path is specified in the url: 
+    // A. redirect to user's profile when the information is incomplete
+    // B. redirect to the hackers list otherwise
+    if (!isUserProfileComplete())
+      Router.go('hacker', {_id: Meteor.userId()});
+    else 
+      Router.go('hackers');
+  } else {
+    // if there is a route path specified in the url
+    // show the corresponding page
+  }
 }
 
 // when user becomes logged out
 var afterLogout = function() {
-  log('becomes logged OUT')
   Router.go('frontpage');
 }
 
 // when logging in is in progress
 var loggingInInProgress = function() {
-  log('signing in....')
+  /* do nothing */
 }
 
 
@@ -38,8 +57,8 @@ var loggingInInProgress = function() {
 
 /* OBSERVE when user becomes logged in */
 
-// observer changes of the current login state
-var loginStateChanges = function(c) {
+// handle actions when login state is changed
+var loginStateHandler = function(c) {
   var state = Session.get('currentLoginState');
   if (c.firstRun) return;
   switch(state) {
@@ -50,22 +69,56 @@ var loginStateChanges = function(c) {
 }
 
 // keep updating the currentLoginState when user is loggin in or out
-var updateLoginState = function() {
-  if (Meteor.userId() && Session.get('subscriptionsReady'))
+var observeLoginState = function() {
+  if (Meteor.userId() && Session.get('subscriptionsReady')) // logged in and rady
     Session.set('currentLoginState', 'loggedIn');
-  else if (Meteor.loggingIn() || (Meteor.userId() && !Session.get('subscriptionsReady')))
+  else if (Meteor.userId()) // logged in but subscriptions arn't ready yet
+    setupPrivateSubscriptions();
+  else if (Meteor.loggingIn()) // meteor is busy with logging in the user
     Session.set('currentLoginState', 'loggingIn');
-  else 
+  else // user is logged out
     Session.set('currentLoginState', 'loggedOut');
 }
 
 // keep track of the login session
 Meteor.startup(function() {
-  Deps.autorun(loginStateChanges);
-  Deps.autorun(updateLoginState);
+  Session.set('currentLoginState', 'loggedOut');
+  Session.set('subscriptionsReady', false);
+  setupPublicSubscriptions();
+  Deps.autorun(loginStateHandler);
+  Deps.autorun(observeLoginState);
 });
 
 
+/* SUBSCRIPTIONS */
+
+var setupPublicSubscriptions = function() {
+
+  var subscribeTo = ['userData'];
+  
+  // subscribe to collections
+  _.each(subscribeTo, function(collection) {
+    Meteor.subscribe(collection);
+  });
+}
+
+var setupPrivateSubscriptions = function() {
+
+  var subscribeTo = [];
+  
+  // mark subscriptions as ready when they are completely loaded
+  var callback = _.after(subscribeTo.length, function() {
+    Session.set('subscriptionsReady', true);
+  });
+
+  // subscribe to collections
+  _.each(subscribeTo, function(collection) {
+    Meteor.subscribe(collection, callback);
+  });
+
+  if (subscribeTo.length === 0)
+    callback();
+}
 
 
 /* LOGIN functionality */
