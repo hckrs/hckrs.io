@@ -194,22 +194,27 @@ input.text {
   color: white;
 }
 input.text:hover {
-  border: 1px dashed white;
+  border-style: dashed;
+  border-color: white;
   background-color: rgba(255,255,255,0.1);
 }
 input.text:focus {
-  border: 1px solid white;
+  border-style: solid;
+  border-color: white;
   background-color: rgba(255,255,255,0.1);
 }
 input.text.saved {
-  border: 1px solid rgba(0,0,0,0);
-  color: #111;
-  background-color: rgba(0,0,0,0.1);
+  border-color: #aaeeaa;
+  background-color: rgba(160,255,160,0.1);
+}
+input.text.invalid {
+  border-color: orange;
 }
 input.text::-webkit-input-placeholder { /* WebKit browsers */ color: #bbb; }
 input.text:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #bbb; }
 input.text::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #bbb; }
 input.text:-ms-input-placeholder { /* Internet Explorer 10+ */ color: #bbb; }
+
 /* END input elements */
 
 
