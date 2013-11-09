@@ -69,7 +69,11 @@ var leaveMap = function() {
 
 // increase the size of the map with animation
 var increaseMapSize = function($map) {
-  resetMapSize($map); // make sure that previous animation will be canceled
+  if (increasedMode) 
+    return; //already increased
+
+  increasedMode = true;
+  map.zoomIn(1, {animate: false});
 
   var startY = $map.offset().top - $(document).scrollTop();
 
@@ -79,9 +83,6 @@ var increaseMapSize = function($map) {
     top: startY,
     left: $map.offset().left
   });
-
-  increasedMode = true;
-  map.zoomIn(1);
   
   // increase size with animation 
   $map.animate({
@@ -94,11 +95,6 @@ var increaseMapSize = function($map) {
 
 // shrink map to original size
 var resetMapSize = function($map, init) {
-  if(increasedMode) {
-    map.zoomOut(1);
-    increasedMode = false;
-  }
-
   $map.stop(true).css({
     position: 'relative',
     top: 0,
@@ -106,6 +102,11 @@ var resetMapSize = function($map, init) {
     width: 'inherit',
     height: 'inherit'
   });
+
+  if(increasedMode) {
+    map.zoomOut(1, {animate: false});
+    increasedMode = false;
+  }
 
   map.invalidateSize();
 }
