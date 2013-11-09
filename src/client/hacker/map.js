@@ -1,16 +1,20 @@
 
-var mouseTimer = null;
-var map;
+var map; // instance to the leaflet map
+var mouseTimer = null; // delay to increase map
+var increasedMode = false; // map is in increased mode
 
 
 // initialize the map so the user can pick a location
-var initializeMap = function() {
+var initializeMap = function(mapElement) {
 
   // Leaflet settings
   L.Icon.Default.imagePath = Meteor.absoluteUrl("img/leaflet");
   
   // set up the map
-  map = new L.Map('map');
+  map = new L.Map(mapElement);
+
+  // start the map in Lyon
+  map.setView(new L.LatLng(45.764043, 4.835659), 13);
 
   // create the tile layer with correct attribution
   // var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -25,17 +29,32 @@ var initializeMap = function() {
   var cloudMadeLayer = L.tileLayer(url, {attribution: '', maxZoom: 18});
   map.addLayer(cloudMadeLayer);
 
-  // start the map in Lyon
-  map.setView(new L.LatLng(45.764043, 4.835659), 12);
+  // init user location marker
+  initMarker();
+}
 
-  // marker
-  var marker = L.marker([45.764043, 4.835659]).addTo(map);
+// show user's location by showing a marker on the map 
+var initMarker = function() {
+  var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
+  var location = Meteor.user().profile.location || defaultLocation;
+  
+  // create marker
+  var marker = L.marker(location, {draggable: true});
+  marker.on('dragend', markerLocationChanged);
+  marker.addTo(map);
+}
+
+// fired when marker location is changed by dragging the marker
+var markerLocationChanged = function(event) {
+  var marker = event.target;
+  var latlng = marker.getLatLng();
+  saveLocation(latlng);
 }
 
 // when mouse enters the map
 var enterMap = function(event) {
   var $map = $(event.currentTarget);
-  var delay = 500;
+  var delay = 400;
   var execute = _.partial(increaseMapSize, $map);
   mouseTimer = Meteor.setTimeout(execute, delay);
 } 
@@ -60,6 +79,9 @@ var increaseMapSize = function($map) {
     top: startY,
     left: $map.offset().left
   });
+
+  increasedMode = true;
+  map.zoomIn(1);
   
   // increase size with animation 
   $map.animate({
@@ -71,7 +93,12 @@ var increaseMapSize = function($map) {
 }
 
 // shrink map to original size
-var resetMapSize = function($map) {
+var resetMapSize = function($map, init) {
+  if(increasedMode) {
+    map.zoomOut(1);
+    increasedMode = false;
+  }
+
   $map.stop(true).css({
     position: 'relative',
     top: 0,
@@ -79,9 +106,17 @@ var resetMapSize = function($map) {
     width: 'inherit',
     height: 'inherit'
   });
+
   map.invalidateSize();
 }
 
+
+
+// DATABASE operations
+
+var saveLocation = function(location) {
+  Meteor.users.update(Meteor.userId(), {$set: {'profile.location': location}});
+}
 
 
 // EVENTS
@@ -96,7 +131,7 @@ Template.hackerEdit.events({
 
 Template.hackerEdit.rendered = function() {
   if (!this.initialized)
-    initializeMap(); // initialize map
+    initializeMap(this.find('#map')); // initialize map
   
   this.initialized = true;
 }

@@ -20,8 +20,8 @@
     email: String,      // e-mailadress
     lang: String,       // language e.a. 'en', 'nl' or 'fr'
     location: {
-      latitude: Number,
-      longitude: Number
+      lat: Number,      // latitude
+      lng: Number       // longitude
     },
     social: {
       facebook: String,  // url to user's facebook profile
