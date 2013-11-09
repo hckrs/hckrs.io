@@ -36,6 +36,11 @@
       github: String,    // url to user's github profile
       twitter: String    // url to user's twitter profile
     },
+    socialPicture: {
+      facebook: String,  // url to user's facebook picture
+      github: String,    // url to user's github picture
+      twitter: String    // url to user's twitter picture
+    },
     skills: [ String ],           // array of skill name
     favoriteSkills: [ String ]    // skills that are also marked as favorite
   },

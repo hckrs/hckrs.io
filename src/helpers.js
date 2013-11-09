@@ -23,11 +23,10 @@ if (Meteor.isClient) {
   }
 
   // adding a class to a html element for a specified duration (in ms)
-  addDynamicClass = function(id, className, duration) {
-    duration = duration || 1000;
-    
+  addDynamicClass = function($elm, className, duration) {
+    var id = ($elm instanceof $) ? $elm.attr('id') : $elm;
     var setupTimer = function(err, docId) {
-      if(duration !== -1) {
+      if(duration) {
         Meteor.setTimeout(function() {
           DynamicClasses.remove(docId);
         }, duration);  
@@ -35,6 +34,14 @@ if (Meteor.isClient) {
     }
 
     DynamicClasses.insert({ elementId: id, className: className }, setupTimer);
+  }
+
+  // remove a dynamic class
+  removeDynamicClass = function($elm, className) {
+    var id = ($elm instanceof $) ? $elm.attr('id') : $elm;
+    DynamicClasses.find({ elementId: id }).forEach(function(doc) {
+      DynamicClasses.remove(doc._id);  
+    });
   }
 
   // dynamic class helper that returns additional classes that 

@@ -1,9 +1,69 @@
 @import 'nib'
 
 #hacker {
+  
   #map {
     width: 300px;
     height: 300px;
     position: relative;
   }
+  
+  #profilePicture {
+    position: relative;
+    img.picture {
+      width: 120px;
+      height: 120px;
+      border-radius: 60px;
+    }
+    div.current-picture {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      .change {
+        display: none;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        width: 100%;
+        text-align: center;
+        color: white;
+        margin-top: 50px;
+      }
+      &:hover {
+        .change {
+          display: block;
+        }
+        img.picture {
+          -webkit-filter: blur(2px) brightness(0.7);
+          -moz-filter: blur(2px) brightness(0.7);
+          -o-filter: blur(2px) brightness(0.7);
+          -ms-filter: blur(2px) brightness(0.7);
+        }
+      }
+    }
+    div.picture-choser {
+      display: none;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 3;
+      width: 100%;
+      background-color: rgba(255,255,255,0.9);
+      padding: 10px;
+      label {
+        float: left;
+        text-align: center;
+      }
+      .label-text {
+        margin-top: 8px;
+      }
+    }
+    div.picture-choser.show {
+      display: block;
+    }
+  }
+  
+
 }

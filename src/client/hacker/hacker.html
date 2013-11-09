@@ -15,10 +15,51 @@
   <h3>Profile of {{profile.name}}</h3>
   <div id="hacker" class="row row-fluid">
     <div class="span6">
+
+
       
       <form class="form-horizontal">
 
-        <img src="{{profile.picture}}" class="hacker-picture" alt="" />    
+        <div id="profilePicture">
+          <div class="current-picture">
+            <div class="change hide">change</div>
+            {{#constant}}
+              <img src="{{profile.picture}}" class="picture" alt="" />
+            {{/constant}}
+          </div>
+          <div class="picture-choser {{dynamicClass 'pictureChoser'}}" id="pictureChoser">
+            {{#with profile.socialPicture}}
+              {{#if facebook}}
+                <label for="inputPictureFacebook" class="radio">
+                  <img src="{{facebook}}" class="picture" alt="" />    
+                  <div class="label-text">
+                    <input type="radio" name="picture" value="{{facebook}}" id="inputPictureFacebook" {{selected facebook}} />
+                    Facebook
+                  </div>
+                </label>
+              {{/if}}
+              {{#if twitter}}
+                <label for="inputPictureTwitter" class="radio">
+                  <img src="{{twitter}}" class="picture" alt="" />    
+                  <div class="label-text">
+                    <input type="radio" name="picture" value="{{twitter}}" id="inputPictureTwitter" {{selected twitter}} />
+                    Twitter
+                  </div>
+                </label>
+              {{/if}}
+              {{#if github}}
+                <label for="inputPictureGithub" class="radio">
+                  <img src="{{github}}" class="picture" alt="" />    
+                  <div class="label-text">
+                    <input type="radio" name="picture" value="{{github}}" id="inputPictureGithub" {{selected github}} />
+                    Github
+                  </div>
+                </label>
+              {{/if}}
+            {{/with}}
+            <div class="clear"></div>
+          </div>
+        </div>
     
         <div class="control-group">
           <label class="control-label" for="inputName">Name</label>

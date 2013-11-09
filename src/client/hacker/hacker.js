@@ -73,7 +73,7 @@ var initializeAddressPicker = function($addressInputField) {
     $addressInputField.removeClass('invalid');
     var address = parseGeocodeResult(data);
     saveAddress(address);
-    addDynamicClass($addressInputField.attr('id'), 'saved'); // show feedback on input element
+    addDynamicClass($addressInputField, 'saved', 1000); // show feedback on input element
   });
 }
 
@@ -90,18 +90,45 @@ var saveChangedField = function(event) {
   Meteor.users.update(Meteor.userId(), {$set: modifier});
 
   // show feedback on input element
-  addDynamicClass($elm.attr('id'), 'saved');
+  addDynamicClass($elm, 'saved', 1000);
 }
 
 // the editing mode will be exited if user press the ESCAPE or RETURN button
 var fieldChanged = function(event) {
-  var $elm = $(event.currentTarget)
+  var $elm = $(event.currentTarget);  //input element
   var keyCode = event.which;
   var ESC = '27', RET = '13';
   if (keyCode == RET)
     $elm.blur()
 }
 
+// show picture choser when user clicked on the current profile picture
+var showPictureChoser = function() {
+  var $elm = $("#hacker #profilePicture .picture-choser");
+  addDynamicClass($elm, 'show');
+}
+
+// hide picture choser
+var hidePictureChoser = function() {
+  var $elm = $("#hacker #profilePicture .picture-choser");
+  removeDynamicClass($elm, 'show');
+}
+
+// user has selected a profile picture
+var pictureChanged = function(event) {
+  var $picture = $("#hacker #profilePicture .current-picture img.picture");
+  var $elm = $(event.currentTarget); //input element
+  var value = $elm.val();
+
+  // hide picture-choser
+  hidePictureChoser();
+
+  // replace current-image in the template
+  $picture.attr('src', value);
+
+  // store in database
+  Meteor.users.update(Meteor.userId(), {$set: {'profile.picture': value}});
+}
 
 // save user's address
 var saveAddress = function(address) {
@@ -114,7 +141,10 @@ var saveAddress = function(address) {
 
 Template.hackerEdit.events({
   "blur input.save": saveChangedField,
-  "keyup input.save": fieldChanged
+  "keyup input.save": fieldChanged,
+  "click .current-picture": showPictureChoser,
+  "mouseleave .picture-choser": hidePictureChoser,
+  "click input[name='picture']": pictureChanged
 });
 
 
@@ -125,7 +155,12 @@ Template.hacker.helpers({
   "hacker": function() { return hacker(); }
 });
 
-
+Template.hackerEdit.helpers({
+  "selected": function(socialPicture) { 
+    var isSelected = Meteor.user().profile.picture == socialPicture;
+    return  isSelected ? 'checked="checked"' : "";
+  }
+});
 
 
 

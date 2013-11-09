@@ -187,7 +187,7 @@ var fetchUserData = function(user, service) {
 var mergeUserData = function(user, service, userData) {
   
   // data used for creating the user profile
-  var extract = ['name', 'picture', 'city', 'lang', 'email' /*, 'gender', 'birthday'*/];
+  var extract = ['name', 'city', 'lang', 'email' /*, 'gender', 'birthday'*/];
   var data = _.pick(userData, extract);
 
   // fill undefined or null properties in user's profile with the new user data
@@ -196,7 +196,12 @@ var mergeUserData = function(user, service, userData) {
   // customized profile properties
   if (userData.link) {
     if (!user.profile.social) user.profile.social = {};
-    user.profile.social[service] = userData.link
+    user.profile.social[service] = userData.link;
+  }
+  if (userData.picture) {
+    if (!user.profile.socialPicture) user.profile.socialPicture = {};
+    user.profile.socialPicture[service] = userData.picture;
+    if (!user.profile.picture) user.profile.picture = userData.picture;
   }
 
   // add e-mail address to user's account
