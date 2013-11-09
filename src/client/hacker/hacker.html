@@ -74,12 +74,13 @@
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputAddress">Address</label>
+          <label class="control-label">Address</label>
           <div class="controls">
-              <input type="text" class="text addresspicker" value="{{profile.address.text}}" placeholder="address" autocomplete="off" id="inputAddress" />
-              {{#constant}}
-              <div id="map"></div>
-              {{/constant}}  
+              <div id="mapWrapper"> 
+                {{#constant}}
+                <div id="map"></div>
+                {{/constant}}  
+              </div>
           </div>
         </div>
   
@@ -135,11 +136,6 @@
 
         <dt>name</dt>
         <dd>{{profile.name}}</dd>
-
-        <dt>e-mailaddresses</dt>
-        <dd>
-          <a href="mailto:{{profile.email}}">{{profile.email}}</a>
-        </dd>
 
         {{#if profile.social.facebook}}
           <dt>facebook</dt>

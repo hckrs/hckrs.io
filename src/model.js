@@ -19,17 +19,9 @@
     name: String,       // full name of the user    
     email: String,      // e-mailadress
     lang: String,       // language e.a. 'en', 'nl' or 'fr'
-    address: {
+    location: {
       latitude: Number,
-      longitude: Number,
-      street: String, 
-      streetNumber: String,
-      city: String,
-      zipcode: String,
-      country: String,
-      region1: String,   // this is called 'provintie' in The Netherlands
-      region2: String,   // this is called 'gemeente' in The Netherlands
-      text: String       // formatted address that includes all address parts
+      longitude: Number
     },
     social: {
       facebook: String,  // url to user's facebook profile
