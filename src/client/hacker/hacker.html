@@ -62,6 +62,37 @@
         </div>
     
         <div class="control-group">
+          <label class="control-label">Type of hacker</label>
+          <div class="controls">
+            <label for="inputClassLife" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassLife" data-type="life" {{classChecked "life"}} />
+              Life hacker
+            </label>
+            <label for="inputClassHardware" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassHardware" data-type="hardware" {{classChecked "hardware"}} />
+              Hardware hacker
+            </label>
+            <label for="inputClassDesign" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassDesign" data-type="design" {{classChecked "design"}} />
+              Design hacker
+            </label>
+            <label for="inputClassSoftware" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassSoftware" data-type="software" {{classChecked "software"}} />
+              Software hacker
+            </label>
+            <label for="inputClassWeb" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassWeb" data-type="web" {{classChecked "web"}} />
+              Web hacker
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputHomepage">Homepage</label>
+          <div class="controls">
+            <input type="text" name="homepage" data-field="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
+          </div>
+        </div>
+        <div class="control-group">
           <label class="control-label" for="inputName">Name</label>
           <div class="controls">
             <input type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" />
@@ -136,6 +167,20 @@
 
         <dt>name</dt>
         <dd>{{profile.name}}</dd>
+
+        {{#if profile.homepage}}
+          <dt>homepage</dt>
+          <dd><a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a></dd>
+        {{/if}}
+
+        {{#if profile.classes}}
+          <dt>type of hacker</dt>
+          <dd>
+            {{#each profile.classes}}
+              <span>{{this}}</span>
+            {{/each}}
+          </dd>
+        {{/if}}
 
         {{#if profile.social.facebook}}
           <dt>facebook</dt>

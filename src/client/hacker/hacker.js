@@ -68,6 +68,18 @@ var pictureChanged = function(event) {
   Meteor.users.update(Meteor.userId(), {$set: {'profile.picture': value}});
 }
 
+// user has checked which type of hacker he is
+var classesChanged = function(event) {
+  var $elm = $(event.currentTarget);
+  var type = $elm.data('type');
+  var checked = $elm.is(':checked');
+  
+  if (checked) // add
+    Meteor.users.update(Meteor.userId(), {$addToSet: {'profile.classes': type}});
+  else // remove
+    Meteor.users.update(Meteor.userId(), {$pull: {'profile.classes': type}});
+}
+
 
 
 
@@ -78,8 +90,10 @@ Template.hackerEdit.events({
   "keyup input.save": fieldChanged,
   "click .current-picture": showPictureChoser,
   "mouseleave .picture-choser": hidePictureChoser,
-  "click input[name='picture']": pictureChanged
+  "click input[name='picture']": pictureChanged,
+  "click input[name='class']": classesChanged
 });
+
 
 
 // TEMPLATE DATA
@@ -93,6 +107,10 @@ Template.hackerEdit.helpers({
   "selected": function(socialPicture) { 
     var isSelected = Meteor.user().profile.picture == socialPicture;
     return  isSelected ? 'checked="checked"' : "";
+  },
+  "classChecked": function(type) {
+    var isChecked = _.contains(Meteor.user().profile.classes, type);
+    return isChecked ? 'checked="checked"' : "";
   }
 });
 
