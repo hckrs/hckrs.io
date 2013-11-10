@@ -15,6 +15,14 @@ omitNull = function(obj) {
 }
 
 
+// execute a performance intensive function after a short delay
+// this delay is used to update UI elements.
+// Notice that this function runs asynchronously.
+exec = function(func) {
+  Meteor.setTimeout(func, 50);
+}
+
+
 if (Meteor.isClient) {
 
   // check if user is logged in
@@ -24,7 +32,13 @@ if (Meteor.isClient) {
 
   // adding a class to a html element for a specified duration (in ms)
   addDynamicClass = function($elm, className, duration) {
-    var id = ($elm instanceof $) ? $elm.attr('id') : $elm;
+    var id = $elm; 
+    
+    if ($elm instanceof $) {
+      id = $elm.attr('id');
+      $elm.addClass(className); //direct feedback for better usability
+    }
+
     var setupTimer = function(err, docId) {
       if(duration) {
         Meteor.setTimeout(function() {
@@ -33,14 +47,24 @@ if (Meteor.isClient) {
       }
     }
 
-    DynamicClasses.insert({ elementId: id, className: className }, setupTimer);
+    exec(function() {
+      DynamicClasses.insert({ elementId: id, className: className }, setupTimer);
+    });
   }
 
   // remove a dynamic class
   removeDynamicClass = function($elm, className) {
-    var id = ($elm instanceof $) ? $elm.attr('id') : $elm;
-    DynamicClasses.find({ elementId: id }).forEach(function(doc) {
-      DynamicClasses.remove(doc._id);  
+    var id = $elm; 
+    
+    if ($elm instanceof $) {
+      id = $elm.attr('id');
+      $elm.removeClass(className); //direct feedback for better usability
+    }
+
+    exec(function() {
+      DynamicClasses.find({ elementId: id }).forEach(function(doc) {
+        DynamicClasses.remove(doc._id);  
+      });
     });
   }
 

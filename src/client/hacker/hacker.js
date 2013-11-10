@@ -23,12 +23,14 @@ var saveChangedField = function(event) {
   var field = $elm.data('field');
   var value = $elm.val();
 
-  var modifier = {};
-  modifier[field] = value;
-  Meteor.users.update(Meteor.userId(), {$set: modifier});
-
   // show feedback on input element
   addDynamicClass($elm, 'saved', 1000);
+
+  exec(function() {
+    var modifier = {};
+    modifier[field] = value;
+    Meteor.users.update(Meteor.userId(), {$set: modifier});
+  });
 }
 
 // the editing mode will be exited if user press the ESCAPE or RETURN button
@@ -65,7 +67,9 @@ var pictureChanged = function(event) {
   $picture.attr('src', value);
 
   // store in database
-  Meteor.users.update(Meteor.userId(), {$set: {'profile.picture': value}});
+  exec(function() {
+    Meteor.users.update(Meteor.userId(), {$set: {'profile.picture': value}});
+  });
 }
 
 // user has checked which type of hacker he is
@@ -74,10 +78,13 @@ var classesChanged = function(event) {
   var type = $elm.data('type');
   var checked = $elm.is(':checked');
   
-  if (checked) // add
-    Meteor.users.update(Meteor.userId(), {$addToSet: {'profile.classes': type}});
-  else // remove
-    Meteor.users.update(Meteor.userId(), {$pull: {'profile.classes': type}});
+  exec(function() {
+    if (checked) // add
+      Meteor.users.update(Meteor.userId(), {$addToSet: {'profile.classes': type}});
+    else // remove
+      Meteor.users.update(Meteor.userId(), {$pull: {'profile.classes': type}});
+  });
+  
 }
 
 
