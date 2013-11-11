@@ -60,7 +60,7 @@ var enterMap = function(event) {
 } 
 
 // when mouse leaves the map
-var leaveMap = function() {
+var leaveMap = function(event) {
   var $map = $(event.currentTarget);
   if (mouseTimer)
     Meteor.clearTimeout(mouseTimer);
