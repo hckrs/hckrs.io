@@ -1,45 +1,36 @@
 
 var map; // instance to the leaflet map
+var marker; // marker for user's location
+var zoom = 13; // the default zoom value;
 var mouseTimer = null; // delay to increase map
 var increasedMode = false; // map is in increased mode
 
 
 // initialize the map so the user can pick a location
 var initializeMap = function(mapElement) {
-
-  // Leaflet settings
-  L.Icon.Default.imagePath = Meteor.absoluteUrl("img/leaflet");
   
+  // user's location
+  var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
+  var location = Meteor.user().profile.location || defaultLocation;
+
+  // map options
+  var mapOptions = {
+    scrollWheelZoom: false
+  };
+
   // set up the map
-  map = new L.Map(mapElement);
+  map = L.mapbox.map('map', SETTINGS.MAPBOX_MAP, mapOptions);
 
   // start the map in Lyon
-  map.setView(new L.LatLng(45.764043, 4.835659), 13);
+  map.setView(location, zoom);
 
-  // create the tile layer with correct attribution
-  // var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  // var osmAttrib='Map data © OpenStreetMap contributors';
-  // var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});   
-  // map.addLayer(osm);
-  
-  // create the tile layer with correct attribution
-  var api_key = SETTINGS.CLOUDEMADE_API_KEY;
-  var url = 'http://{s}.tile.cloudmade.com/'+api_key+'/997/256/{z}/{x}/{y}.png';
-  var attribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
-  var cloudMadeLayer = L.tileLayer(url, {attribution: '', maxZoom: 18});
-  map.addLayer(cloudMadeLayer);
-
-  // init user location marker
-  initMarker();
+  // init marker at user's location
+  initMarker(location);
 }
 
 // show user's location by showing a marker on the map 
-var initMarker = function() {
-  var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
-  var location = Meteor.user().profile.location || defaultLocation;
-  
-  // create marker
-  var marker = L.marker(location, {draggable: true});
+var initMarker = function(location) {
+  marker = L.marker(location, {draggable: true});
   marker.on('dragend', markerLocationChanged);
   marker.addTo(map);
 }
@@ -75,7 +66,22 @@ var increaseMapSize = function($map) {
   increasedMode = true;
   map.zoomIn(1, {animate: false});
 
+  // current window properties
+  var winHeight = $(window).height();
+  var winYMiddle = winHeight/2;
+
+  // current position and height
   var startY = $map.offset().top - $(document).scrollTop();
+  var startHeight = $map.height();
+  var startYMiddle = startY + startHeight/2;
+  var startYBottom = startY + startHeight;
+  var startPointY = startYMiddle > winYMiddle ? startYBottom : startY;
+  var positionAtScreenRatio = startPointY / winHeight;
+
+  // calculate new position and height
+  var newHeight = Math.min(winHeight * 0.8, 400);
+  var deltaHeight = newHeight - startHeight;
+  var deltaY = -(deltaHeight * positionAtScreenRatio);
 
   // inital values to make the map floats
   $map.css({
@@ -87,9 +93,9 @@ var increaseMapSize = function($map) {
   // increase size with animation 
   $map.animate({
     left: 0,
-    top: startY - 50,
+    top: startY + deltaY,
     width: '100%',
-    height: '400px'
+    height: newHeight
   }, { step: function() { map.invalidateSize() } });
 }
 
@@ -101,14 +107,12 @@ var resetMapSize = function($map, init) {
     left: 0,
     width: 'inherit',
     height: 'inherit'
-  });
+  }); 
 
-  if(increasedMode) {
-    map.zoomOut(1, {animate: false});
-    increasedMode = false;
-  }
-
+  map.setView(marker.getLatLng(), zoom);
   map.invalidateSize();
+  
+  increasedMode = false;
 }
 
 

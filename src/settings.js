@@ -1,9 +1,7 @@
 
 SETTINGS = {
 
-  CLOUDEMADE_API_KEY: "131afca3a3bf4f8aaf6f7a82efc43de4",
-
-  GOOGLE_API_KEY: "AIzaSyD2ikAOAtpqpl3Sg__5sRMFj-uk6Je5YMM", //hardcoded in <head> (see main.js)
+  MAPBOX_MAP: "jarnoleconte.g8igpcgk",
 
   FACEBOOK: {
     appId: "609216679124014",
