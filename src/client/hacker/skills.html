@@ -2,7 +2,7 @@
 
 <template name="skills">
   <div id="skills">
-    <h3>Skills</h3>
+    <dt>skills</dt         >
     <ul class="floating-skills">
       {{#each hackerSkills}}
       <li class="skill">
@@ -22,7 +22,6 @@
 <template name="editSkills">
   <div id="skills">
 
-    <h3>Add Skills</h3>
     {{#constant}}
     <select class="chosen-select input-skills" multiple data-placeholder="Add your language skills" >
       {{#each allSkills}}
@@ -31,7 +30,7 @@
     </select>
     {{/constant}}
 
-    <h3>My Skills</h3>
+    <!--<h3>My Skills</h3>
     <ul class="floating-skills">
       {{#isolate}}
       {{#each hackerSkills}}

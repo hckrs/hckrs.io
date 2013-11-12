@@ -16,15 +16,19 @@
   
   #profilePicture {
     position: relative;
-    img.picture {
-      width: 120px;
-      height: 120px;
-      border-radius: 60px;
+    .picture {
+      width: 160px;
+      height: 160px;
+      border-radius: 80px;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
     }
     div.current-picture {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 160px;
+      height: 160px;
       cursor: pointer;
       .change {
         display: none;
@@ -41,7 +45,7 @@
         .change {
           display: block;
         }
-        img.picture {
+        .picture {
           -webkit-filter: blur(2px) brightness(0.7);
           -moz-filter: blur(2px) brightness(0.7);
           -o-filter: blur(2px) brightness(0.7);
@@ -51,16 +55,17 @@
     }
     div.picture-choser {
       display: none;
-      position: absolute;
+      position: fixed;
       top: 0px;
       left: 0px;
-      z-index: 3;
-      width: 100%;
-      background-color: rgba(255,255,255,0.9);
-      padding: 10px;
+      margin: auto;
+      z-index: 11;
+      background-color: rgba(0,0,0,0.8);
+      padding: auto;
       label {
         float: left;
         text-align: center;
+        color: #CCC;
       }
       .label-text {
         margin-top: 8px;
@@ -70,6 +75,19 @@
       display: block;
     }
   }
-  
+
+
+  div.profile-social-container{
+    padding: 8px;
+    background-color: rgba(255,255,255,0.2);
+    border: 1px solid green;
+    border-radius:4px;
+  }
+  A.profile-social-active{
+    padding: 8px;
+    background-color: rgba(92,128,5,0.8);
+    border: 0px;
+    margin: 0px;
+  }
 
 }

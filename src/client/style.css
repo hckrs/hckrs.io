@@ -1,4 +1,3 @@
-
 html {
   height: 100%;
 }
@@ -34,8 +33,8 @@ a {
 
 a:hover{
   text-decoration: none;
-  color: yellow;
-  border-bottom: 2px dotted yellow;
+  color: #1466a8;
+  border-bottom: 2px dotted #1466a8;
   margin-bottom: -5px;
 }
 
@@ -53,7 +52,7 @@ h1 {
 }
 h2 {
   color: #6D461D;
-  font-weight: 100;
+  font-weight: 400;
   margin-top: 0;
   margin-bottom: 10px;
 }
@@ -145,9 +144,9 @@ a.header-social:hover{
   text-align: center;
 }
 
-IMG.hacker-picture {
+.hacker-picture {
   transition-property: all;
-  transition-duration: 100ms;
+  transition-duration: 300ms;
   transition-timing-function: ease-in-out;
   width: 180px;
   height: 180px;
@@ -156,20 +155,22 @@ IMG.hacker-picture {
   -moz-border-radius: 90px;
   line-height: 180px;
   font-size: 90px;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+
+  border:1px solid red;
   /*filter: url(filters.svg#grayscale);*/ /* Firefox 3.5+ */
   filter: gray; /* IE6-9 */
   -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
   margin-bottom: 8px;
 }
 
-IMG.hacker-picture:hover {
+.hacker-picture:hover {
   filter: none;
   -webkit-filter: grayscale(0);
-  box-shadow: 0px 0px 7px rgba(0,0,0,0.4); 
+  /*box-shadow: 0px 0px 7px rgba(0,0,0,0.4);*/
 }
 
 A.hackers-social{
@@ -214,6 +215,37 @@ input.text:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #bbb; }
 input.text::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #bbb; }
 input.text:-ms-input-placeholder { /* Internet Explorer 10+ */ color: #bbb; }
 
+label.checkbox{
+  float: left;
+  margin-right: 24px;
+}
+
+.control-label{
+  font-weight: 700;
+}
+
+.change{
+  line-height: 60px;
+}
+
+
+.imputPictureRadio{
+  visibility: hidden;
+}
+
 /* END input elements */
 
 
+.pictureView {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 90px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  text-align: center;
+  color: white;
+  margin: auto;
+}

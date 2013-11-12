@@ -12,100 +12,161 @@
 </template>
 
 <template name="hackerEdit">
-  <h3>Profile of {{profile.name}}</h3>
-  <div id="hacker" class="row row-fluid">
-    <div class="span6">
+  <div id="hacker">
+
 
 
       
       <form class="form-horizontal">
 
-        <div id="profilePicture">
-          <div class="current-picture">
-            <div class="change hide">change</div>
-            {{#constant}}
-              <img src="{{profile.picture}}" class="picture" alt="" />
-            {{/constant}}
-          </div>
-          <div class="picture-choser {{dynamicClass 'pictureChoser'}}" id="pictureChoser">
-            {{#with profile.socialPicture}}
-              {{#if facebook}}
-                <label for="inputPictureFacebook" class="radio">
-                  <img src="{{facebook}}" class="picture" alt="" />    
-                  <div class="label-text">
-                    <input type="radio" name="picture" value="{{facebook}}" id="inputPictureFacebook" {{selected facebook}} />
-                    Facebook
-                  </div>
-                </label>
-              {{/if}}
-              {{#if twitter}}
-                <label for="inputPictureTwitter" class="radio">
-                  <img src="{{twitter}}" class="picture" alt="" />    
-                  <div class="label-text">
-                    <input type="radio" name="picture" value="{{twitter}}" id="inputPictureTwitter" {{selected twitter}} />
-                    Twitter
-                  </div>
-                </label>
-              {{/if}}
-              {{#if github}}
-                <label for="inputPictureGithub" class="radio">
-                  <img src="{{github}}" class="picture" alt="" />    
-                  <div class="label-text">
-                    <input type="radio" name="picture" value="{{github}}" id="inputPictureGithub" {{selected github}} />
-                    Github
-                  </div>
-                </label>
-              {{/if}}
-            {{/with}}
-            <div class="clear"></div>
-          </div>
-        </div>
-    
+
         <div class="control-group">
-          <label class="control-label">Type of hacker</label>
+          <div class="control-label">
+
+            <div id="profilePicture">
+              <div class="current-picture">
+                <div class="change hide">change</div>
+                {{#constant}}
+                  <div style="background-image:url({{profile.picture}});" class="picture"></div>    
+                {{/constant}}
+              </div>
+              <div class="picture-choser {{dynamicClass 'pictureChoser'}}" id="pictureChoser">
+                {{#with profile.socialPicture}}
+                  {{#if facebook}}
+                    <label for="inputPictureFacebook" class="radio">
+                      <div style="background-image:url({{facebook}});" class="picture"></div>    
+                      <div class="label-text">
+                        <input type="radio" name="picture" value="{{facebook}}" id="inputPictureFacebook" class="imputPictureRadio" {{selected facebook}} />
+                        Facebook
+                      </div>
+                    </label>
+                  {{/if}}
+                  {{#if twitter}}
+                    <label for="inputPictureTwitter" class="radio">
+                      <div style="background-image:url({{twitter}});" class="picture"></div>    
+                      <div class="label-text">
+                        <input type="radio" name="picture" value="{{twitter}}" id="inputPictureTwitter" class="imputPictureRadio" {{selected twitter}} />
+                        Twitter
+                      </div>
+                    </label>
+                  {{/if}}
+                  {{#if github}}
+                    <label for="inputPictureGithub" class="radio">
+                      <div style="background-image:url({{github}});" class="picture"></div>    
+                      <div class="label-text">
+                        <input type="radio" name="picture" value="{{github}}" id="inputPictureGithub" class="imputPictureRadio" {{selected github}} />
+                        Github
+                      </div>
+                    </label>
+                  {{/if}}
+                {{/with}}
+                <div class="clear"></div>
+              </div>
+            </div>
+
+          </div>
           <div class="controls">
-            <label for="inputClassLife" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassLife" data-type="life" {{classChecked "life"}} />
-              Life hacker
-            </label>
-            <label for="inputClassHardware" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassHardware" data-type="hardware" {{classChecked "hardware"}} />
-              Hardware hacker
-            </label>
-            <label for="inputClassDesign" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassDesign" data-type="design" {{classChecked "design"}} />
-              Design hacker
-            </label>
-            <label for="inputClassSoftware" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassSoftware" data-type="software" {{classChecked "software"}} />
-              Software hacker
-            </label>
-            <label for="inputClassWeb" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassWeb" data-type="web" {{classChecked "web"}} />
-              Web hacker
-            </label>
+            <input type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; margin-top:68px;"/>
           </div>
         </div>
+
         <div class="control-group">
-          <label class="control-label" for="inputHomepage">Homepage</label>
+          <label class="control-label">identity</label>
           <div class="controls">
-            <input type="text" name="homepage" data-field="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
+            <div class="profile-social-container">
+              {{#if profile.social.facebook}}
+                <a href="#" id="removeFacebookButton" class="profile-social-active">Facebook</a>
+              {{else}}
+                <a href="#" id="addFacebookButton">Facebook</a>
+              {{/if}}
+              {{#if profile.social.twitter}}
+                <a href="#" id="removeTwitterButton" class="profile-social-active">Twitter</a>
+              {{else}}
+                <a href="#" id="addTwitterButton">Twitter</a>
+              {{/if}}
+              {{#if profile.social.github}}
+                <a href="#" id="removeGithubButton" class="profile-social-active">Github</a>
+              {{else}}
+                <a href="#" id="addGithubButton">Github</a>
+              {{/if}}
+            </div>
           </div>
         </div>
+      
+
         <div class="control-group">
-          <label class="control-label" for="inputName">Name</label>
-          <div class="controls">
-            <input type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" />
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label" for="inputEmail">Email</label>
+          <label class="control-label" for="inputEmail">email</label>
           <div class="controls">
             <input type="email" name="email" data-field="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" />
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label">Address</label>
+          <label class="control-label" for="inputHomepage">homepage</label>
+          <div class="controls">
+            <input type="text" name="homepage" data-field="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">hacking</label>
+          <div class="controls">
+            <label for="inputClassWeb" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassWeb" data-type="websites" {{classChecked "websites"}} />
+              websites
+            </label>
+            <label for="inputClassApp" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassApp" data-type="apps" {{classChecked "apps"}} />
+              apps
+            </label>
+            <label for="inputClassSoftware" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassSoftware" data-type="software" {{classChecked "software"}} />
+              software
+            </label>
+            <label for="inputClassDesign" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassDesign" data-type="design" {{classChecked "design"}} />
+              design
+            </label>
+            <label for="inputClassLife" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassLife" data-type="life" {{classChecked "life"}} />
+              life
+            </label>
+            <label for="inputClassHardware" class="checkbox">
+              <input type="checkbox" name="class" id="inputClassHardware" data-type="hardware" {{classChecked "hardware"}} />
+              hardware
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputSkills">skills</label>
+          <div class="controls">
+            {{> editSkills}}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">available to</label>
+          <div class="controls">
+            <label for="inputAvailableDrink" class="checkbox">
+              <input type="checkbox" name="available" id="inputAvailableDrink" data-type="AvailableDrink" {{classChecked "drink"}} />
+              have a drink
+            </label>
+            <label for="inputAvailableLunch" class="checkbox">
+              <input type="checkbox" name="available" id="inputAvailableLunch" data-type="AvailableLunch" {{classChecked "lunch"}} />
+              have lunch
+            </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="">company</label>
+          <div class="controls">
+            <input type="text" name="" data-field="" class="" value="" placeholder="name" id="" />
+            <input type="text" name="" data-field="" class="" value="http://" placeholder="" id="" />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">main location</label>
           <div class="controls">
               <div id="mapWrapper"> 
                 {{#constant}}
@@ -115,58 +176,19 @@
           </div>
         </div>
   
-        <div class="control-group">
-          <label class="control-label">Facebook</label>
-          <div class="controls">
-            {{#if profile.social.facebook}}
-              <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
-            {{else}}
-              <a href="#" id="addFacebookButton">add facebook</a>
-            {{/if}}
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Github</label>
-          <div class="controls">
-            {{#if profile.social.github}}
-              <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
-            {{else}}
-              <a href="#" id="addGithubButton">add github</a>
-            {{/if}}
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Twitter</label>
-          <div class="controls">
-            {{#if profile.social.twitter}}
-              <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
-            {{else}}
-              <a href="#" id="addTwitterButton">add twitter</a>
-            {{/if}}
-          </div>
-        </div>
 
       </form>
     
-    </div>
-    <div class="span6">
-      {{> editSkills}}
-    </div>
 
   </div>
 </template>
 
 <template name="hackerView">
-  <h3>Profile of {{profile.name}}</h3>
-  <div id="hacker" class="row row-fluid">
-
-    <div class="span6">
+  <div id="hacker" class="">
       <dl style="text-align:left;">
-        <dt>picture</dt>
-        <dd><a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></a></dd>
 
-        <dt>name</dt>
-        <dd>{{profile.name}}</dd>
+        <div style="background-image:url({{profile.picture}});margin: 0px;" class="pictureView"></div>   
+        <h3>{{profile.name}}</h3>
 
         {{#if profile.homepage}}
           <dt>homepage</dt>
@@ -174,12 +196,12 @@
         {{/if}}
 
         {{#if profile.classes}}
-          <dt>type of hacker</dt>
+          <dt>hacking</dt>
           <dd>
             {{#each profile.classes}}
               <span>{{this}}</span>
             {{/each}}
-          </dd>
+          </dd>a
         {{/if}}
 
         {{#if profile.social.facebook}}
@@ -203,11 +225,8 @@
           </dd>
         {{/if}}
       </dl>
-    </div>
 
-    <div class="span6">
       {{> skills}}
-    </div>
 
   </div>
 </template>

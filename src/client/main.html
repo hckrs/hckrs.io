@@ -72,7 +72,8 @@
 
   {{#each hackers}}
   <div class="hacker">
-    <a href="{{pathFor 'hacker'}}"><img src="{{profile.picture}}" class="hacker-picture" alt="{{profile.name}}" /></a><br/><a class="hackers-name" href="{{pathFor 'hacker'}}">{{profile.name}}</a><br/>
+    <div style="background-image:url({{profile.picture}});" class="pictureView" style="cursor: pointer;"></div>
+    <a class="hackers-name" href="{{pathFor 'hacker'}}">{{profile.name}}</a><br/>
     <!--<div class="age">{{profile.age}}</div>-->
     {{#if profile.social.facebook}}
       <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
