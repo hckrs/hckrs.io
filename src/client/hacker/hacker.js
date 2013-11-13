@@ -62,7 +62,7 @@ var hidePictureChoser = function() {
 
 // user has selected a profile picture
 var pictureChanged = function(event) {
-  var $picture = $("#hacker #profilePicture .current-picture img.picture");
+  var $picture = $("#hacker #profilePicture .current-picture .picture");
   var $elm = $(event.currentTarget); //input element
   var value = $elm.val();
 
