@@ -60,7 +60,6 @@ var saveChangedField = function(event) {
 
   exec(function() {
     var modifier = _.object([ '$set' ], [ _.object([field], [value]) ]);
-    log(modifier)
     Meteor.users.update(Meteor.userId(), modifier);
   });
 }
