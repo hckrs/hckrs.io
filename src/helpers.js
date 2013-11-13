@@ -14,6 +14,17 @@ omitNull = function(obj) {
   }); return obj;
 }
 
+// find a value in an object by giving a path
+// pathValue(user, "profile.name") --> user['profile']['name']
+pathValue = function(obj, path) {
+  var paths = path.split('.')
+  var current = obj;
+  _.each(paths, function(path) {
+    if (current[path] == undefined) return undefined;
+    current = current[path];
+  }); return current;
+}
+
 
 // execute a performance intensive function after a short delay
 // this delay is used to update UI elements.

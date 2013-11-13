@@ -24,7 +24,7 @@
       lng: Number         // longitude
     },
     homepage: String,     // external website of user 
-    classes: [ String ],  // array of types: (life|hardware|design|software|web)*
+    hacking: [ String ],  // array of types: (websites|apps|software|design|life|hardware)*
     social: {
       facebook: String,   // url to user's facebook profile
       github: String,     // url to user's github profile

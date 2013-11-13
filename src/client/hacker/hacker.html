@@ -66,7 +66,7 @@
 
           </div>
           <div class="controls" style="padding-top:68px;">
-            <input id="text" type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
+            <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
             {{#if profile.social.facebook}}
               <a href="#" id="removeFacebookButton" class="profile-social-active"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Facebook</a>
             {{else}}
@@ -89,41 +89,41 @@
         <div class="control-group">
           <label class="control-label" for="inputEmail">email</label>
           <div class="controls">
-            <input type="email" name="email" data-field="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" />
+            <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" />
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="inputHomepage">homepage</label>
           <div class="controls">
-            <input type="text" name="homepage" data-field="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
+            <input type="text" name="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label">hacking</label>
           <div class="controls">
-            <label for="inputClassWeb" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassWeb" data-type="websites" {{classChecked "websites"}} />
+            <label for="inputHackingWeb" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingWeb" value="websites" {{checked "profile.hacking" "websites"}} />
               websites
             </label>
-            <label for="inputClassApp" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassApp" data-type="apps" {{classChecked "apps"}} />
+            <label for="inputHackingApp" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
               apps
             </label>
-            <label for="inputClassSoftware" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassSoftware" data-type="software" {{classChecked "software"}} />
+            <label for="inputHackingSoftware" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
               software
             </label>
-            <label for="inputClassDesign" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassDesign" data-type="design" {{classChecked "design"}} />
+            <label for="inputHackingDesign" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
               design
             </label>
-            <label for="inputClassLife" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassLife" data-type="life" {{classChecked "life"}} />
+            <label for="inputHackingLife" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
               life
             </label>
-            <label for="inputClassHardware" class="checkbox">
-              <input type="checkbox" name="class" id="inputClassHardware" data-type="hardware" {{classChecked "hardware"}} />
+            <label for="inputHackingHardware" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
               hardware
             </label>
           </div>
@@ -139,21 +139,21 @@
           <label class="control-label">available to</label>
           <div class="controls">
             <label for="inputAvailableDrink" class="checkbox">
-              <input type="checkbox" name="available" id="inputAvailableDrink" data-type="AvailableDrink" {{classChecked "drink"}} />
+              <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
               have a drink
             </label>
             <label for="inputAvailableLunch" class="checkbox">
-              <input type="checkbox" name="available" id="inputAvailableLunch" data-type="AvailableLunch" {{classChecked "lunch"}} />
+              <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
               have lunch
             </label>
           </div>
         </div>
 
         <div class="control-group">
-          <label class="control-label" for="">company</label>
+          <label class="control-label" for="inputCompany">company</label>
           <div class="controls">
-            <input type="text" name="" data-field="" class="" value="" placeholder="name" id="" />
-            <input type="text" name="" data-field="" class="" value="http://" placeholder="" id="" />
+            <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" />
+            <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" />
           </div>
         </div>
 

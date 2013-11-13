@@ -22,22 +22,51 @@ var hackerId = function () { return Session.get('hackerId'); }
 });
 
 
+
+// input-to-database helper for array values.
+// when user check or uncheck a checkboxes it will be saved to the database.
+//
+// this is how the html is related to the database
+// input[name]  --> database field name
+// input[value] --> the value to store
+// input[checked] --> if checked then add to array or remove otherwise
+var addToSet = function(event) {
+  var $elm = $(event.currentTarget);
+  var field = $elm.attr('name');
+  var value = $elm.val();
+  var checked = $elm.is(':checked');
+  
+  exec(function() {
+    var action = checked ? '$addToSet' : '$pull';
+    var modifier = _.object([ action ], [ _.object([field], [value]) ]);
+    Meteor.users.update(Meteor.userId(), modifier);
+  });
+}
+
+// input-to-database helper for text fields
 // when user starts typing in an input field
 // directly update the user info in the database  
+//
+// this is how the html is related to the database
+// input[name]  --> database field name
+// input[value] --> the value to store
 var saveChangedField = function(event) {
   var $elm = $(event.currentTarget); //input element
-  var field = $elm.data('field');
+  var field = $elm.attr('name');
   var value = $elm.val();
 
   // show feedback on input element
   addDynamicClass($elm, 'saved', 1000);
 
   exec(function() {
-    var modifier = {};
-    modifier[field] = value;
-    Meteor.users.update(Meteor.userId(), {$set: modifier});
+    var modifier = _.object([ '$set' ], [ _.object([field], [value]) ]);
+    log(modifier)
+    Meteor.users.update(Meteor.userId(), modifier);
   });
 }
+
+
+
 
 // the editing mode will be exited if user press the ESCAPE or RETURN button
 var fieldChanged = function(event) {
@@ -70,7 +99,7 @@ var pictureChanged = function(event) {
   hidePictureChoser();
 
   // replace current-image in the template
-  $picture.attr('src', value);
+  $picture.css('background-image', "url('"+value+"')");
 
   // store in database
   exec(function() {
@@ -78,20 +107,8 @@ var pictureChanged = function(event) {
   });
 }
 
-// user has checked which type of hacker he is
-var classesChanged = function(event) {
-  var $elm = $(event.currentTarget);
-  var type = $elm.data('type');
-  var checked = $elm.is(':checked');
-  
-  exec(function() {
-    if (checked) // add
-      Meteor.users.update(Meteor.userId(), {$addToSet: {'profile.classes': type}});
-    else // remove
-      Meteor.users.update(Meteor.userId(), {$pull: {'profile.classes': type}});
-  });
-  
-}
+
+
 
 
 
@@ -99,12 +116,17 @@ var classesChanged = function(event) {
 // EVENTS
 
 Template.hackerEdit.events({
-  "blur input.save": saveChangedField,
-  "keyup input.save": fieldChanged,
+
+  // general autosave input fields
+  "blur input.text.save": saveChangedField,
+  "keyup input.text.save": fieldChanged,
+  "click input[type='checkbox'].save": addToSet,
+
+  // special input fields
   "click .current-picture": showPictureChoser,
   "mouseleave .picture-choser": hidePictureChoser,
   "click input[name='picture']": pictureChanged,
-  "click input[name='class']": classesChanged
+
 });
 
 
@@ -121,8 +143,8 @@ Template.hackerEdit.helpers({
     var isSelected = Meteor.user().profile.picture == socialPicture;
     return  isSelected ? 'checked="checked"' : "";
   },
-  "classChecked": function(type) {
-    var isChecked = _.contains(Meteor.user().profile.classes, type);
+  "checked": function(field, value) {
+    var isChecked = _.contains(pathValue(Meteor.user(), field), value);
     return isChecked ? 'checked="checked"' : "";
   }
 });
