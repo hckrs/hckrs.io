@@ -1,8 +1,10 @@
 
-var facebookOptions = { requestPermissions: [ 'email', 'user_location' /*, 'user_birthday'*/ ] };
-var githubOptions = { requestPermissions: [ 'user:email' /* XXX not working??? */ ] };
-var twitterOptions = { requestPermissions: [ /* no permission available */ ] };
 
+var serviceOptions = {
+  "facebook": { requestPermissions: [ 'email', 'user_location' /*, 'user_birthday'*/ ] },
+  "github": { requestPermissions: [ 'user:email' /* XXX not working??? */ ] },
+  "twitter": { requestPermissions: [ /* no permission available */ ] }
+}
 
 
 // check if user's profile information is complete
@@ -127,15 +129,22 @@ var setupPrivateSubscriptions = function() {
 var loginCallback = function(err) {
   if (err) {
     // XXX TODO: handle the case when login fails
+    log("Error", err);
   } else {
     manuallyLoggedIn();
   }
 }
 
 // login by using a external service
-var loginWithFacebook = function() { Meteor.loginWithFacebook(facebookOptions, loginCallback); }
-var loginWithGithub = function() { Meteor.loginWithGithub(githubOptions, loginCallback); }
-var loginWithTwitter = function() { Meteor.loginWithTwitter(twitterOptions, loginCallback); }
+var loginWithService = function(event) {
+  var $elm = $(event.currentTarget);
+  var service = $elm.data('service');
+  var options = serviceOptions[service];
+  var Service = capitaliseFirstLetter(service);
+
+  // login
+  Meteor["loginWith"+Service](options, loginCallback);
+}
 
 // log out the current user
 var logout = function() { 
@@ -145,9 +154,7 @@ var logout = function() {
 
 // bind the sign up buttons to the corresponding actions
 Template.main.events({
-  "click #signupWithFacebook": loginWithFacebook,
-  "click #signupWithGithub":   loginWithGithub,
-  "click #signupWithTwitter":  loginWithTwitter
+  "click .signupService": loginWithService
 });
 
 // bind the sign out button to the sign out action
@@ -157,11 +164,14 @@ Template.main.events({
 
 
 
+
+
 /* ADD SERVICES to my profile */
 
 // add an external service to current user's account
-var addService = function(service, Service, options) {
-
+var _addService = function(service, options) {
+  var Service = window[capitaliseFirstLetter(service)];
+  
   // request a token from the external service
   Service.requestCredential(options, function(token) {
 
@@ -173,15 +183,26 @@ var addService = function(service, Service, options) {
   });
 }
 
-// adding one of the external services to user's account
-var addFacebook = function() { addService('facebook', Facebook, facebookOptions); }
-var addGithub = function() { addService('github', Github, githubOptions); }
-var addTwitter = function() { addService('twitter', Twitter, twitterOptions); }
+// remove an external service from user's account
+var _removeService = function(service) {
+  Meteor.call("removeServiceFromUser", service, function(err, res) {
+    if (err) throw new Meteor.Error(500, err.reason);    
+  });  
+}
+
+// user toggles an external service
+// add or remove the service from user's account
+var toggleService = function (event) {
+  var $elm = $(event.currentTarget);
+  var service = $elm.data('service');
+  var options = serviceOptions[service];
+  var isLinked = !!Meteor.user().profile.social[service];
+
+  isLinked ? _removeService(service) : _addService(service, options);
+}
 
 Template.hacker.events({
-  "click #addFacebookButton": addFacebook,
-  "click #addGithubButton":   addGithub,
-  "click #addTwitterButton":  addTwitter
+  "click .toggleService": toggleService
 });
 
 

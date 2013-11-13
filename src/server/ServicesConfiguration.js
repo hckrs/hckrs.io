@@ -268,8 +268,12 @@ var addServiceToCurrentUser = function(token, service) {
   // retrieve user data from the external service
   var serviceData = Service.retrieveCredential(token).serviceData;
 
-  // check if the requested external account is already assigned to an (other) user
-  var query = _.object(["service."+service+".id"], [serviceData.id]);
+  // check if the requested external account is already assigned to an other user account
+  // XXX TODO: maybe these accounts can be merged because of the same user idenity
+  var query = _.object([
+    ["services."+service+".id", serviceData.id], 
+    ['_id', {$ne: userId}]
+  ]);
   if (Meteor.users.findOne(query))
     throw new Meteor.Error(500, "This "+service+" account has already assigned to a user.");
 
@@ -287,16 +291,41 @@ var addServiceToCurrentUser = function(token, service) {
 }
 
 
+// Remove a external service from user's account
+// this will not remove the actual service data
+// because that is required to identify the user, so we
+// only remove the social service link in user's profile
+var removeServiceFromCurrentUser = function(service) {
+  var userId = this.userId; //current logged in user
+  var user = Meteor.users.findOne(userId); //get user document from our collection
+
+  if (!userId || !user)
+    throw new Meteor.Error(500, "Unknow user: " + userId);
+
+  if (!user.services[service])
+    throw new Meteor.Error(500, "Service isn't linked to : " + userId);     
+
+  // create modifiers
+  var unsetModifier = _.object([
+    //["services."+service, true], // DON'T DELETE SERVICE DATA (it create ghost accounts)
+    ["profile.social."+service, true],
+    ["profile.socialPicture."+service, true]
+  ]);
+
+  // remove service data
+  Meteor.users.update(userId, {$unset: unsetModifier}); 
+}
 
 
 var test = function() {
-  
+  /* empty */
 }
 
 
 // define methods that can be called from the client-side
 Meteor.methods({
   "addServiceToUser": addServiceToCurrentUser,
+  "removeServiceFromUser": removeServiceFromCurrentUser,
   "oauth": oauthCall, // XXX, check secutiry for client-calls (don't make private user info public)
   "test": test // XXX, check secutiry for client-calls
 });

@@ -39,9 +39,9 @@
     <div class="a">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
       <div class="header-social-container">connect or register&nbsp;
-        <a href="#" class="header-social" id="signupWithFacebook">Facebook</a> •
-        <a href="#" class="header-social" id="signupWithTwitter">Twitter</a> •
-        <a href="#" class="header-social" id="signupWithGithub">Github</a>
+        <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
+        <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
+        <a href="#" class="header-social signupService" data-service="github">Github</a>
       </div>
     </div>
   {{else}}
@@ -49,9 +49,9 @@
     <div class="header">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
       <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>&nbsp;
-        <a href="#" class="header-social" id="signupWithFacebook">Facebook</a> •
-        <a href="#" class="header-social" id="signupWithTwitter">Twitter</a> •
-        <a href="#" class="header-social" id="signupWithGithub">Github</a>
+        <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
+        <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
+        <a href="#" class="header-social signupService" data-service="github">Github</a>
       </div>
       {{#with _currentUser}}<div class="menu">
         <a href="{{pathFor 'hackers'}}">hackers</a> •
