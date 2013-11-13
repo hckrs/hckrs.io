@@ -65,34 +65,26 @@
             </div>
 
           </div>
-          <div class="controls">
-            <input type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; margin-top:68px;"/>
+          <div class="controls" style="padding-top:68px;">
+            <input id="text" type="text" name="name" data-field="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
+            {{#if profile.social.facebook}}
+              <a href="#" id="removeFacebookButton" class="profile-social-active"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Facebook</a>
+            {{else}}
+              <a href="#" id="addFacebookButton" class="profile-social-inactive"><img src="/img/icon-close.svg" class="profile-social-inactive-icon">Facebook</a>
+            {{/if}}
+            {{#if profile.social.twitter}}
+              <a href="#" id="removeTwitterButton" class="profile-social-active"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Twitter</a>
+            {{else}}
+              <a href="#" id="addTwitterButton" class="profile-social-inactive"><img src="/img/icon-close.svg" class="profile-social-inactive-icon">Twitter</a>
+            {{/if}}
+            {{#if profile.social.github}}
+              <a href="#" id="removeGithubButton" class="profile-social-active"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Github</a>
+            {{else}}
+              <a href="#" id="addGithubButton" class="profile-social-inactive"><img src="/img/icon-close.svg" class="profile-social-inactive-icon">Github</a>
+            {{/if}}
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label">identity</label>
-          <div class="controls">
-            <div class="profile-social-container">
-              {{#if profile.social.facebook}}
-                <a href="#" id="removeFacebookButton" class="profile-social-active">Facebook</a>
-              {{else}}
-                <a href="#" id="addFacebookButton">Facebook</a>
-              {{/if}}
-              {{#if profile.social.twitter}}
-                <a href="#" id="removeTwitterButton" class="profile-social-active">Twitter</a>
-              {{else}}
-                <a href="#" id="addTwitterButton">Twitter</a>
-              {{/if}}
-              {{#if profile.social.github}}
-                <a href="#" id="removeGithubButton" class="profile-social-active">Github</a>
-              {{else}}
-                <a href="#" id="addGithubButton">Github</a>
-              {{/if}}
-            </div>
-          </div>
-        </div>
-      
 
         <div class="control-group">
           <label class="control-label" for="inputEmail">email</label>
@@ -187,46 +179,41 @@
   <div id="hacker" class="">
       <dl style="text-align:left;">
 
-        <div style="background-image:url({{profile.picture}});margin: 0px;" class="pictureView"></div>   
-        <h3>{{profile.name}}</h3>
-
-        {{#if profile.homepage}}
-          <dt>homepage</dt>
-          <dd><a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a></dd>
-        {{/if}}
-
+        <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView"></div>
+        <h3 style="float:left;margin-top:66px;margin-left:24px;">{{profile.name}}
+        <span style="font-weight:400;"> / <a href="http://www.lavitrinedetrafik.fr/" target="_blank">Trafik</a></span>
+        <a href="mailto:ramshorst@gmail.com?subject=Lets drink something&body=My profile : [#path]" class="btn btn-success" style="margin-left:48px;">Have a drink</a>
+        <a href="mailto:ramshorst@gmail.com?subject=Lets have lunch&body=My profile : [#path]" class="btn btn-success">Have lunch</a></h3>
         {{#if profile.classes}}
-          <dt>hacking</dt>
-          <dd>
+          <div style="float:left;">
             {{#each profile.classes}}
               <span>{{this}}</span>
             {{/each}}
-          </dd>a
+          </div>
+        {{/if}}
+        <div style="clear:both;"></div>
+
+      <br/>{{> skills}}<br/><br/>
+
+
+        {{#if profile.homepage}}
+          <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
         {{/if}}
 
         {{#if profile.social.facebook}}
-          <dt>facebook</dt>
-          <dd>
-            <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
-          </dd>
+          <a href="{{profile.social.facebook}}" target="_blank">Facebook</a>  
         {{/if}}
 
         {{#if profile.social.github}}
-          <dt>github</dt>
-          <dd>
-            <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
-          </dd>
+          <a href="{{profile.social.github}}" target="_blank">Github</a>
         {{/if}}
 
         {{#if profile.social.twitter}}
-          <dt>twitter</dt>
-          <dd>
-            <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
-          </dd>
+          <a href="{{profile.social.twitter}}" target="_blank">Twitter</a>
         {{/if}}
-      </dl>
 
-      {{> skills}}
+      
+      </dl>
 
   </div>
 </template>

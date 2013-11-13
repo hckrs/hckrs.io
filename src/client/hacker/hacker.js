@@ -14,6 +14,12 @@ var hackerId = function () { return Session.get('hackerId'); }
 
 
 
+// autogrow initiation on text inputs
+  $('#text').autoGrowInput({
+    comfortZone: 10,
+    minWidth: 200,
+    maxWidth: 600
+});
 
 
 // when user starts typing in an input field

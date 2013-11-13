@@ -193,6 +193,8 @@ input.text {
   border-radius: 15px;
   padding: 3px 10px;
   color: white;
+  margin-left: -11px;
+  margin-top: 1px;
 }
 input.text:hover {
   border-color: white;
@@ -217,7 +219,11 @@ input.text:-ms-input-placeholder { /* Internet Explorer 10+ */ color: #bbb; }
 
 label.checkbox{
   float: left;
-  margin-right: 24px;
+  margin-right: 32px;
+  padding-top: 5px;
+  font-weight: 100;
+  color: white;
+  text-shadow: 1px 1px 1px #777;
 }
 
 .control-label{
