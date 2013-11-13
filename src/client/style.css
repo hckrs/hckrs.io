@@ -113,6 +113,11 @@ a.header-social:hover{
   border: 0px;
 }
 
+A IMG{
+  text-decoration: none;
+  border:0px;
+}
+
 
 
 
@@ -140,7 +145,7 @@ a.header-social:hover{
 .hacker{
   float:left;
   width: 260px;
-  margin-top: 24px;
+  margin-bottom: 28px;
   text-align: center;
 }
 
@@ -178,9 +183,10 @@ A.hackers-social{
 }
 
 .hackers-name{
-  font-weight: 700;
-  font-size: 140%;
-  line-height: 35px;
+  font-weight: 400;
+  color: #222;
+  font-size: 130%;
+  line-height: 48px;
 }
 
 

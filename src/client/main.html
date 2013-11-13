@@ -38,7 +38,9 @@
   {{#unless loggedIn}}
     <div class="a">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
-      <div class="header-social-container">connect or register&nbsp;
+      <div class="header-social-container">
+        <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">REGISTRATIONS OPEN</span>
+        connect or register &nbsp;
         <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
         <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
         <a href="#" class="header-social signupService" data-service="github">Github</a>
@@ -48,10 +50,7 @@
 
     <div class="header">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
-      <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>&nbsp;
-        <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
-        <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
-        <a href="#" class="header-social signupService" data-service="github">Github</a>
+      <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>
       </div>
       {{#with _currentUser}}<div class="menu">
         <a href="{{pathFor 'hackers'}}">hackers</a> •
@@ -60,7 +59,7 @@
     </div>
   {{/unless}}
 </template>
-
+  
 
 <template name="frontpage">
   <div id="frontpage">
@@ -72,10 +71,11 @@
 
   {{#each hackers}}
   <div class="hacker">
+    <a class="hackers-name" href="{{pathFor 'hacker'}}">
     <div style="background-image:url({{profile.picture}});" class="pictureView" style="cursor: pointer;"></div>
-    <a class="hackers-name" href="{{pathFor 'hacker'}}">{{profile.name}}</a><br/>
+    {{profile.name}}</a><br/>
     <!--<div class="age">{{profile.age}}</div>-->
-    {{#if profile.social.facebook}}
+    <!--{{#if profile.social.facebook}}
       <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
     {{/if}}
     {{#if profile.social.github}}
@@ -83,11 +83,14 @@
     {{/if}}
     {{#if profile.social.twitter}}
       <a href="{{profile.social.twitter}}" class="hackers-social social-twitter" target="_blank">Twitter</a>
-    {{/if}}
+    {{/if}}-->
   </div>
   {{/each}}
  
   <div style="clear:both;"></div>
+
+
+  <div style="margin-top:24px;font-size:15px;line-height:24px;font-weight:100;color:222;color:#111;text-shadow:1px 1px 1px rgba(255,255,255,0.8);"><a href="mailto:?subject=hckrs.io&body=http://hckrs.io/" style="border:0px;"><img src="/img/help.png" alt="Help!" style="margin-bottom:24px;"></a><br/>Only you know all the cool hackers in Lyon...<br/>We would be forever gratefull if you <b>*make them*</b> join ;)</div>
 </template>
 
 
