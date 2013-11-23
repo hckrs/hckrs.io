@@ -37,10 +37,9 @@
 <template name="header">
   {{#unless loggedIn}}
     <div class="a">
-      <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" class="logo"></a>
+      <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="hckrs.io" class="logo" width="320"></a>
       <div class="header-social-container">
-        <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">REGISTRATIONS OPEN</span>
-        connect or register &nbsp;
+        <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">REGISTRATIONS  OPEN</span>
         <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
         <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
         <a href="#" class="header-social signupService" data-service="github">Github</a>
@@ -49,7 +48,7 @@
   {{else}}
 
     <div class="header">
-      <a href="{{pathFor 'frontpage'}}"><img src="/img/hackers-welcome.png" alt="Hackers Welcome" height="69" width="399" class="logo"></a>
+      <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="Hackers Welcome" class="logo"></a>
       <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>
       </div>
       {{#with _currentUser}}<div class="menu">
@@ -63,7 +62,9 @@
 
 <template name="frontpage">
   <div id="frontpage">
-    <H1>Lyon has <b>{{totalHackers}}</b> hackers.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker?</H1>
+    <H1 style="margin-bottom:48px;">Lyon has <b>{{totalHackers}}</b> hackers.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker?</H1>
+    Our current beta version allows you to discover other geeks around you in Lyon.<br>
+
   </div>
 </template>
 

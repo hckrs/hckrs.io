@@ -67,21 +67,6 @@
           </div>
           <div class="controls" style="padding-top:68px;">
             <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
-            {{#if profile.social.facebook}}
-              <a href="#" class="toggleService profile-social-active" data-service="facebook"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Facebook</a>
-            {{else}}
-              <a href="#" class="toggleService profile-social-inactive" data-service="facebook"><img src="/img/icon-close.svg" class="profile-social-inactive-icon">Facebook</a>
-            {{/if}}
-            {{#if profile.social.twitter}}
-              <a href="#" class="toggleService profile-social-active" data-service="twitter"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Twitter</a>
-            {{else}}
-              <a href="#" class="toggleService profile-social-inactive" data-service="twitter"><img src="/img/icon-close.svg" class="profile-social-inactive-icon">Twitter</a>
-            {{/if}}
-            {{#if profile.social.github}}
-              <a href="#" class="toggleService profile-social-active" data-service="github"><img src="/img/icon-ios7-checkmark-empty.svg" class="profile-social-active-icon">Github</a>
-            {{else}}
-              <a href="#" class="toggleService profile-social-inactive" data-service="github"><img src="/img/icon-close.svg" class="profile-social-inactive-icon">Github</a>
-            {{/if}}
           </div>
         </div>
 
@@ -114,6 +99,10 @@
               <input type="checkbox" name="profile.hacking" class="save" id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
               software
             </label>
+            <label for="inputHackingGame" class="checkbox">
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
+              game
+            </label>
             <label for="inputHackingDesign" class="checkbox">
               <input type="checkbox" name="profile.hacking" class="save" id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
               design
@@ -135,25 +124,12 @@
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label">available to</label>
-          <div class="controls">
-            <label for="inputAvailableDrink" class="checkbox">
-              <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
-              have a drink
-            </label>
-            <label for="inputAvailableLunch" class="checkbox">
-              <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
-              have lunch
-            </label>
-          </div>
-        </div>
 
         <div class="control-group">
           <label class="control-label" for="inputCompany">company</label>
           <div class="controls">
             <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" />
-            <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" />
+            <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="margin-left:10px;" />
           </div>
         </div>
 
@@ -167,7 +143,58 @@
               </div>
           </div>
         </div>
-  
+
+        <div class="control-group">
+          <label class="control-label">would like to</label>
+          <div class="controls">
+            <label for="inputAvailableDrink" class="checkbox">
+              <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
+              have a drink
+            </label>
+                    <div style="clear:both;"></div>
+
+            <label for="inputAvailableLunch" class="checkbox">
+              <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
+              have lunch
+            </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Facebook</label>
+          <div class="controls">
+            {{#if profile.social.facebook}}
+              <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a> –
+              <a href="#" class="toggleService" data-service="facebook">logout</a>
+            {{else}}
+              <a href="#" class="toggleService" data-service="facebook">connect</a>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Twitter</label>
+          <div class="controls">
+            {{#if profile.social.twitter}}
+              <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a> –
+              <a href="#" class="toggleService" data-service="twitter">logout</a>
+            {{else}}
+              <a href="#" class="toggleService" data-service="twitter">connect</a>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">GitHub</label>
+          <div class="controls">
+            {{#if profile.social.github}}
+              <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a> –
+              <a href="#" class="toggleService" data-service="github">logout</a>
+            {{else}}
+              <a href="#" class="toggleService" data-service="github">connect</a>
+            {{/if}}
+          </div>
+        </div>
 
       </form>
     
@@ -181,7 +208,7 @@
 
         <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView"></div>
         <h3 style="float:left;margin-top:66px;margin-left:24px;">{{profile.name}}
-        <span style="font-weight:400;"> / <a href="http://www.lavitrinedetrafik.fr/" target="_blank">Trafik</a></span>
+        <span style="font-weight:400;"> – <a href="http://www.lavitrinedetrafik.fr/" target="_blank">Trafik</a></span>
         <a href="mailto:ramshorst@gmail.com?subject=Lets drink something&body=My profile : [#path]" class="btn btn-success" style="margin-left:48px;">Have a drink</a>
         <a href="mailto:ramshorst@gmail.com?subject=Lets have lunch&body=My profile : [#path]" class="btn btn-success">Have lunch</a></h3>
         {{#if profile.hacking}}
@@ -211,6 +238,10 @@
         {{#if profile.social.twitter}}
           <a href="{{profile.social.twitter}}" target="_blank">Twitter</a>
         {{/if}}
+
+
+
+
 
       
       </dl>

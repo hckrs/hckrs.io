@@ -8,7 +8,7 @@ Template.frontpage.helpers({
 
 // typer text on frontpage
 Template.frontpage.rendered = function() {
-  var texts = ['node.js','arduino','design','game','UX','hardware','life','backbone.js','mobile'];
+  var texts = ['web','app','software','design','life','hardware','life','game'];
   $('#target').teletype({ text: texts }); 
   $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
 }

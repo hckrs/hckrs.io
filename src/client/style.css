@@ -48,7 +48,7 @@ h1 {
   font-size: 60px;
   letter-spacing: 0px;
   font-weight: 400;
-  line-height: 180%;
+  line-height: 120%;
 }
 h2 {
   color: #6D461D;
@@ -200,7 +200,7 @@ input.text {
   padding: 3px 10px;
   color: white;
   margin-left: -11px;
-  margin-top: 1px;
+  margin-top: -5px;
 }
 input.text:hover {
   border-color: white;

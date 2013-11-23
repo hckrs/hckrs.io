@@ -15,7 +15,7 @@
     if (cursor < str.length - 1) {
       setTimeout(function () {
         typeString($target, str, cursor + 1, delay, cb);
-      }, delay*Math.ceil(Math.random() * 1.3));
+      }, delay*Math.ceil(Math.random() * 1.5));
     }
     else {
       cb();
