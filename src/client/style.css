@@ -8,13 +8,14 @@ body {
   margin: 0;
   height: 100%;
   -webkit-font-smoothing: antialiased;
-  background: #000 url(/img/background.jpg) no-repeat center;
+  background: #000 url(/img/background_night.jpg) no-repeat center;
   -webkit-background-size: cover; /* For WebKit*/
   -moz-background-size: cover;    /* Mozilla*/
   -o-background-size: cover;      /* Opera*/
   background-size: cover;         /* Generic*/
   background-attachment:fixed;
-  padding: 24px;  
+  padding: 24px;
+  color: white; 
 }
 .clear {
   clear: both;
@@ -34,8 +35,23 @@ a {
 a:hover{
   text-decoration: none;
   color: #1466a8;
-  border-bottom: 2px dotted #1466a8;
-  margin-bottom: -5px;
+  /*border-bottom: 2px dotted #1466a8;
+  margin-bottom: -5px;*/
+}
+
+a.menu {
+  text-decoration: none;
+  color: #222;
+  margin: 0px;
+  padding: 0px 8px 0px 8px;;
+  float: none;
+}
+
+a.menu:hover{
+  text-decoration: none;
+  color: #1466a8;
+  /*border-bottom: 2px dotted #1466a8;
+  margin-bottom: -5px;*/
 }
 
 h1, h2 {
@@ -67,13 +83,17 @@ h2 {
 
 .header {
   margin: 0 auto 0;
-  height: 120px; /* temporary fix */
+  height: 90px; /* temporary fix */
+}
+
+.logo{
+  float: left;checkbox
 }
 
 .menu{
   float: left;
-  clear: left;
-  padding-top: 48px;
+  padding-top: 24px;
+  padding-left: 48px;
   font-size: 18px;
   font-weight: 700;
 }
@@ -82,9 +102,6 @@ h2 {
   margin-top: 48px;
 }
 
-.logo{
-  float: left;
-}
 
 
 
@@ -213,7 +230,8 @@ input.text:focus {
 }
 input.text.saved {
   border-color: #aaeeaa;
-  background-color: rgba(160,255,160,0.1);
+  background-color: rgba(64,163,195,0.2);
+  border: 1px solid rgba(255,255,255,0.5);
 }
 input.text.invalid {
   border-color: orange;
@@ -230,10 +248,6 @@ label.checkbox{
   font-weight: 100;
   color: white;
   text-shadow: 1px 1px 1px #777;
-}
-
-.control-label{
-  font-weight: 700;
 }
 
 .change{

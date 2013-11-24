@@ -145,6 +145,7 @@
   padding: 0 0 0 4px;
   max-height: 240px;
   -webkit-overflow-scrolling: touch;
+  color: #222; /* added - no search results color */
 }
 .chosen-container .chosen-results li {
   display: none;
@@ -156,6 +157,7 @@
 .chosen-container .chosen-results li.active-result {
   display: list-item;
   cursor: pointer;
+  color: #222; /* modified */
 }
 .chosen-container .chosen-results li.disabled-result {
   display: list-item;
@@ -170,6 +172,7 @@
   background-image: -o-linear-gradient(#3875d7 20%, #2a62bc 90%);
   background-image: linear-gradient(#3875d7 20%, #2a62bc 90%);
   color: #fff;
+  font-weight: 700; /* added */
 }
 .chosen-container .chosen-results li.no-results {
   display: list-item;
@@ -197,14 +200,17 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0;
-  padding: 2px 0px 2px 0px; 
+  margin-top: -6px;
+  padding: 2px 0px 2px 0px;
   width: 100%;
   height: auto !important;
   height: 1%;
-  border: 1px solid #aaa;
+  border: 1px solid rgba(255,255,255,0); /* changed */
   background-color:  rgba(255,255,255,0.2);
-  border-radius: 4px;
+  border-radius: 0px; /* changed */
   cursor: text;
+  font-size: 14px; /* added */
+  color: #222;
 }
 .chosen-container-multi .chosen-choices li {
   float: left;
@@ -218,26 +224,27 @@
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
   margin: 1px 0;
   padding: 5px;
-  height: 15px;
+  height: 18px; /* changed */
   outline: 0;
   border: 0 !important;
   background: transparent !important;
   box-shadow: none;
-  color: #666;
+  color: #FFF; /* placeholder text color */
   font-size: 100%;
   font-family: sans-serif;
-  line-height: normal;
+  line-height: 18px; /* changed */
   border-radius: 0;
+  width: auto;
 }
 .chosen-container-multi .chosen-choices li.search-field .default {
   color: #999;
 }
-.chosen-container-multi .chosen-choices li.search-choice {
+.chosen-container-multi .chosen-choices li.search-choice { /* search results tags */
   position: relative;
   margin: 3px 0 3px 5px;
-  padding: 3px 20px 3px 5px;
+  padding: 5px 23px 5px 8px; /* changed */
   border: 1px solid #aaa;
-  border-radius: 3px;
+  border-radius: 0px;
   background-color: #e4e4e4;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
   background-image: -webkit-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
@@ -246,13 +253,18 @@
   background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
   background-clip: padding-box;
   box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-  color: #333;
+  color: #222;
   line-height: 13px;
   cursor: default;
+  opacity: 0.7;
 }
+.chosen-container-multi .chosen-choices li.search-choice:hover {
+  opacity: 1;
+}
+
 .chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
   position: absolute;
-  top: 4px;
+  top: 7px;
   right: 3px;
   display: block;
   width: 12px;

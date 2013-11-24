@@ -10,6 +10,15 @@
       z-index: 10;
       width: inherit;
       height: inherit;
+      opacity: 0.6; 
+    }
+    #map:hover {
+      opacity: 1; 
+      -webkit-transition: opacity 0.4s ease-in;
+      -moz-transition: opacity 0.4s ease-in;
+      -ms-transition: opacity 0.4s ease-in;
+      -o-transition: opacity 0.4s ease-in;
+      transition: opacity 0.4s ease-in;
     }
   }
   
@@ -55,13 +64,14 @@
     }
     div.picture-choser {
       display: none;
-      position: fixed;
+      position: absolute;
       top: 0px;
-      left: 0px;
-      margin: auto;
-      z-index: 11;
-      background-color: rgba(0,0,0,0.8);
-      padding: auto;
+      left: -20px;
+      z-index: 3;
+      width: 600px;
+      padding-left: 0px !important;
+      margin-left: 0px !important;
+      /*background-color: rgba(0,0,0,0.8);*/
       label {
         float: left;
         text-align: center;
@@ -69,6 +79,7 @@
       }
       .label-text {
         margin-top: 8px;
+        color: white;
       }
     }
     div.picture-choser.show {
@@ -120,9 +131,99 @@
     padding-right: 6px;
   }
 
-  DIV.controls{
-    line-height: 30px;
+  .control-label{
+    font-weight: 700;
     color: white;
   }
+
+  DIV.controls{
+    line-height: 30px;
+    color: #e2e2e2;
+  }
+
+  .overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:rgba(0, 0, 0, 0.85);
+    background: url(data:;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAATSURBVBhXY2RgYNgHxGAAYuwDAA78AjwwRoQYAAAAAElFTkSuQmCC) repeat scroll transparent\9;
+    z-index:2;
+    color:white;
+    visibility: hidden;
+  }
+
+
+  /* VIEW hacker */
+
+  .headline{
+    float:left;
+    margin-top: 70px;
+    margin-left: 24px;
+  }
+
+  .name{
+    font-size: 36px;
+    line-height: 48px;
+    font-weight: 700;
+    color:white;
+    float:left;
+  }
+
+  .hacking-container{
+    float:left;
+    font-size: 18px;
+    clear:left;
+    margin-bottom: 12px;
+    margin-top: 30px;
+  }
+
+  .hacking-tag{
+    float:left;
+    line-height: 32px;
+    background-color: rgba(0,0,0,0.45);
+    border-radius: 18px;
+    padding: 0px 14px 0px 14px;
+    margin-right: 6px;
+    font-weight: 700;
+  }
+
+  .hacker-number{
+    line-height: 34px;
+    font-size: 14px;
+    float: left;
+    margin-left: 12px;
+  }
+
+  /* lines */
+
+  .line{
+    margin-top:48px;
+    clear: left;
+  }
+
+  .handle{
+    float:left;
+    width:175px;
+    text-align:right;
+    padding-right:24px;
+    font-weight:700;
+    line-height:28px;
+  }
+
+  .output{
+    float:left;
+    line-height: 28px;
+  }
+
+  .available{
+    opacity: 0.6;
+  }
+
+  .available:hover{
+    opacity: 0.8;
+  }
+
 
 }

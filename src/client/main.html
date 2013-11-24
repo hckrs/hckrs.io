@@ -5,8 +5,8 @@
   <meta content="http://www.HackersWelcome.com" property="og:url" />
   <!--
     <meta content="" property="og:image" />
-    <link rel="shortcut icon" id="favicon" href="favicon.png"> 
   -->
+  <link rel="icon" type="image/png" href="img/favicon.png">
   <meta name="author" content="Toon van Ramshorst &amp; Jarno Le Conté">
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
 
@@ -15,6 +15,22 @@
     <link href='//api.tiles.mapbox.com/mapbox.js/v1.4.0/mapbox.ie.css' rel='stylesheet' />
   <![endif]-->
   <script src='//api.tiles.mapbox.com/mapbox.js/v1.4.0/mapbox.js'></script>
+
+  <!--<script type="text/javascript">
+  
+    // background image depending of time 
+    var currentTime = new Date().getHours();
+    if (7 <= currentTime && currentTime < 19) {
+        if (document.body) {
+            document.body.background = "/img/background.jpg";
+        }
+    }
+    else {
+        if (document.body) {
+            document.body.background = "/img/background_night.jpg";
+        }
+    }
+  </script>-->
 
 </head>
 
@@ -39,7 +55,7 @@
     <div class="a">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="hckrs.io" class="logo" width="320"></a>
       <div class="header-social-container">
-        <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">REGISTRATIONS  OPEN</span>
+        <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
         <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
         <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
         <a href="#" class="header-social signupService" data-service="github">Github</a>
@@ -49,12 +65,13 @@
 
     <div class="header">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="Hackers Welcome" class="logo"></a>
+      {{#with _currentUser}}<div class="menu">
+        <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
+        <a href="{{pathFor 'hacker'}}" class="menu">profile</a>
+      </div>{{/with}}
       <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>
       </div>
-      {{#with _currentUser}}<div class="menu">
-        <a href="{{pathFor 'hackers'}}">hackers</a> •
-        <a href="{{pathFor 'hacker'}}">profile</a>
-      </div>{{/with}}
+
     </div>
   {{/unless}}
 </template>
@@ -91,7 +108,9 @@
   <div style="clear:both;"></div>
 
 
-  <div style="margin-top:24px;font-size:15px;line-height:24px;font-weight:100;color:222;color:#111;text-shadow:1px 1px 1px rgba(255,255,255,0.8);"><a href="mailto:?subject=hckrs.io&body=http://hckrs.io/" style="border:0px;"><img src="/img/help.png" alt="Help!" style="margin-bottom:24px;"></a><br/>Only you know all the cool hackers in Lyon...<br/>We would be forever gratefull if you <b>*make them*</b> join ;)</div>
+  <div style="margin-top:24px;font-size:15px;line-height:24px;font-weight:100;color:222;  color: white;
+  text-shadow: 1px 1px 1px #777;
+"><a href="mailto:?subject=hckrs.io&body=http://hckrs.io/" style="border:0px;"><img src="/img/help.svg" alt="Help!" style="margin-bottom:24px;"></a><br/>Only you know all the cool hackers in Lyon...<br/>We would be forever gratefull if you <a href="mailto:?subject=hckrs.io&body=http://hckrs.io/" style="color:#FFF;"><b>*make them*</b></a> join ;)</div>
 </template>
 
 

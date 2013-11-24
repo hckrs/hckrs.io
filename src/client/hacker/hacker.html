@@ -66,10 +66,9 @@
 
           </div>
           <div class="controls" style="padding-top:68px;">
-            <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:24px;font-weight:700;padding:12px;color:#222;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
+            <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:36px;font-weight:700;padding:12px;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
           </div>
         </div>
-
 
         <div class="control-group">
           <label class="control-label" for="inputEmail">email</label>
@@ -77,19 +76,13 @@
             <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" />
           </div>
         </div>
-        <div class="control-group">
-          <label class="control-label" for="inputHomepage">homepage</label>
-          <div class="controls">
-            <input type="text" name="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
-          </div>
-        </div>
 
         <div class="control-group">
           <label class="control-label">hacking</label>
           <div class="controls">
             <label for="inputHackingWeb" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingWeb" value="websites" {{checked "profile.hacking" "websites"}} />
-              websites
+              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
+              web
             </label>
             <label for="inputHackingApp" class="checkbox">
               <input type="checkbox" name="profile.hacking" class="save" id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
@@ -101,7 +94,7 @@
             </label>
             <label for="inputHackingGame" class="checkbox">
               <input type="checkbox" name="profile.hacking" class="save" id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
-              game
+              games
             </label>
             <label for="inputHackingDesign" class="checkbox">
               <input type="checkbox" name="profile.hacking" class="save" id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
@@ -118,7 +111,7 @@
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputSkills">skills</label>
+          <label class="control-label" for="inputSkills">skillset</label>
           <div class="controls">
             {{> editSkills}}
           </div>
@@ -128,13 +121,13 @@
         <div class="control-group">
           <label class="control-label" for="inputCompany">company</label>
           <div class="controls">
-            <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" />
-            <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="margin-left:10px;" />
+            <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
+            <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" />
           </div>
         </div>
 
         <div class="control-group">
-          <label class="control-label">main location</label>
+          <label class="control-label" style="margin-top: -10px;">main location</label>
           <div class="controls">
               <div id="mapWrapper"> 
                 {{#constant}}
@@ -145,18 +138,25 @@
         </div>
 
         <div class="control-group">
-          <label class="control-label">would like to</label>
+          <label class="control-label">available to</label>
           <div class="controls">
             <label for="inputAvailableDrink" class="checkbox">
               <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
-              have a drink
+              having drinks
             </label>
                     <div style="clear:both;"></div>
 
             <label for="inputAvailableLunch" class="checkbox">
               <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
-              have lunch
+              having lunch
             </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputHomepage">homepage</label>
+          <div class="controls">
+            <input type="text" name="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
           </div>
         </div>
 
@@ -197,7 +197,11 @@
         </div>
 
       </form>
-    
+
+      <div class="overlay">
+          <div class="txt">Overlay</div>
+      </div>
+
 
   </div>
 </template>
@@ -207,43 +211,106 @@
       <dl style="text-align:left;">
 
         <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView"></div>
-        <h3 style="float:left;margin-top:66px;margin-left:24px;">{{profile.name}}
-        <span style="font-weight:400;"> – <a href="http://www.lavitrinedetrafik.fr/" target="_blank">Trafik</a></span>
-        <a href="mailto:ramshorst@gmail.com?subject=Lets drink something&body=My profile : [#path]" class="btn btn-success" style="margin-left:48px;">Have a drink</a>
-        <a href="mailto:ramshorst@gmail.com?subject=Lets have lunch&body=My profile : [#path]" class="btn btn-success">Have lunch</a></h3>
-        {{#if profile.hacking}}
-          <div style="float:left;">
-            {{#each profile.hacking}}
-              <span>{{this}}</span>
-            {{/each}}
-          </div>
-        {{/if}}
+        <div class="headline">
+          <div class="name">{{profile.name}}</div>
+          {{#if profile.hacking}}
+            <div class="hacking-container">
+              {{#each profile.hacking}}
+                <div class="hacking-tag">{{this}}</div>
+              {{/each}}
+            <div class="hacker-number">Lyon's 13th hacker</div>
+            </div>
+          {{/if}}
+        </div>
+        
         <div style="clear:both;"></div>
 
-      <br/>{{> skills}}<br/><br/>
-
+        <div class="line" style="margin-bottom:100px;">
+          <div class="handle">
+            skillset
+          </div>
+          <div class="output">
+            {{> skills}}
+          </div>
+        </div>
 
         {{#if profile.homepage}}
-          <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
+        <div class="line">
+          <div class="handle">
+            homepage
+          </div>
+          <div class="output">
+            <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
+          </div>
+        </div>
         {{/if}}
 
         {{#if profile.social.facebook}}
-          <a href="{{profile.social.facebook}}" target="_blank">Facebook</a>  
+        <div class="line">
+          <div class="handle">
+            Facebook
+          </div>
+          <div class="output">
+            <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>  
+          </div>
+        </div>
         {{/if}}
 
         {{#if profile.social.github}}
-          <a href="{{profile.social.github}}" target="_blank">Github</a>
+        <div class="line">
+          <div class="handle">
+            GitHub
+          </div>
+          <div class="output">
+            <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
+          </div>
+        </div>
         {{/if}}
 
         {{#if profile.social.twitter}}
-          <a href="{{profile.social.twitter}}" target="_blank">Twitter</a>
+        <div class="line">
+          <div class="handle">
+            Twitter
+          </div>
+          <div class="output">
+            <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if profile.company}}
+        <div class="line" style="margin-top:100px;">
+          <div class="handle">
+            company
+          </div>
+          <div class="output">
+            <a href="{{profile.companyUrl}}" target="_blank">{{profile.company}}</a>
+          </div>
+        </div>
+        {{/if}}
+
+        <div class="line">
+          <div class="handle">
+            main location
+          </div>
+          <div class="output">
+            <div id="mapWrapper" style="background-color: rgba(0,0,0,0.2); margin-top:10px; margin-bottom:18px;"></div>
+          </div>
+        </div>
+
+        {{#if profile.available}} <!-- Needs to be adjusted :) -->
+        <div class="line">
+          <div class="handle">
+            available to
+          </div>
+          <div class="output">
+            <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : [#path]" class="btn btn-inverse available">have a drink</a>
+            <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : [#path]" class="btn btn-inverse available">have lunch</a>
+          </div>
+        </div>
         {{/if}}
 
 
-
-
-
-      
       </dl>
 
   </div>
