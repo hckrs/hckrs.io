@@ -7,7 +7,7 @@ var increasedMode = false; // map is in increased mode
 
 
 // initialize the map so the user can pick a location
-var initializeMap = function(mapElement) {
+initializeMap = function(mapElement) {
   
   // user's location
   var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
@@ -132,12 +132,5 @@ Template.hackerEdit.events({
 });
 
 
-// RENDERING
 
-Template.hackerEdit.rendered = function() {
-  if (!this.initialized)
-    initializeMap(this.find('#map')); // initialize map
-  
-  this.initialized = true;
-}
 

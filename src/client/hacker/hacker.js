@@ -14,17 +14,6 @@ var hackerId = function () { return Session.get('hackerId'); }
 
 
 
-// autogrow initiation on text inputs - not working yet
-Template.hackerEdit.rendered = function() {
-  console.log('test');
-  $('.text').autoGrowInput({
-    comfortZone: 10,
-    minWidth: 200,
-    maxWidth: 600
-  });
-}
-
-
 // input-to-database helper for array values.
 // when user check or uncheck a checkboxes it will be saved to the database.
 //
@@ -151,6 +140,14 @@ Template.hackerEdit.helpers({
 });
 
 
+// RENDERING
+
+Template.hackerEdit.rendered = function() {
+  if (!this.initialized)
+    initializeMap(this.find('#map')); // initialize map
+
+  this.initialized = true;
+}
 
 
 

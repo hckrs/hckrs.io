@@ -27,11 +27,27 @@ Template.hackers.helpers({
 
 
 // html document fully loaded and rendered
+$(document).ready(function() {
 
   // change background image depending on time 
+  // 1. night,  2. in daytime
   var currentTime = new Date().getHours();
   var isNight = currentTime < 7 || currentTime >= 19;
   var image = isNight ? "background_night.jpg" : "background.jpg";
   $('body').css('background-image', 'url(/img/'+image+')');
 
 });
+
+
+// execute when one of the (sub)templates of main is rerendered
+Template.main.rendered = function() {
+  
+  // auto grow input fields
+  // resizing fields depending on their text size
+  $("input.text").autoGrowInput({
+    comfortZone: 10,
+    minWidth: 180,
+    maxWidth: 400
+  });
+  
+}
