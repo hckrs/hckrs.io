@@ -20,3 +20,16 @@ Template.frontpage.rendered = function() {
 Template.hackers.helpers({
   "hackers": function() { return Meteor.users.find({}, {reactive: false}).fetch(); }
 });
+
+
+/* GENERAL */
+
+// background image depending on time
+$( document ).ready(function() {
+    var currentTime = new Date().getHours();
+    if (7 <= currentTime && currentTime < 19) {
+        $('body').css('background-image', 'url(/img/background.jpg)');
+    } else {
+        $('body').css('background-image', 'url(/img/background_night.jpg)');
+    }
+});

@@ -15,11 +15,14 @@ var hackerId = function () { return Session.get('hackerId'); }
 
 
 // autogrow initiation on text inputs - not working yet
-  $('#text').autoGrowInput({
+Template.hackerEdit.rendered = function() {
+  console.log('test');
+  $('.text').autoGrowInput({
     comfortZone: 10,
     minWidth: 200,
     maxWidth: 600
-});
+  });
+}
 
 
 // input-to-database helper for array values.

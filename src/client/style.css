@@ -8,7 +8,7 @@ body {
   margin: 0;
   height: 100%;
   -webkit-font-smoothing: antialiased;
-  background: #000 url(/img/background_night.jpg) no-repeat center;
+  /*background: #000 url(/img/background_night.jpg) no-repeat center;*/
   -webkit-background-size: cover; /* For WebKit*/
   -moz-background-size: cover;    /* Mozilla*/
   -o-background-size: cover;      /* Opera*/
@@ -43,7 +43,7 @@ a.menu {
   text-decoration: none;
   color: #222;
   margin: 0px;
-  padding: 0px 8px 0px 8px;;
+  padding: 0px 8px 0px 8px;
   float: none;
 }
 
@@ -87,7 +87,7 @@ h2 {
 }
 
 .logo{
-  float: left;checkbox
+  float: left;
 }
 
 .menu{
