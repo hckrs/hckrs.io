@@ -22,14 +22,16 @@ Template.hackers.helpers({
 });
 
 
+
 /* GENERAL */
 
-// background image depending on time
-$( document ).ready(function() {
-    var currentTime = new Date().getHours();
-    if (7 <= currentTime && currentTime < 19) {
-        $('body').css('background-image', 'url(/img/background.jpg)');
-    } else {
-        $('body').css('background-image', 'url(/img/background_night.jpg)');
-    }
+
+// html document fully loaded and rendered
+
+  // change background image depending on time 
+  var currentTime = new Date().getHours();
+  var isNight = currentTime < 7 || currentTime >= 19;
+  var image = isNight ? "background_night.jpg" : "background.jpg";
+  $('body').css('background-image', 'url(/img/'+image+')');
+
 });
