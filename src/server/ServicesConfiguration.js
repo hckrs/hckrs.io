@@ -94,8 +94,10 @@ var fetchUserData = function(user, service) {
   var services = {
   
     "github": function(user) {
-      var url = "https://api.github.com/user";
-      var data = oauthCall(user, 'github', 'GET', url).data;
+      var data = HTTP.get("https://api.github.com/user", {
+        headers: {"User-Agent": "Meteor/"+Meteor.release},
+        params: {access_token: user.services[service].accessToken}
+      }).data;
 
       var userData = {
         'id': data.id,
