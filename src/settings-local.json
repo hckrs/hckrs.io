@@ -1,10 +1,9 @@
 {
   "public": {
-    
     "environment": "local",
     
-    "mapbox": "ramshorst.gcod0o2c"
-
+    "mapboxDefault": "ramshorst.gd0ekbb3",
+    "mapboxPlaces": "ramshorst.gcoejeom"
   },
 
 

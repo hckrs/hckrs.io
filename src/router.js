@@ -6,7 +6,7 @@ if (Meteor.isClient) {
   Router.map(function () {
     this.route('frontpage', { path: '/' });
     this.route('hackers', { path: '/hackers' });
-    
+    this.route('places', { path: '/places' });
     this.route('hacker', { 
       path: '/hacker/:_id', 
       before: function() { 

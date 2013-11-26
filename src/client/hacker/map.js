@@ -19,7 +19,7 @@ initializeMap = function(mapElement) {
   };
 
   // set up the map
-  map = L.mapbox.map('map', Meteor.settings.public.mapbox, mapOptions);
+  map = L.mapbox.map('map', Meteor.settings.public.mapboxDefault, mapOptions);
 
   // start the map in Lyon
   map.setView(location, zoom);
