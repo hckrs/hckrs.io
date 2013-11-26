@@ -96,7 +96,7 @@ Meteor.startup(function() {
 
 var setupPublicSubscriptions = function() {
 
-  var subscribeTo = ['userData'];
+  var subscribeTo = ['publicUserDataCurrentUser', 'publicUserDataEmail', 'publicUserData'];
   
   // subscribe to collections
   _.each(subscribeTo, function(collection) {
