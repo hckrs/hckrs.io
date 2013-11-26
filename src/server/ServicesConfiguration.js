@@ -256,6 +256,9 @@ Accounts.onCreateUser(function (options, user) {
 // @param service String (facebook, github, twitter, etc.)
 // @effect (updating the user object with an additional service attached)
 var addServiceToCurrentUser = function(token, service) {
+  check(token, String);
+  check(service, String);
+
   var userId = this.userId; //current logged in user
   var user = Meteor.users.findOne(userId); //get user document from our collection
   var Service = global[capitaliseFirstLetter(service)]; //meteor package for this external service
@@ -263,12 +266,19 @@ var addServiceToCurrentUser = function(token, service) {
   if (!userId || !user)
     throw new Meteor.Error(500, "Unknow user: " + userId);
 
+  if (!token)
+    throw new Meteor.Error(500, "Unknow token: " + token);
+
   if (!Service)
     throw new Meteor.Error(500, "Unknow service: " + service);
 
 
   // retrieve user data from the external service
   var serviceData = Service.retrieveCredential(token).serviceData;
+
+  if(!serviceData)
+    throw new Meteor.Error(500, "Unknow service data: " + serviceData);
+
 
   // check if the requested external account is already assigned to an other user account
   // XXX TODO: maybe these accounts can be merged because of the same user idenity
@@ -298,6 +308,8 @@ var addServiceToCurrentUser = function(token, service) {
 // because that is required to identify the user, so we
 // only remove the social service link in user's profile
 var removeServiceFromCurrentUser = function(service) {
+  check(service, String);
+
   var userId = this.userId; //current logged in user
   var user = Meteor.users.findOne(userId); //get user document from our collection
 
@@ -319,6 +331,8 @@ var removeServiceFromCurrentUser = function(service) {
 }
 
 
+// test some functionality
+// XXX, check secutiry for client-calls
 var test = function() {
   /* empty */
 }
@@ -328,8 +342,7 @@ var test = function() {
 Meteor.methods({
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
-  "oauth": oauthCall, // XXX, check secutiry for client-calls (don't make private user info public)
-  "test": test // XXX, check secutiry for client-calls
+  "test": test 
 });
 
 
