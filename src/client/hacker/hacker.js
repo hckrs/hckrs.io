@@ -13,8 +13,7 @@ var hacker = function () { return Session.get('hacker'); }
 var hackerId = function () { return Session.get('hackerId'); }
 
 
-
-// input-to-database helper for array values.
+// DB: checkbox-to-array
 // when user check or uncheck a checkboxes it will be saved to the database.
 //
 // this is how the html is related to the database
@@ -34,9 +33,9 @@ var addToSet = function(event) {
   });
 }
 
-// input-to-database helper for text fields
-// when user starts typing in an input field
-// directly update the user info in the database  
+// DB: input-to-string
+// when user input field becomes unfoccused
+// update the user info in the database  
 //
 // this is how the html is related to the database
 // input[name]  --> database field name
@@ -136,6 +135,17 @@ Template.hackerEdit.helpers({
   "checked": function(field, value) {
     var isChecked = _.contains(pathValue(Meteor.user(), field), value);
     return isChecked ? 'checked="checked"' : "";
+  }
+});
+
+Template.hackerView.helpers({
+  "checked": function(field, value) {
+    var isChecked = _.contains(pathValue(Meteor.user(), field), value);
+    return isChecked ? 'checked="checked"' : "";
+  },
+  "urlCurrentUser": function() { 
+    var currentUser = Meteor.user();
+    return Router.routes['hacker'].url(currentUser); 
   }
 });
 

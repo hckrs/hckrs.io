@@ -97,8 +97,14 @@ if (Meteor.isClient) {
     return id ? { _id: id } : null;
   });
 
+  // check if the two values are equal (weak comparison)
   Handlebars.registerHelper('equals', function(val1, val2) {
     return val1 == val2;
+  });
+
+  // check if the given value is in the array
+  Handlebars.registerHelper('contains', function(array, value) {
+    return _.contains(array, value);
   });
 
 }

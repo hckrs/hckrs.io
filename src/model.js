@@ -23,8 +23,11 @@
       lat: Number,        // latitude
       lng: Number         // longitude
     },
-    homepage: String,     // external website of user 
-    hacking: [ String ],  // array of types: (websites|apps|software|design|life|hardware)*
+    homepage: String,     // external website of user
+    company: String,      // name of company
+    conpanyUrl: String,   // the website of the company 
+    hacking: [ String ],  // array of types: (web|apps|software|game|design|life|hardware)*
+    available: [ String ],// array with items where user is available for (drink|lunch)*
     social: {
       facebook: String,   // url to user's facebook profile
       github: String,     // url to user's github profile

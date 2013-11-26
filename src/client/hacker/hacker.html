@@ -298,14 +298,19 @@
           </div>
         </div>
 
-        {{#if profile.available}} <!-- Needs to be adjusted :) -->
+        
+        {{#if profile.available}}
         <div class="line">
           <div class="handle">
             available to
           </div>
           <div class="output">
-            <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : [#path]" class="btn btn-inverse available">have a drink</a>
-            <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : [#path]" class="btn btn-inverse available">have lunch</a>
+            {{#if contains profile.available "drink"}}
+            <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have a drink</a>
+            {{/if}}
+            {{#if contains profile.available "lunch"}}
+            <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have lunch</a>
+            {{/if}}
           </div>
         </div>
         {{/if}}
