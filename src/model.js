@@ -18,7 +18,6 @@
     picture: String,      // url of an avatar for this user
     name: String,         // full name of the user    
     email: String,        // e-mailadress
-    lang: String,         // language: (en|nl|nl|fr)?
     location: {
       lat: Number,        // latitude
       lng: Number         // longitude

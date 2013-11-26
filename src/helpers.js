@@ -7,6 +7,12 @@ capitaliseFirstLetter = function(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// check if all values from the first array
+// are present in the second array (weak comparison)
+allIn = function(values, allowedValues) {
+  return _.all(values, function(v) { return _.contains(allowedValues, v); });
+}
+
 omitNull = function(obj) {
   obj = _.clone(obj);
   _.each(obj, function(val, key) {
@@ -107,4 +113,17 @@ if (Meteor.isClient) {
     return _.contains(array, value);
   });
 
+}
+
+if (Meteor.isServer) {
+
+  /* MATCH helpers */
+  Match.In = function(allowedValues) {
+    return Match.Where(function(value) {
+      return _.contains(allowedValues, value);
+    });
+  }
+  Match.AllIn = function(allowedValues) {
+    return [ Match.In(allowedValues) ];
+  }
 }

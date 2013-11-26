@@ -18,7 +18,6 @@
 var publicUserFields = {
   "profile.picture": true,
   "profile.name": true,
-  "profile.lang": true,
   "profile.location": true,
   "profile.homepage": true,
   "profile.company": true,
