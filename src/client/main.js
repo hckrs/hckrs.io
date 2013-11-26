@@ -45,9 +45,9 @@ Template.main.rendered = function() {
   // auto grow input fields
   // resizing fields depending on their text size
   $("input.text").autoGrowInput({
-    comfortZone: 10,
-    minWidth: 180,
-    maxWidth: 400
+    comfortZone: 8,
+    minWidth: 100,
+    maxWidth: 500
   });
   
 }

@@ -1,7 +1,7 @@
 
 SETTINGS = {
 
-  MAPBOX_MAP: "jarnoleconte.g8igpcgk",
+  MAPBOX_MAP: "ramshorst.gcod0o2c",
 
   FACEBOOK: {
     appId: "609216679124014",
