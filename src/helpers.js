@@ -113,6 +113,11 @@ if (Meteor.isClient) {
     return _.contains(array, value);
   });
 
+  // return the current environment (local|production)
+  Handlebars.registerHelper('environment', function() {
+    return (Meteor.settings && Meteor.settings.public.environment) ||
+           (/localhost/.test(Meteor.absoluteUrl()) ? 'local' : 'production');
+  });  
 }
 
 

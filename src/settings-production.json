@@ -1,0 +1,24 @@
+{
+  "public": {
+    
+    "environment": "production",
+    
+    "mapbox": "ramshorst.gcod0o2c"
+
+  },
+
+  "facebook": {
+    "appId": "",
+    "secret": ""
+  },
+
+  "github": {
+    "clientId": "",
+    "secret": ""
+  },
+
+  "twitter": {
+    "consumerKey": "",
+    "secret": ""
+  }
+}
