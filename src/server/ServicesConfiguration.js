@@ -9,6 +9,9 @@ var facebookConfigured = Accounts.loginServiceConfiguration.findOne({service: 'f
 var githubConfigured = Accounts.loginServiceConfiguration.findOne({service: 'github'});
 var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'twitter'});
 
+// XXX TODO: do not write the 'id' and 'secret' directly into the code
+// this must be stored seperately, for example in a settings file or 
+// exported as environment variables.
 
 Meteor.startup(function() {
 
@@ -16,8 +19,8 @@ Meteor.startup(function() {
   if(!facebookConfigured) {
     Accounts.loginServiceConfiguration.insert({
       service: "facebook",
-      appId: Meteor.settings.facebook.appId,
-      secret: Meteor.settings.facebook.secret
+      appId: SETTINGS.FACEBOOK.appId,
+      secret: SETTINGS.FACEBOOK.secret
     });
   }
 
@@ -25,8 +28,8 @@ Meteor.startup(function() {
   if(!githubConfigured) {
     Accounts.loginServiceConfiguration.insert({
       service: "github",
-      clientId: Meteor.settings.github.clientId,
-      secret: Meteor.settings.github.secret
+      clientId: SETTINGS.GITHUB.clientId,
+      secret: SETTINGS.GITHUB.secret
     });
   }
 
@@ -34,8 +37,8 @@ Meteor.startup(function() {
   if(!twitterConfigured) {
     Accounts.loginServiceConfiguration.insert({
       service: "twitter",
-      consumerKey: Meteor.settings.twitter.consumerKey,
-      secret: Meteor.settings.twitter.secret
+      consumerKey: SETTINGS.TWITTER.consumerKey,
+      secret: SETTINGS.TWITTER.secret
     });
   }
   

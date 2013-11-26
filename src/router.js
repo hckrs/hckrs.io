@@ -32,20 +32,8 @@ if (Meteor.isClient) {
     }
   }
 
-  // verify if meteor is started up with a settings file
-  var settingsRequired = function() {
-    if (!Meteor.settings) {
-      this.render('requireSettingFile');
-      this.stop();
-    }
-  }
-
-
   // make sure the user is logged in, except for the pages below
   Router.before(loginRequired, {except: ['frontpage']});
-
-  // make sure there is a settings file specified
-  Router.before(settingsRequired);
 
   // global router configuration
   Router.configure({
