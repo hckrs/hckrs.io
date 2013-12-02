@@ -78,6 +78,7 @@ h2 {
 .main {
   float: left;
   width: 100%;
+  height: auto;
   margin: 0 auto;
 }
 
@@ -100,6 +101,7 @@ h2 {
 
 .content{
   margin-top: 48px;
+  height: auto;
 }
 
 
