@@ -23,24 +23,32 @@ var isUserProfileComplete = function() {
 // when user is logged in by filling in its credentials
 var manuallyLoggedIn = function() {
   /* do nothing */
+  /* no certainty that subscriptions are ready here */
 }
 
 // when user becomes logged in
 var afterLogin = function() {
   var route = Router._currentController.route.name; //current route
-  var noRoute = route == 'frontpage';
+
+  // when user isn't yet allowed to enter the site
+  // check if he has signed up with a valid invite code
+  if (Meteor.user() && !Meteor.user().allowAccess && Session.get('invitationCode')) {
   
-  if (noRoute) {
-    // if no route path is specified in the url: 
-    // A. redirect to user's profile when the information is incomplete
-    // B. redirect to the hackers list otherwise
+    // make a server call to check the invitation
+    Meteor.call('verifyInvitationCode', Session.get('invitationCode'), function(err) {
+      if (err) log("Error", err)
+      else setupSubscriptions() //rerun subscriptions
+    });
+  }
+  
+  // if no route path is specified in the url: 
+  // A. redirect to user's profile when the information is incomplete
+  // B. redirect to the hackers list otherwise
+  if (route == 'frontpage') {
     if (!isUserProfileComplete())
       Router.go('hacker', {_id: Meteor.userId()});
     else 
       Router.go('hackers');
-  } else {
-    // if there is a route path specified in the url
-    // show the corresponding page
   }
 }
 
@@ -63,19 +71,19 @@ var loggingInInProgress = function() {
 var loginStateHandler = function(c) {
   var state = Session.get('currentLoginState');
   if (c.firstRun) return;
-  switch(state) {
-    case 'loggedIn': afterLogin(); break;
-    case 'loggingIn': loggingInInProgress(); break;
-    case 'loggedOut': afterLogout(); break;
-  }
+  Deps.nonreactive(function() {
+    switch(state) {
+      case 'loggedIn': afterLogin(); break;
+      case 'loggingIn': loggingInInProgress(); break;
+      case 'loggedOut': afterLogout(); break;
+    }
+  });
 }
 
 // keep updating the currentLoginState when user is loggin in or out
 var observeLoginState = function() {
-  if (Meteor.userId() && Session.get('subscriptionsReady')) // logged in and rady
-    Session.set('currentLoginState', 'loggedIn');
-  else if (Meteor.userId()) // logged in but subscriptions arn't ready yet
-    setupPrivateSubscriptions();
+  if (Meteor.user() && Session.get('subscriptionsReady')) // logged in and rady
+    Session.set('currentLoginState', 'loggedIn'); 
   else if (Meteor.loggingIn()) // meteor is busy with logging in the user
     Session.set('currentLoginState', 'loggingIn');
   else // user is logged out
@@ -86,7 +94,7 @@ var observeLoginState = function() {
 Meteor.startup(function() {
   Session.set('currentLoginState', 'loggedOut');
   Session.set('subscriptionsReady', false);
-  setupPublicSubscriptions();
+  setupSubscriptions();
   Deps.autorun(loginStateHandler);
   Deps.autorun(observeLoginState);
 });
@@ -94,33 +102,35 @@ Meteor.startup(function() {
 
 /* SUBSCRIPTIONS */
 
-var setupPublicSubscriptions = function() {
 
-  var subscribeTo = ['publicUserDataCurrentUser', 'publicUserDataEmail', 'publicUserData'];
-  
-  // subscribe to collections
-  _.each(subscribeTo, function(collection) {
-    Meteor.subscribe(collection);
-  });
-}
+var setupSubscriptions = function() {
 
-var setupPrivateSubscriptions = function() {
+  var subscribeTo = ['invitations', 'publicUserDataCurrentUser', 'publicUserDataEmail', 'publicUserData'];
 
-  var subscribeTo = [];
-  
+  // reset subscriptions ready
+  Session.set('subscriptionsReady', false);
+
+  // NOTICE: empty subscriptions don't callback, so this can't be use
+  var callback = function() {};
+  Session.set('subscriptionsReady', true);
   // mark subscriptions as ready when they are completely loaded
-  var callback = _.after(subscribeTo.length, function() {
-    Session.set('subscriptionsReady', true);
-  });
+  // var callback = _.after(subscribeTo.length, function() {
+  //   Session.set('subscriptionsReady', true);
+  // });
 
+  // this unique hash makes it sure that all subscriptions rerun 
+  // when this method "setupSubscriptions" called again
+  var hash = Random.id();
+  
   // subscribe to collections
   _.each(subscribeTo, function(collection) {
-    Meteor.subscribe(collection, callback);
+    Meteor.subscribe(collection, hash, callback);
   });
 
   if (subscribeTo.length === 0)
     callback();
 }
+
 
 
 /* LOGIN functionality */

@@ -102,6 +102,13 @@
 
 
 
+<template name="accessDenied">
+  {{! when user isn't invited he can't enter the site }}
+  <h1 style="margin-bottom:48px;">Invite only</h1>
+  <p>The website is in BETA and you must be invited to enter the website.</p>
+  <p>We will contact you when the site becomes public.</p>
+</template>
+
 
 <template name="requireSettingFile">
   {{! this template reminds you that you must start meteor with a settings file }}

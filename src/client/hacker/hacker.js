@@ -98,6 +98,23 @@ var pictureChanged = function(event) {
 
 
 
+// send invite to someone 
+// so that he can signup for this site
+var sendInvite = function(event) {
+  event.preventDefault();
+
+  // create invite code
+  var code = Invitations.insert({});
+  var link = Router.routes['invite'].url({code: code});
+
+  // create mail
+  var receiver = ""; //empty
+  var subject = "Invite for hckrs.io";
+  var message = "Invite Link: "+link;
+
+  // open desktop mail app with example mail
+  document.location.href = "mailto:"+receiver+"?subject="+subject+"&body="+message;
+}
 
 
 
@@ -117,6 +134,10 @@ Template.hackerEdit.events({
   "click input[name='picture']": pictureChanged,
 
 });
+
+Template.invitations.events({
+  'click .invite': sendInvite
+})
 
 
 
@@ -148,6 +169,19 @@ Template.hackerView.helpers({
     return Router.routes['hacker'].url(currentUser); 
   }
 });
+
+Template.invitations.helpers({
+  'numberOfInvitationsLeft': function() {
+    var numberSend = Invitations.find().count();
+    var limit = Meteor.settings.public.userInvitationLimit;
+    return Math.max(0, limit - numberSend);
+  },
+  'disabled': function() {
+    var numberSend = Invitations.find().count();
+    var limit = Meteor.settings.public.userInvitationLimit;
+    return numberSend >= limit ? 'disabled="disabled"' : '';
+  }
+})
 
 
 // RENDERING

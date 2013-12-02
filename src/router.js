@@ -4,19 +4,25 @@ if (Meteor.isClient) {
   // ROUTES 
 
   Router.map(function () {
-    this.route('frontpage', { path: '/' });
-    this.route('hackers', { path: '/hackers' });
-    this.route('places', { path: '/places' });
-    this.route('hacker', { 
-      path: '/hacker/:_id', 
-      before: function() { 
-        var hackerId = this.params._id;
-        Session.set('hackerId', hackerId);
-        Deps.autorun(function() {
-          Session.set('hacker', Meteor.users.findOne(hackerId));
-        });
-      }
-    });
+    
+    this.route('frontpage', { path: '/', template: 'frontpage' });
+    
+    this.route('hackers', { path: '/hackers', template: 'hackers' });
+    
+    this.route('places', { path: '/places', template: 'places' });
+    
+    this.route('invite', { path: '/invite/:code', template: 'frontpage', before: function() {
+      Session.set('invitationCode', this.params.code);
+      this.redirect('frontpage');
+    }});
+    
+    this.route('hacker', { path: '/hacker/:_id', template: 'hacker', before: function() { 
+      var hackerId = this.params._id;
+      Session.set('hackerId', hackerId);
+      Deps.autorun(function() {
+        Session.set('hacker', Meteor.users.findOne(hackerId));
+      });
+    }});
 
   });
 
@@ -27,7 +33,14 @@ if (Meteor.isClient) {
   // when login is required, render the frontpage
   var loginRequired = function() {
     if(!isLoggedIn()) {
-      this.render('frontpage');
+      this.redirect('frontpage');
+    }
+  }
+
+  // make sure that user is allowed to enter the site
+  var allowedAccess = function() {
+    if(Meteor.user() && !Meteor.user().allowAccess) {
+      this.render('accessDenied');
       this.stop();
     }
   }
@@ -41,8 +54,12 @@ if (Meteor.isClient) {
   }
 
 
+
   // make sure the user is logged in, except for the pages below
-  Router.before(loginRequired, {except: ['frontpage']});
+  Router.before(loginRequired, {except: ['frontpage', 'invite']});
+
+  // make sure that user is allowed to enter the site
+  Router.before(allowedAccess, {except: ['frontpage', 'invite']})
 
   // make sure there is a settings file specified
   Router.before(settingsRequired);

@@ -228,6 +228,10 @@ var mergeUserData = function(user, service, userData) {
 Accounts.onCreateUser(function (options, user) {
   user.profile = options.profile;
 
+  // no invite required for the first registered user
+  if (Meteor.users.find().count() === 0)
+    user.allowAccess = true;
+
   // determine which external service is used for account creation
   var serviceObj = _.omit(user.services, ['resume']);
   var serviceName = _.first(_.keys(serviceObj));
@@ -328,6 +332,35 @@ var removeServiceFromCurrentUser = function(service) {
 }
 
 
+// when user created an account he hasn't directly full access
+// the client can call this function to verify an invitation code
+// so we can permit access for this user
+var verifyInvitationCode = function(code) {
+  check(code, String);
+  
+  // search invitation
+  var invitation = Invitations.findOne(code);
+
+  if (!this.userId)
+    throw new Meteor.Error(500, "Unknow user: " + this.userId);
+
+  if (!invitation)
+    throw new Meteor.Error(500, "Unknow invitation");
+
+  if (invitation.used)
+    throw new Meteor.Error(500, "Invitation already used");
+
+  // code is valid!
+  
+  // assign invitation to current user
+  var modifier = { receivingUser: this.userId, signedupAt: new Date(), used: true };
+  Invitations.update(invitation._id, {$set: modifier});   
+
+  // allow access for this user
+  Meteor.users.update(this.userId, {$set: {allowAccess: true}});
+}
+
+
 // test some functionality
 // XXX, check secutiry for client-calls
 var test = function() {
@@ -337,6 +370,7 @@ var test = function() {
 
 // define methods that can be called from the client-side
 Meteor.methods({
+  "verifyInvitationCode": verifyInvitationCode,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
   "test": test 

@@ -14,6 +14,7 @@
 // when a user match a rule it will directly published with the specified 
 // fields. The lower rules are not evaluated further for that user.
 // on the client you must subscribe all publish rules.
+// note: we not publish all users, only the ones that are allowed to access
 
 var publicUserFields = {
   "profile.picture": true,
@@ -38,13 +39,14 @@ var publicUserFieldsEmail = _.extend(_.clone(publicUserFields), {
 
 var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
   "emails": true,
+  "allowAccess": true,
   "profile.socialPicture": true
 });
 
 
 // 1. current logged in user
-// publish all data in the 'emails' and 'profile' fields for the current user
-Meteor.publish("publicUserDataCurrentUser", function () {
+// publish additional fields 'emails' and 'profile' for the current user
+Meteor.publish("publicUserDataCurrentUser", function (hash) {
   if(!this.userId) return null;
   var selector = {_id: this.userId};
   return Meteor.users.find(selector, {fields: publicUserFieldsCurrentUser}); 
@@ -53,17 +55,41 @@ Meteor.publish("publicUserDataCurrentUser", function () {
 // 2. users with public e-mailaddress
 // we make emailaddresses public of the users that are available for drink/lunch
 // publish their public information including emailaddress
-Meteor.publish("publicUserDataEmail", function () {
+Meteor.publish("publicUserDataEmail", function (hash) {
   if(!this.userId) return null;
-  var selector = {"profile.available": {$exists: true, $not: {$size: 0}}};
+  if(!allowedAccess(this.userId)) return null;
+  var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, allowAccess: true};
   return Meteor.users.find(selector, {fields: publicUserFieldsEmail}); 
 });
 
 // 3. otherwise only the default public user data is published
 // publish all public profile data of all users
-Meteor.publish("publicUserData", function () {
+Meteor.publish("publicUserData", function (hash) {
   if(!this.userId) return null;
-  return Meteor.users.find({}, {fields: publicUserFields}); 
+  if(!allowedAccess(this.userId)) return null;
+  return Meteor.users.find({allowAccess: true}, {fields: publicUserFields}); 
 });
 
+
+
+/* INVITATIONS */
+
+// Only publish invitation codes for the logged in user
+Meteor.publish("invitations", function (hash) {
+  if(!this.userId) return null;
+  if(!allowedAccess(this.userId)) return null;
+  return Invitations.find({broadcastUser: this.userId});
+});
+
+
+
+
+// helper functions
+
+// check if user is allowed to access the site
+// otherwise all database modifier functions will be blocked
+var allowedAccess = function(userId) {
+  var user = Meteor.users.findOne(userId);
+  return user && user.allowAccess;
+}
 

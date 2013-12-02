@@ -1,6 +1,8 @@
 {
   "public": {
     "environment": "local",
+
+    "userInvitationLimit": 3,
     
     "mapboxDefault": "ramshorst.gd0ekbb3",
     "mapboxPlaces": "ramshorst.gcoejeom"

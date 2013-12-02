@@ -124,6 +124,13 @@ if (Meteor.isClient) {
 
 /* MATCH helpers */
 
+// match if value equals the given value
+Match.Equals = function(validValue) {
+  return Match.Where(function(value) {
+    return _.equals(value, validValue);
+  });
+}
+
 // pass in an array of allowed elements
 // when matching a string it must be present in the allowed array
 Match.In = function(allowedValues) {

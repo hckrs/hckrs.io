@@ -6,18 +6,22 @@
 // meteor allow users to update their public profiles
 // other information can't be modified by default
 
-Meteor.users.deny({ //DENY
+Meteor.users.deny({
   insert: function(userId, doc) {
-    return true; //deny
+    return true; //DENY
   },
   remove: function(userId, doc) {
-    return true; //deny
+    return true; //DENY
   },
   update: function(userId, doc, fields, modifier) {
-      
+    
+    // deny if user isn't permitted to access te site
+    if (!allowedAccess(userId))
+      return true; //DENY
+
     // deny if user don't ownes this document
     if (!_.isEqual(userId, doc._id))
-      return true; //deny
+      return true; //DENY
 
 
     /* handle modifier */
@@ -60,3 +64,55 @@ Meteor.users.deny({ //DENY
 });
 
 
+
+/* INVITATIONS */
+
+// only allow inserting invitations when user haven't reached its invitation limit
+// removing and updating is not allowed.
+
+Invitations.deny({
+  remove: function() { return true; /* DENY */ },
+  update: function() { return true; /* DENY */ },
+  insert: function(userId, doc) { 
+
+    // deny if user isn't permitted to access te site
+    if (!allowedAccess(userId))
+      return true; //DENY
+
+    // check invitation limit
+    var numberSend = Invitations.find({broadcastUser: userId}).count();
+    var limit = Meteor.settings.public.userInvitationLimit;
+    if (numberSend >= limit)
+      return true; //DENY
+
+    // DENY if NO match
+    return !(Match.test(doc, {
+      '_id': String
+    }));
+  }
+});
+Invitations.allow({
+  insert: function(userId, doc) { 
+
+    // set additional properties
+    _.extend(doc, {
+      'broadcastUser': userId,
+      'createdAt': new Date(),
+    });
+
+    return true;
+  }
+});
+
+
+
+
+
+// helper functions
+
+// check if user is allowed to access the site
+// otherwise all database modifier functions will be blocked
+var allowedAccess = function(userId) {
+  var user = Meteor.users.findOne(userId);
+  return user && user.allowAccess;
+}

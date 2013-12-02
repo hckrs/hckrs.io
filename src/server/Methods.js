@@ -4,5 +4,7 @@
 
 
 Meteor.methods({
-  "totalHackers": function() { return Meteor.users.find().count(); }
+  "totalHackers": function() { 
+    return Meteor.users.find({allowAccess: true}).count(); 
+  }
 });
