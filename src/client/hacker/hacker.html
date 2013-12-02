@@ -25,11 +25,9 @@
           <div class="control-label">
 
             <div id="profilePicture">
-              <div class="current-picture">
+              <div class="current-picture {{changePictureAllowed}}">
                 <div class="change hide">change</div>
-                {{#constant}}
-                  <div style="background-image:url({{profile.picture}});" class="picture"></div>    
-                {{/constant}}
+                <div style="background-image:url({{profile.picture}});" class="picture"></div>    
               </div>
               <div class="picture-choser {{dynamicClass 'pictureChoser'}}" id="pictureChoser">
                 {{#with profile.socialPicture}}

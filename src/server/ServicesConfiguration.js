@@ -191,16 +191,22 @@ var mergeUserData = function(user, service, userData) {
 
   // fill undefined or null properties in user's profile with the new user data
   user.profile = _.defaults(omitNull(user.profile), omitNull(data)); 
+
+  // default required properties
+  if (!user.profile.social) 
+    user.profile.social = {};
+
+  if (!user.profile.socialPicture) 
+    user.profile.socialPicture = {};
   
   // customized profile properties
-  if (userData.link) {
-    if (!user.profile.social) user.profile.social = {};
+  if (userData.link) 
     user.profile.social[service] = userData.link;
-  }
+
   if (userData.picture) {
-    if (!user.profile.socialPicture) user.profile.socialPicture = {};
     user.profile.socialPicture[service] = userData.picture;
-    if (!user.profile.picture) user.profile.picture = userData.picture;
+    if (!user.profile.picture) 
+      user.profile.picture = userData.picture;
   }
 
   // add e-mail address to user's account
@@ -319,6 +325,11 @@ var removeServiceFromCurrentUser = function(service) {
 
   if (!user.services[service])
     throw new Meteor.Error(500, "Service isn't linked to : " + userId);     
+
+  // if this service profile picture is setted as default, choose another one
+  var otherPictures = _.values(_.omit(user.profile.socialPicture, service));
+  if (!_.contains(otherPictures, user.profile.picture))
+    Meteor.users.update(userId, {$set: {"profile.picture": _.first(otherPictures)}});
 
   // create modifiers
   var unsetModifier = _.object([

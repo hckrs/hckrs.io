@@ -67,9 +67,12 @@ var fieldChanged = function(event) {
 }
 
 // show picture choser when user clicked on the current profile picture
+// and user is connected to multiple services
 var showPictureChoser = function() {
-  var $elm = $("#hacker #profilePicture .picture-choser");
-  addDynamicClass($elm, 'show');
+  if (countSocialServices() > 1) {
+    var $elm = $("#hacker #profilePicture .picture-choser");
+    addDynamicClass($elm, 'show');
+  }
 }
 
 // hide picture choser
@@ -116,6 +119,11 @@ var sendInvite = function(event) {
   document.location.href = "mailto:"+receiver+"?subject="+subject+"&body="+message;
 }
 
+// count the number of social services the user is connected to
+var countSocialServices = function() {
+  return _.compact(_.values(hacker().profile.social || {})).length
+}
+
 
 
 
@@ -156,6 +164,10 @@ Template.hackerEdit.helpers({
   "checked": function(field, value) {
     var isChecked = _.contains(pathValue(Meteor.user(), field), value);
     return isChecked ? 'checked="checked"' : "";
+  },
+  "changePictureAllowed": function() {
+    // activate changing social pictures only when connected to multiple services
+    return countSocialServices() > 1 ? 'change-allowed' : '';
   }
 });
 
