@@ -3,14 +3,17 @@
 
 // bind total number of hackers to template
 Template.frontpage.helpers({
-  "totalHackers": function() { return Session.get('totalHackers') || '...'; }
+  "totalHackers": function() { 
+    var total = Session.get('totalHackers');
+    return _.isNumber(total) ? total : '...'; 
+  }
 });
 
 // request number of hackers when template frontpage is created 
 Template.frontpage.created = function() {
   // request from server the number of hackers
   Meteor.call('totalHackers', function(error, total) {
-    Session.set('totalHackers', total);
+    Session.set('totalHackers', _.isNumber(total) && total);
   });
 }
 
