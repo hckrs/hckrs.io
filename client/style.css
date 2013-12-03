@@ -208,6 +208,14 @@ A.hackers-social{
   line-height: 48px;
 }
 
+#invitations .invite {
+  height: 35px;
+}
+#invitations .invite.used {
+  padding-top: 10px;
+  height: 25px;
+}
+
 
 /* BEGIN input elements */
 

@@ -5,7 +5,6 @@
   {{#with hacker}}
     {{#if hackerIsCurrentUser}}
       {{> hackerEdit}}
-      {{> invitations}}
     {{else}}
       {{> hackerView}}
     {{/if}}
@@ -322,11 +321,4 @@
 
 
 
-<template name="invitations">
-  <div id="invitations">
-    <strong>{{numberOfInvitationsLeft}}</strong> invitations left<br/>
-    {{#if numberOfInvitationsLeft}}
-      <button class="btn btn-inverse invite">invite somone</button>
-    {{/if}}
-  </div>
-</template>
+

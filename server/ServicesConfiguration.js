@@ -247,6 +247,10 @@ Accounts.onCreateUser(function (options, user) {
   user.localRank = (local && local.localRank || 0) + 1;
   user.globalRank = (global && global.globalRank || 0) + 1;
 
+  // give this user the default number of invite codes
+  var numberOfInvites = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
+  _.times(numberOfInvites, _.partial(createInviteForUser, user._id));
+
   // determine which external service is used for account creation
   var serviceObj = _.omit(user.services, ['resume']);
   var serviceName = _.first(_.keys(serviceObj));
@@ -352,6 +356,8 @@ var removeServiceFromCurrentUser = function(service) {
 }
 
 
+
+
 // when user created an account he hasn't directly full access
 // the client can call this function to verify an invitation code
 // so we can permit access for this user
@@ -359,10 +365,13 @@ var verifyInvitationCode = function(code) {
   check(code, String);
   
   // search invitation
-  var invitation = Invitations.findOne(code);
+  var invitation = Invitations.findOne({code: code});
 
-  if (!this.userId)
+  if (!Meteor.user())
     throw new Meteor.Error(500, "Unknow user: " + this.userId);
+
+  if (Meteor.user().allowAccess)
+    throw new Meteor.Error(500, "User has already access to the site.");
 
   if (!invitation)
     throw new Meteor.Error(500, "Unknow invitation");
@@ -373,11 +382,24 @@ var verifyInvitationCode = function(code) {
   // code is valid!
   
   // assign invitation to current user
-  var modifier = { receivingUser: this.userId, signedupAt: new Date(), used: true };
+  var modifier = { receivingUser: Meteor.userId(), signedupAt: new Date(), used: true };
   Invitations.update(invitation._id, {$set: modifier});   
 
   // allow access for this user
-  Meteor.users.update(this.userId, {$set: {allowAccess: true}});
+  Meteor.users.update(Meteor.userId(), {$set: {allowAccess: true}});
+}
+
+
+// generate a new invitation code for a user
+// that the user can give to someone else
+createInviteForUser = function (userId) { // GLOBAL (also called from Admin.js)
+
+  // insert invitation
+  Invitations.insert({
+    'code': Random.hexString(50),
+    'broadcastUser': userId,
+    'createdAt': new Date(),
+  });
 }
 
 

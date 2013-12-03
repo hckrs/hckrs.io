@@ -17,18 +17,30 @@
 // additional we transform the user objects before they will be returned
 // from fetch() or findOne() so we can set extra properties, such as the localRankHash.
 
-Meteor.users = Meteor.users; // already defined
-
 Meteor.users._transform = function(user) {
-  user.localRankHash = bitHash(user.localRank)
+  user.localRankHash = bitHash(user.localRank);
+  user.globalRankHash = bitHash(user.globalRank);
   return user;
 }
 
 
 // Invitations is a collection with valid invitation codes
 // the user can give such code to someone to let him signup 
+//
+// add additional user information of the user who has used the invitation
 
-Invitations = new Meteor.Collection('invitations');
+Invitations = new Meteor.Collection('invitations', {transform: function(invitation) {
+  if (invitation.receivingUser) {
+    var receiver = Meteor.users.findOne(invitation.receivingUser);
+    if (receiver) { 
+      // add info of receiver
+      invitation.name = receiver.profile.name;
+      invitation.localRankHash = bitHash(receiver.localRank);
+      invitation.globalRankHash = bitHash(receiver.globalRank);
+    }
+  }
+  return invitation;
+}});
 
 
 

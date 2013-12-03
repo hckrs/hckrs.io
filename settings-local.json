@@ -1,13 +1,12 @@
 {
   "public": {
     "environment": "local",
-
-    "userInvitationLimit": 3,
     
     "mapboxDefault": "ramshorst.gd0ekbb3",
     "mapboxPlaces": "ramshorst.gcoejeom"
   },
 
+  "defaultNumberOfInvitesForNewUsers": 1,
 
   "facebook": {
     "appId": "609216679124014",

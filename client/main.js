@@ -32,6 +32,15 @@ Template.hackers.helpers({
   "hackers": function() { return Meteor.users.find({}, {reactive: false}).fetch(); }
 });
 
+Template.invitations.helpers({
+  'total': function() { return Invitations.find().count(); },
+  'totalUsed': function() { return Invitations.find({used: true}).count(); },
+  'totalUnused': function() { return Invitations.find().count() - Invitations.find({used: true}).count(); },
+  'invitations': function() { return Invitations.find({}, {sort: {used: -1}}).fetch(); },
+  'link': function() { return Router.routes['invite'].url(this); },
+  'screenName': function() { return this.name || 'anonymous'; }
+});
+
 
 
 /* GENERAL */

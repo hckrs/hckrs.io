@@ -101,24 +101,6 @@ var pictureChanged = function(event) {
 
 
 
-// send invite to someone 
-// so that he can signup for this site
-var sendInvite = function(event) {
-  event.preventDefault();
-
-  // create invite code
-  var code = Invitations.insert({});
-  var link = Router.routes['invite'].url({code: code});
-
-  // create mail
-  var receiver = ""; //empty
-  var subject = "Invite for hckrs.io";
-  var message = "Invite Link: "+link;
-
-  // open desktop mail app with example mail
-  document.location.href = "mailto:"+receiver+"?subject="+subject+"&body="+message;
-}
-
 // count the number of social services the user is connected to
 var countSocialServices = function() {
   return _.compact(_.values(hacker().profile.social || {})).length
@@ -142,10 +124,6 @@ Template.hackerEdit.events({
   "click input[name='picture']": pictureChanged,
 
 });
-
-Template.invitations.events({
-  'click .invite': sendInvite
-})
 
 
 
@@ -182,18 +160,7 @@ Template.hackerView.helpers({
   }
 });
 
-Template.invitations.helpers({
-  'numberOfInvitationsLeft': function() {
-    var numberSend = Invitations.find().count();
-    var limit = Meteor.settings.public.userInvitationLimit;
-    return Math.max(0, limit - numberSend);
-  },
-  'disabled': function() {
-    var numberSend = Invitations.find().count();
-    var limit = Meteor.settings.public.userInvitationLimit;
-    return numberSend >= limit ? 'disabled="disabled"' : '';
-  }
-})
+
 
 
 // RENDERING

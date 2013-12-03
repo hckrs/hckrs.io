@@ -67,41 +67,12 @@ Meteor.users.deny({
 
 /* INVITATIONS */
 
-// only allow inserting invitations when user haven't reached its invitation limit
-// removing and updating is not allowed.
+// invitations are read only
 
 Invitations.deny({
   remove: function() { return true; /* DENY */ },
   update: function() { return true; /* DENY */ },
-  insert: function(userId, doc) { 
-
-    // deny if user isn't permitted to access te site
-    if (!allowedAccess(userId))
-      return true; //DENY
-
-    // check invitation limit
-    var numberSend = Invitations.find({broadcastUser: userId}).count();
-    var limit = Meteor.settings.public.userInvitationLimit;
-    if (numberSend >= limit)
-      return true; //DENY
-
-    // DENY if NO match
-    return !(Match.test(doc, {
-      '_id': String
-    }));
-  }
-});
-Invitations.allow({
-  insert: function(userId, doc) { 
-
-    // set additional properties
-    _.extend(doc, {
-      'broadcastUser': userId,
-      'createdAt': new Date(),
-    });
-
-    return true;
-  }
+  insert: function() { return true; /* DENY */ }
 });
 
 

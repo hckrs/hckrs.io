@@ -1,6 +1,15 @@
-/* server startup */
+
 
 Meteor.startup(function() {
-  /* nothing */
+  
+  /* server startup */
+  // ...
+  
 });
 
+
+
+// GLOBAL server functions
+// these functions can be called from everywhere on the server
+
+// ...

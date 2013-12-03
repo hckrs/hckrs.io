@@ -93,12 +93,30 @@
  
   <div style="clear:both;"></div>
 
+  {{> invitations}}
 
-  <div style="margin-top:24px;font-size:15px;line-height:24px;font-weight:100;color:222;  color: white;
-  text-shadow: 1px 1px 1px #777;
-"><a href="mailto:?subject=hckrs.io&body=http://hckrs.io/" style="border:0px;"><img src="/img/help.svg" alt="Help!" style="margin-bottom:24px;"></a><br/>Only you know all the cool hackers in Lyon...<br/>We would be forever gratefull if you <a href="mailto:?subject=hckrs.io&body=http://hckrs.io/" style="color:#FFF;"><b>*make them*</b></a> join ;)</div>
 </template>
 
+
+<template name="invitations">
+  <div id="invitations">
+    {{#if invitations}}
+      <strong>{{totalUsed}} people invited / {{totalUnused}} invitations left</strong>
+    {{/if}}
+    {{#each invitations}}
+      {{#if used}}
+        <div class="invite used">
+          <span class="icon-ok icon-white"></span> 
+          <a href="{{pathFor 'hacker'}}">{{screenName}}</a>
+        </div>
+      {{else}}
+        <div class="invite used">
+          <input type="text" value="{{link}}" />
+        </div>
+      {{/if}}
+    {{/each}}
+  </div>
+</template>
 
 
 
