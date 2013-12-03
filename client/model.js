@@ -13,8 +13,16 @@
 
 // Meteor.users is a collection with all user data
 // this collection is already predefined by meteor
+//
+// additional we transform the user objects before they will be returned
+// from fetch() or findOne() so we can set extra properties, such as the localRankHash.
 
 Meteor.users = Meteor.users; // already defined
+
+Meteor.users._transform = function(user) {
+  user.localRankHash = bitHash(user.localRank)
+  return user;
+}
 
 
 // Invitations is a collection with valid invitation codes

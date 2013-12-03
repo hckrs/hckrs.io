@@ -238,6 +238,15 @@ Accounts.onCreateUser(function (options, user) {
   if (Meteor.users.find().count() === 0)
     user.allowAccess = true;
 
+  // set the city where this user becomes registered
+  user.city = "lyon";
+
+  // determine and set the hacker ranking
+  var local = Meteor.users.findOne({city: user.city}, {sort: {localRank: -1}});
+  var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
+  user.localRank = (local && local.localRank || 0) + 1;
+  user.globalRank = (global && global.globalRank || 0) + 1;
+
   // determine which external service is used for account creation
   var serviceObj = _.omit(user.services, ['resume']);
   var serviceName = _.first(_.keys(serviceObj));

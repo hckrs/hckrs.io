@@ -40,6 +40,18 @@ exec = function(func) {
 }
 
 
+// calculate bithash of a number
+// transform into a string where 0 and 1 are replaced by the given characters
+bitHash = function(num) {
+  return parseInt(num).toString(2).replace(/0/g, '_').replace(/1/g, '-');
+}
+
+// invert the bithash opration
+bitHashInv = function(hash) {
+  return parseInt(hash.replace(/_/g, '0').replace(/-/g, '1'), 2);
+}
+
+
 if (Meteor.isClient) {
 
   // check if user is logged in

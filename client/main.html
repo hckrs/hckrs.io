@@ -50,7 +50,7 @@
 
     <div class="header">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="Hackers Welcome" class="logo"></a>
-      {{#with _currentUser}}<div class="menu">
+      {{#with currentUser}}<div class="menu">
         <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
         <a href="{{pathFor 'hacker'}}" class="menu">profile</a> •
         <a href="{{pathFor 'places'}}" class="menu">places</a>

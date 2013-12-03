@@ -17,6 +17,9 @@
 // note: we not publish all users, only the ones that are allowed to access
 
 var publicUserFields = {
+  "city": true,
+  "localRank": true,
+  "globalRank": true,
   "profile.picture": true,
   "profile.name": true,
   "profile.location": true,
@@ -47,7 +50,7 @@ var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
 // 1. current logged in user
 // publish additional fields 'emails' and 'profile' for the current user
 Meteor.publish("publicUserDataCurrentUser", function (hash) {
-  if(!this.userId) return null;
+  if(!this.userId) return [];
   var selector = {_id: this.userId};
   return Meteor.users.find(selector, {fields: publicUserFieldsCurrentUser}); 
 });
@@ -56,8 +59,8 @@ Meteor.publish("publicUserDataCurrentUser", function (hash) {
 // we make emailaddresses public of the users that are available for drink/lunch
 // publish their public information including emailaddress
 Meteor.publish("publicUserDataEmail", function (hash) {
-  if(!this.userId) return null;
-  if(!allowedAccess(this.userId)) return null;
+  if(!this.userId) return [];
+  if(!allowedAccess(this.userId)) return [];
   var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, allowAccess: true};
   return Meteor.users.find(selector, {fields: publicUserFieldsEmail}); 
 });
@@ -65,8 +68,8 @@ Meteor.publish("publicUserDataEmail", function (hash) {
 // 3. otherwise only the default public user data is published
 // publish all public profile data of all users
 Meteor.publish("publicUserData", function (hash) {
-  if(!this.userId) return null;
-  if(!allowedAccess(this.userId)) return null;
+  if(!this.userId) return [];
+  if(!allowedAccess(this.userId)) return [];
   return Meteor.users.find({allowAccess: true}, {fields: publicUserFields}); 
 });
 
@@ -76,8 +79,8 @@ Meteor.publish("publicUserData", function (hash) {
 
 // Only publish invitation codes for the logged in user
 Meteor.publish("invitations", function (hash) {
-  if(!this.userId) return null;
-  if(!allowedAccess(this.userId)) return null;
+  if(!this.userId) return [];
+  if(!allowedAccess(this.userId)) return [];
   return Invitations.find({broadcastUser: this.userId});
 });
 

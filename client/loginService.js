@@ -46,7 +46,7 @@ var afterLogin = function() {
   // B. redirect to the hackers list otherwise
   if (route == 'frontpage') {
     if (!isUserProfileComplete())
-      Router.go('hacker', {_id: Meteor.userId()});
+      Router.go('hacker', Meteor.user());
     else 
       Router.go('hackers');
   }
@@ -82,8 +82,10 @@ var loginStateHandler = function(c) {
 
 // keep updating the currentLoginState when user is loggin in or out
 var observeLoginState = function() {
-  if (Meteor.user() && Session.get('subscriptionsReady')) // logged in and rady
+  if (Meteor.user() && Session.get('userSubscriptionsReady')) // logged in and rady
     Session.set('currentLoginState', 'loggedIn'); 
+  else if (Meteor.user()) // logged in but wait to subscriptions are reloaded
+    setupSubscriptions();
   else if (Meteor.loggingIn()) // meteor is busy with logging in the user
     Session.set('currentLoginState', 'loggingIn');
   else // user is logged out
@@ -94,6 +96,7 @@ var observeLoginState = function() {
 Meteor.startup(function() {
   Session.set('currentLoginState', 'loggedOut');
   Session.set('subscriptionsReady', false);
+  Session.set('userSubscriptionsReady', false);
   setupSubscriptions();
   Deps.autorun(loginStateHandler);
   Deps.autorun(observeLoginState);
@@ -109,14 +112,14 @@ var setupSubscriptions = function() {
 
   // reset subscriptions ready
   Session.set('subscriptionsReady', false);
-
-  // NOTICE: empty subscriptions don't callback, so this can't be use
-  var callback = function() {};
-  Session.set('subscriptionsReady', true);
+  Session.set('userSubscriptionsReady', false);
+  
   // mark subscriptions as ready when they are completely loaded
-  // var callback = _.after(subscribeTo.length, function() {
-  //   Session.set('subscriptionsReady', true);
-  // });
+  var callback = _.after(subscribeTo.length, function() {
+    Session.set('subscriptionsReady', true);
+    if (Meteor.user()) // XXX can we assume that Meteor.user() is always setted at this point?
+      Session.set('userSubscriptionsReady', true);
+  });
 
   // this unique hash makes it sure that all subscriptions rerun 
   // when this method "setupSubscriptions" called again

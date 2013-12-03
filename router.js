@@ -16,13 +16,19 @@ if (Meteor.isClient) {
       this.redirect('frontpage');
     }});
     
-    this.route('hacker', { path: '/hacker/:_id', template: 'hacker', before: function() { 
-      var hackerId = this.params._id;
-      Session.set('hackerId', hackerId);
-      Deps.autorun(function() {
-        Session.set('hacker', Meteor.users.findOne(hackerId));
-      });
+    this.route('hacker', { path: '/:localRankHash', template: 'hacker', before: function() { 
+      var city = 'lyon';
+      var localRankHash = this.params.localRankHash;
+      var localRank = bitHashInv(localRankHash);
+      var hacker = Meteor.users.findOne({city: city, localRank: localRank});
+
+      if (!hacker)
+        this.redirect('frontpage');
+      
+      Session.set('hackerId', hacker._id);
+      Session.set('hacker', hacker);
     }});
+
 
   });
 
