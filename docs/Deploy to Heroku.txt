@@ -1,0 +1,28 @@
+
+(always perform terminal commands from the app root folder)
+
+
+INSTALL HEROKU command line tools
+
+1. download heroku toolbelt (https://toolbelt.heroku.com)
+
+$ heroku login
+
+
+
+CREATE APP
+
+$ heroku apps:create hckrs --stack cedar --buildpack https://github.com/oortcloud/heroku-buildpack-meteorite.git
+
+$ heroku config:add ROOT_URL=http://hckrs.herokuapp.com
+
+
+
+UPDATE APP
+
+[optional: update settings file]
+$ heroku config:add METEOR_SETTINGS="`cat settings-production.json`"
+
+$ git push heroku master
+
+
