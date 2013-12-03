@@ -13,7 +13,7 @@ Template.frontpage.helpers({
 Template.frontpage.created = function() {
   // request from server the number of hackers
   Meteor.call('totalHackers', function(error, total) {
-    Session.set('totalHackers', _.isNumber(total) && total);
+    Session.set('totalHackers', total);
   });
 }
 
