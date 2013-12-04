@@ -236,7 +236,7 @@ Accounts.onCreateUser(function (options, user) {
 
   // no invite required for the first registered user
   if (Meteor.users.find().count() === 0)
-    user.allowAccess = true;
+    user.isInvited = true;
 
   // set the city where this user becomes registered
   user.city = "lyon";
@@ -370,8 +370,8 @@ var verifyInvitationCode = function(code) {
   if (!Meteor.user())
     throw new Meteor.Error(500, "Unknow user: " + this.userId);
 
-  if (Meteor.user().allowAccess)
-    throw new Meteor.Error(500, "User has already access to the site.");
+  if (Meteor.user().isInvited)
+    throw new Meteor.Error(500, "User is already invited.");
 
   if (!invitation)
     throw new Meteor.Error(500, "Unknow invitation");
@@ -383,10 +383,13 @@ var verifyInvitationCode = function(code) {
   
   // assign invitation to current user
   var modifier = { receivingUser: Meteor.userId(), signedupAt: new Date(), used: true };
-  Invitations.update(invitation._id, {$set: modifier});   
+  Invitations.update(invitation._id, {$set: modifier});  
 
-  // allow access for this user
-  Meteor.users.update(Meteor.userId(), {$set: {allowAccess: true}});
+  // mark user as invited
+  Meteor.users.update(Meteor.userId(), {$set: {isInvited: true}});
+
+  // check if user now get access to the website
+  requestAccess(); 
 }
 
 
@@ -403,6 +406,30 @@ createInviteForUser = function (userId) { // GLOBAL (also called from Admin.js)
 }
 
 
+// request allow access for a user
+// user will be allowed to access the site if he is invited
+// and his profile is complete
+var requestAccess = function() {
+
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user");
+
+  if (Meteor.user().allowAccess)
+    throw new Meteor.Error(500, "User has already access to the site.");
+
+  if (!Meteor.user().isInvited)
+    throw new Meteor.Error(500, "User hasn't used an invitation code.");
+
+  if (!Meteor.user().profile.email || !Meteor.user().profile.name)
+    throw new Meteor.Error(500, "User profile is incomplete.");
+
+  // access allowed!
+
+  // allow access for this user
+  Meteor.users.update(Meteor.userId(), {$set: {allowAccess: true}});
+}
+
+
 // test some functionality
 // XXX, check secutiry for client-calls
 var test = function() {
@@ -412,6 +439,7 @@ var test = function() {
 
 // define methods that can be called from the client-side
 Meteor.methods({
+  "requestAccess": requestAccess,
   "verifyInvitationCode": verifyInvitationCode,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,

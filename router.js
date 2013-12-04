@@ -39,15 +39,19 @@ if (Meteor.isClient) {
   // when login is required, render the frontpage
   var loginRequired = function() {
     if(!isLoggedIn()) {
-      this.redirect('frontpage');
+      if (Meteor.userId()) 
+        this.stop(); // login in progress, wait!
+      else {
+        this.stop();
+        this.render('frontpage'); //hold current route, but render frontpage
+      }
     }
   }
 
   // make sure that user is allowed to enter the site
   var allowedAccess = function() {
     if(Meteor.user() && !Meteor.user().allowAccess) {
-      this.render('accessDenied');
-      this.stop();
+      this.redirect('hacker', Meteor.user());
     }
   }
 
@@ -64,7 +68,7 @@ if (Meteor.isClient) {
   Router.before(loginRequired, {except: ['frontpage', 'invite']});
 
   // make sure that user is allowed to enter the site
-  Router.before(allowedAccess, {except: ['frontpage', 'invite']})
+  Router.before(allowedAccess, {except: ['invite', 'hacker']})
 
   // make sure there is a settings file specified
   Router.before(settingsRequired);

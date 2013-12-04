@@ -50,11 +50,15 @@
 
     <div class="header">
       <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="Hackers Welcome" class="logo"></a>
-      {{#with currentUser}}<div class="menu">
-        <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
-        <a href="{{pathFor 'hacker'}}" class="menu">profile</a> •
-        <a href="{{pathFor 'places'}}" class="menu">places</a>
-      </div>{{/with}}
+      {{#with currentUser}}
+        {{#if allowAccess}}
+        <div class="menu">
+          <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
+          <a href="{{pathFor 'hacker'}}" class="menu">profile</a> •
+          <a href="{{pathFor 'places'}}" class="menu">places</a>
+        </div>
+        {{/if}}
+      {{/with}}
       <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>
       </div>
 
@@ -119,13 +123,6 @@
 </template>
 
 
-
-<template name="accessDenied">
-  {{! when user isn't invited he can't enter the site }}
-  <h1 style="margin-bottom:48px;">Invite only</h1>
-  <p>The website is in BETA and you must be invited to enter the website.</p>
-  <p>We will contact you when the site becomes public.</p>
-</template>
 
 
 <template name="requireSettingFile">

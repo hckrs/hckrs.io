@@ -114,7 +114,10 @@ var countSocialServices = function() {
 Template.hackerEdit.events({
 
   // general autosave input fields
-  "blur input.text.save": saveChangedField,
+  "blur input.text.save": function(evt) {
+    saveChangedField(evt);
+    checkAccess();
+  },
   "keyup input.text.save": fieldChanged,
   "click input[type='checkbox'].save": addToSet,
 

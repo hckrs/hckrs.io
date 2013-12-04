@@ -14,10 +14,6 @@ Meteor.users.deny({
     return true; //DENY
   },
   update: function(userId, doc, fields, modifier) {
-    
-    // deny if user isn't permitted to access te site
-    if (!allowedAccess(userId))
-      return true; //DENY
 
     // deny if user don't ownes this document
     if (!_.isEqual(userId, doc._id))
@@ -31,9 +27,9 @@ Meteor.users.deny({
     var allowedSocialPictures = _.values(doc.profile.socialPicture);
 
     var $setPattern = {
-      'profile.email': Match.Optional(Match.EmptyOr(Match.Email)),
+      'profile.email': Match.Optional(Match.Email),
       'profile.picture': Match.Optional(Match.In(allowedSocialPictures)),
-      'profile.name': Match.Optional(Match.Max(100, String)),
+      'profile.name': Match.Optional(Match.MinMax(1, 100, String)),
       "profile.location": Match.Optional({lat: Number, lng: Number}),
       "profile.homepage": Match.Optional(Match.Max(2100, String)),
       "profile.company": Match.Optional(Match.Max(100, String)),

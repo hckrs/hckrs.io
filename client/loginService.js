@@ -7,15 +7,6 @@ var serviceOptions = {
 }
 
 
-// check if user's profile information is complete
-var isUserProfileComplete = function() {
-  var requiredFields = ['name', 'email', 'address'];
-  var user = Meteor.users.findOne(Meteor.userId(), {reactive: false});
-  if (!user) return false;
-  var userFields = _.pick(user.profile, requiredFields);
-  return _.size(userFields) == requiredFields.length && _.every(userFields, _.identity);
-}
-
 
 
 /* LOGIN EVENT handlers */
@@ -28,28 +19,15 @@ var manuallyLoggedIn = function() {
 
 // when user becomes logged in
 var afterLogin = function() {
+  
+  checkInvitation();
+  checkAccess();
+
   var route = Router._currentController.route.name; //current route
 
-  // when user isn't yet allowed to enter the site
-  // check if he has signed up with a valid invite code
-  if (Meteor.user() && !Meteor.user().allowAccess && Session.get('invitationCode')) {
-  
-    // make a server call to check the invitation
-    Meteor.call('verifyInvitationCode', Session.get('invitationCode'), function(err) {
-      if (err) log("Error", err)
-      else setupSubscriptions() //rerun subscriptions
-    });
-  }
-  
-  // if no route path is specified in the url: 
-  // A. redirect to user's profile when the information is incomplete
-  // B. redirect to the hackers list otherwise
-  if (route == 'frontpage') {
-    if (!isUserProfileComplete())
-      Router.go('hacker', Meteor.user());
-    else 
-      Router.go('hackers');
-  }
+  // if no route is setted, go to hackers list after login
+  if (route == 'frontpage')
+    Router.go('hackers');
 }
 
 // when user becomes logged out
@@ -63,6 +41,35 @@ var loggingInInProgress = function() {
 }
 
 
+
+/* ACCESS & INVITATIONS */
+
+// when user isn't yet allowed to enter the site
+// check if he has signed up with a valid invite code
+var checkInvitation = function() {
+  
+  if (Meteor.user() && !Meteor.user().isInvited && Session.get('invitationCode')) {
+    // make a server call to check the invitation
+    Meteor.call('verifyInvitationCode', Session.get('invitationCode'), function(err) {
+      if (err) log("Error", err)
+      else setupSubscriptions() //rerun subscriptions
+    });
+  } 
+};
+
+// new users have no access to the site until their profile is complete
+// observe if the fields email and name are filled in, after saving
+checkAccess = function() { /* GLOBAL, called from hacker.js */
+  exec(function() {
+    var user = Meteor.user();
+    var profile = user.profile;
+    if (!user.allowAccess && user.isInvited && profile.email && profile.name)
+      Meteor.call('requestAccess', function(err) {
+        if (err) log(err);
+        else setupSubscriptions();
+      });
+  });
+};
 
 
 /* OBSERVE when user becomes logged in */

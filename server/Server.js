@@ -15,8 +15,7 @@ Meteor.startup(function() {
 var _keepAlive = function() {
   var startupDate = new Date();
   var signal = function() { return true; }; 
-  var logging = function() { log("[Server Uptime]:" + moment(startupDate).fromNow(true)); }
-  Meteor.setTimeout(logging, 1000);
+  var logging = function() { log("[Server Uptime]: " + moment(startupDate).fromNow(true)); }
   Meteor.setInterval(signal, 5000);
   Meteor.setInterval(logging, 55000);
 }

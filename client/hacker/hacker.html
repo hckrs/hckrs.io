@@ -15,6 +15,21 @@
   <div id="hacker">
 
 
+      {{#unless allowAccess}}
+        {{#if isInvited}}
+          <div class="access-denied alert alert-info">
+            <h1>Make your profile complete</h1>
+            <p>Make your profile complete and get access to your local hackers tribe.</p>
+          </div>
+        {{else}}
+          <div class="access-denied alert alert-info">
+            <h1>Invite only</h1>
+            <p>Because the site is in beta we can't give access to everyone. When you complete your profile below we will notify you when we have activated your account manually.<br/>
+            <strong>You can also request somebody to invite you. Then you get directly access.</strong></p>
+          </div>
+        {{/if}}
+      {{/unless}}
+      
 
       
       <form class="form-horizontal">
@@ -64,14 +79,14 @@
 
           </div>
           <div class="controls" style="padding-top:68px;">
-            <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:36px;font-weight:700;padding:12px;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;"/>
+            <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:36px;font-weight:700;padding:12px;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;" required />
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label" for="inputEmail">email</label>
           <div class="controls">
-            <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" />
+            <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
           </div>
         </div>
 

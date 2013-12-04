@@ -15,6 +15,8 @@ var user = { /* scheme */
   createdAt: Date,        // automatic filled in by meteor
 
   isAdmin: Boolean,       // true if this user has admin privilege
+  isInvited: Boolean,     // user has entered a valid invite code (permit to enter site)
+  allowAccess: Boolean,   // user is allowed to enter the site if he is invited and profile is complete
 
   city: String,           // the city where this hacker is registered to (lowercase)
   localRank: Number,      // assigned hacker number based on signup order in city
@@ -51,8 +53,6 @@ var user = { /* scheme */
     address: String,      // e-mailadress
     verified: Boolean     // e-mailadress is verified by clicking the link in enrollment mail
   } ], 
-
-  allowAccess: Boolean,   // user is invited and allowed to enter the site
 
   services: {             // meteor stores login information here...
     resume: { /* ... */ },

@@ -41,9 +41,11 @@ var publicUserFieldsEmail = _.extend(_.clone(publicUserFields), {
 });
 
 var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
-  "emails": true,
+  "isAdmin": true,
+  "isInvited": true,
   "allowAccess": true,
-  "profile.socialPicture": true
+  "profile.socialPicture": true,
+  "emails": true
 });
 
 
