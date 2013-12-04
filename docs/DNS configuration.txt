@@ -1,0 +1,17 @@
+
+DNS
+@ 300 IN A 217.70.184.38
+* 3600 IN CNAME hckrs.herokuapp.com.
+imap 10800 IN CNAME access.mail.gandi.net.
+pop 10800 IN CNAME access.mail.gandi.net.
+smtp 10800 IN CNAME relay.mail.gandi.net.
+webmail 10800 IN CNAME webmail.gandi.net.
+@ 10800 IN MX 50 fb.mail.gandi.net.
+@ 10800 IN MX 10 spool.mail.gandi.net.
+
+FORWARDINGS:
+http://hckrs.io --> http://www.hckrs.io (redirect permanent 301)
+
+ADD DOMAINS TO HEROKU (control panel)
+*.hckrs.io
+hckrs.io
