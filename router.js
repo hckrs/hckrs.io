@@ -59,11 +59,30 @@ if (Meteor.isClient) {
     }
   }
 
-  // make use of the correct domain
+
+  // make sure the user is logged in, except for the pages below
+  Router.before(loginRequired, {except: ['frontpage', 'invite']});
+
+  // make sure that user is allowed to enter the site
+  Router.before(allowedAccess, {except: ['frontpage', 'invite']})
+
+  // make sure there is a settings file specified
+  Router.before(settingsRequired);
+
+  // global router configuration
+  Router.configure({
+    autoRender: false
+  });
+
+
+
+
+
+  // make use of the correct domain (canonical)
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
   var useCanonicalDomain = function() {
     if (location.hostname.indexOf(appHostname()) === -1)
-      document.location.href = location.href.replace(location.hostname, appHostname());
+      document.location.href = replaceHostname(location.href, appHostname());
   }
 
   // redirect to city if not present in subdomain
@@ -80,33 +99,25 @@ if (Meteor.isClient) {
 
     // redirect if no valid city is specified in the subdomain
     if (!_.contains(allowedCities, subdomain))
-      document.location.href = replaceHostname(location.href, defaultCity+'.'+appHostname());
+      document.location.href = replaceHostname(location.href, defaultCity+'.'+appHostname());    
   }
 
 
+  // resolve correct url when entering the site
+  Meteor.startup(function() {
 
-  // when running on a server
-  if (Meteor.settings.public.environment != "local") {
+    // only run this code on a online server
+    if (Meteor.settings.public.environment != "local") {
 
-    // make use of the correct domain
-    Router.before(useCanonicalDomain);
+      // make use of the correct domain (canonical)
+      useCanonicalDomain();
 
-    // redirect to a valid city
-    Router.before(redirectToCity);
-  }
-
-  // make sure the user is logged in, except for the pages below
-  Router.before(loginRequired, {except: ['frontpage', 'invite']});
-
-  // make sure that user is allowed to enter the site
-  Router.before(allowedAccess, {except: ['frontpage', 'invite']})
-
-  // make sure there is a settings file specified
-  Router.before(settingsRequired);
-
-  // global router configuration
-  Router.configure({
-    autoRender: false
+      // redirect to the default city if not present in subdomain
+      redirectToCity();
+    
+    }
+      
   });
+
 }
 
