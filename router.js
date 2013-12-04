@@ -59,7 +59,41 @@ if (Meteor.isClient) {
     }
   }
 
+  // make use of the correct domain
+  // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
+  var useCanonicalDomain = function() {
+    if (location.hostname.indexOf(appHostname()) === -1)
+      document.location.href = location.href.replace(location.hostname, appHostname());
+  }
 
+  // redirect to city if not present in subdomain
+  var redirectToCity = function() {
+
+    // all cities on this app
+    var allowedCities = ['lyon']; 
+
+    // city where to redirect to
+    var defaultCity = 'lyon';
+
+    // current subdomain
+    var subdomain = location.hostname.replace(appHostname(), '').split('.')[0];
+
+    // redirect if no valid city is specified in the subdomain
+    if (!_.contains(allowedCities, subdomain))
+      document.location.href = replaceHostname(location.href, defaultCity+'.'+appHostname());
+  }
+
+
+
+  // when running on a server
+  if (Meteor.settings.public.environment != "local") {
+
+    // make use of the correct domain
+    Router.before(useCanonicalDomain);
+
+    // redirect to a valid city
+    Router.before(redirectToCity);
+  }
 
   // make sure the user is logged in, except for the pages below
   Router.before(loginRequired, {except: ['frontpage', 'invite']});

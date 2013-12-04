@@ -51,6 +51,16 @@ bitHashInv = function(hash) {
   return parseInt(hash.replace(/_/g, '0').replace(/-/g, '1'), 2);
 }
 
+// hostname as specified in the environment variable ROOT_URL
+appHostname = function() {
+  return new RegExp(/\/\/([^\/:]*)/).exec(Meteor.absoluteUrl())[1];
+}
+
+// replace url's hostname
+replaceHostname = function(url, newHostname) {
+  return url.replace(/\/\/([^\/:]*)/, '//' + newHostname);
+}
+
 
 if (Meteor.isClient) {
 
