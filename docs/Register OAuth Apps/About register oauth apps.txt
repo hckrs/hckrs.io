@@ -1,0 +1,9 @@
+Facebook:
+- no callbackUrl required
+- need to be verified for production
+
+Github:
+- callbackUrl required
+
+Twitter:
+- callbackUrl required
