@@ -1,6 +1,6 @@
 Facebook:
 - set callback url to: http://hckrs.io/_oauth/facebook?close
-- need to be verified for production
+- disable sandbox mode in production environment
 
 Github:
 - set callback url to: http://hckrs.io/_oauth/github?close
