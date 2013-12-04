@@ -18,11 +18,9 @@ $ heroku config:add ROOT_URL=http://hckrs.herokuapp.com
 
 
 
-UPDATE APP
+UPDATE APP (+ reload settings file)
 
-[optional: update settings file]
-$ heroku config:add METEOR_SETTINGS="`cat settings-production.json`"
+$ git push heroku master && heroku config:add METEOR_SETTINGS="`cat settings-production.json`"
 
-$ git push heroku master
 
 
