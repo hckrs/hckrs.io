@@ -14,7 +14,7 @@ CREATE APP
 
 $ heroku apps:create hckrs --stack cedar --buildpack https://github.com/oortcloud/heroku-buildpack-meteorite.git
 
-$ heroku config:add ROOT_URL=http://hckrs.herokuapp.com
+$ heroku config:add ROOT_URL="http://hckrs.io"
 
 
 

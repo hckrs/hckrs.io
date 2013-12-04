@@ -1,9 +1,9 @@
 Facebook:
-- no callbackUrl required
+- set callback url to: http://hckrs.io/_oauth/facebook?close
 - need to be verified for production
 
 Github:
-- callbackUrl required
+- set callback url to: http://hckrs.io/_oauth/github?close
 
 Twitter:
-- callbackUrl required
+- set callback url to: http://hckrs.io/_oauth/twitter?close
