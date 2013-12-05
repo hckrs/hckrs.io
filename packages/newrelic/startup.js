@@ -1,8 +1,9 @@
 
-
+console.log(Meteor.settings)
 if (Meteor.settings) {
   var keys = _.pick(Meteor.settings, 'NEW_RELIC_LICENSE_KEY', 'NEW_RELIC_APP_NAME');
   _.extend(process.env, keys);
+  console.log(process.env)
 }
 
 if (!('NEW_RELIC_LICENSE_KEY' in process.env) || 
