@@ -79,18 +79,28 @@ if (Meteor.isClient) {
   });
 
 
+}
 
 
+
+
+
+if (Meteor.isServer) {
+
+  // SERVER SIDE routes
+
+  var url = Npm.require('url');
 
   // make use of the correct domain (canonical)
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
-  var useCanonicalDomain = function() {
-    if (location.hostname.indexOf(appHostname()) === -1)
-      document.location.href = replaceHostname(location.href, appHostname());
+  var useCanonicalDomain = function(currentUrlData, appUrlData) {
+    if (currentUrlData.hostname.indexOf(appUrlData.hostname) === -1) {
+      this.response.redirect(_.defaults({hostname: appUrlData.hostname}, currentUrlData));
+    }
   }
 
   // redirect to city if not present in subdomain
-  var redirectToCity = function() {
+  var redirectToCity = function(queryData) {
 
     // all cities on this app
     var allowedCities = ['lyon']; 
@@ -107,21 +117,27 @@ if (Meteor.isClient) {
   }
 
 
-  // resolve correct url when entering the site
-  Meteor.startup(function() {
-
-    // only run this code on a online server
-    if (Meteor.settings.public.environment != "local") {
-
-      // make use of the correct domain (canonical)
-      useCanonicalDomain();
-
-      // redirect to the default city if not present in subdomain
-      redirectToCity();
-    
-    }
+  Router.map(function () {
+    this.route('any', {
+      where: 'server',
+      path: '/*',
+      action: function () {
+        var currentUrlData = url.parse(this.request.url);
+        var appUrlData = url.parse(Meteor.absoluteUrl());
       
+        // only run this code on a online server
+        if (currentUrlData.hostname) {
+
+          // make use of the correct domain (canonical)
+          useCanonicalDomain.call(this, currentUrlData, appUrlData);
+
+          // redirect to the default city if not present in subdomain
+          // redirectToCity.call(this, currentUrlData, appUrlData);
+        
+        }
+
+        this.next();
+      }
+    });
   });
-
 }
-
