@@ -90,6 +90,7 @@ if (Meteor.isServer) {
   // SERVER SIDE routes
 
   var url = Npm.require('url');
+  var util = Npm.require('util');
 
   // make use of the correct domain (canonical)
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
@@ -137,18 +138,19 @@ if (Meteor.isServer) {
       action: function () {
         var currentUrlData = url.parse(this.request.url);
         var appUrlData = url.parse(Meteor.absoluteUrl());
-        log(this.request.headers, _.pick(this.request, 'protocol', 'hostname', 'hash', 'search', 'query', 'pathname', 'href'))
+        log(util.inspect(this.request.headers));
+        log(util.inspect(_.pick(this.request, 'protocol', 'hostname', 'hash', 'search', 'query', 'pathname', 'href')));
 
         // only run this code on a online server
-        if (currentUrlData.hostname) {
+        // if (currentUrlData.hostname) {
 
-          // make use of the correct domain (canonical)
-          useCanonicalDomain.call(this, currentUrlData, appUrlData);
+        //   // make use of the correct domain (canonical)
+        //   useCanonicalDomain.call(this, currentUrlData, appUrlData);
 
-          // redirect to the default city if not present in subdomain
-          // redirectToCity.call(this, currentUrlData, appUrlData);
+        //   // redirect to the default city if not present in subdomain
+        //   // redirectToCity.call(this, currentUrlData, appUrlData);
         
-        }
+        // }
 
         this.next();
       }
