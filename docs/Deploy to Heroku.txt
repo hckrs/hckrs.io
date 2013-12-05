@@ -16,6 +16,8 @@ $ heroku apps:create hckrs --stack cedar --buildpack https://github.com/oortclou
 
 $ heroku config:add ROOT_URL="http://hckrs.io"
 
+$ heroku labs:enable websockets -a hckrs
+
 
 
 UPDATE APP (+ reload settings file)
