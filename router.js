@@ -96,7 +96,8 @@ if (Meteor.isServer) {
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
   var useCanonicalDomain = function(currentUrlData, appUrlData) {
     if (currentUrlData.hostname.indexOf(appUrlData.hostname) === -1) {
-      this.response.redirect(_.defaults({hostname: appUrlData.hostname}, currentUrlData));
+      var urlData = _.defaults({hostname: appUrlData.hostname}, currentUrlData);
+      this.response.redirect( url.format(urlData) );
     }
   }
 
@@ -118,39 +119,42 @@ if (Meteor.isServer) {
   }
 
 
-  // var fibers = Npm.require("fibers");
-  // var connect = Npm.require('connect');
-  // var app = __meteor_bootstrap__.app;
+  // parse url specified in environment ROOT_URL
+  var getAppUrlData = function() {
+    return url.parse(Meteor.absoluteUrl());
+  }
 
-  // var router = connect.middleware.router(function(route) {
-  //   route.get('/*', function (req, res) {
-  //     console.log(req);
-  //     res.writeHead(200);
-  //     res.end();
-  //   });
-  // });
-  // app.use(router);
+  // parse current request url
+  // XXX: not all properties can be resolved
+  var getUrlData = function(request) {
+    var currentUrlData = request._parsedUrl;
+    currentUrlData.protocol = getAppUrlData().protocol;
+    currentUrlData.host = request.headers.host;
+    currentUrlData.hostname = request.headers.host.split(':')[0];
+    currentUrlData.port = request.headers.host.split(':')[1] || null;
+    currentUrlData.href = undefined;
+    return currentUrlData
+  }
+  
 
   Router.map(function () {
     this.route('any', {
       where: 'server',
       path: '/*',
       action: function () {
-        var currentUrlData = url.parse(this.request.url);
-        var appUrlData = url.parse(Meteor.absoluteUrl());
-        log(util.inspect(this.request.headers));
-        log(util.inspect(_.pick(this.request, 'protocol', 'hostname', 'hash', 'search', 'query', 'pathname', 'href')));
+        var currentUrlData = getUrlData(this.request);
+        var appUrlData = getAppUrlData();
 
         // only run this code on a online server
-        // if (currentUrlData.hostname) {
+        if (Meteor.settings.public.environment !== 'local') {
 
-        //   // make use of the correct domain (canonical)
-        //   useCanonicalDomain.call(this, currentUrlData, appUrlData);
+          // make use of the correct domain (canonical)
+          useCanonicalDomain.call(this, currentUrlData, appUrlData);
 
-        //   // redirect to the default city if not present in subdomain
-        //   // redirectToCity.call(this, currentUrlData, appUrlData);
+          // redirect to the default city if not present in subdomain
+          // redirectToCity.call(this, currentUrlData, appUrlData);
         
-        // }
+        }
 
         this.next();
       }
