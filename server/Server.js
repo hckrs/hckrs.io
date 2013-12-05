@@ -3,26 +3,25 @@
 Meteor.startup(function() {
   
   /* server startup */
+
+  // add environment variables from settings file to current process environment
+  if (Meteor.settings.env)
+    _.extend(process.env, Meteor.settings.env);
   
-  _keepAlive(); // prevent Heroku app from going to sleeping mode
+  // print uptime to console
+  uptimeLogging();
   
 });
 
 
 
-// prevent app from sleeping (in Heroku's dyno field)
-// make sure there is activity every minute
-var _keepAlive = function() {
+// show server uptime in console
+var uptimeLogging = function() {
   var startupDate = new Date();
-  var signal = function() { return true; }; 
-  var logging = function() { log("[Server Uptime]: " + moment(startupDate).fromNow(true)); }
-  Meteor.setInterval(signal, 5000);
-  Meteor.setInterval(logging, 55000);
+  var logging = function() { 
+    log("[Server Uptime]: " + moment(startupDate).fromNow(true)); 
+  }
+  Meteor.setInterval(logging, 15 * 60 * 1000);
 }
 
 
-
-// GLOBAL server functions
-// these functions can be called from everywhere on the server
-
-// ...
