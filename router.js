@@ -79,18 +79,29 @@ if (Meteor.isClient) {
   });
 
 
+}
 
 
+
+
+
+if (Meteor.isServer) {
+
+  // SERVER SIDE routes
+
+  var url = Npm.require('url');
+  var util = Npm.require('util');
 
   // make use of the correct domain (canonical)
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
-  var useCanonicalDomain = function() {
-    if (location.hostname.indexOf(appHostname()) === -1)
-      document.location.href = replaceHostname(location.href, appHostname());
+  var useCanonicalDomain = function(currentUrlData, appUrlData) {
+    if (currentUrlData.host.indexOf(appUrlData.host) === -1)
+      return url.format(_.defaults({host: appUrlData.host}, currentUrlData));
+    return null;
   }
 
   // redirect to city if not present in subdomain
-  var redirectToCity = function() {
+  var redirectToCity = function(currentUrlData, appUrlData) {
 
     // all cities on this app
     var allowedCities = ['lyon']; 
@@ -99,29 +110,63 @@ if (Meteor.isClient) {
     var defaultCity = 'lyon';
 
     // current subdomain
-    var subdomain = location.hostname.replace(appHostname(), '').split('.')[0];
+    log(currentUrlData)
+    var subdomain = currentUrlData.host.replace(appUrlData.host, '').split('.')[0];
 
     // redirect if no valid city is specified in the subdomain
     if (!_.contains(allowedCities, subdomain))
-      document.location.href = replaceHostname(location.href, defaultCity+'.'+appHostname());    
+      return url.format(_.defaults({host: defaultCity+'.'+appUrlData.host}, currentUrlData));   
+
+    return null;
   }
 
+  var redirect = function(url, res) {
+    res.writeHead(302, {'Location': url});
+    res.end();
+  }
 
-  // resolve correct url when entering the site
-  Meteor.startup(function() {
+  // parse url specified in environment ROOT_URL
+  var getAppUrlData = function() {
+    return url.parse(Meteor.absoluteUrl());
+  }
 
-    // only run this code on a online server
-    if (Meteor.settings.public.environment != "local") {
+  // parse current request url
+  // XXX: not all properties can be resolved
+  var getUrlData = function(request) {
+    var currentUrlData = request._parsedUrl;
+    currentUrlData.protocol = getAppUrlData().protocol;
+    currentUrlData.host = request.headers.host;
+    currentUrlData.hostname = request.headers.host.split(':')[0];
+    currentUrlData.port = request.headers.host.split(':')[1] || null;
+    currentUrlData.href = undefined;
+    return currentUrlData
+  }
+  
 
-      // make use of the correct domain (canonical)
-      useCanonicalDomain();
+  Router.map(function () {
+    this.route('any', {
+      where: 'server',
+      path: '/*',
+      action: function () {
+        var currentUrlData = getUrlData(this.request);
+        var appUrlData = getAppUrlData();
+        var redirectUrl;
+        
+        // only run this code on a online server
+        if (Meteor.settings.public.environment !== 'local') {
 
-      // redirect to the default city if not present in subdomain
-      redirectToCity();
-    
-    }
-      
+          // make use of the correct domain (canonical)
+          if (redirectUrl = useCanonicalDomain(currentUrlData, appUrlData))
+            return redirect(redirectUrl, this.response);
+
+          // redirect to the default city if not present in subdomain
+          if (redirectUrl = redirectToCity(currentUrlData, appUrlData))
+            return redirect(redirectUrl, this.response);            
+        }
+
+        // otherwise default meteor behaviour
+        this.next();
+      }
+    });
   });
-
 }
-
