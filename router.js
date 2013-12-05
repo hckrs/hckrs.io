@@ -95,14 +95,13 @@ if (Meteor.isServer) {
   // make use of the correct domain (canonical)
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
   var useCanonicalDomain = function(currentUrlData, appUrlData) {
-    if (currentUrlData.hostname.indexOf(appUrlData.hostname) === -1) {
-      var urlData = _.defaults({hostname: appUrlData.hostname}, currentUrlData);
-      this.response.redirect( url.format(urlData) );
-    }
+    if (currentUrlData.host.indexOf(appUrlData.host) === -1)
+      return url.format(_.defaults({host: appUrlData.host}, currentUrlData));
+    return null;
   }
 
   // redirect to city if not present in subdomain
-  var redirectToCity = function(queryData) {
+  var redirectToCity = function(currentUrlData, appUrlData) {
 
     // all cities on this app
     var allowedCities = ['lyon']; 
@@ -111,13 +110,20 @@ if (Meteor.isServer) {
     var defaultCity = 'lyon';
 
     // current subdomain
-    var subdomain = location.hostname.replace(appHostname(), '').split('.')[0];
+    log(currentUrlData)
+    var subdomain = currentUrlData.host.replace(appUrlData.host, '').split('.')[0];
 
     // redirect if no valid city is specified in the subdomain
     if (!_.contains(allowedCities, subdomain))
-      document.location.href = replaceHostname(location.href, defaultCity+'.'+appHostname());    
+      return url.format(_.defaults({host: defaultCity+'.'+appUrlData.host}, currentUrlData));   
+
+    return null;
   }
 
+  var redirect = function(url, res) {
+    res.writeHead(302, {'Location': url});
+    res.end();
+  }
 
   // parse url specified in environment ROOT_URL
   var getAppUrlData = function() {
@@ -144,18 +150,21 @@ if (Meteor.isServer) {
       action: function () {
         var currentUrlData = getUrlData(this.request);
         var appUrlData = getAppUrlData();
-
+        var redirectUrl;
+        
         // only run this code on a online server
         if (Meteor.settings.public.environment !== 'local') {
 
           // make use of the correct domain (canonical)
-          useCanonicalDomain.call(this, currentUrlData, appUrlData);
+          if (redirectUrl = useCanonicalDomain(currentUrlData, appUrlData))
+            return redirect(redirectUrl, this.response);
 
           // redirect to the default city if not present in subdomain
-          // redirectToCity.call(this, currentUrlData, appUrlData);
-        
+          if (redirectUrl = redirectToCity(currentUrlData, appUrlData))
+            return redirect(redirectUrl, this.response);            
         }
 
+        // otherwise default meteor behaviour
         this.next();
       }
     });
