@@ -117,6 +117,19 @@ if (Meteor.isServer) {
   }
 
 
+  // var fibers = Npm.require("fibers");
+  // var connect = Npm.require('connect');
+  // var app = __meteor_bootstrap__.app;
+
+  // var router = connect.middleware.router(function(route) {
+  //   route.get('/*', function (req, res) {
+  //     console.log(req);
+  //     res.writeHead(200);
+  //     res.end();
+  //   });
+  // });
+  // app.use(router);
+
   Router.map(function () {
     this.route('any', {
       where: 'server',
@@ -124,7 +137,7 @@ if (Meteor.isServer) {
       action: function () {
         var currentUrlData = url.parse(this.request.url);
         var appUrlData = url.parse(Meteor.absoluteUrl());
-        log(currentUrlData.hostname, this.request, _.pick(this.request, 'protocol', 'hostname', 'hash', 'search', 'query', 'pathname', 'href'))
+        log(this.request.headers, _.pick(this.request, 'protocol', 'hostname', 'hash', 'search', 'query', 'pathname', 'href'))
 
         // only run this code on a online server
         if (currentUrlData.hostname) {
