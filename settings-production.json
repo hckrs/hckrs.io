@@ -6,7 +6,12 @@
     "mapboxPlaces": "ramshorst.gcoejeom"
   },
 
+
   "defaultNumberOfInvitesForNewUsers": 1,
+
+
+  "NEW_RELIC_LICENSE_KEY": "74c38a63cd258d4834daea40cb5509eed29bc3db",
+  "NEW_RELIC_APP_NAME": "hckrs",
 
   "facebook": {
     "appId": "1402626163309473",

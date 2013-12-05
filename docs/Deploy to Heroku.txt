@@ -18,6 +18,8 @@ $ heroku config:add ROOT_URL="http://hckrs.io"
 
 $ heroku labs:enable websockets -a hckrs
 
+$ heroku addons:add newrelic:stark
+
 
 
 UPDATE APP (+ reload settings file)
