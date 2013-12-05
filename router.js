@@ -124,7 +124,8 @@ if (Meteor.isServer) {
       action: function () {
         var currentUrlData = url.parse(this.request.url);
         var appUrlData = url.parse(Meteor.absoluteUrl());
-      
+        log(currentUrlData.hostname, this.request, _.pick(this.request, 'protocol', 'hostname', 'hash', 'search', 'query', 'pathname', 'href'))
+
         // only run this code on a online server
         if (currentUrlData.hostname) {
 
