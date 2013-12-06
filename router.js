@@ -90,7 +90,6 @@ if (Meteor.isServer) {
   // SERVER SIDE routes
 
   var url = Npm.require('url');
-  var util = Npm.require('util');
 
   // make use of the correct domain (canonical)
   // redirect when not at the same hostname as specified in environment variable "ROOT_URL"
