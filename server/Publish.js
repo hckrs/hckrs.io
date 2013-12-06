@@ -17,6 +17,7 @@
 // note: we not publish all users, only the ones that are allowed to access
 
 var publicUserFields = {
+  "createdAt": true,
   "city": true,
   "localRank": true,
   "globalRank": true,
@@ -53,7 +54,7 @@ var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
 // publish additional fields 'emails' and 'profile' for the current user
 Meteor.publish("publicUserDataCurrentUser", function (hash) {
   if(!this.userId) return [];
-  var selector = {_id: this.userId};
+  var selector = {_id: this.userId, isDeleted: {$ne: true}};
   return Meteor.users.find(selector, {fields: publicUserFieldsCurrentUser}); 
 });
 
@@ -63,7 +64,7 @@ Meteor.publish("publicUserDataCurrentUser", function (hash) {
 Meteor.publish("publicUserDataEmail", function (hash) {
   if(!this.userId) return [];
   if(!allowedAccess(this.userId)) return [];
-  var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, allowAccess: true};
+  var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, allowAccess: true, isDeleted: {$ne: true}};
   return Meteor.users.find(selector, {fields: publicUserFieldsEmail}); 
 });
 
@@ -72,7 +73,8 @@ Meteor.publish("publicUserDataEmail", function (hash) {
 Meteor.publish("publicUserData", function (hash) {
   if(!this.userId) return [];
   if(!allowedAccess(this.userId)) return [];
-  return Meteor.users.find({allowAccess: true}, {fields: publicUserFields}); 
+  var selector = {allowAccess: true, isDeleted: {$ne: true}};
+  return Meteor.users.find(selector, {fields: publicUserFields}); 
 });
 
 

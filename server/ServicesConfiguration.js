@@ -170,7 +170,7 @@ var fetchServiceUserData = function(user, service) {
     throw new Meteor.Error(500, "Unknow how to fetch user data from " + service);    
 
   // return the fetched data
-  return services[service](user);
+  return omitNull( services[service](user) );
 }
 
 
@@ -225,12 +225,44 @@ var mergeServiceUserData = function(user, service, userData) {
 
 
 
-// match or find an existing user that probably match with the given user data
-var existingUserMatch = function(user) {
-  var emails = user.emails ? _.pluck(user.emails, 'address') : [];
-  return Meteor.users.findOne({'emails.address': {$in: emails}});
+// merge user accounts by combining two user objects
+// merge the second user in the first one, returning a copy of the result
+// notice that some properties must be handled manually
+var mergeUsers = function(firstUser, secondUser) {
+  
+  // merge 2 objects (taking right object and extend it with the first one)
+  var mergedData = _.deepExtend(_.deepClone(secondUser), _.deepClone(firstUser)); 
+
+  // XXX arrays are considered as sets when working with primitives.
+  // but objects in arrays are compared on their pointer (no deep equality testing)
+
+  // remove duplicate emails
+  mergedData.emails = _.uniq(mergedData.emails, _.isEqual);
+
+  // manually handle properties
+  if (firstUser.isInvited || secondUser.isInvited)
+    mergedData.isInvited = true;
+  if (firstUser.allowAccess || secondUser.allowAccess)
+    mergedData.allowAccess = true;
+  if (firstUser.isAdmin || secondUser.isAdmin)
+    mergedData.isAdmin = true;
+
+  return mergedData;
 }
 
+
+
+// find an existing user that matches the idenity of the given user data
+// probably this is the same user and we can merge the accounts afterwards
+var findExistingUser = function(userData) {
+
+  // now we matching on verified emailaddresses only
+  var emails = userData.emails ? _.pluck(userData.emails, 'address') : [];
+  var emailQuery = {$elemMatch: {address: {$in: emails}, verified: true}};
+  var existingUser = Meteor.users.findOne({'emails': emailQuery});
+
+  return existingUser;
+}
 
 
 // When an user account is created (after user is logging in for the first time)
@@ -251,59 +283,51 @@ Accounts.onCreateUser(function (options, user) {
   var user = mergeServiceUserData(user, serviceName, userData);
 
   // find an existing user that probaly match this identity
-  var existingUser = existingUserMatch(user);
-
-  // build a new user object to insert in the database
-  var newUser;
+  var existingUser = findExistingUser(user);  
 
   // merge data from existing user if exists
   if (existingUser) {
 
-    // use existing user data as base
-    newUser = _.clone(existingUser); 
-
-    // merge default service data
-    newUser.services[serviceName] = user.services[serviceName];
-
-    // merge additional service data in this user again!
-    newUser = mergeServiceUserData(newUser, serviceName, userData);
-
-    // merge login token
-    newUser.services.resume.loginTokens.push(user.services.resume.loginTokens[0]);
-      
-    // remove existing user document from database
+    user = mergeUsers(existingUser, user);
     Meteor.users.remove(existingUser._id);
+
   }
     
   // additional information, for new user only!
   if (!existingUser) {
-
-    // user the submitted user data as base for the new user
-    newUser = _.clone(user);
   
     // no invite required for the first registered user
     if (Meteor.users.find().count() === 0)
-      newUser.isInvited = true;
+      user.isInvited = true;
 
     // set the city where this user becomes registered
-    newUser.city = "lyon";
+    user.city = "lyon";
 
     // determine and set the hacker ranking
-    var local = Meteor.users.findOne({city: newUser.city}, {sort: {localRank: -1}});
+    var local = Meteor.users.findOne({city: user.city}, {sort: {localRank: -1}});
     var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
-    newUser.localRank = (local && local.localRank || 0) + 1;
-    newUser.globalRank = (global && global.globalRank || 0) + 1;
+    user.localRank = (local && local.localRank || 0) + 1;
+    user.globalRank = (global && global.globalRank || 0) + 1;
 
     // give this user the default number of invite codes
     var numberOfInvites = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
-    _.times(numberOfInvites, _.partial(createInviteForUser, newUser._id));
+    _.times(numberOfInvites, _.partial(createInviteForUser, user._id));
   }
   
   // create new user account
-  return newUser; 
+  return user; 
 });
 
 
+// Remove an account
+// this is be done be marking an account as deleted rather than deleting permanently
+// you can set additional properties that are setted on this archived user object
+var removeUser = function(userId, additionalProperties) {
+  Meteor.users.update(userId, {$set: {'isDeleted': true, 'deletedAt': new Date(), 'emails': [], 'services': {}}});
+  Meteor.users.update(userId, {$set: {'services.resume.loginTokens': []}});
+  if (additionalProperties) 
+    Meteor.users.update(userId, {$set: additionalProperties});
+}
 
 
 
@@ -316,6 +340,7 @@ Accounts.onCreateUser(function (options, user) {
 // @param token String (oauth requestToken that can be exchanged for an accessToken)
 // @param service String (facebook, github, twitter, etc.)
 // @effect (updating the user object with an additional service attached)
+var _lastUsedToken;
 var addServiceToCurrentUser = function(token, service) {
   check(token, String);
   check(service, String);
@@ -323,6 +348,18 @@ var addServiceToCurrentUser = function(token, service) {
   var userId = this.userId; //current logged in user
   var user = Meteor.users.findOne(userId); //get user document from our collection
   var Service = global[capitaliseFirstLetter(service)]; //meteor package for this external service
+
+  // create an extended user with the servicedata attached
+  var extendedUser = _.clone(user);
+
+
+  // XXX Meteor issue, this method is called a second time 
+  // when we change the current logged in user below with this.setUserId()
+  // we must prevent from running again and not throwing errors
+  if (_lastUsedToken === token) 
+    return;
+  else _lastUsedToken = token; 
+
 
   if (!userId || !user)
     throw new Meteor.Error(500, "Unknow user: " + userId);
@@ -333,34 +370,74 @@ var addServiceToCurrentUser = function(token, service) {
   if (!Service)
     throw new Meteor.Error(500, "Unknow service: " + service);
 
-
   // retrieve user data from the external service
-  var serviceData = Service.retrieveCredential(token).serviceData;
+  var serviceResponse = Service.retrieveCredential(token);
+  var serviceData = serviceResponse && serviceResponse.serviceData;
 
   if(!serviceData)
     throw new Meteor.Error(500, "Unknow service data: " + serviceData);
 
-
-  // check if the requested external account is already assigned to an other user account
-  // XXX TODO: maybe these accounts can be merged because of the same user idenity
-  var query = _.object([
-    ["services."+service+".id", serviceData.id], 
-    ['_id', {$ne: userId}]
-  ]);
-  if (Meteor.users.findOne(query))
-    throw new Meteor.Error(500, "This "+service+" account has already assigned to a user.");
-
-  // atach serviceData directly to the user
-  user.services[service] = serviceData;
+  // extend the user with the service data
+  extendedUser.services[service] = serviceData;
 
   // fetch additional user information
-  var userData = fetchServiceUserData(user, service);
+  var userData = fetchServiceUserData(extendedUser, service);
   
   // merge fetched data into the user object
-  user = mergeServiceUserData(user, service, userData);
+  extendedUser = mergeServiceUserData(extendedUser, service, userData);
 
-  // replace the whole user by the updated one
-  Meteor.users.update(userId, user);
+
+  // check if the requested external account is already assigned to an other user account
+  var existingUser1 = Meteor.users.findOne(_.object([
+    ["services."+service+".id", serviceData.id], 
+    ['_id', {$ne: userId}]
+  ]));
+
+  // check if there is an other user with the same email -> merge
+  var existingUser2 = findExistingUser(extendedUser);
+  
+
+
+  // helper function for merging two user accounts
+  var merge = function(user, existingUser) {
+
+    // check which account is the oldest
+    var currentIsNewer = existingUser.createdAt.getTime() < user.createdAt.getTime();
+    var oldestUser = currentIsNewer ? existingUser : user;
+    var newestUser = currentIsNewer ? user : existingUser;
+
+    // login the merged user (probably the same as currect session)
+    this.setUserId(oldestUser._id); 
+
+    // merge the user data into the oldest user
+    var mergedUserData = mergeUsers(oldestUser, newestUser);
+    removeUser(newestUser._id, {mergedWith: oldestUser._id});
+    Meteor.users.update(oldestUser._id, mergedUserData);
+
+    return oldestUser;
+  }
+
+  
+    
+  if (existingUser1) {
+
+    // service data already present in an other user account
+    // merge 2 accounts
+    var mergedUser = merge.call(this, user, existingUser1);
+
+  } else if (existingUser2) {
+
+    // there is an account that uses the same emailadress
+    // merge with that account AND include the new service data
+    // merge 2 accounts
+    var mergedUser = merge.call(this, extendedUser, existingUser2);    
+
+  } else {
+
+    // only add the new service data to this user
+    Meteor.users.update(userId, extendedUser);
+
+  }
 }
 
 
