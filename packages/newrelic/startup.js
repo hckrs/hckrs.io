@@ -19,6 +19,5 @@ if (!('NEW_RELIC_LICENSE_KEY' in process.env) ||
 
   // use newrelic
   process.env.NEW_RELIC_NO_CONFIG_FILE = true;
-  console.log("Start newrelic from meteor package.")
   Npm.require('newrelic');
 }
