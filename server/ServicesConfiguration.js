@@ -86,7 +86,7 @@ var oauthCall = function(user, service, method, url, params) {
 
 // @param user String|{Object} (either a userId or an user object)
 // @param service String (facebook, github, twitter, etc.)
-var fetchUserData = function(user, service) {
+var fetchServiceUserData = function(user, service) {
 
   var services = {
   
@@ -183,7 +183,7 @@ var fetchUserData = function(user, service) {
 // @param service String (facebook, github, twitter, etc.)
 // @param userData {Object} (the additional user data that fill the empty properties)
 // @return {Object} (the same user object with additional info attached to it)
-var mergeUserData = function(user, service, userData) {
+var mergeServiceUserData = function(user, service, userData) {
   
   // data used for creating the user profile
   var extract = ['name', 'city', 'lang', 'email' /*, 'gender', 'birthday'*/];
@@ -225,6 +225,13 @@ var mergeUserData = function(user, service, userData) {
 
 
 
+// match or find an existing user that probably match with the given user data
+var existingUserMatch = function(user) {
+  var emails = user.emails ? _.pluck(user.emails, 'address') : [];
+  return Meteor.users.findOne({'emails.address': {$in: emails}});
+}
+
+
 
 // When an user account is created (after user is logging in for the first time)
 // extract the important user information and return a new user object where this
@@ -234,32 +241,66 @@ var mergeUserData = function(user, service, userData) {
 Accounts.onCreateUser(function (options, user) {
   user.profile = options.profile;
 
-  // no invite required for the first registered user
-  if (Meteor.users.find().count() === 0)
-    user.isInvited = true;
-
-  // set the city where this user becomes registered
-  user.city = "lyon";
-
-  // determine and set the hacker ranking
-  var local = Meteor.users.findOne({city: user.city}, {sort: {localRank: -1}});
-  var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
-  user.localRank = (local && local.localRank || 0) + 1;
-  user.globalRank = (global && global.globalRank || 0) + 1;
-
-  // give this user the default number of invite codes
-  var numberOfInvites = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
-  _.times(numberOfInvites, _.partial(createInviteForUser, user._id));
-
   // determine which external service is used for account creation
-  var serviceObj = _.omit(user.services, ['resume']);
-  var serviceName = _.first(_.keys(serviceObj));
+  var serviceName = _.first(_.keys(_.omit(user.services, ['resume'])));
 
   // fetch additional user information
-  var userData = fetchUserData(user, serviceName);
+  var userData = fetchServiceUserData(user, serviceName);
+
+  // extend user object with additional fetched user information
+  var user = mergeServiceUserData(user, serviceName, userData);
+
+  // find an existing user that probaly match this identity
+  var existingUser = existingUserMatch(user);
+
+  // build a new user object to insert in the database
+  var newUser;
+
+  // merge data from existing user if exists
+  if (existingUser) {
+
+    // use existing user data as base
+    newUser = _.clone(existingUser); 
+
+    // merge default service data
+    newUser.services[serviceName] = user.services[serviceName];
+
+    // merge additional service data in this user again!
+    newUser = mergeServiceUserData(newUser, serviceName, userData);
+
+    // merge login token
+    newUser.services.resume.loginTokens.push(user.services.resume.loginTokens[0]);
+      
+    // remove existing user document from database
+    Meteor.users.remove(existingUser._id);
+  }
+    
+  // additional information, for new user only!
+  if (!existingUser) {
+
+    // user the submitted user data as base for the new user
+    newUser = _.clone(user);
   
-  // return the new user object that will be used for account creation
-  return mergeUserData(user, serviceName, userData);
+    // no invite required for the first registered user
+    if (Meteor.users.find().count() === 0)
+      newUser.isInvited = true;
+
+    // set the city where this user becomes registered
+    newUser.city = "lyon";
+
+    // determine and set the hacker ranking
+    var local = Meteor.users.findOne({city: newUser.city}, {sort: {localRank: -1}});
+    var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
+    newUser.localRank = (local && local.localRank || 0) + 1;
+    newUser.globalRank = (global && global.globalRank || 0) + 1;
+
+    // give this user the default number of invite codes
+    var numberOfInvites = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
+    _.times(numberOfInvites, _.partial(createInviteForUser, newUser._id));
+  }
+  
+  // create new user account
+  return newUser; 
 });
 
 
@@ -313,10 +354,10 @@ var addServiceToCurrentUser = function(token, service) {
   user.services[service] = serviceData;
 
   // fetch additional user information
-  var userData = fetchUserData(user, service);
+  var userData = fetchServiceUserData(user, service);
   
   // merge fetched data into the user object
-  user = mergeUserData(user, service, userData);
+  user = mergeServiceUserData(user, service, userData);
 
   // replace the whole user by the updated one
   Meteor.users.update(userId, user);
