@@ -109,7 +109,6 @@ if (Meteor.isServer) {
     var defaultCity = 'lyon';
 
     // current subdomain
-    log(currentUrlData)
     var subdomain = currentUrlData.host.replace(appUrlData.host, '').split('.')[0];
 
     // redirect if no valid city is specified in the subdomain
