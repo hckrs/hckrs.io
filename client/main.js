@@ -71,3 +71,13 @@ Template.main.rendered = function() {
   });
   
 }
+
+
+// reset local storage after running 
+// "meteor reset" on the terminal
+Meteor.startup(function() {
+  Meteor.call('totalHackers', function(error, total) {
+    if (!error && total === 0)
+      _.each(_.keys(amplify.store()), function(key) { amplify.store(key, null); });
+  });
+});

@@ -14,12 +14,12 @@ var serviceOptions = {
 // when user is logged in by filling in its credentials
 var manuallyLoggedIn = function() {
   /* do nothing */
-  /* no certainty that subscriptions are ready here */
 }
 
 // when user becomes logged in
 var afterLogin = function() {
   
+  checkDuplicateIdentity();
   checkInvitation();
   checkAccess();
 
@@ -42,7 +42,46 @@ var loggingInInProgress = function() {
 
 
 
-/* ACCESS & INVITATIONS */
+/* ACCOUNT & ACCESS & INVITATIONS */
+
+// check if there is an other existing user account
+// that probably match the current user idenity
+// we check that by using the browser persistent storage
+var checkDuplicateIdentity = function() {
+
+  var currentService = amplify.store('currentLoginService');
+  var previousSession = amplify.store('previousLoginSession');
+  
+  var isRecentlyCreated = new Date().getTime() - Meteor.user().createdAt.getTime() < 2*60*1000; //5min
+  var isOtherService = previousSession && previousSession.service != currentService;
+  var isOtherAccount = previousSession && previousSession.userId != Meteor.userId();
+
+  // when this is a new account (created in the last 2 minutes), then we check
+  // if there are previously login session with an other account with different service
+  // if so we notify the user that he has possible 2 account and we request to merge them
+  var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount;
+
+  Session.set('requestMergeDuplicateAccount', requestMerge);
+  Session.set('previousLoginSession', previousSession);
+  
+  // store the current login session in persistent browser storage, 
+  // so we can check for duplicate idenity next time
+  amplify.store("previousLoginSession", {
+    userId: Meteor.userId(),
+    service: currentService
+  });
+}
+
+Handlebars.registerHelper('previousLoginSession', function() {
+  return Session.get('previousLoginSession');
+});
+
+Template.main.events({
+  "click #requestMergeDuplicateAccount .close": function() {
+    Session.set('requestMergeDuplicateAccount', false);
+  }
+});
+
 
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
@@ -57,6 +96,7 @@ var checkInvitation = function() {
   } 
 };
 
+
 // new users have no access to the site until their profile is complete
 // observe if the fields email and name are filled in, after saving
 checkAccess = function() { /* GLOBAL, called from hacker.js */
@@ -70,6 +110,7 @@ checkAccess = function() { /* GLOBAL, called from hacker.js */
       });
   });
 };
+
 
 
 /* OBSERVE when user becomes logged in */
@@ -151,7 +192,10 @@ var loginCallback = function(err) {
     // XXX TODO: handle the case when login fails
     log("Error", err);
   } else {
-    manuallyLoggedIn();
+    Deps.autorun(function(c) {
+      if (Session.equals('currentLoginState', 'loggedIn'))
+        Deps.nonreactive(manuallyLoggedIn);
+    });
   }
 }
 
@@ -161,6 +205,9 @@ var loginWithService = function(event) {
   var service = $elm.data('service');
   var options = serviceOptions[service];
   var Service = capitaliseFirstLetter(service);
+
+  // set used service as cookie
+  amplify.store('currentLoginService', service);
 
   // login
   Meteor["loginWith"+Service](options, loginCallback);
@@ -221,10 +268,9 @@ var toggleService = function (event) {
   isLinked ? _removeService(service) : _addService(service, options);
 }
 
-Template.hacker.events({
+Template.main.events({
   "click .toggleService": toggleService
 });
-
 
 
 

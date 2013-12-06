@@ -61,8 +61,8 @@
       {{/with}}
       <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>
       </div>
-
     </div>
+
   {{/unless}}
 </template>
   
@@ -123,6 +123,19 @@
 </template>
 
 
+<template name="requestMergeDuplicateAccount">
+  <div id="requestMergeDuplicateAccount">
+    <div class="alert alert-info">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h1>Login with {{previousLoginSession.service}}</h1>
+      <p>We think that you have previously logged in with {{previousLoginSession.service}}. To enter your account we ask you to <strong>login with {{previousLoginSession.service}}</strong> once again.</p>
+      <p>
+        <button class="btn btn-primary toggleService" data-service="{{previousLoginSession.service}}">login with <strong>{{previousLoginSession.service}}</strong></button>
+      </p>
+      <div class="clear"></div>
+    </div>
+  </div>
+</template>
 
 
 <template name="requireSettingFile">

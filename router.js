@@ -36,6 +36,14 @@ if (Meteor.isClient) {
 
   /* custom functionality */
 
+  // check if there are duplicate accounts, if so request for merge
+  var checkDuplicateAccounts = function() {
+    if (Session.get('requestMergeDuplicateAccount')) {
+      this.render('requestMergeDuplicateAccount');
+      this.stop();
+    }
+  }
+
   // when login is required, render the frontpage
   var loginRequired = function() {
     if(!isLoggedIn()) {
@@ -63,6 +71,8 @@ if (Meteor.isClient) {
     }
   }
 
+  // check for duplicate accounts, if so request for merge
+  Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite']});
 
   // make sure the user is logged in, except for the pages below
   Router.before(loginRequired, {except: ['frontpage', 'invite']});
