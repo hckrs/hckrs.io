@@ -36,22 +36,24 @@
 
 
 <template name="header">
-  {{#unless loggedIn}}
-    <div class="header">
-      <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
-      <div class="right">
-        <div class="button-bar">
-          <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
-          <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
-          <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
-          <a href="#" class="header-social signupService" data-service="github">Github</a>
-        </div>
-      </div>
-    </div>
-  {{else}}
 
-    <div class="header {{absoluteHeader}} {{inversedHeader}}">
-      <div class="content">
+  <div class="header {{absoluteHeader}} {{inversedHeader}}">
+    <div class="content">
+  
+      {{#unless loggedIn}}
+
+        <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
+        <div class="right">
+          <div class="button-bar">
+            <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
+            <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
+            <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
+            <a href="#" class="header-social signupService" data-service="github">Github</a>
+          </div>
+        </div>
+            
+      {{else}}
+
         <a href="{{pathFor 'frontpage'}}"><div class="logo-small"></div></a>
         {{#with currentUser}}
           {{#if allowAccess}}
@@ -68,10 +70,11 @@
           </div>
         </div>
         <div class="clear"></div>
-      </div>
-    </div>
 
-  {{/unless}}
+      {{/unless}}
+
+    </div>
+  </div>
 </template>
   
 
