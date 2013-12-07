@@ -1,4 +1,17 @@
 
+/* HEADER */
+
+Template.header.helpers({
+  'absoluteHeader': function() { 
+    return Session.get('absoluteHeader') ? 'absolute' : ''; 
+  },
+  'inversedHeader': function() { 
+    return Session.get('inversedHeader') ? 'inversed' : ''; 
+  }
+});
+
+
+
 /* FRONTPAGE */
 
 // bind total number of hackers to template

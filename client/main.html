@@ -37,29 +37,37 @@
 
 <template name="header">
   {{#unless loggedIn}}
-    <div class="a">
+    <div class="header">
       <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
-      <div class="header-social-container">
-        <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
-        <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
-        <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
-        <a href="#" class="header-social signupService" data-service="github">Github</a>
+      <div class="right">
+        <div class="button-bar">
+          <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
+          <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
+          <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
+          <a href="#" class="header-social signupService" data-service="github">Github</a>
+        </div>
       </div>
     </div>
   {{else}}
 
-    <div class="header">
-      <a href="{{pathFor 'frontpage'}}"><div class="logo-small"></div></a>
-      {{#with currentUser}}
-        {{#if allowAccess}}
-        <div class="menu">
-          <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
-          <a href="{{pathFor 'hacker'}}" class="menu">profile</a> •
-          <a href="{{pathFor 'places'}}" class="menu">places</a>
+    <div class="header {{absoluteHeader}} {{inversedHeader}}">
+      <div class="content">
+        <a href="{{pathFor 'frontpage'}}"><div class="logo-small"></div></a>
+        {{#with currentUser}}
+          {{#if allowAccess}}
+          <div class="menu">
+            <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
+            <a href="{{pathFor 'hacker'}}" class="menu">profile</a> •
+            <a href="{{pathFor 'places'}}" class="menu">places</a>
+          </div>
+          {{/if}}
+        {{/with}}
+        <div class="right">
+          <div class="button-bar">
+            <a href="#" id="signOutButton">sign out</a>
+          </div>
         </div>
-        {{/if}}
-      {{/with}}
-      <div class="header-social-container"><a href="#" id="signOutButton" class="header-social">sign out</a>
+        <div class="clear"></div>
       </div>
     </div>
 
@@ -68,7 +76,7 @@
   
 
 <template name="frontpage">
-  <div id="frontpage">
+  <div id="frontpage" class="page">
     <H1 style="margin-bottom:48px;">Lyon has <b>{{totalHackers}}</b> hackers.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker?</H1>
     Our current beta version allows you to discover other geeks around you in Lyon.<br>
 
@@ -76,29 +84,31 @@
 </template>
 
 <template name="hackers">
+  <div id="hackers" class="page">
+    
+    {{#each hackers}}
+    <div class="hacker">
+      <a class="hackers-name" href="{{pathFor 'hacker'}}">
+      <div style="background-image:url({{profile.picture}});" class="pictureView" style="cursor: pointer;"></div>
+      {{profile.name}}</a><br/>
+      <!--<div class="age">{{profile.age}}</div>-->
+      <!--{{#if profile.social.facebook}}
+        <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
+      {{/if}}
+      {{#if profile.social.github}}
+        <a href="{{profile.social.github}}" class="hackers-social social-github" target="_blank">Github</a>
+      {{/if}}
+      {{#if profile.social.twitter}}
+        <a href="{{profile.social.twitter}}" class="hackers-social social-twitter" target="_blank">Twitter</a>
+      {{/if}}-->
+    </div>
+    {{/each}}
+   
+    <div style="clear:both;"></div>
 
-  {{#each hackers}}
-  <div class="hacker">
-    <a class="hackers-name" href="{{pathFor 'hacker'}}">
-    <div style="background-image:url({{profile.picture}});" class="pictureView" style="cursor: pointer;"></div>
-    {{profile.name}}</a><br/>
-    <!--<div class="age">{{profile.age}}</div>-->
-    <!--{{#if profile.social.facebook}}
-      <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
-    {{/if}}
-    {{#if profile.social.github}}
-      <a href="{{profile.social.github}}" class="hackers-social social-github" target="_blank">Github</a>
-    {{/if}}
-    {{#if profile.social.twitter}}
-      <a href="{{profile.social.twitter}}" class="hackers-social social-twitter" target="_blank">Twitter</a>
-    {{/if}}-->
+    {{> invitations}}
+
   </div>
-  {{/each}}
- 
-  <div style="clear:both;"></div>
-
-  {{> invitations}}
-
 </template>
 
 

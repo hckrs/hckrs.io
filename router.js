@@ -9,7 +9,16 @@ if (Meteor.isClient) {
     
     this.route('hackers', { path: '/hackers', template: 'hackers' });
     
-    this.route('places', { path: '/places', template: 'places' });
+    this.route('places', { path: '/places', template: 'places',
+      load: function() { 
+        Session.set('absoluteHeader', true); 
+        Session.set('inversedHeader', true); 
+      },
+      unload: function() { 
+        Session.set('absoluteHeader', false); 
+        Session.set('inversedHeader', false); 
+      }
+    });
     
     this.route('invite', { path: '/invite/:code', template: 'frontpage', before: function() {
       Session.set('invitationCode', this.params.code);
