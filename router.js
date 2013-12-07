@@ -13,37 +13,43 @@ if (Meteor.isClient) {
       load: function() { 
         Session.set('absoluteHeader', true); 
         Session.set('inversedHeader', true); 
-      },
-      unload: function() { 
-        Session.set('absoluteHeader', false); 
-        Session.set('inversedHeader', false); 
       }
     });
     
-    this.route('invite', { path: '/invite/:code', template: 'frontpage', before: function() {
-      Session.set('invitationCode', this.params.code);
-      this.redirect('frontpage');
-    }});
-    
-    this.route('hacker', { path: '/:localRankHash', template: 'hacker', before: function() { 
-      var city = 'lyon';
-      var localRankHash = this.params.localRankHash;
-      var localRank = bitHashInv(localRankHash);
-      var hacker = Meteor.users.findOne({city: city, localRank: localRank});
-
-      if (!hacker)
+    this.route('invite', { path: '/invite/:code', template: 'frontpage', 
+      before: function() {
+        Session.set('invitationCode', this.params.code);
         this.redirect('frontpage');
-      
-      Session.set('hackerId', hacker._id);
-      Session.set('hacker', hacker);
-    }});
+      }
+    });
+    
+    this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
+      before: function() { 
+        var city = 'lyon';
+        var localRankHash = this.params.localRankHash;
+        var localRank = bitHashInv(localRankHash);
+        var hacker = Meteor.users.findOne({city: city, localRank: localRank});
 
+        if (!hacker)
+          this.redirect('frontpage');
+        
+        Session.set('hackerId', hacker._id);
+        Session.set('hacker', hacker);
+      }
+    });
 
   });
 
 
 
   /* custom functionality */
+
+
+  // reset some session variables before entering a route
+  var resetState = function() {
+    Session.set('absoluteHeader', false); 
+    Session.set('inversedHeader', false);
+  }
 
   // check if there are duplicate accounts, if so request for merge
   var checkDuplicateAccounts = function() {
@@ -79,6 +85,9 @@ if (Meteor.isClient) {
       this.stop();
     }
   }
+
+  // reset state before each route will be loaded
+  Router.load(resetState);
 
   // check for duplicate accounts, if so request for merge
   Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite']});
