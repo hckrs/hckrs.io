@@ -1,3 +1,5 @@
+@import 'nib'
+
 html {
   height: 100%;
 }
@@ -88,8 +90,29 @@ a.menu:hover{
   height: 90px; /* temporary fix */
 }
 
-.logo{
+.logo-large{
   float: left;
+  height: 120px;
+  width: 360px;
+  background-image: url('/img/logo.svg');
+  background-size: 100%;
+}
+
+.logo-small{
+  float: left;
+  height: 63px;
+  width: 190px;
+  background-image: url('/img/logo.svg');
+
+}
+
+.logo-small-inversed{
+  float: left;
+  height: 63px;
+  width: 190px;
+  z-index: 1;
+  position: fixed;
+  background-image: url('/img/logo-inversed.svg');
 }
 
 .menu{

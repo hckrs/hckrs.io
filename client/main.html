@@ -38,7 +38,7 @@
 <template name="header">
   {{#unless loggedIn}}
     <div class="a">
-      <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="hckrs.io" class="logo" width="320"></a>
+      <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
       <div class="header-social-container">
         <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
         <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
@@ -49,7 +49,7 @@
   {{else}}
 
     <div class="header">
-      <a href="{{pathFor 'frontpage'}}"><img src="/img/logo.svg" alt="Hackers Welcome" class="logo"></a>
+      <a href="{{pathFor 'frontpage'}}"><div class="logo-small"></div></a>
       {{#with currentUser}}
         {{#if allowAccess}}
         <div class="menu">
