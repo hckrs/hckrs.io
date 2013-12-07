@@ -19,3 +19,5 @@ preserve-inputs
 http
 newrelic
 amplify
+
+iron-router
