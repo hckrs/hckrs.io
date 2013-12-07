@@ -13,7 +13,7 @@ var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'tw
 Meteor.startup(function() {
 
   // register facebook
-  if(!facebookConfigured && Meteor.settings.facebook.appId) {
+  if(!facebookConfigured && Meteor.settings.facebook) {
     Accounts.loginServiceConfiguration.insert({
       service: "facebook",
       appId: Meteor.settings.facebook.appId,
@@ -22,7 +22,7 @@ Meteor.startup(function() {
   }
 
   // register github app
-  if(!githubConfigured && Meteor.settings.github.clientId) {
+  if(!githubConfigured && Meteor.settings.github) {
     Accounts.loginServiceConfiguration.insert({
       service: "github",
       clientId: Meteor.settings.github.clientId,
@@ -31,7 +31,7 @@ Meteor.startup(function() {
   }
 
   // register twitter app
-  if(!twitterConfigured && Meteor.settings.twitter.consumerKey) {
+  if(!twitterConfigured && Meteor.settings.twitter) {
     Accounts.loginServiceConfiguration.insert({
       service: "twitter",
       consumerKey: Meteor.settings.twitter.consumerKey,
