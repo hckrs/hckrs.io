@@ -229,23 +229,20 @@ var mergeServiceUserData = function(user, service, userData) {
 // merge the second user in the first one, returning a copy of the result
 // notice that some properties must be handled manually
 var mergeUsers = function(firstUser, secondUser) {
-  
+  firstUser = _.deepClone(firstUser);
+  secondUser = _.deepClone(secondUser);
+
   // merge 2 objects (taking right object and extend it with the first one)
-  var mergedData = _.deepExtend(_.deepClone(secondUser), _.deepClone(firstUser)); 
+  var mergedData = _.deepExtend(secondUser, firstUser); 
+
+  // XXX all values that evaluate to 0 will be extended, so all of this properties
+  // undefined, null, 0, false, "" can be replaced by the values of the second object
 
   // XXX arrays are considered as sets when working with primitives.
   // but objects in arrays are compared on their pointer (no deep equality testing)
 
   // remove duplicate emails
   mergedData.emails = _.uniq(mergedData.emails, _.isEqual);
-
-  // manually handle properties
-  if (firstUser.isInvited || secondUser.isInvited)
-    mergedData.isInvited = true;
-  if (firstUser.allowAccess || secondUser.allowAccess)
-    mergedData.allowAccess = true;
-  if (firstUser.isAdmin || secondUser.isAdmin)
-    mergedData.isAdmin = true;
 
   return mergedData;
 }
@@ -258,8 +255,10 @@ var findExistingUser = function(userData) {
 
   // now we matching on verified emailaddresses only
   var emails = userData.emails ? _.pluck(userData.emails, 'address') : [];
-  var emailQuery = {$elemMatch: {address: {$in: emails}, verified: true}};
-  var existingUser = Meteor.users.findOne({'emails': emailQuery});
+  var existingUser = Meteor.users.findOne({
+    '_id': {$ne: userData._id}, 
+    'emails': {$elemMatch: {address: {$in: emails}, verified: true}}
+  });
 
   return existingUser;
 }
