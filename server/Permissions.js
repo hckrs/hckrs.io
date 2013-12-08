@@ -47,12 +47,19 @@ Meteor.users.deny({
       "profile.favoriteSkills": Match.Optional(Match.In(SKILL_NAMES))
     }
 
+    var $pullPattern = {
+      "profile.hacking": Match.Optional(Match.Any),
+      "profile.available": Match.Optional(Match.Any),
+      "profile.skills": Match.Optional(Match.Any),
+      "profile.favoriteSkills": Match.Optional(Match.Any)
+    }
+
     // DENY if NO match
     return !(Match.test(modifier, {
       '$set': Match.Optional($setPattern),
       '$push': Match.Optional($pushPattern),
       '$addToSet': Match.Optional($pushPattern),
-      '$pull': Match.Optional(Match.Any)
+      '$pull': Match.Optional($pullPattern)
     }));
   },
 
