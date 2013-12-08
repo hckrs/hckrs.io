@@ -32,6 +32,7 @@ if (Meteor.isClient) {
         
         Session.set('hackerId', hacker._id);
         Session.set('hacker', hacker);
+        Session.set('hackerEditMode', true);
       },
       unload: function() {
         Session.set('hackerId', null);

@@ -7,11 +7,11 @@ var increasedMode = false; // map is in increased mode
 
 
 // initialize the map so the user can pick a location
-initializeMap = function(mapElement) {
+initializeMap = function(mapElement, user, editable) {
   
   // user's location
   var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
-  var location = Meteor.user().profile.location || defaultLocation;
+  var location = user.profile.location || defaultLocation;
 
   // map options
   var mapOptions = {
@@ -19,18 +19,19 @@ initializeMap = function(mapElement) {
   };
 
   // set up the map
-  map = L.mapbox.map('map', Meteor.settings.public.mapboxDefault, mapOptions);
+  var mapStyle = Meteor.settings.public.mapboxDefault;
+  map = L.mapbox.map(mapElement, mapStyle, mapOptions);
 
   // start the map in Lyon
   map.setView(location, zoom);
 
   // init marker at user's location
-  initMarker(location);
+  initMarker(location, editable);
 }
 
 // show user's location by showing a marker on the map 
-var initMarker = function(location) {
-  marker = L.marker(location, {draggable: true});
+var initMarker = function(location, editable) {
+  marker = L.marker(location, {draggable: editable});
   marker.on('dragend', markerLocationChanged);
   marker.addTo(map);
 }
@@ -41,6 +42,10 @@ var markerLocationChanged = function(event) {
   var latlng = marker.getLatLng();
   saveLocation(latlng);
 }
+
+
+
+/* Increase map size to fullscreen */
 
 // when mouse enters the map
 var enterMap = function(event) {
@@ -117,18 +122,19 @@ var resetMapSize = function($map, init) {
 
 
 
-// DATABASE operations
+
+/* DATABASE operations */
 
 var saveLocation = function(location) {
   Meteor.users.update(Meteor.userId(), {$set: {'profile.location': location}});
 }
 
 
-// EVENTS
+/* EVENTS */
 
 Template.hackerEdit.events({
-  'mouseenter #map': enterMap,
-  'mouseleave #map': leaveMap
+  'mouseenter #editMap': enterMap,
+  'mouseleave #editMap': leaveMap
 });
 
 

@@ -1,29 +1,46 @@
 @import 'nib'
 
 #hacker {
+  position: relative;
 
   .alert {
     width: 550px;
     margin-left: 200px;
   }
+
+  .btn-edit-mode {
+    position absolute;
+    top: 94px;
+    left: 730px;
+    .icon {
+      margin-right: 3px;
+    }
+  }
   
-  #mapWrapper {
+  #mapWrapper.edit {
     width: 200px;
     height: 200px;
-    #map {
+    .map {
       position: relative;
       z-index: 10;
       width: inherit;
       height: inherit;
-      opacity: 0.6; 
+      opacity: 0.6;
+      transition: opacity 0.3s ease-in;
     }
-    #map:hover {
-      opacity: 1; 
-      -webkit-transition: opacity 0.4s ease-in;
-      -moz-transition: opacity 0.4s ease-in;
-      -ms-transition: opacity 0.4s ease-in;
-      -o-transition: opacity 0.4s ease-in;
-      transition: opacity 0.4s ease-in;
+    .map:hover {
+      opacity: 1;
+    }
+  }
+
+  #mapWrapper.view {
+    width: 700px;
+    height: 300px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+    .map {
+      width: inherit;
+      height: inherit;
     }
   }
   
@@ -34,9 +51,6 @@
       width: 160px;
       height: 160px;
       border-radius: 80px;
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
       background-size: cover;
     }
     div.current-picture {
@@ -70,15 +84,19 @@
     div.picture-choser {
       display: none;
       position: absolute;
-      top: 0px;
+      top: -20px;
       left: -20px;
       z-index: 3;
-      width: 600px;
-      padding-left: 0px !important;
-      margin-left: 0px !important;
-      /*background-color: rgba(0,0,0,0.8);*/
+      border-radius: 10px;
+      padding: 10px 10px 5px 10px;
+      background-color: rgba(0,0,0,0.85);
+      white-space:nowrap;
+      .choice-wrapper {
+        margin: 10px;
+        display: inline-block;
+      }
       label {
-        float: left;
+        padding: 0px;
         text-align: center;
         color: #CCC;
       }
@@ -92,6 +110,32 @@
     }
   }
 
+  .edit-social {
+    .disabled {
+      opacity: 0.6;
+    }
+    .icon {
+      position: relative;
+      top: 2px;
+    }
+    .icon-plus {
+      margin-left: 9px;
+    }
+    .icon-remove {
+      top: 3px;
+      display: none;
+    }
+    &:hover {
+      .icon-remove {
+        display: inline-block;
+        opacity: 0.4;
+      }
+      .icon-remove:hover {
+        display: inline-block;
+        opacity: 1;
+      }
+    }
+  }
 
   A.profile-social-active{
     padding: 7px 12px 8px 4px;

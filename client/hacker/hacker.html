@@ -1,56 +1,75 @@
 
 <template name="hacker">
-  {{! view a hacker's profile and include editing functionality when visiting your own profile }}
+  <div id="hacker" class="page">
 
-  {{#with hacker}}
-    {{#if hackerIsCurrentUser}}
+    {{!-- 
+      This template is rendering a hacker's profile.
+      When the logged in user ownes the profile he has the 
+      possibility to edit his data.
+    --}}
+
+    {{#if isCurrentUser}}
+      <a href="#" class="btn btn-small btn-edit-mode toggle-edit-mode">
+        {{#if editMode}}
+          <span class="icon icon-eye-open"></span> view my profile
+        {{else}}
+          <span class="icon icon-pencil"></span> edit my profile
+        {{/if}}      
+      </a>
+    {{/if}}
+
+    {{#if editMode}}
       {{> hackerEdit}}
     {{else}}
       {{> hackerView}}
     {{/if}}
-  {{/with}}
+
+    <div class="page-space"></div>
+  </div>
 </template>
 
-<template name="hackerEdit">
-  <div id="hacker" class="page">
 
-      {{#if invitationLimitReached}}
-        <div class="alert alert-error">
-          <p>The invite link you have used has reached its maximum number of invites. Wait until the maximum is increased. We will do that soon.</p>
+<template name="hackerEdit">  
+  {{#with hacker}}
+
+    {{#if invitationLimitReached}}
+      <div class="alert alert-error">
+        <p>The invite link you have used has reached its maximum number of invites. Wait until the maximum is increased. We will do that soon.</p>
+      </div>
+    {{/if}}
+
+    {{#unless allowAccess}}
+      {{#if isInvited}}
+        <div class="access-denied alert alert-info">
+          <h1>Make your profile complete</h1>
+          <p>Make your profile complete and get access to your local hackers tribe.</p>
+        </div>
+      {{else}}
+        <div class="access-denied alert alert-info">
+          <h1>Invite only</h1>
+          <p>Because the site is in beta we can't give access to everyone. When you complete your profile below we will notify you when we have activated your account manually.<br/>
+          <strong>You can also request somebody to invite you. Then you get directly access.</strong></p>
         </div>
       {{/if}}
+    {{/unless}}
+    
 
-      {{#unless allowAccess}}
-        {{#if isInvited}}
-          <div class="access-denied alert alert-info">
-            <h1>Make your profile complete</h1>
-            <p>Make your profile complete and get access to your local hackers tribe.</p>
-          </div>
-        {{else}}
-          <div class="access-denied alert alert-info">
-            <h1>Invite only</h1>
-            <p>Because the site is in beta we can't give access to everyone. When you complete your profile below we will notify you when we have activated your account manually.<br/>
-            <strong>You can also request somebody to invite you. Then you get directly access.</strong></p>
-          </div>
-        {{/if}}
-      {{/unless}}
-      
-
-      
-      <form class="form-horizontal">
+    
+    <form class="form-horizontal">
 
 
-        <div class="control-group">
-          <div class="control-label">
+      <div class="control-group">
+        <div class="control-label">
 
-            <div id="profilePicture">
-              <div class="current-picture {{changePictureAllowed}}">
-                <div class="change hide">change</div>
-                <div style="background-image:url({{profile.picture}});" class="picture"></div>    
-              </div>
-              <div class="picture-choser {{dynamicClass 'pictureChoser'}}" id="pictureChoser">
-                {{#with profile.socialPicture}}
-                  {{#if facebook}}
+          <div id="profilePicture">
+            <div class="current-picture {{changePictureAllowed}}">
+              <div class="change hide">change</div>
+              <div style="background-image:url({{profile.picture}});" class="picture"></div>    
+            </div>
+            <div class="picture-choser {{dynamicClass 'pictureChoser'}}" id="pictureChoser">
+              {{#with profile.socialPicture}}
+                {{#if facebook}}
+                  <div class="choice-wrapper">
                     <label for="inputPictureFacebook" class="radio">
                       <div style="background-image:url({{facebook}});" class="picture"></div>    
                       <div class="label-text">
@@ -58,8 +77,10 @@
                         Facebook
                       </div>
                     </label>
-                  {{/if}}
-                  {{#if twitter}}
+                  </div>
+                {{/if}}
+                {{#if twitter}}
+                  <div class="choice-wrapper">
                     <label for="inputPictureTwitter" class="radio">
                       <div style="background-image:url({{twitter}});" class="picture"></div>    
                       <div class="label-text">
@@ -67,8 +88,10 @@
                         Twitter
                       </div>
                     </label>
-                  {{/if}}
-                  {{#if github}}
+                  </div>
+                {{/if}}
+                {{#if github}}
+                  <div class="choice-wrapper">
                     <label for="inputPictureGithub" class="radio">
                       <div style="background-image:url({{github}});" class="picture"></div>    
                       <div class="label-text">
@@ -76,270 +99,283 @@
                         Github
                       </div>
                     </label>
-                  {{/if}}
-                {{/with}}
-                <div class="clear"></div>
-              </div>
+                  </div>
+                {{/if}}
+              {{/with}}
+              <div class="clear"></div>
             </div>
+          </div>
 
-          </div>
-          <div class="controls" style="padding-top:68px;">
-            <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="font-size:36px;font-weight:700;padding:12px;border-radius: 24px;padding: 12px 21px; width:350px; line-height:30px;" required />
-          </div>
         </div>
-
-        <div class="control-group">
-          <label class="control-label" for="inputEmail">email</label>
-          <div class="controls">
-            <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
-          </div>
+        <div class="controls" style="padding-top:68px;">
+          <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="height:36px;font-size:36px;line-height:font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px;" required />
         </div>
+      </div>
 
-        <div class="control-group">
-          <label class="control-label">hacking</label>
-          <div class="controls">
-            <label for="inputHackingWeb" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
-              web
-            </label>
-            <label for="inputHackingApp" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
-              apps
-            </label>
-            <label for="inputHackingSoftware" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
-              software
-            </label>
-            <label for="inputHackingGame" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
-              games
-            </label>
-            <label for="inputHackingDesign" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
-              design
-            </label>
-            <label for="inputHackingLife" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
-              life
-            </label>
-            <label for="inputHackingHardware" class="checkbox">
-              <input type="checkbox" name="profile.hacking" class="save" id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
-              hardware
-            </label>
-          </div>
+      <div class="control-group">
+        <label class="control-label" for="inputEmail">email</label>
+        <div class="controls">
+          <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
         </div>
-        <div class="control-group">
-          <label class="control-label" for="inputSkills">skillset</label>
-          <div class="controls">
-            {{> editSkills}}
-          </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">hacking</label>
+        <div class="controls">
+          <label for="inputHackingWeb" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
+            web
+          </label>
+          <label for="inputHackingApp" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
+            apps
+          </label>
+          <label for="inputHackingSoftware" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
+            software
+          </label>
+          <label for="inputHackingGame" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
+            games
+          </label>
+          <label for="inputHackingDesign" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
+            design
+          </label>
+          <label for="inputHackingLife" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
+            life
+          </label>
+          <label for="inputHackingHardware" class="checkbox">
+            <input type="checkbox" name="profile.hacking" class="save" id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
+            hardware
+          </label>
         </div>
-
-
-        <div class="control-group">
-          <label class="control-label" for="inputCompany">company</label>
-          <div class="controls">
-            <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-            <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" />
-          </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="inputSkills">skillset</label>
+        <div class="controls">
+          {{> editSkills}}
         </div>
-
-        <div class="control-group">
-          <label class="control-label" style="margin-top: -10px;">main location</label>
-          <div class="controls">
-              <div id="mapWrapper"> 
-                {{#constant}}
-                <div id="map"></div>
-                {{/constant}}  
-              </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">available to</label>
-          <div class="controls">
-            <label for="inputAvailableDrink" class="checkbox">
-              <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
-              having drinks
-            </label>
-                    <div style="clear:both;"></div>
-
-            <label for="inputAvailableLunch" class="checkbox">
-              <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
-              having lunch
-            </label>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label" for="inputHomepage">homepage</label>
-          <div class="controls">
-            <input type="text" name="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Facebook</label>
-          <div class="controls">
-            {{#if profile.social.facebook}}
-              <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a> –
-              <a href="#" class="toggleService" data-service="facebook">logout</a>
-            {{else}}
-              none –
-              <a href="#" class="toggleService" data-service="facebook">connect</a>
-            {{/if}}
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Twitter</label>
-          <div class="controls">
-            {{#if profile.social.twitter}}
-              <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a> –
-              <a href="#" class="toggleService" data-service="twitter">logout</a>
-            {{else}}
-              none –
-              <a href="#" class="toggleService" data-service="twitter">connect</a>
-            {{/if}}
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">GitHub</label>
-          <div class="controls">
-            {{#if profile.social.github}}
-              <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a> –
-              <a href="#" class="toggleService" data-service="github">logout</a>
-            {{else}}
-              none –
-              <a href="#" class="toggleService" data-service="github">connect</a>
-            {{/if}}
-          </div>
-        </div>
-
-      </form>
-
-      <div class="overlay">
-          <div class="txt">Overlay</div>
       </div>
 
 
-  </div>
-</template>
+      <div class="control-group">
+        <label class="control-label" for="inputCompany">company</label>
+        <div class="controls">
+          <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
+          <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" />
+        </div>
+      </div>
 
-<template name="hackerView">
-  <div id="hacker" class="page">
-      <dl style="text-align:left;">
-
-        <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView"></div>
-        <div class="headline">
-          <div class="name">{{profile.name}}</div>
-          {{#if profile.hacking}}
-            <div class="hacking-container">
-              {{#each profile.hacking}}
-                <div class="hacking-tag">{{this}}</div>
-              {{/each}}
-            <div class="hacker-number">Lyon's 13th hacker</div>
+      <div class="control-group">
+        <label class="control-label" style="margin-top: -10px;">main location</label>
+        <div class="controls">
+            <div id="mapWrapper" class="edit"> 
+              {{#constant}}
+              <div id="editMap" class="map"></div>
+              {{/constant}}  
             </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">available to</label>
+        <div class="controls">
+          <label for="inputAvailableDrink" class="checkbox">
+            <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
+            having drinks
+          </label>
+                  <div style="clear:both;"></div>
+
+          <label for="inputAvailableLunch" class="checkbox">
+            <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
+            having lunch
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="inputHomepage">homepage</label>
+        <div class="controls">
+          <input type="text" name="profile.homepage" class="text save {{dynamicClass 'inputHomepage'}}" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
+        </div>
+      </div>
+
+      <div class="control-group edit-social">
+        <label class="control-label">Facebook</label>
+        <div class="controls">
+          {{#if profile.social.facebook}}
+            <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
+            <a href="#" class="toggle toggleService" data-service="facebook"><span class="icon icon-remove icon-white"></span></a>
+          {{else}}
+            <span class="disabled">none</span>
+            <a href="#" class="toggle toggleService" data-service="facebook"><i class="icon icon-plus icon-white"></i> add</a>
           {{/if}}
         </div>
-        
-        <div style="clear:both;"></div>
+      </div>
 
-        <div class="line" style="margin-bottom:100px;">
-          <div class="handle">
-            skillset
-          </div>
-          <div class="output">
-            {{> skills}}
-          </div>
+      <div class="control-group edit-social">
+        <label class="control-label">Twitter</label>
+        <div class="controls">
+          {{#if profile.social.twitter}}
+            <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a> 
+            <a href="#" class="toggle toggleService" data-service="twitter"><span class="icon icon-remove icon-white"></span></a>
+          {{else}}
+            <span class="disabled">none</span>
+            <a href="#" class="toggle toggleService" data-service="twitter"><i class="icon icon-plus icon-white"></i> add</a>
+          {{/if}}
         </div>
+      </div>
 
-        {{#if profile.homepage}}
-        <div class="line">
-          <div class="handle">
-            homepage
-          </div>
-          <div class="output">
-            <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
-          </div>
-        </div>
-        {{/if}}
-
-        {{#if profile.social.facebook}}
-        <div class="line">
-          <div class="handle">
-            Facebook
-          </div>
-          <div class="output">
-            <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>  
-          </div>
-        </div>
-        {{/if}}
-
-        {{#if profile.social.github}}
-        <div class="line">
-          <div class="handle">
-            GitHub
-          </div>
-          <div class="output">
+      <div class="control-group edit-social">
+        <label class="control-label">GitHub</label>
+        <div class="controls">
+          {{#if profile.social.github}}
             <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
-          </div>
+            <a href="#" class="toggle toggleService" data-service="github"><span class="icon icon-remove icon-white"></span></a>
+          {{else}}
+            <span class="disabled">none</span>
+            <a href="#" class="toggle toggleService" data-service="github"><i class="icon icon-plus icon-white"></i> add</a>
+          {{/if}}
         </div>
-        {{/if}}
+      </div>
 
-        {{#if profile.social.twitter}}
-        <div class="line">
-          <div class="handle">
-            Twitter
+    </form>
+
+    <div class="overlay">
+        <div class="txt">Overlay</div>
+    </div>
+
+  {{/with}}
+</template>
+
+
+
+<template name="hackerView">
+  {{#with hacker}}
+
+    <dl style="text-align:left;">
+
+      <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView"></div>
+      <div class="headline">
+        <div class="name">{{profile.name}}</div>
+          <div class="hacking-container">
+            {{#each profile.hacking}}
+              <div class="hacking-tag">{{this}}</div>
+            {{/each}}
+          <div class="hacker-number">hacker #{{localRank}} in Lyon</div>
           </div>
-          <div class="output">
-            <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
-          </div>
+      </div>
+      
+      <div style="clear:both;"></div>
+
+      {{#if profile.skills}}
+      <div class="line" style="margin-bottom:100px;">
+        <div class="handle">
+          skillset
         </div>
-        {{/if}}
+        <div class="output">
+          {{> skills}}
+        </div>
+      </div>
+      {{/if}}
 
-        {{#if profile.company}}
-        <div class="line" style="margin-top:100px;">
-          <div class="handle">
-            company
-          </div>
-          <div class="output">
+      {{#if profile.homepage}}
+      <div class="line">
+        <div class="handle">
+          homepage
+        </div>
+        <div class="output">
+          <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.social.facebook}}
+      <div class="line">
+        <div class="handle">
+          Facebook
+        </div>
+        <div class="output">
+          <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>  
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.social.github}}
+      <div class="line">
+        <div class="handle">
+          GitHub
+        </div>
+        <div class="output">
+          <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.social.twitter}}
+      <div class="line">
+        <div class="handle">
+          Twitter
+        </div>
+        <div class="output">
+          <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.company}}
+      <div class="line" style="margin-top:100px;">
+        <div class="handle">
+          company
+        </div>
+        <div class="output">
+          {{#if profile.companyUrl}}
             <a href="{{profile.companyUrl}}" target="_blank">{{profile.company}}</a>
+          {{else}}
+            {{profile.company}}
+          {{/if}}
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.location}}
+      <div class="line">
+        <div class="handle">
+          main location
+        </div>
+        <div class="output">
+          <div id="mapWrapper" class="view">
+            {{#constant}}
+            <div id="viewMap" class="map"></div>
+            {{/constant}}  
           </div>
         </div>
-        {{/if}}
+      </div>
+      {{/if}}
 
-        <div class="line">
-          <div class="handle">
-            main location
-          </div>
-          <div class="output">
-            <div id="mapWrapper" style="background-color: rgba(0,0,0,0.2); margin-top:10px; margin-bottom:18px;"></div>
-          </div>
+      
+      {{#if profile.available}}
+      <div class="line">
+        <div class="handle">
+          available to
         </div>
-
-        
-        {{#if profile.available}}
-        <div class="line">
-          <div class="handle">
-            available to
-          </div>
-          <div class="output">
-            {{#if contains profile.available "drink"}}
-            <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have a drink</a>
-            {{/if}}
-            {{#if contains profile.available "lunch"}}
-            <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have lunch</a>
-            {{/if}}
-          </div>
+        <div class="output">
+          {{#if contains profile.available "drink"}}
+          <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have a drink</a>
+          {{/if}}
+          {{#if contains profile.available "lunch"}}
+          <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have lunch</a>
+          {{/if}}
         </div>
-        {{/if}}
+      </div>
+      {{/if}}
 
 
-      </dl>
+    </dl>
 
-  </div>
+  {{/with}}
 </template>
 
 

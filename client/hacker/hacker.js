@@ -100,16 +100,28 @@ var pictureChanged = function(event) {
 }
 
 
+// toggle between edit/view mode
+var toggleEditMode = function(event) {
+  event.preventDefault();
+  Session.set('hackerEditMode', !Session.get('hackerEditMode'));
+}
 
 // count the number of social services the user is connected to
 var countSocialServices = function() {
   return _.compact(_.values(hacker().profile.social || {})).length
 }
 
-
+// check if the profile we are viewing is owned by the logged in user
+var isCurrentUser = function() {
+  return Meteor.userId() == hackerId();
+}
 
 
 // EVENTS
+
+Template.hacker.events({
+  'click .toggle-edit-mode': toggleEditMode
+});
 
 Template.hackerEdit.events({
 
@@ -133,11 +145,12 @@ Template.hackerEdit.events({
 // TEMPLATE DATA
 
 Template.hacker.helpers({
-  "hackerIsCurrentUser": function() { return Meteor.userId() == hackerId(); },
-  "hacker": function() { return hacker(); }
+  'isCurrentUser': function() { return isCurrentUser(); },
+  'editMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },
 });
 
 Template.hackerEdit.helpers({
+  "hacker": function() { return hacker(); },
   "selected": function(socialPicture) { 
     var isSelected = Meteor.user().profile.picture == socialPicture;
     return  isSelected ? 'checked="checked"' : "";
@@ -153,6 +166,7 @@ Template.hackerEdit.helpers({
 });
 
 Template.hackerView.helpers({
+  "hacker": function() { return hacker(); },
   "checked": function(field, value) {
     var isChecked = _.contains(pathValue(Meteor.user(), field), value);
     return isChecked ? 'checked="checked"' : "";
@@ -170,8 +184,13 @@ Template.hackerView.helpers({
 
 Template.hackerEdit.rendered = function() {
   if (!this.initialized)
-    initializeMap(this.find('#map')); // initialize map
+    initializeMap(this.find('#editMap'), Meteor.user(), true); // initialize map
+  this.initialized = true;
+}
 
+Template.hackerView.rendered = function() {
+  if (!this.initialized)
+    initializeMap(this.find('#viewMap'), hacker(), false); // initialize map
   this.initialized = true;
 }
 

@@ -79,10 +79,12 @@ Template.main.rendered = function() {
   
   // auto grow input fields
   // resizing fields depending on their text size
-  $("input.text").autoGrowInput({
-    comfortZone: 8,
-    minWidth: 100,
-    maxWidth: 500
+  $("input.text").each(function() {
+    $(this).autoGrowInput({
+      comfortZone: parseInt($(this).css('font-size')),
+      minWidth: 100,
+      maxWidth: 500
+    });
   });
   
 }
