@@ -77,7 +77,7 @@ if (Meteor.isClient) {
       Router.go('frontpage'); 
       this.stop();
     }
-    
+
   }
 
   // make sure that user is allowed to enter the site
@@ -88,13 +88,6 @@ if (Meteor.isClient) {
     }
   }
 
-  // verify if meteor is started up with a settings file
-  var settingsRequired = function() {
-    if (!Meteor.settings) {
-      this.render('requireSettingFile');
-      this.stop();
-    }
-  }
 
 
   // check for duplicate accounts, if so request for merge
@@ -105,9 +98,6 @@ if (Meteor.isClient) {
 
   // make sure that user is allowed to enter the site
   Router.before(allowedAccess, {except: ['invite', 'hacker']})
-
-  // make sure there is a settings file specified
-  Router.before(settingsRequired);
 
   // global router configuration
   Router.configure({

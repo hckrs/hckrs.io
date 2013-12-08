@@ -4,6 +4,10 @@ Meteor.startup(function() {
   
   /* server startup */
 
+  // check if settingsfile is missing
+  if (!Meteor.settings || !Meteor.settings.public || !Meteor.settings.public.environment)
+    throw new Meteor.Error(500, "Settings file missing!");
+
   // add environment variables from settings file to current process environment
   if (Meteor.settings.env)
     _.extend(process.env, Meteor.settings.env);
