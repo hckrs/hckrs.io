@@ -46,7 +46,7 @@ var saveChangedField = function(event) {
   var value = $elm.val();
 
   // show feedback on input element
-  addDynamicClass($elm, 'saved', 1000);
+  addDynamicClass($elm, 'saved', 600);
 
   exec(function() {
     var modifier = _.object([ '$set' ], [ _.object([field], [value]) ]);

@@ -163,8 +163,8 @@
       <div class="control-group">
         <label class="control-label" for="inputCompany">company</label>
         <div class="controls">
-          <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-          <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" />
+          <input type="text" name="profile.company" class="text save {{dynamicClass 'inputCompany'}}" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
+          <input type="text" name="profile.companyUrl" class="text save {{dynamicClass 'inputCompanyUrl'}}" value="{{profile.companyUrl}}" placeholder="http://" style="" id="inputCompanyUrl" />
         </div>
       </div>
 
