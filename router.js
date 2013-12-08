@@ -32,6 +32,10 @@ if (Meteor.isClient) {
         
         Session.set('hackerId', hacker._id);
         Session.set('hacker', hacker);
+      },
+      unload: function() {
+        Session.set('hackerId', null);
+        Session.set('hacker', null);
       }
     });
 
