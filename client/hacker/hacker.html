@@ -186,11 +186,19 @@
             <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
             having drinks
           </label>
-                  <div style="clear:both;"></div>
+          
+          <div class="clear"></div>
 
           <label for="inputAvailableLunch" class="checkbox">
             <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
             having lunch
+          </label>
+
+          <div class="clear"></div>
+
+          <label for="inputAvailableEmail" class="checkbox">
+            <input type="checkbox" name="profile.available" class="save" id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
+            e-mail contact
           </label>
         </div>
       </div>
@@ -367,6 +375,9 @@
           {{/if}}
           {{#if contains profile.available "lunch"}}
           <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have lunch</a>
+          {{/if}}
+          {{#if contains profile.available "email"}}
+          <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">e-mail contact</a>
           {{/if}}
         </div>
       </div>

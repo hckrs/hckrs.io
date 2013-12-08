@@ -23,7 +23,7 @@ Meteor.users.deny({
     /* handle modifier */
 
     var allowedHackingValues = ['web','apps','software','game','design','life','hardware'];
-    var allowedAvailableValues = ['drink','lunch'];
+    var allowedAvailableValues = ['drink','lunch','email'];
     var allowedSocialPictures = _.values(doc.profile.socialPicture);
 
     var $setPattern = {
