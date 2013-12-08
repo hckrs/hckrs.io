@@ -13,6 +13,10 @@ if (Meteor.isClient) {
       load: function() { 
         Session.set('absoluteHeader', true); 
         Session.set('inversedHeader', true); 
+      },
+      unload: function() {
+        Session.set('absoluteHeader', false); 
+        Session.set('inversedHeader', false); 
       }
     });
     
@@ -44,12 +48,10 @@ if (Meteor.isClient) {
 
   /* custom functionality */
 
+  // XXX in iron-router you can't call this.redirect() if you want
+  // that the unload event must be triggered. Instead you must use
+  // Router.go() and then stopping the current route with this.stop()
 
-  // reset some session variables before entering a route
-  var resetState = function() {
-    Session.set('absoluteHeader', false); 
-    Session.set('inversedHeader', false);
-  }
 
   // check if there are duplicate accounts, if so request for merge
   var checkDuplicateAccounts = function() {
@@ -61,20 +63,28 @@ if (Meteor.isClient) {
 
   // when login is required, render the frontpage
   var loginRequired = function() {
-    if(!isLoggedIn()) {
-      if (Meteor.userId()) 
-        this.stop(); // login in progress, wait!
-      else {
-        this.stop();
-        this.render('frontpage'); //hold current route, but render frontpage
-      }
+    
+    if (!isLoggedIn() && Meteor.userId())
+      return this.stop(); // login in progress, wait!
+    
+    if (!isLoggedIn()) {
+      
+      // hold current route so we can redirect after login
+      var url = location.pathname + location.search + location.hash;
+      Session.set('redirectUrl', url);
+
+      // redirect to frontpage so that the user can login
+      Router.go('frontpage'); 
+      this.stop();
     }
+    
   }
 
   // make sure that user is allowed to enter the site
   var allowedAccess = function() {
     if(Meteor.user() && !Meteor.user().allowAccess) {
-      this.redirect('hacker', Meteor.user());
+      Router.go('hacker', Meteor.user()); 
+      this.stop();
     }
   }
 
@@ -86,8 +96,6 @@ if (Meteor.isClient) {
     }
   }
 
-  // reset state before each route will be loaded
-  Router.load(resetState);
 
   // check for duplicate accounts, if so request for merge
   Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite']});

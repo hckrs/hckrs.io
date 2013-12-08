@@ -23,16 +23,25 @@ var afterLogin = function() {
   checkInvitation();
   checkAccess();
 
-  var route = Router._currentController.route.name; //current route
+  // if a redirectUrl is present, redirect to that url
+  // otherwise if also no route is setted to the hackers list
+  var redirectUrl = Session.get('redirectUrl');
+  var currentRoute = Router._currentController.route.name;
+  var useRoute = 'hackers'; //default
 
-  // if no route is setted, go to hackers list after login
-  if (route == 'frontpage')
-    Router.go('hackers');
+  if (redirectUrl)
+    useRoute = redirectUrl;
+  else if (currentRoute === 'frontpage')
+    useRoute = currentRoute;
+  
+  Session.set('redirectUrl', null);
+  Router.go(redirectUrl);
+  
 }
 
 // when user becomes logged out
 var afterLogout = function() {
-  Router.go('frontpage');
+  /* do nothing */
 }
 
 // when logging in is in progress
