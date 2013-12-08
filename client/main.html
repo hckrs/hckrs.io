@@ -117,21 +117,26 @@
 
 <template name="invitations">
   <div id="invitations">
-    {{#if invitations}}
-      <strong>{{totalUsed}} people invited / {{totalUnused}} invitations left</strong>
+    
+    {{#if invitedUsers}}
+      <p> 
+        <strong>{{invitedTotal}}</strong> hackers invited:
+        {{#each invitedUsers}}
+          <span class="invite used">
+            <a href="{{pathFor 'hacker'}}"><strong>{{screenName}}</strong></a>
+          </span>
+        {{/each}}
+      </p>
     {{/if}}
-    {{#each invitations}}
-      {{#if used}}
-        <div class="invite used">
-          <span class="icon-ok icon-white"></span> 
-          <a href="{{pathFor 'hacker'}}">{{screenName}}</a>
-        </div>
-      {{else}}
-        <div class="invite used">
-          <input type="text" value="{{link}}" />
-        </div>
-      {{/if}}
-    {{/each}}
+    
+    <p>
+      <strong>{{unusedTotal}}</strong> unused invitations
+    </p>
+    
+    {{#if unusedTotal}}
+      <p>invitation url: <strong>{{link}}</strong></p>
+    {{/if}}
+
   </div>
 </template>
 

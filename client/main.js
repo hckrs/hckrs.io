@@ -46,12 +46,14 @@ Template.hackers.helpers({
 });
 
 Template.invitations.helpers({
-  'total': function() { return Invitations.find().count(); },
-  'totalUsed': function() { return Invitations.find({used: true}).count(); },
-  'totalUnused': function() { return Invitations.find().count() - Invitations.find({used: true}).count(); },
-  'invitations': function() { return Invitations.find({}, {sort: {used: -1}}).fetch(); },
-  'link': function() { return Router.routes['invite'].url(this); },
-  'screenName': function() { return this.name || 'anonymous'; }
+  'unusedTotal': function() { return Meteor.user().invitations; },
+  'invitedTotal': function() { return Invitations.find().count(); },
+  'link': function() { 
+    var phrase = bitHash(Meteor.user().invitationPhrase);
+    return Router.routes['invite'].url({phrase: phrase}); 
+  },
+  'invitedUsers': function() { return Invitations.find({}, {sort: {signedupAt: 1}}).fetch(); },
+  'screenName': function() { return this.name || 'anonymous'; },
 });
 
 

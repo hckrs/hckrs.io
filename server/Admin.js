@@ -33,6 +33,8 @@ Meteor.startup(function() {
 // @param number Number [optional, default=1] (number of invites)
 var addInvites = function(number) {
   verifyAdmin();
+
+  var number = number || 1;
   check(number, Number);
   
   Meteor.users.find().forEach(function(user) {
@@ -44,6 +46,8 @@ var addInvites = function(number) {
 // @param number Number [optional, default=1] (number of invites)
 var addInvitesToCity = function(city, number) {
   verifyAdmin();
+
+  var number = number || 1;
   check(city, String);
   check(number, Number);
   
@@ -56,17 +60,27 @@ var addInvitesToCity = function(city, number) {
 // @param number Number [optional, default=1] (number of invites)
 var addInvitesToUser = function(userId, number) {
   verifyAdmin();
+
+  var number = number || 1;
   check(userId, String);
   check(number, Number);
 
+
+  var user = Meteor.users.findOne(userId);
+
   // check if user exists
-  if (!Meteor.users.findOne(userId))
+  if (!user)
     throw new Meteor.Error(500, "User doesn't exists");
 
-  // generate invitations for this user
-  _.times(number, function() {
-    createInviteForUser(userId); // defined in ServicesConfiguration.js
-  });  
+  if (number < 1)
+    throw new Meteor.Error(500, "No valid number of invitations");
+
+  // calculate new number of invitations
+  var maxInvites = Meteor.settings.maximumNumberOfUnusedInvitesPerUser || 999;
+  var newNumberOfInvites = Math.min(user.invitations + number, maxInvites);
+
+  // add invitations to this user
+  Meteor.users.update(userId, {$set: {invitations: newNumberOfInvites}});
 }
 
 

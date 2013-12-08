@@ -308,9 +308,12 @@ Accounts.onCreateUser(function (options, user) {
     user.localRank = (local && local.localRank || 0) + 1;
     user.globalRank = (global && global.globalRank || 0) + 1;
 
+    // set invitation phrase
+    user.invitationPhrase = user.globalRank * 2 + 77;
+
     // give this user the default number of invite codes
-    var numberOfInvites = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
-    _.times(numberOfInvites, _.partial(createInviteForUser, user._id));
+    user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
+
   }
   
   // create new user account
@@ -476,13 +479,13 @@ var removeServiceFromCurrentUser = function(service) {
 
 
 // when user created an account he hasn't directly full access
-// the client can call this function to verify an invitation code
+// the client can call this function to verify the invitation phrase
 // so we can permit access for this user
-var verifyInvitationCode = function(code) {
-  check(code, String);
+var verifyInvitation = function(phrase) {
+  check(phrase, Number);
   
-  // search invitation
-  var invitation = Invitations.findOne({code: code});
+  // search broadcast user
+  var broadcastUser = Meteor.users.findOne({invitationPhrase: phrase});
 
   if (!Meteor.user())
     throw new Meteor.Error(500, "Unknow user: " + this.userId);
@@ -490,37 +493,31 @@ var verifyInvitationCode = function(code) {
   if (Meteor.user().isInvited)
     throw new Meteor.Error(500, "User is already invited.");
 
-  if (!invitation)
-    throw new Meteor.Error(500, "Unknow invitation");
+  if (!broadcastUser)
+    throw new Meteor.Error(500, "Unknow broadcast user");
 
-  if (invitation.used)
-    throw new Meteor.Error(500, "Invitation already used");
-
-  // code is valid!
+  if (broadcastUser.invitations < 1)
+    throw new Meteor.Error(200, "limit", "Invitation limit reached.");
   
-  // assign invitation to current user
-  var modifier = { receivingUser: Meteor.userId(), signedupAt: new Date(), used: true };
-  Invitations.update(invitation._id, {$set: modifier});  
+  // invitation valid
+
+  // insert invitation couple in database
+  Invitations.insert({
+    broadcastUser: broadcastUser._id,
+    receivingUser: Meteor.userId(), 
+    signedupAt: new Date()
+  });  
 
   // mark user as invited
   Meteor.users.update(Meteor.userId(), {$set: {isInvited: true}});
+
+  // decrement broadcast user's unused invitations
+  Meteor.users.update(broadcastUser._id, {$inc: {invitations: -1}});
 
   // check if user now get access to the website
   requestAccess(); 
 }
 
-
-// generate a new invitation code for a user
-// that the user can give to someone else
-createInviteForUser = function (userId) { // GLOBAL (also called from Admin.js)
-
-  // insert invitation
-  Invitations.insert({
-    'code': Random.hexString(50),
-    'broadcastUser': userId,
-    'createdAt': new Date(),
-  });
-}
 
 
 // request allow access for a user
@@ -557,7 +554,7 @@ var test = function() {
 // define methods that can be called from the client-side
 Meteor.methods({
   "requestAccess": requestAccess,
-  "verifyInvitationCode": verifyInvitationCode,
+  "verifyInvitation": verifyInvitation,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
   "test": test 

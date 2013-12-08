@@ -20,29 +20,41 @@ if (Meteor.isClient) {
       }
     });
     
-    this.route('invite', { path: '/invite/:code', template: 'frontpage', 
-      before: function() {
-        Session.set('invitationCode', this.params.code);
-        this.redirect('frontpage');
-      }
-    });
-    
     this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
       before: function() { 
         var city = 'lyon';
         var localRankHash = this.params.localRankHash;
         var localRank = bitHashInv(localRankHash);
         var hacker = Meteor.users.findOne({city: city, localRank: localRank});
-
+        
         if (!hacker)
-          this.redirect('frontpage');
+          return this.redirect('frontpage');
         
         Session.set('hackerId', hacker._id);
         Session.set('hacker', hacker);
       }
     });
 
+
+    this.route('invite', { path: /^\/\+\/(.*)/, template: 'frontpage', 
+      before: function() {
+        var phrase = bitHashInv(this.params[0]);
+        Session.set('invitationPhrase', phrase);
+        this.redirect('frontpage');
+      }
+    });
+    
+
   });
+
+
+
+
+  /* resolve url helpers */
+
+  Router.routes['invite'].url = function(params) {
+    return Meteor.absoluteUrl('+/' + params.phrase);
+  }
 
 
 

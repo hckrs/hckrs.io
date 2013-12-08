@@ -14,6 +14,11 @@
 <template name="hackerEdit">
   <div id="hacker" class="page">
 
+      {{#if invitationLimitReached}}
+        <div class="alert alert-error">
+          <p>The invite link you have used has reached its maximum number of invites. Wait until the maximum is increased. We will do that soon.</p>
+        </div>
+      {{/if}}
 
       {{#unless allowAccess}}
         {{#if isInvited}}

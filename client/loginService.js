@@ -27,16 +27,13 @@ var afterLogin = function() {
   // otherwise if also no route is setted to the hackers list
   var redirectUrl = Session.get('redirectUrl');
   var currentRoute = Router._currentController.route.name;
-  var useRoute = 'hackers'; //default
-
+  
   if (redirectUrl)
-    useRoute = redirectUrl;
+    Router.go(redirectUrl);
   else if (currentRoute === 'frontpage')
-    useRoute = currentRoute;
+    Router.go('hackers');
   
   Session.set('redirectUrl', null);
-  Router.go(redirectUrl);
-  
 }
 
 // when user becomes logged out
@@ -52,6 +49,20 @@ var loggingInInProgress = function() {
 
 
 /* ACCOUNT & ACCESS & INVITATIONS */
+
+Handlebars.registerHelper('previousLoginSession', function() {
+  return Session.get('previousLoginSession');
+});
+
+Template.main.events({
+  "click #requestMergeDuplicateAccount .close": function() {
+    Session.set('requestMergeDuplicateAccount', false);
+  }
+});
+
+Handlebars.registerHelper('invitationLimitReached', function() {
+  return Session.get('invitationLimitReached');
+});
 
 // check if there is an other existing user account
 // that probably match the current user idenity
@@ -81,30 +92,27 @@ var checkDuplicateIdentity = function() {
   });
 }
 
-Handlebars.registerHelper('previousLoginSession', function() {
-  return Session.get('previousLoginSession');
-});
-
-Template.main.events({
-  "click #requestMergeDuplicateAccount .close": function() {
-    Session.set('requestMergeDuplicateAccount', false);
-  }
-});
-
-
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
 var checkInvitation = function() {
-  
-  if (Meteor.user() && !Meteor.user().isInvited && Session.get('invitationCode')) {
+
+  if (Meteor.user() && !Meteor.user().isInvited && Session.get('invitationPhrase')) {
     // make a server call to check the invitation
-    Meteor.call('verifyInvitationCode', Session.get('invitationCode'), function(err) {
-      if (err) log("Error", err)
-      else setupSubscriptions() //rerun subscriptions
+    Meteor.call('verifyInvitation', Session.get('invitationPhrase'), function(err) {
+      if (err && err.reason === 'limit') {
+        // show invitation limit reached message
+        Session.set('invitationLimitReached', true);
+        Meteor.setTimeout(function() {
+          Session.set('invitationLimitReached', false);
+        }, 5 * 60 * 1000);
+      } else if (err) {
+        log("Error", err);
+      } else { //on success
+        setupSubscriptions() //rerun subscriptions
+      }
     });
   } 
 };
-
 
 // new users have no access to the site until their profile is complete
 // observe if the fields email and name are filled in, after saving
@@ -223,7 +231,13 @@ var loginWithService = function(event) {
 }
 
 // log out the current user
-var logout = function() { 
+var logout = function() {
+  
+  // first redirect to frontpage to make sure there are no helpers
+  // active that making use of the user session information
+  // this prevent from errors in the console
+  Router.go('frontpage');
+
   Meteor.logout(); 
 }
 
