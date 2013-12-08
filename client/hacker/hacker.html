@@ -34,21 +34,21 @@
 
     {{#if invitationLimitReached}}
       <div class="alert alert-error">
-        <p>The invite link you have used has reached its maximum number of invites. Wait until the maximum is increased. We will do that soon.</p>
+        <p>This personal invile URL has reached its maximum number of invites. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the normal application process on the homepage.</p>
       </div>
     {{/if}}
 
     {{#unless allowAccess}}
       {{#if isInvited}}
         <div class="access-denied alert alert-info">
-          <h1>Make your profile complete</h1>
-          <p>Make your profile complete and get access to your local hackers tribe.</p>
+          <h1>Profile incomplete</h1>
+          <p>Give us some more information so that other hackers can get a feel for who your are :)</p>
         </div>
       {{else}}
         <div class="access-denied alert alert-info">
           <h1>Invite only</h1>
-          <p>Because the site is in beta we can't give access to everyone. When you complete your profile below we will notify you when we have activated your account manually.<br/>
-          <strong>You can also request somebody to invite you. Then you get directly access.</strong></p>
+          <p>Right now there are no available slots in the tribe. You can though fill out your profile, and every now an then we handpick some of you to get acces to the tribe. If this is the case we will notify you.<br/>
+          <strong>You may also ask a member to invite you.</strong></p>
         </div>
       {{/if}}
     {{/unless}}
@@ -258,7 +258,7 @@
 
   {{/with}}
 </template>
-
+  
 
 
 <template name="hackerView">
