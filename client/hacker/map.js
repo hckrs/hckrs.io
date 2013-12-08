@@ -1,4 +1,5 @@
 
+var $map; // instance to the HTML element containing the map
 var map; // instance to the leaflet map
 var marker; // marker for user's location
 var zoom = 13; // the default zoom value;
@@ -8,7 +9,8 @@ var increasedMode = false; // map is in increased mode
 
 // initialize the map so the user can pick a location
 initializeMap = function(mapElement, user, editable) {
-  
+  $map = $(mapElement);
+
   // user's location
   var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
   var location = user.profile.location || defaultLocation;
@@ -49,18 +51,17 @@ var markerLocationChanged = function(event) {
 
 // when mouse enters the map
 var enterMap = function(event) {
-  var $map = $(event.currentTarget);
-  var delay = 400;
-  var execute = _.partial(increaseMapSize, $map);
-  mouseTimer = Meteor.setTimeout(execute, delay);
+  event.preventDefault();
+  increaseMapSize($map);
+  Session.set('mapFullscreenActive', true);
 } 
 
 // when mouse leaves the map
 var leaveMap = function(event) {
-  var $map = $(event.currentTarget);
-  if (mouseTimer)
-    Meteor.clearTimeout(mouseTimer);
+  event.preventDefault();
+  event.stopPropagation();
   resetMapSize($map);
+  Session.set('mapFullscreenActive', false);
 } 
 
 // increase the size of the map with animation
@@ -83,11 +84,6 @@ var increaseMapSize = function($map) {
   var startPointY = startYMiddle > winYMiddle ? startYBottom : startY;
   var positionAtScreenRatio = startPointY / winHeight;
 
-  // calculate new position and height
-  var newHeight = Math.min(winHeight * 0.8, 400);
-  var deltaHeight = newHeight - startHeight;
-  var deltaY = -(deltaHeight * positionAtScreenRatio);
-
   // inital values to make the map floats
   $map.css({
     position: 'fixed',
@@ -98,9 +94,9 @@ var increaseMapSize = function($map) {
   // increase size with animation 
   $map.animate({
     left: 0,
-    top: startY + deltaY,
+    top: 0,
     width: '100%',
-    height: newHeight
+    height: winHeight
   }, { step: function() { map.invalidateSize() } });
 }
 
@@ -133,10 +129,16 @@ var saveLocation = function(location) {
 /* EVENTS */
 
 Template.hackerEdit.events({
-  'mouseenter #editMap': enterMap,
-  'mouseleave #editMap': leaveMap
+  'click .map': enterMap,
+  'click .close-map': leaveMap
 });
 
 
+/* HELPERS */
 
+Template.hackerEdit.helpers({
+  'mapFullscreenActive': function() { 
+    return Session.get('mapFullscreenActive') ? 'active' : ''; 
+  }
+})
 
