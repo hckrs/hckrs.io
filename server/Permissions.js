@@ -40,6 +40,10 @@ Meteor.users.deny({
       "profile.favoriteSkills": Match.Optional(Match.AllIn(SKILL_NAMES))
     };
 
+    var $unsetPattern = {
+      'profile.location': Match.Optional(Match.Any)
+    };
+
     var $pushPattern = {
       "profile.hacking": Match.Optional(Match.In(allowedHackingValues)),
       "profile.available": Match.Optional(Match.In(allowedAvailableValues)),
@@ -57,6 +61,7 @@ Meteor.users.deny({
     // DENY if NO match
     return !(Match.test(modifier, {
       '$set': Match.Optional($setPattern),
+      '$unset': Match.Optional($unsetPattern),
       '$push': Match.Optional($pushPattern),
       '$addToSet': Match.Optional($pushPattern),
       '$pull': Match.Optional($pullPattern)

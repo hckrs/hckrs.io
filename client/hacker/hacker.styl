@@ -20,6 +20,7 @@
   }
   
   #mapWrapper.edit {
+    position: relative;
     width: 200px;
     height: 200px;
     
@@ -30,43 +31,61 @@
       height: inherit;
       opacity: 0.6;
       transition: opacity 0.3s ease-in;
-      
+
+      .leaflet-popup-content {
+        margin: 2px 4px !important;
+      }
+    }
+
+    /* overlay that catches the click event */
+    .event-catch-overlay { 
+      position: absolute;
+      z-index: 11;
+      width: inherit;
+      height: inherit;
+
       &:hover { /* hovering map */
         cursor: pointer;
-        -webkit-filter: brightness(1.6);
-        -moz-filter: brightness(1.6);
-        -o-filter: brightness(1.6);
-        -ms-filter: brightness(1.6);
-        filter: brightness(1.6);
         box-shadow: 0 0 10px rgba(255, 255, 255, 1);  
+      }
+
+      &:hover + .map {
+        opacity: 0.8;
       }
     }
     
-    .close-map {
+    .close-map { /* close fullscreen button */
       display: none;
       position: fixed;
       top: 30px;
       right: 30px;
-      z-index: 11;
+      z-index: 14;
     }
     
-    &.active { /* in fullscreen mode */
+    &.active { /* map in fullscreen mode */
       .map {
+        z-index: 13;
         opacity: 1;
-        
-        /* reset the :hover properties from above */
-        cursor: default;
-        -webkit-filter: none;
-        -moz-filter: none;
-        -o-filter: none;
-        -ms-filter: none;
-        filter: none;
-        box-shadow: none;
+        cursor: crosshair;
+
+        /* effect before closing fullscreen */
+        -webkit-transition: -webkit-filter 0.3s ease-in;
+        -moz-transition: -moz-filter 0.3s ease-in;
+        -o-transition: -o-filter 0.3s ease-in;
+        -ms-transition: -ms-filter 0.3s ease-in;
+        &.before-close-effect {
+          -webkit-filter: brightness(2);
+          -moz-filter: brightness(2);
+          -o-filter: brightness(2);
+          -ms-filter: brightness(2);
+          filter: brightness(2);
+        }
       }
       .close-map {
         display: block;
       }
     }
+
   }
 
   #mapWrapper.view {

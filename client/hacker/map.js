@@ -2,17 +2,25 @@
 var $map; // instance to the HTML element containing the map
 var map; // instance to the leaflet map
 var marker; // marker for user's location
+var popup; // popup of the marker
+var defaultLocation; // the default location of the map
 var zoom = 13; // the default zoom value;
 var mouseTimer = null; // delay to increase map
 var increasedMode = false; // map is in increased mode
 
 
+/* 
+  TODO XXX: this file need some restructering in the future.
+  The functionality is too specific for the edit-profile-pahe.
+*/
+
+
 // initialize the map so the user can pick a location
 initializeMap = function(mapElement, user, editable) {
   $map = $(mapElement);
+  defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
 
-  // user's location
-  var defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
+  var mapStyle = Meteor.settings.public.mapboxDefault;
   var location = user.profile.location || defaultLocation;
 
   // map options
@@ -21,8 +29,8 @@ initializeMap = function(mapElement, user, editable) {
   };
 
   // set up the map
-  var mapStyle = Meteor.settings.public.mapboxDefault;
   map = L.mapbox.map(mapElement, mapStyle, mapOptions);
+  map.on('click', setMarker);
 
   // start the map in Lyon
   map.setView(location, zoom);
@@ -34,33 +42,73 @@ initializeMap = function(mapElement, user, editable) {
 // show user's location by showing a marker on the map 
 var initMarker = function(location, editable) {
   marker = L.marker(location, {draggable: editable});
-  marker.on('dragend', markerLocationChanged);
+  marker.on('dragend', _.partial(markerLocationChanged, true));
   marker.addTo(map);
+  
+  popup = L.popup({'closeButton': false, 'minWidth': null});
+  popup.setContent('<a href="#" class="remove-marker">remove</a>');
+  marker.bindPopup(popup);
+  popup.on('open', function() {
+    // disable popup when no location setted
+    if (_.isEqual(marker.getLatLng(), defaultLocation))
+      marker.closePopup();
+  });
+
+  // inital store marker position
+  markerLocationChanged(false);
+}
+
+// set marker to clicked position
+var setMarker = function(event) {
+  marker.setLatLng(event.latlng);
+  markerLocationChanged(true);
 }
 
 // fired when marker location is changed by dragging the marker
-var markerLocationChanged = function(event) {
-  var marker = event.target;
+var markerLocationChanged = function(effect) {
   var latlng = marker.getLatLng();
-  saveLocation(latlng);
+  
+  if (_.isEqual(latlng, defaultLocation)) { // no location specified
+    marker.closePopup();
+    marker.setOpacity(0.7);
+    removeLocation();
+  } else { // location specified, store!
+    marker.setOpacity(1);
+    saveLocation(latlng);
+  }
+
+  if (effect) {
+    // close map with flashing save effect
+    addDynamicClass($map, 'before-close-effect', 400);
+    Meteor.setTimeout(leaveMap, 1300);
+  }
 }
 
+// removing marker (making it transparant)
+var removeMarker = function() {
+  marker.setLatLng(defaultLocation);
+  markerLocationChanged(true);
+}
 
 
 /* Increase map size to fullscreen */
 
-// when mouse enters the map
+// enter fullscreen mode when clicked on the mini map
 var enterMap = function(event) {
-  event.preventDefault();
+  if (event && event.preventDefault) event.preventDefault();
   increaseMapSize($map);
+  $map.focus();
   Session.set('mapFullscreenActive', true);
 } 
 
-// when mouse leaves the map
+// exit fullscreen mode
 var leaveMap = function(event) {
-  event.preventDefault();
-  event.stopPropagation();
+  if (event && event.preventDefault) event.preventDefault();
+  if (event && event.stopPropagation) event.stopPropagation();
+  
   resetMapSize($map);
+
+  $("#hacker .close-map").css('display', 'none'); // direct feedback
   Session.set('mapFullscreenActive', false);
 } 
 
@@ -78,11 +126,6 @@ var increaseMapSize = function($map) {
 
   // current position and height
   var startY = $map.offset().top - $(document).scrollTop();
-  var startHeight = $map.height();
-  var startYMiddle = startY + startHeight/2;
-  var startYBottom = startY + startHeight;
-  var startPointY = startYMiddle > winYMiddle ? startYBottom : startY;
-  var positionAtScreenRatio = startPointY / winHeight;
 
   // inital values to make the map floats
   $map.css({
@@ -97,7 +140,10 @@ var increaseMapSize = function($map) {
     top: 0,
     width: '100%',
     height: winHeight
-  }, { step: function() { map.invalidateSize() } });
+  }, { 
+    step: function() { map.invalidateSize(); },
+    complete: function() { map.invalidateSize(); }
+  });
 }
 
 // shrink map to original size
@@ -110,12 +156,12 @@ var resetMapSize = function($map, init) {
     height: 'inherit'
   }); 
 
-  map.setView(marker.getLatLng(), zoom);
+  var location = marker && marker.getLatLng() || defaultLocation;
+  map.setView(location, zoom);
   map.invalidateSize();
   
   increasedMode = false;
 }
-
 
 
 
@@ -125,12 +171,33 @@ var saveLocation = function(location) {
   Meteor.users.update(Meteor.userId(), {$set: {'profile.location': location}});
 }
 
+var removeLocation = function() {
+  Meteor.users.update(Meteor.userId(), {$unset: {'profile.location': true}});
+}
+
 
 /* EVENTS */
 
 Template.hackerEdit.events({
-  'click .map': enterMap,
-  'click .close-map': leaveMap
+
+  // activate fullscreen mode by clicking on the minimap
+  'click .event-catch-overlay': enterMap,
+
+  // user clicked on 'remove' in the marker popup
+  'click .remove-marker': removeMarker, 
+
+  // closing fullscreen mode by clicking the close-button
+  'click .close-map': leaveMap,
+
+  // closing fullscreen mode by typing Escape or Return on the keyboard
+  'keydown': function(event) { 
+    var $elm = $(event.currentTarget);  //input element
+    var keyCode = event.which;
+    var ESC = '27', RET = '13';
+    if (keyCode == ESC || keyCode == RET)
+      leaveMap(event);
+  }
+
 });
 
 

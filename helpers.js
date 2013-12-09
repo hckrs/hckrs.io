@@ -81,6 +81,8 @@ if (Meteor.isClient) {
     var setupTimer = function(err, docId) {
       if(duration) {
         Meteor.setTimeout(function() {
+          if ($elm instanceof $)
+            $elm.removeClass(className); //direct feedback for better usability
           DynamicClasses.remove(docId);
         }, duration);  
       }
