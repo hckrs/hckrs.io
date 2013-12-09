@@ -260,7 +260,6 @@
 
 <template name="hackerView">
 
-  <dl style="text-align:left;">
 
     <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView"></div>
     <div class="headline">
@@ -273,18 +272,21 @@
         </div>
     </div>
     
-    <div style="clear:both;"></div>
+    <div style="clear:both;margin-bottom: 50px;"></div>
 
     {{#if profile.skills}}
-    <div class="line" style="margin-bottom:100px;">
+    <div class="line">
       <div class="handle">
         skillset
       </div>
       <div class="output">
         {{> skills}}
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
+
+    <div class="spacer"></div>
 
     {{#if profile.homepage}}
     <div class="line">
@@ -294,6 +296,7 @@
       <div class="output">
         <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
 
@@ -305,6 +308,7 @@
       <div class="output">
         <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>  
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
 
@@ -316,6 +320,7 @@
       <div class="output">
         <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
 
@@ -327,11 +332,12 @@
       <div class="output">
         <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
 
     {{#if profile.company}}
-    <div class="line" style="margin-top:100px;">
+    <div class="line">
       <div class="handle">
         company
       </div>
@@ -342,8 +348,11 @@
           {{profile.company}}
         {{/if}}
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
+
+    <div class="spacer"></div>
 
     {{#if profile.location}}
     <div class="line">
@@ -357,9 +366,11 @@
           {{/constant}}  
         </div>
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
 
+    <div class="spacer"></div>
     
     {{#if profile.available}}
     <div class="line">
@@ -377,11 +388,10 @@
         <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
         {{/if}}
       </div>
+      <div class="clear"></div>
     </div>
     {{/if}}
 
-
-  </dl>
 
 </template>
 
