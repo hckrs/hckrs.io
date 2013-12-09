@@ -10,10 +10,12 @@
 
   .btn-edit-mode {
     position absolute;
-    top: 94px;
-    left: 730px;
+    top: 105px;
+    left: 745px;
     .icon {
       margin-right: 3px;
+      margin-bottom: 2px;
+      vertical-align: middle;
     }
   }
   
@@ -82,15 +84,15 @@
   #profilePicture {
     position: relative;
     .picture {
-      width: 160px;
-      height: 160px;
-      border-radius: 80px;
+      width: 180px;
+      height: 180px;
+      border-radius: 90px;
       background-size: cover;
     }
     div.current-picture {
       position: relative;
-      width: 160px;
-      height: 160px;
+      width: 180px;
+      height: 180px;
       .change {
         display: none;
         position: absolute;
@@ -225,19 +227,6 @@
     color: #e2e2e2;
   }
 
-  .overlay {
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background-color:rgba(0, 0, 0, 0.85);
-    background: url(data:;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAATSURBVBhXY2RgYNgHxGAAYuwDAA78AjwwRoQYAAAAAElFTkSuQmCC) repeat scroll transparent\9;
-    z-index:2;
-    color:white;
-    visibility: hidden;
-  }
-
 
   /* VIEW hacker */
 
@@ -249,7 +238,6 @@
 
   .name{
     font-size: 36px;
-    line-height: 48px;
     font-weight: 700;
     color:white;
     float:left;
@@ -302,12 +290,12 @@
     max-width: 750px;
   }
 
-  .available{
-    opacity: 0.6;
+  .btn-opacity{
+    opacity: 0.6 !important;
   }
 
-  .available:hover{
-    opacity: 0.8;
+  .btn-opacity{
+    opacity: 0.8 !important;
   }
 
 

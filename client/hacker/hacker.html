@@ -9,11 +9,11 @@
     --}}
 
     {{#if isCurrentUser}}
-      <a href="#" class="btn btn-small btn-edit-mode toggle-edit-mode">
+      <a href="#" class="btn btn-small btn-edit-mode toggle-edit-mode btn-opacity">
         {{#if editMode}}
-          <span class="icon icon-eye-open"></span> view my profile
+          <span class="icon icon-eye-open"></span> view
         {{else}}
-          <span class="icon icon-pencil"></span> edit my profile
+          <span class="icon icon-pencil"></span> edit
         {{/if}}      
       </a>
     {{/if}}
@@ -107,8 +107,8 @@
           </div>
 
         </div>
-        <div class="controls" style="padding-top:68px;">
-          <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="height:36px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px;" required />
+        <div class="controls" style="padding-top:76px;">
+          <input id="text" type="text" name="profile.name" class="text save {{dynamicClass 'inputName'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="height:36px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:16px;" required />
         </div>
       </div>
 
@@ -372,13 +372,13 @@
         </div>
         <div class="output">
           {{#if contains profile.available "drink"}}
-          <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have a drink</a>
+          <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have a drink</a>
           {{/if}}
           {{#if contains profile.available "lunch"}}
-          <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">have lunch</a>
+          <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have lunch</a>
           {{/if}}
           {{#if contains profile.available "email"}}
-          <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse available">e-mail contact</a>
+          <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
           {{/if}}
         </div>
       </div>
