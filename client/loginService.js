@@ -1,7 +1,7 @@
 
 
 var serviceOptions = {
-  "facebook": { requestPermissions: [ 'email', 'user_location' /*, 'user_birthday'*/ ] },
+  "facebook": { requestPermissions: [ 'email', 'user_location', 'user_birthday', 'user_website', 'user_work_history' ] },
   "github": { requestPermissions: [ 'user:email' /* XXX not working??? */ ] },
   "twitter": { requestPermissions: [ /* no permission available */ ] }
 }

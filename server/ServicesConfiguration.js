@@ -81,88 +81,35 @@ var oauthCall = function(user, service, method, url, params) {
 
 
 // fetch user information from external service
-// we try to make user's profile complete, if the service don't provide 
-// the basic information we set the value to null
+// we try to make user's info complete
 
-// @param user String|{Object} (either a userId or an user object)
+// @param user {Object} (an user object)
 // @param service String (facebook, github, twitter, etc.)
 var fetchServiceUserData = function(user, service) {
 
   var services = {
   
     "github": function(user) {
-      var data = HTTP.get("https://api.github.com/user", {
+      var fields = ["id","accessToken","email","username","login","avatar_url","html_url","name","company","blog","location"]
+      var response = HTTP.get("https://api.github.com/user", {
         headers: {"User-Agent": "Meteor/"+Meteor.release},
         params: {access_token: user.services[service].accessToken}
-      }).data;
-
-      var userData = {
-        'id': data.id,
-        'username': data.login,
-        'email': data.email,
-        'name': data.name,
-        //'gender': null,
-        //'birthday': null,
-        'city': data.location,
-        'link': data.html_url,
-        'picture': data.avatar_url && data.avatar_url + "&size=180",
-        'lang': null
-      };
-
-      return userData;
+      });
+      return _.pick(response.data, fields);
     },
     
     "facebook": function(user) {
       var url = "https://graph.facebook.com/me";
-      var params = { fields: [ 'id', 'email', 'name', 'locale', 'picture', 
-                               'link', 'username', 'location' /*, 'birthday', 'gender' */ ] };
-      var data = oauthCall(user, 'facebook', 'GET', url, params).data;
-
-      // if (data.birthday) {
-      //   var p = data.birthday.split('/');
-      //   data.birthday = new Date(p[2], p[0], p[1]);
-      // }
-
-      if (data.username && data.picture && data.picture.data && !data.picture.data.is_silhouette)
-        data.picture = "https://graph.facebook.com/" + data.username + "/picture?type=large";
-      
-      var userData = {
-        'id': data.id,
-        'username': data.username,
-        'email': data.email,
-        'name': data.name,
-        //'gender': data.gender,
-        //'birthday': data.birthday,
-        'city': data.location && data.location.name, //XXX TODO: use additional data.location.id 
-        'link': data.link,
-        'picture': data.picture,
-        'lang': data.locale && data.locale.substr(0,2)
-      };
-
-      return userData;
+      var fields = ['id', 'email', 'name', 'locale', 'picture', 'link', 'username', 'location', 'birthday', 'gender', 'website', 'work'];
+      return oauthCall(user, 'facebook', 'GET', url, {fields: fields}).data;
     },
     
     "twitter": function(user) {
       var url = "https://api.twitter.com/1.1/account/verify_credentials.json";
+      var fields = ['id','id_str','accessToken','profile_image_url','name','screen_name','location','entities'];
       var data = oauthCall(user, 'twitter', 'GET', url).data;
-
-      if (!data.default_profile_image && data.profile_image_url)
-        data.picture = data.profile_image_url.replace(/_normal(.{0,5})$/, '$1');
-
-      var userData = {
-        'id': data.id_str,
-        'username': data.screen_name,
-        'email': null,
-        'name': data.name,
-        //'gender': null,
-        //'birthday': null,
-        'city': data.location,
-        'link': data.screen_name && "http://twitter.com/" + data.screen_name,
-        'picture': data.picture,
-        'lang': data.lang
-      };
-
-      return userData;
+      data.id = data.id_str;
+      return _.pick(data, fields);
     }
   }
 
@@ -170,28 +117,124 @@ var fetchServiceUserData = function(user, service) {
     throw new Meteor.Error(500, "Unknow how to fetch user data from " + service);    
 
   // return the fetched data
-  return omitNull( services[service](user) );
+  return services[service](user);
+}
+
+
+// transform the raw service data into a uniform format
+// that is the same for all services. The transformed data
+// can be used to make user's profile complete
+var uniformServiceData = function(data, service) {
+
+  var services = {
+  
+    "github": function(data) {
+
+      if (data.location)
+        data.location = geocode(data.location);
+
+      var userData = {
+        'email': data.email,
+        'name': data.name,
+        'picture': data.avatar_url && data.avatar_url + "&size=180",
+        'link': data.html_url,
+        'company': data.company,
+        'homepage': data.blog,
+        'location': data.location,
+        
+        // 'username': data.login,
+        // 'birthday': data.birthday || null,
+        // 'city': data.location,
+        // 'lang': data.lang || null
+      };
+
+      return userData;
+    },
+    
+    "facebook": function(data) {
+
+      if (data.birthday) {
+        var p = data.birthday.split('/');
+        data.birthday = new Date(p[2], p[0], p[1]);
+      }
+
+      if (data.username && data.picture && data.picture.data && !data.picture.data.is_silhouette)
+        data.picture = "https://graph.facebook.com/" + data.username + "/picture?type=large";
+
+      if (data.location && data.location.name)
+        data.location = geocode(data.location.name);
+
+      if (data.work && data.work[0] && data.work[0].employer)
+        data.company = data.work[0].employer;
+      
+      var userData = {
+        'email': data.email,
+        'name': data.name,
+        'picture': data.picture,
+        'link': data.link,
+        'company': data.company, // XXX TODO ? working???
+        'homepage': data.website,
+        'location': data.location,
+        
+        // 'username': data.username,
+        // 'birthday': data.birthday,
+        // 'city': data.location && data.location.name, //XXX TODO: use additional data.location.id 
+        // 'lang': data.locale && data.locale.substr(0,2)
+      };
+
+      return userData;
+    },
+    
+    "twitter": function(data) {
+    
+      if (!data.default_profile_image && data.profile_image_url)
+        data.picture = data.profile_image_url.replace(/_normal(.{0,5})$/, '$1');
+
+      var urls = pathValue(data, 'entities.url.urls');
+      data.homepage = urls && urls[0] && urls[0].expanded_url;
+
+      if (data.location)
+        data.location = geocode(data.location);
+
+      var userData = {
+        'email': null, // not available
+        'name': data.name,
+        'picture': data.picture,
+        'link': data.screen_name && "http://twitter.com/" + data.screen_name,
+        'company': null, // not available
+        'homepage': data.homepage,
+        'location': data.location,
+        
+        // 'username': data.screen_name,
+        // 'birthday': data.birthday || null,
+        // 'city': data.location,
+        // 'lang': data.lang
+      };
+
+      return userData;
+    }
+  }
+
+  if (!services[service])
+    throw new Meteor.Error(500, "Unknow service " + service);    
+
+  // return the fetched data
+  return omitNull(services[service](data));
 }
 
 
 
-
-// merge new user data in the given user object
-// only empty fields are filled in, so no info will be overidden
-
-// @param user {Object} (an user object)
-// @param service String (facebook, github, twitter, etc.)
-// @param userData {Object} (the additional user data that fill the empty properties)
-// @return {Object} (the same user object with additional info attached to it)
-var mergeServiceUserData = function(user, service, userData) {
+// extending the user's profile with the given data
+// the given data must be in uniform format
+var extendUserProfile = function(user, userData, service) {
   
   // data used for creating the user profile
-  var extract = ['name', 'city', 'lang', 'email' /*, 'gender', 'birthday'*/];
+  var extract = ['name', 'email', 'company', 'homepage', 'location' /*, 'gender', 'birthday'*/];
   var data = _.pick(userData, extract);
-
+  
   // fill undefined or null properties in user's profile with the new user data
-  user.profile = _.defaults(omitNull(user.profile), omitNull(data)); 
-
+  user.profile = _.defaults(omitNull(user.profile), data); 
+ 
   // default required properties
   if (!user.profile.social) 
     user.profile.social = {};
@@ -216,12 +259,36 @@ var mergeServiceUserData = function(user, service, userData) {
       user.emails.push({ address: userData.email, verified: true });
   }
 
-  // beside creating a new profile for this user, 
-  // the user also gets a new service data object
-  user.services[service] = _.extend(user.services[service], userData);
+  return user;
+}
+
+
+
+
+// fetching additional user information from the service
+// and attach it to the service object.
+// then a new user profile is created by filling in the gaps.
+
+// @param user {Object} (an user object)
+// @param service String (facebook, github, twitter, etc.)
+// @return {Object} (the same user object with additional info attached to it)
+var extendUserByFetchingService = function(user, service) {
+  
+  // fetch additional user data from service
+  var serviceData = fetchServiceUserData(user, service);
+
+  // attach the new service data directly
+  user.services[service] = _.extend(user.services[service], serviceData);
+
+  // transform service data in uniform format
+  var userData = uniformServiceData(serviceData, service);
+
+  // extending the user's profile
+  user = extendUserProfile(user, userData, service);
   
   return user;
 }
+
 
 
 
@@ -276,10 +343,8 @@ Accounts.onCreateUser(function (options, user) {
   var serviceName = _.first(_.keys(_.omit(user.services, ['resume'])));
 
   // fetch additional user information
-  var userData = fetchServiceUserData(user, serviceName);
-
   // extend user object with additional fetched user information
-  var user = mergeServiceUserData(user, serviceName, userData);
+  user = extendUserByFetchingService(user, serviceName);
 
   // find an existing user that probaly match this identity
   var existingUser = findExistingUser(user);  
@@ -383,10 +448,8 @@ var addServiceToCurrentUser = function(token, service) {
   extendedUser.services[service] = serviceData;
 
   // fetch additional user information
-  var userData = fetchServiceUserData(extendedUser, service);
-  
   // merge fetched data into the user object
-  extendedUser = mergeServiceUserData(extendedUser, service, userData);
+  extendedUser = extendUserByFetchingService(extendedUser, service);
 
 
   // check if the requested external account is already assigned to an other user account

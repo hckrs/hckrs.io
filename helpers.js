@@ -16,7 +16,7 @@ allIn = function(values, allowedValues) {
 omitNull = function(obj) {
   obj = _.clone(obj);
   _.each(obj, function(val, key) {
-    if (_.isNull(val)) delete obj[key];
+    if (_.isNull(val) || _.isUndefined(val)) delete obj[key];
   }); return obj;
 }
 
@@ -61,6 +61,20 @@ replaceHostname = function(url, newHostname) {
   return url.replace(/\/\/([^\/:]*)/, '//' + newHostname);
 }
 
+// geocoder for openstreet
+geocode = function(address, cb) {
+  var url = "http://nominatim.openstreetmap.org/search";
+  var options = {params: { format: 'json', q: address }};
+  var response = function(res) {
+    var loc = res && res.data && res.data[0];
+    if (loc && loc.lat && loc.lon)
+      return { lat: loc.lat, lng: loc.lon };
+  }
+  if (Meteor.isServer)
+    return response(HTTP.get(url, options));
+  else
+    HTTP.get(url, options, function(err, res) { cb(response(res)); });
+}
 
 if (Meteor.isClient) {
 
