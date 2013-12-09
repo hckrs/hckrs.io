@@ -145,12 +145,12 @@ Template.hackerEdit.events({
 // TEMPLATE DATA
 
 Template.hacker.helpers({
+  "hacker": function() { return hacker(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'editMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },
 });
 
 Template.hackerEdit.helpers({
-  "hacker": function() { return hacker(); },
   "selected": function(socialPicture) { 
     var isSelected = Meteor.user().profile.picture == socialPicture;
     return  isSelected ? 'checked="checked"' : "";
@@ -166,7 +166,6 @@ Template.hackerEdit.helpers({
 });
 
 Template.hackerView.helpers({
-  "hacker": function() { return hacker(); },
   "checked": function(field, value) {
     var isChecked = _.contains(pathValue(Meteor.user(), field), value);
     return isChecked ? 'checked="checked"' : "";
