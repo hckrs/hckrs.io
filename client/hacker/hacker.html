@@ -10,18 +10,25 @@
       {{/if}}
       
       {{#unless allowAccess}}
-        {{#if isInvited}}
-          <div class="access-denied alert alert-info">
-            <h1>Profile incomplete</h1>
-            <p>Give us some more information so that other hackers can get a feel for who your are :)</p>
-          </div>
-        {{else}}
+        {{#unless isInvited}}
           <div class="access-denied alert alert-info">
             <h1>Invite only</h1>
             <p>Right now there are no available slots in the tribe. You can though fill out your profile, and every now an then we handpick some of you to get acces to the tribe. If this is the case we will notify you.<br/>
             <strong>You may also ask a member to invite you.</strong></p>
           </div>
-        {{/if}}
+        {{else}}
+          {{#if incompleteProfile}}
+            <div class="access-denied alert alert-info">
+              <h1>Profile incomplete</h1>
+              <p>Give us some more information so that other hackers can get a feel for who your are :)</p>
+            </div>
+          {{else}}
+            <div class="access-denied alert alert-info">
+              <h1>Verify e-mail</h1>
+              <p>You must verify your e-mailaddress. We have sent you an e-mail with a verification link.</p>
+            </div>
+          {{/if}}
+        {{/unless}}
       {{/unless}}
     </div>
 

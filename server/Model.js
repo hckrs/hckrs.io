@@ -19,7 +19,7 @@ var user = { /* scheme */
   createdAt: Date,        // automatic filled in by meteor
   
   isInvited: Boolean,     // user has entered a valid invite code (permit to enter site)
-  allowAccess: Boolean,   // user is allowed to enter the site if he is invited and profile is complete
+  allowAccess: Boolean,   // user is allowed to enter the site if he is invited, profile complete, email verified
 
   invitationPhrase: Number,   // uniq number that used in the invite url that this user can share with others
   invitations: Number,        // number of unused invites that this user can use to invite people

@@ -586,6 +586,7 @@ var verifyInvitation = function(phrase) {
 // request allow access for a user
 // user will be allowed to access the site if he is invited
 // and his profile is complete
+// and has filled in a valid e-mailaddress
 var requestAccess = function() {
 
   if (!Meteor.user())
@@ -595,10 +596,13 @@ var requestAccess = function() {
     throw new Meteor.Error(500, "User has already access to the site.");
 
   if (!Meteor.user().isInvited)
-    throw new Meteor.Error(500, "User hasn't used an invitation code.");
+    throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");
 
   if (!Meteor.user().profile.email || !Meteor.user().profile.name)
-    throw new Meteor.Error(500, "User profile is incomplete.");
+    throw new Meteor.Error(500, "profileIncomplete", "User profile is incomplete.");
+
+  if (!_.findWhere(Meteor.user().emails, {address: Meteor.user().profile.email, verified: true}))
+    throw new Meteor.Error(500, "emailNotVerified", "e-mailaddress isn't verified.");
 
   // access allowed!
 

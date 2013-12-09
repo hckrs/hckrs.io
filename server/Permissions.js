@@ -20,6 +20,7 @@ Meteor.users.deny({
       return true; //DENY
 
 
+
     /* handle modifier */
 
     var allowedHackingValues = ['web','apps','software','game','design','life','hardware'];
@@ -58,14 +59,40 @@ Meteor.users.deny({
       "profile.favoriteSkills": Match.Optional(Match.Any)
     }
 
-    // DENY if NO match
-    return !(Match.test(modifier, {
+    var match = Match.test(modifier, {
       '$set': Match.Optional($setPattern),
       '$unset': Match.Optional($unsetPattern),
       '$push': Match.Optional($pushPattern),
       '$addToSet': Match.Optional($pushPattern),
       '$pull': Match.Optional($pullPattern)
-    }));
+    });
+
+    // pattern matching
+    if (!match) 
+      return true; //DENY
+
+
+    /* 
+      handle new e-mailaddress 
+      insert into user's emails array 
+      and send a verification e-mail
+    */
+    if (modifier.$set && modifier.$set['profile.email']) {
+      var email = modifier.$set['profile.email'];
+      var emails = Meteor.users.findOne(userId).emails;
+      var found = _.findWhere(emails, {address: email});
+      if (!found) //insert
+        Meteor.users.update(userId, {$push: {'emails': {'address': email, verified: false}}});
+      if (!found || !found.verified) { 
+        // address need to be verified
+        // we disallow access temporary
+        Accounts.sendVerificationEmail(userId, email);
+        Meteor.users.update(userId, {$set: {'allowAccess': false}});
+      }
+    }
+
+
+
   },
 
   fetch: ['profile.socialPicture']

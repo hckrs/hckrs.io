@@ -19,6 +19,14 @@ if (Meteor.isClient) {
         Session.set('inversedHeader', false); 
       }
     });
+
+    this.route('verifyEmail', {path: '/verify-email/:token',
+      action: function() {
+        Accounts.verifyEmail(this.params.token, checkAccess);
+        Router.go('hackers'); 
+        this.stop();
+      }
+    });
     
     this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
       before: function() { 
@@ -48,7 +56,7 @@ if (Meteor.isClient) {
         this.redirect('frontpage');
       }
     });
-    
+  
 
   });
 
@@ -108,13 +116,13 @@ if (Meteor.isClient) {
 
 
   // check for duplicate accounts, if so request for merge
-  Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite']});
+  Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite', 'verifyEmail']});
 
   // make sure the user is logged in, except for the pages below
-  Router.before(loginRequired, {except: ['frontpage', 'invite']});
+  Router.before(loginRequired, {except: ['frontpage', 'invite', 'verifyEmail']});
 
   // make sure that user is allowed to enter the site
-  Router.before(allowedAccess, {except: ['invite', 'hacker']})
+  Router.before(allowedAccess, {except: ['invite', 'hacker', 'verifyEmail']})
 
   // global router configuration
   Router.configure({
@@ -210,4 +218,5 @@ if (Meteor.isServer) {
       }
     });
   });
+
 }

@@ -50,18 +50,19 @@ var loggingInInProgress = function() {
 
 /* ACCOUNT & ACCESS & INVITATIONS */
 
-Handlebars.registerHelper('previousLoginSession', function() {
-  return Session.get('previousLoginSession');
-});
-
 Template.main.events({
   "click #requestMergeDuplicateAccount .close": function() {
     Session.set('requestMergeDuplicateAccount', false);
   }
 });
-
+Handlebars.registerHelper('previousLoginSession', function() {
+  return Session.get('previousLoginSession');
+});
 Handlebars.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
+});
+Handlebars.registerHelper('incompleteProfile', function() {
+  return !checkCompletedProfile();
 });
 
 // check if there is an other existing user account
@@ -116,17 +117,30 @@ var checkInvitation = function() {
 
 // new users have no access to the site until their profile is complete
 // observe if the fields email and name are filled in, after saving
-checkAccess = function() { /* GLOBAL, called from hacker.js */
+// also the user must have filled in a verified e-mailaddress
+checkAccess = function() { /* GLOBAL, called from hacker.js, router.js */
   exec(function() {
     var user = Meteor.user();
     var profile = user.profile;
-    if (!user.allowAccess && user.isInvited && profile.email && profile.name)
+    if (!user.allowAccess && user.isInvited && checkCompletedProfile() && verifiedEmail())
       Meteor.call('requestAccess', function(err) {
         if (err) log(err);
         else setupSubscriptions();
       });
   });
 };
+
+// check if user uses a verified e-mailaddress
+var verifiedEmail = function() {
+  var user = Meteor.user();
+  return !!_.findWhere(user.emails, {address: user.profile.email, verified: true});
+}
+
+// check if user has completed his profile data
+var checkCompletedProfile = function() {
+  var profile = Meteor.user().profile;
+  return profile.email && profile.name;
+}
 
 
 
