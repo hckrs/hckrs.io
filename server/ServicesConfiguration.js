@@ -180,7 +180,7 @@ var uniformServiceData = function(data, service) {
         data.location = geocode(data.location.name);
 
       if (data.work && data.work[0] && data.work[0].employer)
-        data.company = data.work[0].employer;
+        data.company = data.work[0].employer.name;
       
       var userData = {
         'email': data.email,
