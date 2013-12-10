@@ -90,12 +90,16 @@ var fetchServiceUserData = function(user, service) {
   var services = {
   
     "github": function(user) {
-      var fields = ["id","accessToken","email","username","login","avatar_url","gravatar_id","html_url","name","company","blog","location"]
-      var response = HTTP.get("https://api.github.com/user", {
+      var fields = ["id","accessToken","email", "privateEmails","username","login","avatar_url","gravatar_id","html_url","name","company","blog","location"]
+      var data = HTTP.get("https://api.github.com/user", {
         headers: {"User-Agent": "Meteor/"+Meteor.release},
         params: {access_token: user.services[service].accessToken}
-      });
-      return _.pick(response.data, fields);
+      }).data;
+      data.privateEmails = HTTP.get("https://api.github.com/user/emails", {
+        headers: {"User-Agent": "Meteor/"+Meteor.release},
+        params: {access_token: user.services[service].accessToken}
+      }).data; // XXX API response format for /user/emails will change in the future
+      return _.pick(data, fields);;
     },
     
     "facebook": function(user) {
@@ -135,6 +139,14 @@ var uniformServiceData = function(data, service) {
 
       if (data.location)
         data.location = geocode(data.location);
+
+      // check for private mailaddress when public email isn't setted
+      if (!data.email && data.privateEmails) { 
+        var emails = _.filter(data.privateEmails, function(email) {
+          return _.isString(email) && email.indexOf("@users.noreply.github.com") === -1;
+        });
+        data.email = _.first(emails);
+      }
 
       var userData = {
         'email': data.email,
