@@ -212,15 +212,17 @@ Template.hackerView.helpers({
 // RENDERING
 
 Template.hackerEdit.rendered = function() {
-  if (!this.initialized)
+  if (!this.initialized && this.find('#editMap')) {
     initializeMap(this.find('#editMap'), Meteor.user(), true); // initialize map
-  this.initialized = true;
+    this.initialized = true;
+  }
 }
 
 Template.hackerView.rendered = function() {
-  if (!this.initialized)
+  if (!this.initialized && this.find('#viewMap')) {
     initializeMap(this.find('#viewMap'), hacker(), false); // initialize map
-  this.initialized = true;
+    this.initialized = true;
+  }
 }
 
 
