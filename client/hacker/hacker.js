@@ -54,9 +54,6 @@ var saveChangedField = function(event, cb) {
   });
 }
 
-
-
-
 // the editing mode will be exited if user press the ESCAPE or RETURN button
 var fieldChanged = function(event) {
   var $elm = $(event.currentTarget);  //input element
@@ -65,6 +62,7 @@ var fieldChanged = function(event) {
   if (keyCode == RET)
     $elm.blur()
 }
+
 
 
 // special case when autosaving email field

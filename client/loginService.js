@@ -82,15 +82,17 @@ var checkDuplicateIdentity = function() {
   // if so we notify the user that he has possible 2 account and we request to merge them
   var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount;
 
-  Session.set('requestMergeDuplicateAccount', requestMerge);
   Session.set('previousLoginSession', previousSession);
+  Session.set('requestMergeDuplicateAccount', requestMerge);
   
   // store the current login session in persistent browser storage, 
   // so we can check for duplicate idenity next time
-  amplify.store("previousLoginSession", {
-    userId: Meteor.userId(),
-    service: currentService
-  });
+  if (currentService) {
+    amplify.store("previousLoginSession", {
+      userId: Meteor.userId(),
+      service: currentService
+    });
+  }
 }
 
 // when user isn't yet allowed to enter the site
