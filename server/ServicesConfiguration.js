@@ -312,18 +312,13 @@ var extendUserByFetchingService = function(user, service) {
 
 
 
-// merge user accounts by combining two user objects
+// merge two user objects
 // merge the second user in the first one, returning a copy of the result
 // notice that some properties must be handled manually
-var mergeUsers = function(firstUser, secondUser) {
-  firstUser = _.deepClone(firstUser);
-  secondUser = _.deepClone(secondUser);
+var mergeUserData = function(firstUser, secondUser) {
 
-  // merge 2 objects (taking right object and extend it with the first one)
-  var mergedData = _.deepExtend(secondUser, firstUser); 
-
-  // XXX all values that evaluate to 0 will be extended, so all of this properties
-  // undefined, null, 0, false, "" can be replaced by the values of the second object
+  // merge 2 objects (copy right properties to left, it will override always)
+  var mergedData = _.deepExtend(_.deepClone(secondUser), _.deepClone(firstUser)); 
 
   // XXX arrays are considered as sets when working with primitives.
   // but objects in arrays are compared on their pointer (no deep equality testing)
@@ -331,7 +326,43 @@ var mergeUsers = function(firstUser, secondUser) {
   // remove duplicate emails
   mergedData.emails = _.uniq(mergedData.emails, _.isEqual);
 
+  // properties that must take the highest valye of the two users
+  // this is required for some Boolean / Number types.
+  mergedData.isInvited = !!(firstUser.isInvited || secondUser.isInvited);
+  mergedData.allowAccess = !!(firstUser.allowAccess || secondUser.allowAccess);
+  mergedData.invitations = Math.max(firstUser.invitations, secondUser.invitations) || firstUser.invitations || secondUser.invitations || 0;
+  if (!_.isUndefined(mergedData.isAdmin))
+    mergedData.isAdmin = !!(firstUser.isAdmin || secondUser.isAdmin);
+
   return mergedData;
+}
+
+// merge two user accounts by puting data of the newest user
+// into the oldest. Afterwards login into the (new) account.
+// this function must be called within the method-call scope
+// so we can call the function this.setUserId()
+var mergeUsers = function(user, existingUser) {
+
+  // check which account is the oldest
+  var currentIsNewer = existingUser.createdAt.getTime() < user.createdAt.getTime();
+  var surviveUser = currentIsNewer ? existingUser : user; // oldest account (will be survive)
+  var zombieUser = currentIsNewer ? user : existingUser; // newest account (will be removed)
+
+  // login the merged user (probably the same as currect session)
+  this.setUserId(surviveUser._id); 
+
+  // merge the user data into the oldest user
+  var mergedUserData = mergeUserData(surviveUser, zombieUser);
+  removeUser(zombieUser._id);
+  Meteor.users.update(zombieUser._id, {$set: {mergedWith: surviveUser._id}});
+  Meteor.users.update(surviveUser._id, mergedUserData);
+
+  // replace all userID references in other collections
+  Invitations.update({broadcastUser: zombieUser._id}, {$set: {broadcastUser: surviveUser._id}}, {multi: true});
+  Invitations.update({receivingUser: zombieUser._id}, {$set: {receivingUser: surviveUser._id}}, {multi: true});
+  Meteor.users.update({mergedWith: zombieUser._id}, {$set: {mergedWith: surviveUser._id}}, {multi: true});
+
+  return surviveUser;
 }
 
 
@@ -383,7 +414,7 @@ Accounts.onCreateUser(function (options, user) {
   // merge data from existing user if exists
   if (existingUser) {
 
-    user = mergeUsers(existingUser, user);
+    user = mergeUserData(existingUser, user);
     Meteor.users.remove(existingUser._id);
 
   }
@@ -419,12 +450,9 @@ Accounts.onCreateUser(function (options, user) {
 
 // Remove an account
 // this is be done be marking an account as deleted rather than deleting permanently
-// you can set additional properties that are setted on this archived user object
-var removeUser = function(userId, additionalProperties) {
+var removeUser = function(userId) {
   Meteor.users.update(userId, {$set: {'isDeleted': true, 'deletedAt': new Date(), 'emails': [], 'services': {}}});
   Meteor.users.update(userId, {$set: {'services.resume.loginTokens': []}});
-  if (additionalProperties) 
-    Meteor.users.update(userId, {$set: additionalProperties});
 }
 
 
@@ -512,24 +540,7 @@ var addServiceToCurrentUser = function(token, service) {
   
 
 
-  // helper function for merging two user accounts
-  var merge = function(user, existingUser) {
 
-    // check which account is the oldest
-    var currentIsNewer = existingUser.createdAt.getTime() < user.createdAt.getTime();
-    var oldestUser = currentIsNewer ? existingUser : user;
-    var newestUser = currentIsNewer ? user : existingUser;
-
-    // login the merged user (probably the same as currect session)
-    this.setUserId(oldestUser._id); 
-
-    // merge the user data into the oldest user
-    var mergedUserData = mergeUsers(oldestUser, newestUser);
-    removeUser(newestUser._id, {mergedWith: oldestUser._id});
-    Meteor.users.update(oldestUser._id, mergedUserData);
-
-    return oldestUser;
-  }
 
   
     
@@ -537,14 +548,14 @@ var addServiceToCurrentUser = function(token, service) {
 
     // service data already present in an other user account
     // merge 2 accounts
-    var mergedUser = merge.call(this, user, existingUser1);
+    var mergedUser = mergeUsers.call(this, user, existingUser1);
 
   } else if (existingUser2) {
 
     // there is an account that uses the same emailadress
     // merge with that account AND include the new service data
     // merge 2 accounts
-    var mergedUser = merge.call(this, extendedUser, existingUser2);    
+    var mergedUser = mergeUsers.call(this, extendedUser, existingUser2);    
 
   } else {
 
@@ -598,6 +609,8 @@ var verifyInvitation = function(phrase) {
   
   // search broadcast user
   var broadcastUser = Meteor.users.findOne({invitationPhrase: phrase});
+  if (broadcastUser.mergedWith)
+    broadcastUser = Meteor.users.findOne(broadcastUser.mergedWith);
 
   if (!Meteor.user())
     throw new Meteor.Error(500, "Unknow user: " + this.userId);
