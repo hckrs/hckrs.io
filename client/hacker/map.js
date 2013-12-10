@@ -44,7 +44,7 @@ initializeMap = function(mapElement, user, editable) {
 // show user's location by showing a marker on the map 
 var initMarker = function(location, editable) {
   marker = L.marker(location, {draggable: editable});
-  marker.on('dragend', _.partial(markerLocationChanged, true));
+  marker.on('dragend', markerLocationChanged);
   marker.addTo(map);
   
   if (editable) {
@@ -57,9 +57,6 @@ var initMarker = function(location, editable) {
         marker.closePopup();
     });
   }
-
-  // inital store marker position
-  markerLocationChanged(false);
 }
 
 // set marker to clicked position
@@ -69,7 +66,7 @@ var setMarker = function(event) {
 }
 
 // fired when marker location is changed by dragging the marker
-var markerLocationChanged = function(effect) {
+var markerLocationChanged = function() {
   var latlng = marker.getLatLng();
   
   if (_.isEqual(latlng, defaultLocation)) { // no location specified
@@ -81,17 +78,15 @@ var markerLocationChanged = function(effect) {
     saveLocation(latlng);
   }
 
-  if (effect) {
-    // close map with flashing save effect
-    addDynamicClass($map, 'before-close-effect', 200);
-    Meteor.setTimeout(leaveMap, 500);
-  }
+  // close map with flashing save effect
+  addDynamicClass($map, 'before-close-effect', 200);
+  Meteor.setTimeout(leaveMap, 500);
 }
 
 // removing marker (making it transparant)
 var removeMarker = function() {
   marker.setLatLng(defaultLocation);
-  markerLocationChanged(true);
+  markerLocationChanged();
 }
 
 
