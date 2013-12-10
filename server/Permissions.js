@@ -79,16 +79,23 @@ Meteor.users.deny({
     */
     if (modifier.$set && modifier.$set['profile.email']) {
       var email = modifier.$set['profile.email'];
-      var emails = Meteor.users.findOne(userId).emails;
+      var user = Meteor.users.findOne(userId);
+      var emails = user.emails;
       var found = _.findWhere(emails, {address: email});
-      if (!found) //insert
+
+      // insert new e-mail
+      if (!found)
         Meteor.users.update(userId, {$push: {'emails': {'address': email, verified: false}}});
+
+      // verify e-mailaddres, by sending a verification e-mail
+      // user will be temporary disallowed to enter the site
       if (!found || !found.verified) { 
-        // address need to be verified
-        // we disallow access temporary
         Accounts.sendVerificationEmail(userId, email);
         Meteor.users.update(userId, {$set: {'allowAccess': false}});
       }
+
+      // remove previous mailaddress
+      Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 2000);
     }
 
 

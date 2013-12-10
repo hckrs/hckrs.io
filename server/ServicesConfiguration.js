@@ -397,6 +397,20 @@ var removeUser = function(userId, additionalProperties) {
 }
 
 
+// Remove e-mailaddress from user's account that aren't in use
+// This is the case when it is not used by a social services
+// or manually filled in in the user's profile
+cleanEmailAddress = function(userId) { 
+  var user = Meteor.users.findOne(userId);
+  
+  var usedEmails = _.map(user.services, function(s) { return s.email; });
+  usedEmails.push(user.profile.email);
+  usedEmails = _.compact(usedEmails);
+  
+  // remove emails that arn't in use
+  Meteor.users.update(userId, {$pull: {'emails': {'address': {$nin: usedEmails}}}});
+}
+
 
 // Existing users can link additional social services to their accounts.
 // Therefor a service token is required to fetch user data from the external service. 
@@ -450,6 +464,10 @@ var addServiceToCurrentUser = function(token, service) {
   // fetch additional user information
   // merge fetched data into the user object
   extendedUser = extendUserByFetchingService(extendedUser, service);
+
+  // after replacing the previous service data
+  // some e-mailaddress can be become unused, clean them
+  Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 2000);
 
 
   // check if the requested external account is already assigned to an other user account
