@@ -90,7 +90,7 @@ var fetchServiceUserData = function(user, service) {
   var services = {
   
     "github": function(user) {
-      var fields = ["id","accessToken","email","username","login","avatar_url","html_url","name","company","blog","location"]
+      var fields = ["id","accessToken","email","username","login","avatar_url","gravatar_id","html_url","name","company","blog","location"]
       var response = HTTP.get("https://api.github.com/user", {
         headers: {"User-Agent": "Meteor/"+Meteor.release},
         params: {access_token: user.services[service].accessToken}
@@ -130,13 +130,16 @@ var uniformServiceData = function(data, service) {
   
     "github": function(data) {
 
+      if (data.avatar_url)
+        data.picture = data.avatar_url + "&size=180"
+
       if (data.location)
         data.location = geocode(data.location);
 
       var userData = {
         'email': data.email,
         'name': data.name,
-        'picture': data.avatar_url && data.avatar_url + "&size=180",
+        'picture': data.picture,
         'link': data.html_url,
         'company': data.company,
         'homepage': data.blog,
@@ -188,19 +191,24 @@ var uniformServiceData = function(data, service) {
     "twitter": function(data) {
     
       if (!data.default_profile_image && data.profile_image_url)
+        // remove '_normal' from url to get original size
         data.picture = data.profile_image_url.replace(/_normal(.{0,5})$/, '$1');
 
       var urls = pathValue(data, 'entities.url.urls');
-      data.homepage = urls && urls[0] && urls[0].expanded_url;
+      if (urls && urls[0])
+        data.homepage = urls[0].expanded_url;
 
       if (data.location)
         data.location = geocode(data.location);
+
+      if (data.screen_name)
+        data.link = "http://twitter.com/" + data.screen_name
 
       var userData = {
         'email': null, // not available
         'name': data.name,
         'picture': data.picture,
-        'link': data.screen_name && "http://twitter.com/" + data.screen_name,
+        'link': data.link,
         'company': null, // not available
         'homepage': data.homepage,
         'location': data.location,
