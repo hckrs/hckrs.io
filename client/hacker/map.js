@@ -47,14 +47,16 @@ var initMarker = function(location, editable) {
   marker.on('dragend', _.partial(markerLocationChanged, true));
   marker.addTo(map);
   
-  popup = L.popup({'closeButton': false, 'minWidth': null});
-  popup.setContent('<a href="#" class="remove-marker">remove</a>');
-  marker.bindPopup(popup);
-  popup.on('open', function() {
-    // disable popup when no location setted
-    if (_.isEqual(marker.getLatLng(), defaultLocation))
-      marker.closePopup();
-  });
+  if (editable) {
+    popup = L.popup({'closeButton': false, 'minWidth': null});
+    popup.setContent('<a href="#" class="remove-marker">remove</a>');
+    marker.bindPopup(popup);
+    popup.on('open', function() {
+      // disable popup when no location setted
+      if (_.isEqual(marker.getLatLng(), defaultLocation))
+        marker.closePopup();
+    });
+  }
 
   // inital store marker position
   markerLocationChanged(false);
