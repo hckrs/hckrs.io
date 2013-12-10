@@ -15,7 +15,7 @@
   
 
   "env": {
-    "MAIL_URL": "smtp://smtp@hckrs.io:password@hckrs.io:587/"
+    "MAIL_URL": "smtp://smtp@hckrs.io:eT6AmOLrHjxldxGI6aKdvFyB@mail.gandi.net:587/"
   },
 
   "newrelic": {
