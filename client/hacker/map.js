@@ -30,7 +30,9 @@ initializeMap = function(mapElement, user, editable) {
 
   // set up the map
   map = L.mapbox.map(mapElement, mapStyle, mapOptions);
-  map.on('click', setMarker);
+
+  if (editable)
+    map.on('click', setMarker);
 
   // start the map in Lyon
   map.setView(location, zoom);
@@ -79,8 +81,8 @@ var markerLocationChanged = function(effect) {
 
   if (effect) {
     // close map with flashing save effect
-    addDynamicClass($map, 'before-close-effect', 400);
-    Meteor.setTimeout(leaveMap, 1300);
+    addDynamicClass($map, 'before-close-effect', 200);
+    Meteor.setTimeout(leaveMap, 500);
   }
 }
 
