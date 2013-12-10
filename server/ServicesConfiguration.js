@@ -340,12 +340,23 @@ var mergeUsers = function(firstUser, secondUser) {
 // probably this is the same user and we can merge the accounts afterwards
 var findExistingUser = function(userData) {
 
-  // now we matching on verified emailaddresses only
+  // we matching on emailaddresses
   var emails = userData.emails ? _.pluck(userData.emails, 'address') : [];
   var existingUser = Meteor.users.findOne({
     '_id': {$ne: userData._id}, 
-    'emails': {$elemMatch: {address: {$in: emails}, verified: true}}
+    'emails.address': {$in: emails}
   });
+
+  if (!existingUser)
+    return false;
+  
+  // if one of the matched e-mails isn't verified
+  // we can not merge the user
+  // also meteor don't allow to create users with the same e-mail
+  // so this request can't be handled and we throw a error
+  var unverifiedEmails = _.pluck(_.where(existingUser.emails, {verified: false}), 'address');
+  if (_.some(unverifiedEmails, function(e) { return _.contains(emails, e); }))
+    throw new Meteor.Error(500, 'duplicateEmail');
 
   return existingUser;
 }
@@ -487,7 +498,7 @@ var addServiceToCurrentUser = function(token, service) {
 
   // after replacing the previous service data
   // some e-mailaddress can be become unused, clean them
-  Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 2000);
+  Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 10000);
 
 
   // check if the requested external account is already assigned to an other user account

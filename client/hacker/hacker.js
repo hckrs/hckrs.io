@@ -40,7 +40,7 @@ var addToSet = function(event) {
 // this is how the html is related to the database
 // input[name]  --> database field name
 // input[value] --> the value to store
-var saveChangedField = function(event) {
+var saveChangedField = function(event, cb) {
   var $elm = $(event.currentTarget); //input element
   var field = $elm.attr('name');
   var value = $elm.val();
@@ -50,7 +50,7 @@ var saveChangedField = function(event) {
 
   exec(function() {
     var modifier = _.object([ '$set' ], [ _.object([field], [value]) ]);
-    Meteor.users.update(Meteor.userId(), modifier);
+    Meteor.users.update(Meteor.userId(), modifier, cb);
   });
 }
 
@@ -64,6 +64,24 @@ var fieldChanged = function(event) {
   var ESC = '27', RET = '13';
   if (keyCode == RET)
     $elm.blur()
+}
+
+
+// special case when autosaving email field
+// callback after email field updated in the database
+var updateEmailCallback = function(err) { 
+  Session.set('isDuplicateEmail', false);
+  Session.set('isNotValidEmail', false);
+  if (err) {
+    if (err.reason === "Access denied") { 
+      // possible no valid e-mailaddress
+      Session.set('isNotValidEmail', true);
+    } else {
+      // the most possible reason that the update fails is when
+      // there is another account with the same e-mailaddress
+      Session.set('isDuplicateEmail', true);
+    }
+  }
 }
 
 // show picture choser when user clicked on the current profile picture
@@ -127,7 +145,12 @@ Template.hackerEdit.events({
 
   // general autosave input fields
   "blur input.text.save": function(evt) {
-    saveChangedField(evt);
+    var callback;
+    
+    if ($(event.currentTarget).hasClass('email')) //email field
+      callback = updateEmailCallback; //run after saving new email
+
+    saveChangedField(evt, callback);
     checkAccess();
   },
   "keyup input.text.save": fieldChanged,
@@ -162,6 +185,15 @@ Template.hackerEdit.helpers({
   "changePictureAllowed": function() {
     // activate changing social pictures only when connected to multiple services
     return countSocialServices() > 1 ? 'change-allowed' : '';
+  },
+  "isDuplicateEmail": function() {
+    return Session.equals('isDuplicateEmail', true);
+  },
+  "isNotValidEmail": function() {
+    return Session.equals('isNotValidEmail', true);
+  },
+  "isAddServiceError": function(service) {
+    return Session.equals('isAddServiceError_'+service, true);
   }
 });
 

@@ -122,10 +122,16 @@
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group {{#if isDuplicateEmail}}error{{/if}} {{#if isNotValidEmail}}error{{/if}}">
       <label class="control-label" for="inputEmail">email</label>
       <div class="controls">
-        <input type="email" name="profile.email" class="text save {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
+        <input type="email" name="profile.email" class="text save email {{dynamicClass 'inputEmail'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
+        {{#if isDuplicateEmail}}
+          <span class="help-inline">Already used in another account!</span>
+        {{/if}}
+        {{#if isNotValidEmail}}
+          <span class="help-inline">invalid email!</span>
+        {{/if}}
       </div>
     </div>
 
@@ -222,7 +228,7 @@
       </div>
     </div>
 
-    <div class="control-group edit-social">
+    <div class="control-group edit-social {{#if isAddServiceError 'facebook'}}error{{/if}}">
       <label class="control-label">Facebook</label>
       <div class="controls">
         {{#if profile.social.facebook}}
@@ -232,10 +238,13 @@
           <span class="disabled">none</span>
           <a href="#" class="toggle toggleService" data-service="facebook"><i class="icon icon-plus icon-white"></i> add</a>
         {{/if}}
+        {{#if isAddServiceError 'facebook'}}
+          <span class="help-inline">already used by another hacker!</span>
+        {{/if}}
       </div>
     </div>
 
-    <div class="control-group edit-social">
+    <div class="control-group edit-social {{#if isAddServiceError 'twitter'}}error{{/if}}">
       <label class="control-label">Twitter</label>
       <div class="controls">
         {{#if profile.social.twitter}}
@@ -245,10 +254,13 @@
           <span class="disabled">none</span>
           <a href="#" class="toggle toggleService" data-service="twitter"><i class="icon icon-plus icon-white"></i> add</a>
         {{/if}}
+        {{#if isAddServiceError 'twitter'}}
+          <span class="help-inline">already used by another hacker!</span>
+        {{/if}}
       </div>
     </div>
 
-    <div class="control-group edit-social">
+    <div class="control-group edit-social {{#if isAddServiceError 'github'}}error{{/if}}">
       <label class="control-label">GitHub</label>
       <div class="controls">
         {{#if profile.social.github}}
@@ -257,6 +269,9 @@
         {{else}}
           <span class="disabled">none</span>
           <a href="#" class="toggle toggleService" data-service="github"><i class="icon icon-plus icon-white"></i> add</a>
+        {{/if}}
+        {{#if isAddServiceError 'github'}}
+          <span class="help-inline">already used by another hacker!</span>
         {{/if}}
       </div>
     </div>

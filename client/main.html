@@ -48,7 +48,11 @@
             <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
             <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
             <a href="#" class="header-social signupService" data-service="github">Github</a>
+            {{#if serviceLoginError}}
+              <div class="error">{{serviceLoginError}}</div>
+            {{/if}}
           </div>
+
         </div>
             
       {{else}}

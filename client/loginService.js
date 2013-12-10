@@ -217,12 +217,28 @@ var setupSubscriptions = function() {
 
 /* LOGIN functionality */
 
+Handlebars.registerHelper('serviceLoginError', function() {
+  return Session.get('serviceLoginError');
+});
+
 // after user tries to login, check if an error occured
 var loginCallback = function(err) {
   if (err) {
-    // XXX TODO: handle the case when login fails
-    log("Error", err);
+
+    // on error
+    var message = "Something went wrong";
+    
+    // emailadres is in use by another user 
+    if (err.reason === "duplicateEmail")
+      message = "Try one of the other services!";
+
+    Session.set('serviceLoginError', message);
+    Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 10000);
+    log(err);
+  
   } else {
+
+    // on success
     Deps.autorun(function(c) {
       if (Session.equals('currentLoginState', 'loggedIn'))
         Deps.nonreactive(manuallyLoggedIn);
@@ -282,7 +298,15 @@ var _addService = function(service, options) {
     // send the token to our server-side method, which will handle 
     // updating the user with the new service information
     Meteor.call("addServiceToUser", token, service, function(err, res) {
-      if (err) throw new Meteor.Error(500, err.reason);    
+      if (err) {
+        if (err.reason === "duplicateEmail") {
+          // emailadres is in use by another user  
+          Session.set('isAddServiceError_'+service, true);
+          Meteor.setTimeout(function() { Session.set('isAddServiceError_'+service, false); }, 10000);
+        } else {
+          log(err);
+        }
+      } 
     });       
   });
 }

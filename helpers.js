@@ -156,6 +156,17 @@ if (Meteor.isClient) {
     return (Meteor.settings && Meteor.settings.public.environment) ||
            (/localhost/.test(Meteor.absoluteUrl()) ? 'local' : 'production');
   });  
+
+  // template helper to use the value of a Session variable directly in the template
+  Handlebars.registerHelper('Session', function(key) {
+    return Session.get('key');
+  });
+
+  // template helper for testing if a Session variable equals a specified value
+  Handlebars.registerHelper('SessionEquals', function(key, val) {
+    return Session.equals('key', val);
+  });
+
 }
 
 

@@ -95,7 +95,7 @@ Meteor.users.deny({
       }
 
       // remove previous mailaddress
-      Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 2000);
+      Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 10000);
     }
 
 
