@@ -22,7 +22,7 @@ Accounts.emailTemplates.from = siteName+" <"+siteEmail+">";
 // verify your mail address
 
 Accounts.emailTemplates.verifyEmail.subject = function (user) {
-    return "Verify your e-mailaddress on " + siteUrlShort();
+    return siteUrlShort() + "e-mail validation ";
 };
 Accounts.emailTemplates.verifyEmail.text = function (user, url) {
   // we change the default meteor verification url
@@ -30,7 +30,7 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
   // that not depending on url hashes
   var url = url.replace('/#', ''); 
 
-  return "Verify your new e-mailaddress by clicking the link below:\n\n" + url;
+  return "If you are a real person please place your input device pointer above the following anchor, followed by an single onclick action:\n\n" + url;
 };
 
 
