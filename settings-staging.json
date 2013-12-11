@@ -21,6 +21,21 @@
   "newrelic": {
     "NEW_RELIC_LICENSE_KEY": "74c38a63cd258d4834daea40cb5509eed29bc3db",
     "NEW_RELIC_APP_NAME": "hckrs-staging"
+  },
+
+  "facebook": {
+    "appId": "244791149017424",
+    "secret": "0352b030cf6dee0bbded69c77061462a"
+  },
+
+  "github": {
+    "clientId": "fb03b8307d87b8e45ab2",
+    "secret": "bd6a24ca5de37349f120303b7379adaf248c2c70"
+  },
+
+  "twitter": {
+    "consumerKey": "1lBHttY8tFAOqQJ35qKug",
+    "secret": "45Lj8VEJSXgtCTGBAyw8TLW3EG40msiz0dZKZhwZi0"
   }
 
 }
