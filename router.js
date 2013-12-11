@@ -160,7 +160,7 @@ if (Meteor.isServer) {
     var defaultCity = 'lyon';
 
     // current subdomain
-    var subdomain = currentUrlData.host.replace(appUrlData.host, '').split('.')[0];
+    var subdomain = currentUrlData.host.replace(appUrlData.host, '').replace(/\.$/, '');
 
     // redirect if no valid city is specified in the subdomain
     if (!_.contains(allowedCities, subdomain))
@@ -202,7 +202,7 @@ if (Meteor.isServer) {
         var redirectUrl;
         
         // only run this code on a online server
-        if (Meteor.settings.public.environment !== 'local') {
+        if (currentUrlData.hostname !== 'localhost') {
 
           // make use of the correct domain (canonical)
           if (redirectUrl = useCanonicalDomain(currentUrlData, appUrlData))
