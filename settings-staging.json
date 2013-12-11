@@ -1,0 +1,26 @@
+{
+  "public": {
+    "environment": "staging",
+    
+    "mapboxDefault": "ramshorst.gd0ekbb3",
+    "mapboxPlaces": "ramshorst.gcoejeom",
+
+    "siteName": "hckrs.io",
+    "siteEmail": "info@hckrs.io"
+  },
+
+
+  "defaultNumberOfInvitesForNewUsers": 1,
+  "maximumNumberOfUnusedInvitesPerUser": 6,
+
+
+  "env": {
+    "MAIL_URL": "smtp://smtp@hckrs.io:eT6AmOLrHjxldxGI6aKdvFyB@mail.gandi.net:587/"
+  },
+
+  "newrelic": {
+    "NEW_RELIC_LICENSE_KEY": "74c38a63cd258d4834daea40cb5509eed29bc3db",
+    "NEW_RELIC_APP_NAME": "hckrs-staging"
+  }
+
+}
