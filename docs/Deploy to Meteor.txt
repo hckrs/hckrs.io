@@ -1,0 +1,48 @@
+LOKALE DEVELOPMENT SERVER STARTEN
+
+Hieronder een uitleg hoe te werken met Meteor.
+
+Regels die starten met het $-teken voer je uit in de Terminal.
+Het $-teken zelf is geen onderdeel van het commando, laat dat dus weg!
+
+
+
+NAVIGEER NAAR PROJECT
+
+Navigeer naar de projectfolder via de Terminal.
+Pas het path aan naar de locatie van de projectfolder op jouw computer.
+
+$ cd ~/Jarno/projects/hckrs
+
+
+CREATE APP on METEOR
+
+(A) zonder custom domain
+
+$ mrt deploy hckrs --settings settings-production.json --password
+
+(B) gebruik custom domain
+
+1. create app
+$ mrt deploy hckrs.io --settings settings-production.json --password
+
+2. pas DNS settings aan:
+- Maak CNAME record voor het 'www' subdomein die verwijst naar origin.meteor.com
+- Maak A record voor de bare-domain die verwijst naar 107.22.210.133
+
+
+UPDATE APP on METEOR
+
+(A) zonder custom domain
+
+$ mrt deploy hckrs --settings settings-production.json
+
+(B) gebruik custom domain
+
+$ mrt deploy hckrs.io --settings settings-production.json
+
+
+BEKIJK IN BROWSER
+
+Bekijk het resultaat in de browser, via http://hckrs.meteor.com of http://www.hckrs.io
+

@@ -55,7 +55,7 @@ $ heroku config:add ROOT_URL="http://staging.hckrs.io" --remote staging
 
 $ heroku labs:enable websockets -a hckrs-staging
 
-($ heroku addons:add newrelic:stark --remote staging)
+$ heroku addons:add newrelic:stark --remote staging
 
 
 

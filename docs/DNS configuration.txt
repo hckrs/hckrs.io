@@ -26,4 +26,4 @@ ADD DOMAINS IN HEROKU for 'staging' app
 staging.hckrs.io
 
 THE DNS RECORDS (local1)
-The dns records *.local1 and local1 pointing to Jarno's local development machine. This make it possible to test the app locally with the use of real city-subdomains e.g. http://utrecht.local1.hckrs.io
+The dns records *.local1 and local1 pointing to Jarno's local development machine. This make it possible to test the app locally with real city-subdomains e.g. http://utrecht.local1.hckrs.io
