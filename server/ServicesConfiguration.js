@@ -582,16 +582,11 @@ var removeServiceFromCurrentUser = function(service) {
   if (!user.services[service])
     throw new Meteor.Error(500, "Service isn't linked to : " + userId);     
 
-  // if this service profile picture is setted as default, choose another one
-  var otherPictures = _.values(_.omit(user.profile.socialPicture, service));
-  if (!_.contains(otherPictures, user.profile.picture))
-    Meteor.users.update(userId, {$set: {"profile.picture": _.first(otherPictures)}});
-
   // create modifiers
   var unsetModifier = _.object([
     //["services."+service, true], // DON'T DELETE SERVICE DATA (it create ghost accounts)
-    ["profile.social."+service, true],
-    ["profile.socialPicture."+service, true]
+    ["profile.social."+service, true], // only delete the link to user's social profile
+    // ["profile.socialPicture."+service, true] // don't delete the profile picture
   ]);
 
   // remove service data
