@@ -11,7 +11,7 @@ var siteUrlShort = function() {
 
 /* E-mail general settings */
 
-Accounts.emailTemplates.siteName = siteName+" <"+siteEmail+">";
+Accounts.emailTemplates.siteName = siteName;
 
 Accounts.emailTemplates.from = siteName+" <"+siteEmail+">";
 
@@ -22,7 +22,7 @@ Accounts.emailTemplates.from = siteName+" <"+siteEmail+">";
 // verify your mail address
 
 Accounts.emailTemplates.verifyEmail.subject = function (user) {
-    return siteUrlShort() + "e-mail validation ";
+    return siteName + " e-mail validation ";
 };
 Accounts.emailTemplates.verifyEmail.text = function (user, url) {
   // we change the default meteor verification url
