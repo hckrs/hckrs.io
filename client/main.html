@@ -41,19 +41,6 @@
   
       {{#unless loggedIn}}
 
-        <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
-        <div class="right">
-          <div class="button-bar">
-            <span style="color:#1466a8;font-weight:700;margin:0px 24px 0px 4px;font-size:11px;">INVITE ONLY</span>
-            <a href="#" class="header-social signupService" data-service="facebook">Facebook</a> •
-            <a href="#" class="header-social signupService" data-service="twitter">Twitter</a> •
-            <a href="#" class="header-social signupService" data-service="github">Github</a>
-            {{#if serviceLoginError}}
-              <div class="error">{{serviceLoginError}}</div>
-            {{/if}}
-          </div>
-
-        </div>
             
       {{else}}
 
@@ -62,16 +49,23 @@
           {{#if allowAccess}}
           <div class="menu">
             <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
-            <a href="{{pathFor 'hacker'}}" class="menu">profile</a> •
             <a href="{{pathFor 'places'}}" class="menu">places</a>
+          </div>
+          <div class="right">
+            <div class="pull-right">
+              <a href="{{pathFor 'hacker'}}" data-toggle="dropdown">
+                <div style="background-image:url({{profile.picture}});" class="pictureViewSmall" style="cursor: pointer;"></div>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="{{pathFor 'hacker'}}"><i class="icon-user"></i> {{profile.name}}</a></li>
+                <li class="divider"></li>
+                <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
+              </ul>
+            </div>
           </div>
           {{/if}}
         {{/with}}
-        <div class="right">
-          <div class="button-bar">
-            <a href="#" id="signOutButton">sign out</a>
-          </div>
-        </div>
+
         <div class="clear"></div>
 
       {{/unless}}
@@ -83,9 +77,18 @@
 
 <template name="frontpage">
   <div id="frontpage" class="page">
-    <H1 style="margin-bottom:48px;">Lyon has <b>{{totalHackers}}</b> hackers.<br>Are you a <b><span id="target"></span><span id="cursor"></span></b> hacker?</H1>
-    Our current beta version allows you to discover other geeks around you in Lyon.<br>
+    <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
+    <div class="frontpage-login">
+      <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
+      <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
+      <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
+    </div>
+    <H1 class="frontpage-headline">join <b>{{totalHackers}}</b> other <span id="target"></span> hackers in Lyon<br></H1>
 
+    {{#if serviceLoginError}}
+      <div class="error">{{serviceLoginError}}</div>
+    {{/if}}
+    Our current beta version allows you to discover other geeks around you.
     <div class="page-space"></div>
     <div class="page-space"></div>
   </div>

@@ -96,7 +96,7 @@ a img {
 
 
 
-/* header */
+/* HEADER */
 
 
 .header {
@@ -117,14 +117,6 @@ a img {
   background-color: rgba(0,0,0,0.4);
 }
 
-.logo-large{
-  float: left;
-  height: 120px;
-  width: 360px;
-  background-image: url('/img/logo.svg');
-  background-size: 100%;
-}
-
 .logo-small{
   float: left;
   height: 63px;
@@ -141,6 +133,8 @@ a img {
     background-image: url('/img/logo-inversed.svg');  
   } 
 }
+
+/* menu */
 
 .menu{
   float: left;
@@ -172,36 +166,47 @@ a.menu:hover{
   color: #fff; 
 }
 
-.header .right {
-  position: absolute;
-  right: $pagePaddingWidth;
-  top: $pagePaddingHeight + 20;
-}
-.button-bar {
-  padding: 8px;
-  padding-left: 14px;
-  padding-top: 9px;
-  background-color: rgba(255,255,255,1);
-  color: #666;
+/* user menu */
 
-  a {
-    text-decoration: none;
-    color: #888;
-    font-weight: 700;
-    padding: 6px;
+.header {
+
+  .right {
+    position: absolute;
+    right: $pagePaddingWidth;
+    top: 0px;
   }
 
-  a:hover {
-    text-decoration: none;
-    color: black;
-    border: 0px;
-  }
-
-  .error {
-    display: block;
-    color: red;
+  .pictureViewSmall {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin: 0px;
+    padding: 0px;
+    border-radius: 32px;
+    background-position: center; 
+    background-size: cover;
     text-align: center;
+    color: white;
+    margin: auto;
   }
+
+  .pull-right{
+    float: right;
+  }
+
+  .dropdown-toggle{
+    float: right;
+    font-size: 2em;
+  }
+
+  .dropdown-menu{
+    margin-top: -13px;
+  }
+
+  .icon-user, .icon-remove{
+    margin-top: 3px;
+  }
+
 }
 
 
@@ -210,7 +215,8 @@ a.menu:hover{
 
 
 
-/* frontpage */
+
+/* FRONTPAGE */
 
 #frontpage h1, 
 #frontpage h2 {
@@ -218,12 +224,12 @@ a.menu:hover{
   float: left;
 }
 #frontpage h1 {
-  color: #333;
+  color: #FFF;
   margin-bottom: 5px;
   font-size: 60px;
   letter-spacing: 0px;
-  font-weight: 400;
-  line-height: 120%;
+  font-weight: 100;
+  line-height: 140%;
 }
 #frontpage h2 {
   color: #6D461D;
@@ -234,7 +240,7 @@ a.menu:hover{
 
 #frontpage {
   text-align: center;
-  margin-top: 260px;
+  margin-top: 60px;
 }
 
 #cursor{
@@ -243,16 +249,61 @@ a.menu:hover{
 
 #target{
   color:#FFF;
+  font-weight: 700;
 } 
 
+.logo-large{
+  height: 180px;
+  width: 550px;
+  margin: auto;
+  background: url('/img/logo.svg') no-repeat;
+  background-size: 100%;
+  border-left: 64px solid rgba(0,0,0,0);
+}
 
+.frontpage-login{
+  height: 100px;
+  width: 557px;
+  margin: auto;
+  margin-bottom: 48px;
+  margin-top: 100px;
+  line-height: 78px;
+  vertical-align: top;
+  border-left: 24px solid rgba(0,0,0,0);
+}
 
+.social-logo{
+  height: 78px;
+  width: 181px;
+  float: left;
+}
 
+.social-logo-line{
+  border-right: 1px solid white;
+}
 
+.social-logo:hover{
+  background-color: rgba(255,255,255,0.08);
+}
 
+.social-logo-facebook{
+  background: url('/img/social-logo-facebook.svg') center no-repeat;
+}
 
+.social-logo-twitter{
+  background: url('/img/social-logo-twitter.svg') center no-repeat;
+}
 
-/* hacker */
+.social-logo-github{
+  background: url('/img/social-logo-github.svg') center no-repeat;
+}
+
+.frontpage-headline{
+  margin-top:42px;
+  font-size: 32px !important;
+}
+
+/* HACKER */
 
 .picture {
   max-width: 200px;
@@ -291,13 +342,14 @@ a.menu:hover{
 
 
 
-/* hackers list */
+/* HACKERS LIST */
 
 .pictureView {
   position: relative;
   width: 180px;
   height: 180px;
   border-radius: 90px;
+  background-position: center; 
   background-size: cover;
   text-align: center;
   color: white;
@@ -317,7 +369,7 @@ a.menu:hover{
 
 
 
-/* BEGIN input elements */
+/* INPUT ELEMENTS */
 
 input.text {
   background: transparent;
@@ -368,7 +420,5 @@ label.checkbox{
 .imputPictureRadio{
   visibility: hidden;
 }
-
-/* END input elements */
 
 
