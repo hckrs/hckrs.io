@@ -58,6 +58,7 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a href="{{pathFor 'hacker'}}"><i class="icon-user"></i> {{profile.name}}</a></li>
+                <li><a href="{{pathFor 'invitations'}}"><i class="icon-gift"></i> invitations ({{currentUser.invitations}})</a></li>
                 <li class="divider"></li>
                 <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
               </ul>
@@ -83,7 +84,7 @@
       <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
     </div>
-    <H1 class="frontpage-headline">join <b>{{totalHackers}}</b> other <span id="target"></span> hackers in Lyon<br></H1>
+    <H1 class="frontpage-headline">join <b>{{totalHackers}}</b> other <span id="target"></span><span class="blink">_</span> hackers in Lyon<br></H1>
 
     {{#if serviceLoginError}}
       <div class="error">{{serviceLoginError}}</div>
@@ -125,11 +126,11 @@
 
 
 <template name="invitations">
-  <div id="invitations">
+  <div id="invitations" class="page">
     
-    <H2>Invite other hackers</h2>
+    <H2>Share the love</h2>
     <p>
-      <strong>We trust you</strong> to invite awesome hackers in Lyon trough:<br/>
+      <strong>We trust you</strong> to invite awesome hackers to the community.<br/>
     </p>
     
     <p><strong>{{link}}</strong></p>
@@ -146,7 +147,7 @@
     {{/if}}
 
     <p>
-      You have <strong>{{unusedTotal}}</strong> slot at your disposal right now.
+      This personal URL is a wildcard for <strong>{{unusedTotal}}</strong> slots.
     </p>
 
   </div>

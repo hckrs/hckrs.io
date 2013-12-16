@@ -8,6 +8,8 @@ if (Meteor.isClient) {
     this.route('frontpage', { path: '/', template: 'frontpage' });
     
     this.route('hackers', { path: '/hackers', template: 'hackers' });
+
+    this.route('invitations', { path: '/invitations', template: 'invitations' });
     
     this.route('places', { path: '/places', template: 'places',
       load: function() { 
