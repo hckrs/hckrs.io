@@ -49,6 +49,7 @@
           {{#if allowAccess}}
           <div class="menu">
             <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
+            <a href="{{pathFor 'agenda'}}" class="menu">agenda</a> •
             <a href="{{pathFor 'places'}}" class="menu">places</a>
           </div>
           <div class="right">
@@ -169,6 +170,14 @@
       </div>
     </div>
     
+  </div>
+</template>
+
+
+<template name="agenda">
+  <div id="agenda" class="page">
+    <iframe id="agenda2" src="https://www.google.com/calendar/embed?title=Lyon%20Tech%20Hub&amp;showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=ck2ruq6cqfch3t4gshbd6vdnd4%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis" style=" border-width:0 " width="100%" height="700" frameborder="0" scrolling="no"></iframe>
+    <div class="small">source: Lyon Tech Hub<div>
   </div>
 </template>
 
