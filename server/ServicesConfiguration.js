@@ -427,10 +427,6 @@ Accounts.onCreateUser(function (options, user) {
   // additional information, for new user only!
   if (!existingUser) {
 
-    // let the first user invite himself
-    if (Meteor.users.find().count() === 0)
-      Invitations.insert({broadcastUser: user._id, receivingUser: user._id, signedupAt: new Date()});  
-
     // set the city where this user becomes registered
     user.city = "lyon";
 
@@ -439,6 +435,10 @@ Accounts.onCreateUser(function (options, user) {
     var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
     user.localRank = (local && local.localRank || 0) + 1;
     user.globalRank = (global && global.globalRank || 0) + 1;
+
+    // make the first user of a city the mayor
+    if (user.localRank === 1)
+      user.isMayor = true;
 
     // set invitation phrase
     user.invitationPhrase = user.globalRank * 2 + 77;
@@ -658,7 +658,7 @@ var requestAccess = function() {
   if (Meteor.user().isAccessDenied != true)
     throw new Meteor.Error(500, "User has already access to the site.");
 
-  if (!Invitations.findOne({receivingUser: Meteor.userId()}))
+  if (!(Invitations.findOne({receivingUser: Meteor.userId()}) || Meteor.user().isMayor))
     throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");
 
   if (!Meteor.user().profile.email || !Meteor.user().profile.name)

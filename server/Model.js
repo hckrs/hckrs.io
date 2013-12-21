@@ -62,6 +62,7 @@ var user = { /* scheme */
 
   isAccessDenied: Boolean,  // user isn't allowed to enter the site unless he is invited, profile complete, email verified 
   isHidden: Boolean,        // this user isn't visible to others (denied users & admins)
+  isMayor: Boolean,         // this user is the mayor of a city
   isAdmin: Boolean,         // true if this user has admin privilege
   isDeleted: Boolean,       // mark this account as deleted (probably merged with other account)
   deletedAt: Date,          // date of deletion
