@@ -15,7 +15,8 @@
   
 
   "env": {
-    "MAIL_URL": "smtp://mail@hckrs.io:bpYvKzYDKSPRwjyIFGuxratPob4DvtBHR8ScsUZ@mail.gandi.net:587/"
+    "MAIL_URL": "smtp://mail@hckrs.io:bpYvKzYDKSPRwjyIFGuxratPob4DvtBHR8ScsUZ@mail.gandi.net:587/",
+    "MAIL_URL_MAYOR": "smtp://toon@hckrs.io:WJeCLaTKs5IIQYMNHVSUIevNQ9KCqpzaQdHwkIk@mail.gandi.net:587/"
   },
 
   "newrelic": {
