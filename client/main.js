@@ -41,7 +41,7 @@ Template.frontpage.rendered = function() {
         }    
     }, 500);
   });
-  var texts = ['web','app','software','design','life','hardware','life','game'];
+  var texts = ['web','app','software','design','life','hardware','life','game','open source'];
   $('#target').teletype({ text: texts }); 
   $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
 }
