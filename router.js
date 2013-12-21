@@ -13,6 +13,8 @@ if (Meteor.isClient) {
 
     this.route('agenda', { path: '/agenda', template: 'agenda' });
     
+    this.route('about', { path: '/about', template: 'about' });
+
     this.route('places', { path: '/places', template: 'places',
       load: function() { 
         Session.set('absoluteHeader', true); 
