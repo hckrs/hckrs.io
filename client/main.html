@@ -80,17 +80,20 @@
 <template name="frontpage">
   <div id="frontpage" class="page">
     <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
+    {{#if loggedIn}}
+    <div class="frontpage-login" style="visibility:hidden;margin:0px;">
+    {{else}}
     <div class="frontpage-login">
+    {{/if}} 
       <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
     </div>
     <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in Lyon<br></H1>
-
     {{#if serviceLoginError}}
       <div class="error">{{serviceLoginError}}</div>
     {{/if}}
-    Our current beta version allows you to discover other geeks around you.
+    discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
     <div class="page-space"></div>
     <div class="page-space"></div>
   </div>
