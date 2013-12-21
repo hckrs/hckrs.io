@@ -84,11 +84,12 @@
       <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
+      <div class="frontpage-join-us"></div>
     </div>
-    <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in Lyon<br></H1>
     {{#if serviceLoginError}}
       <div class="error">{{serviceLoginError}}</div>
     {{/if}}
+    <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in Lyon<br></H1>
     discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
     <div class="page-space"></div>
     <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> — <a href="{{pathFor 'about'}}">about hckrs</a></div>
