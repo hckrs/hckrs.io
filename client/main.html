@@ -49,6 +49,7 @@
             <a href="{{pathFor 'agenda'}}" class="menu">agenda</a> •
             <a href="{{pathFor 'places'}}" class="menu">places</a>
           </div>
+          {{/unless}}
           <div class="right">
             <div class="pull-right">
               <a href="{{pathFor 'hacker'}}" data-toggle="dropdown">
@@ -56,13 +57,14 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a href="{{pathFor 'hacker'}}"><i class="icon-user"></i> {{profile.name}}</a></li>
-                <li><a href="{{pathFor 'invitations'}}"><i class="icon-gift"></i> invitations ({{currentUser.invitations}})</a></li>
+                {{#unless isAccessDenied}}
+                  <li><a href="{{pathFor 'invitations'}}"><i class="icon-gift"></i> invitations ({{currentUser.invitations}})</a></li>
+                {{/unless}}
                 <li class="divider"></li>
                 <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
               </ul>
             </div>
           </div>
-          {{/unless}}
         {{/with}}
 
         <div class="clear"></div>
