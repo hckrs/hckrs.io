@@ -43,8 +43,8 @@ var publicUserFieldsEmail = _.extend(_.clone(publicUserFields), {
 
 var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
   "isAdmin": true,
-  "isInvited": true,
-  "allowAccess": true,
+  "isAccessDenied": true,
+  "isHidden": true,
   "invitations": true,
   "invitationPhrase": true,
   "profile.socialPicture": true,
@@ -55,28 +55,35 @@ var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
 // 1. current logged in user
 // publish additional fields 'emails' and 'profile' for the current user
 Meteor.publish("publicUserDataCurrentUser", function (hash) {
-  if(!this.userId) return [];
-  var selector = {_id: this.userId, isDeleted: {$ne: true}};
-  return Meteor.users.find(selector, {fields: publicUserFieldsCurrentUser}); 
+  if(!this.userId) {
+    return [];
+  } else {
+    var selector = {_id: this.userId};
+    return Meteor.users.find(selector, {fields: publicUserFieldsCurrentUser});
+  }
 });
 
 // 2. users with public e-mailaddress
 // we make emailaddresses public of the users that are available for drink/lunch
 // publish their public information including emailaddress
 Meteor.publish("publicUserDataEmail", function (hash) {
-  if(!this.userId) return [];
-  if(!allowedAccess(this.userId)) return [];
-  var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, allowAccess: true, isDeleted: {$ne: true}};
-  return Meteor.users.find(selector, {fields: publicUserFieldsEmail}); 
+  if(!this.userId || !allowedAccess(this.userId)) {
+    return []; 
+  } else {
+    var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, isHidden: {$ne: true}};
+    return Meteor.users.find(selector, {fields: publicUserFieldsEmail}); 
+  }
 });
 
 // 3. otherwise only the default public user data is published
 // publish all public profile data of all users
 Meteor.publish("publicUserData", function (hash) {
-  if(!this.userId) return [];
-  if(!allowedAccess(this.userId)) return [];
-  var selector = {allowAccess: true, isDeleted: {$ne: true}};
-  return Meteor.users.find(selector, {fields: publicUserFields}); 
+  var selector = {isHidden: {$ne: true}};
+  if(!this.userId || !allowedAccess(this.userId)) {
+    return Meteor.users.find(selector, {fields: {_id: true}});   
+  } else {
+    return Meteor.users.find(selector, {fields: publicUserFields}); 
+  }
 });
 
 
@@ -85,9 +92,11 @@ Meteor.publish("publicUserData", function (hash) {
 
 // Only publish invitation codes for the logged in user
 Meteor.publish("invitations", function (hash) {
-  if(!this.userId) return [];
-  if(!allowedAccess(this.userId)) return [];
-  return Invitations.find({broadcastUser: this.userId});
+  if(!this.userId) {
+    return [];
+  } else {
+    return Invitations.find({});
+  }
 });
 
 
@@ -99,6 +108,6 @@ Meteor.publish("invitations", function (hash) {
 // otherwise all database modifier functions will be blocked
 var allowedAccess = function(userId) {
   var user = Meteor.users.findOne(userId);
-  return user && user.allowAccess;
+  return user && user.isAccessDenied != true;
 }
 

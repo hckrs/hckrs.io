@@ -91,7 +91,7 @@ Meteor.users.deny({
       // user will be temporary disallowed to enter the site
       if (!found || !found.verified) { 
         Accounts.sendVerificationEmail(userId, email);
-        Meteor.users.update(userId, {$set: {'allowAccess': false}});
+        Meteor.users.update(userId, {$set: {'isAccessDenied': true}});
       }
 
       // remove previous mailaddress
@@ -127,5 +127,5 @@ Invitations.deny({
 // otherwise all database modifier functions will be blocked
 var allowedAccess = function(userId) {
   var user = Meteor.users.findOne(userId);
-  return user && user.allowAccess;
+  return user && user.isAccessDenied != true;
 }

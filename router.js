@@ -111,7 +111,7 @@ if (Meteor.isClient) {
 
   // make sure that user is allowed to enter the site
   var allowedAccess = function() {
-    if(Meteor.user() && !Meteor.user().allowAccess) {
+    if(Meteor.user() && Meteor.user().isAccessDenied) {
       Router.go('hacker', Meteor.user()); 
       this.stop();
     }

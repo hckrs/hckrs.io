@@ -39,14 +39,11 @@
   <div class="header {{absoluteHeader}} {{inversedHeader}}">
     <div class="content">
   
-      {{#unless loggedIn}}
-
-            
-      {{else}}
-
+      {{#if loggedIn}}
+      
         <a href="{{pathFor 'frontpage'}}"><div class="logo-small"></div></a>
         {{#with currentUser}}
-          {{#if allowAccess}}
+          {{#unless isAccessDenied}}
           <div class="menu">
             <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
             <a href="{{pathFor 'agenda'}}" class="menu">agenda</a> •
@@ -65,12 +62,12 @@
               </ul>
             </div>
           </div>
-          {{/if}}
+          {{/unless}}
         {{/with}}
 
         <div class="clear"></div>
 
-      {{/unless}}
+      {{/if}}
 
     </div>
   </div>

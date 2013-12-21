@@ -99,7 +99,9 @@ var checkDuplicateIdentity = function() {
 // check if he has signed up with a valid invite code
 var checkInvitation = function() {
 
-  if (Meteor.user() && !Meteor.user().isInvited && Session.get('invitationPhrase')) {
+  var isInvited = Invitations.findOne({receivingUser: Meteor.userId()});
+
+  if (!checkInvited() && Session.get('invitationPhrase')) {
     // make a server call to check the invitation
     Meteor.call('verifyInvitation', Session.get('invitationPhrase'), function(err) {
       if (err && err.reason === 'limit') {
@@ -124,13 +126,18 @@ checkAccess = function() { /* GLOBAL, called from hacker.js, router.js */
   exec(function() {
     var user = Meteor.user();
     var profile = user.profile;
-    if (!user.allowAccess && user.isInvited && checkCompletedProfile() && verifiedEmail())
+    if (user.isAccessDenied && checkInvited() && checkCompletedProfile() && verifiedEmail())
       Meteor.call('requestAccess', function(err) {
         if (err) log(err);
         else setupSubscriptions();
       });
   });
 };
+
+// check if user is invited
+checkInvited = function() { //GLOBAL, used in hacker.js
+  return !!Invitations.findOne({receivingUser: Meteor.userId()});
+}
 
 // check if user uses a verified e-mailaddress
 var verifiedEmail = function() {

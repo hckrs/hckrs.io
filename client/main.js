@@ -16,18 +16,10 @@ Template.header.helpers({
 // bind total number of hackers to template
 Template.frontpage.helpers({
   "totalHackers": function() { 
-    var total = Session.get('totalHackers');
-    return _.isNumber(total) ? total : '...'; 
+    return Meteor.users.find().count() || ''; 
   }
 });
 
-// request number of hackers when template frontpage is created 
-Template.frontpage.created = function() {
-  // request from server the number of hackers
-  Meteor.call('totalHackers', function(error, total) {
-    Session.set('totalHackers', total);
-  });
-}
 
 // typer text on frontpage
 Template.frontpage.rendered = function() {
@@ -51,17 +43,17 @@ Template.frontpage.rendered = function() {
 
 // bind hackers to template
 Template.hackers.helpers({
-  "hackers": function() { return Meteor.users.find({}, {reactive: false}).fetch(); }
+  "hackers": function() { return Meteor.users.find().fetch(); }
 });
 
 Template.invitations.helpers({
   'unusedTotal': function() { return Meteor.user().invitations; },
-  'invitedTotal': function() { return Invitations.find().count(); },
+  'invitedTotal': function() { return Invitations.find({broadcastUser: Meteor.userId()}).count(); },
   'link': function() { 
     var phrase = bitHash(Meteor.user().invitationPhrase);
     return Router.routes['invite'].url({phrase: phrase}); 
   },
-  'invitedUsers': function() { return Invitations.find({}, {sort: {signedupAt: 1}}).fetch(); },
+  'invitedUsers': function() { return Invitations.find({broadcastUser: Meteor.userId()}, {sort: {signedupAt: 1}}).fetch(); },
   'screenName': function() { return this.name || 'anonymous'; },
 });
 
@@ -102,8 +94,10 @@ Template.main.rendered = function() {
 // reset local storage after running 
 // "meteor reset" on the terminal
 Meteor.startup(function() {
-  Meteor.call('totalHackers', function(error, total) {
-    if (!error && total === 0)
+  Deps.autorun(function() {
+    if (Meteor.users.find().count() === 0 && Session.get('subscriptionsReady')) {
       _.each(_.keys(amplify.store()), function(key) { amplify.store(key, null); });
+      log('Meteor resetted!')
+    }
   });
 });

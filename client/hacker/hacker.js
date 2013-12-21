@@ -143,13 +143,15 @@ Template.hackerEdit.events({
 
   // general autosave input fields
   "blur input.text.save": function(evt) {
-    var callback;
     
-    if ($(event.currentTarget).hasClass('email')) //email field
-      callback = updateEmailCallback; //run after saving new email
-
-    saveChangedField(evt, callback);
-    checkAccess();
+    var isEmailField = $(evt.currentTarget).hasClass('email');
+    
+    saveChangedField(evt, function(err) {
+      if (isEmailField) // run after saving new email
+        updateEmailCallback(err); 
+      checkAccess(); // run after changing a field
+    });
+    
   },
   "keyup input.text.save": fieldChanged,
   "click input[type='checkbox'].save": addToSet,
@@ -166,6 +168,7 @@ Template.hackerEdit.events({
 // TEMPLATE DATA
 
 Template.hacker.helpers({
+  "isInvited": function() { return checkInvited(); },
   "hacker": function() { return hacker(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'editMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },

@@ -326,11 +326,16 @@ var mergeUserData = function(firstUser, secondUser) {
   // remove duplicate emails
   mergedData.emails = _.uniq(mergedData.emails, _.isEqual);
 
-  // properties that must take the highest valye of the two users
+  // properties that must take the highest value of the two users
   // this is required for some Boolean / Number types.
-  mergedData.isInvited = !!(firstUser.isInvited || secondUser.isInvited);
-  mergedData.allowAccess = !!(firstUser.allowAccess || secondUser.allowAccess);
   mergedData.invitations = Math.max(firstUser.invitations, secondUser.invitations) || firstUser.invitations || secondUser.invitations || 0;
+  
+  if (!_.isUndefined(mergedData.isAccessDenied))
+    mergedData.isAccessDenied = !!(firstUser.isAccessDenied && secondUser.isAccessDenied);
+  
+  if (!_.isUndefined(mergedData.isHidden))
+    mergedData.isHidden = !!(firstUser.isHidden && secondUser.isHidden);  
+
   if (!_.isUndefined(mergedData.isAdmin))
     mergedData.isAdmin = !!(firstUser.isAdmin || secondUser.isAdmin);
 
@@ -421,10 +426,10 @@ Accounts.onCreateUser(function (options, user) {
     
   // additional information, for new user only!
   if (!existingUser) {
-  
-    // no invite required for the first registered user
+
+    // let the first user invite himself
     if (Meteor.users.find().count() === 0)
-      user.isInvited = true;
+      Invitations.insert({broadcastUser: user._id, receivingUser: user._id, signedupAt: new Date()});  
 
     // set the city where this user becomes registered
     user.city = "lyon";
@@ -441,6 +446,10 @@ Accounts.onCreateUser(function (options, user) {
     // give this user the default number of invite codes
     user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
 
+    // don't allow access until user completes his profile
+    user.isAccessDenied = true;
+    user.isHidden = true;
+
   }
   
   // create new user account
@@ -451,7 +460,7 @@ Accounts.onCreateUser(function (options, user) {
 // Remove an account
 // this is be done be marking an account as deleted rather than deleting permanently
 var removeUser = function(userId) {
-  Meteor.users.update(userId, {$set: {'isDeleted': true, 'deletedAt': new Date(), 'emails': [], 'services': {}}});
+  Meteor.users.update(userId, {$set: {'isHidden': true, 'isDeleted': true, 'deletedAt': new Date(), 'emails': [], 'services': {}}});
   Meteor.users.update(userId, {$set: {'services.resume.loginTokens': []}});
 }
 
@@ -610,7 +619,7 @@ var verifyInvitation = function(phrase) {
   if (!Meteor.user())
     throw new Meteor.Error(500, "Unknow user: " + this.userId);
 
-  if (Meteor.user().isInvited)
+  if (Invitations.findOne({receivingUser: Meteor.userId()}))
     throw new Meteor.Error(500, "User is already invited.");
 
   if (!broadcastUser)
@@ -627,9 +636,6 @@ var verifyInvitation = function(phrase) {
     receivingUser: Meteor.userId(), 
     signedupAt: new Date()
   });  
-
-  // mark user as invited
-  Meteor.users.update(Meteor.userId(), {$set: {isInvited: true}});
 
   // decrement broadcast user's unused invitations
   Meteor.users.update(broadcastUser._id, {$inc: {invitations: -1}});
@@ -649,10 +655,10 @@ var requestAccess = function() {
   if (!Meteor.user())
     throw new Meteor.Error(500, "Unknow user");
 
-  if (Meteor.user().allowAccess)
+  if (Meteor.user().isAccessDenied != true)
     throw new Meteor.Error(500, "User has already access to the site.");
 
-  if (!Meteor.user().isInvited)
+  if (!Invitations.findOne({receivingUser: Meteor.userId()}))
     throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");
 
   if (!Meteor.user().profile.email || !Meteor.user().profile.name)
@@ -664,7 +670,29 @@ var requestAccess = function() {
   // access allowed!
 
   // allow access for this user
-  Meteor.users.update(Meteor.userId(), {$set: {allowAccess: true}});
+  Meteor.users.update(Meteor.userId(), {$unset: {isAccessDenied: true}});
+
+  // request visibility
+  requestVisibility();
+}
+
+
+// make a user visible for others
+// by default a user is hidden at time of signup 
+// until he is allowed to access the site.
+// also admins are hidden
+var requestVisibility = function() {
+
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user");
+
+  // user must have allow access to become visible
+  if (Meteor.user().isAccessDenied == true)
+    throw new Meteor.Error(500, "User don't allowed to be visible");
+
+  // make user visible to other users
+  Meteor.users.update(Meteor.userId(), {$unset: {isHidden: true}});
+
 }
 
 

@@ -4,7 +4,5 @@
 
 
 Meteor.methods({
-  "totalHackers": function() { 
-    return Meteor.users.find({allowAccess: true, isDeleted: {$ne: true}}).count(); 
-  }
+  
 });
