@@ -122,10 +122,10 @@ if (Meteor.isClient) {
 
 
   // check for duplicate accounts, if so request for merge
-  Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite', 'verifyEmail']});
+  Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite', 'verifyEmail', 'about']});
 
   // make sure the user is logged in, except for the pages below
-  Router.before(loginRequired, {except: ['frontpage', 'invite', 'verifyEmail']});
+  Router.before(loginRequired, {except: ['frontpage', 'invite', 'verifyEmail', 'about']});
 
   // make sure that user is allowed to enter the site
   Router.before(allowedAccess, {except: ['invite', 'hacker', 'verifyEmail']})
