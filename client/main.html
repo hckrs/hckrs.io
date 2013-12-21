@@ -40,7 +40,7 @@
     <div class="content">
   
       {{#if loggedIn}}
-      
+
         <a href="{{pathFor 'frontpage'}}"><div class="logo-small"></div></a>
         {{#with currentUser}}
           {{#unless isAccessDenied}}
@@ -76,22 +76,27 @@
 
 <template name="frontpage">
   <div id="frontpage" class="page">
-    <a href="{{pathFor 'frontpage'}}"><div class="logo-large"></div></a>
+    <div class="logo-large"></div>
+    {{#if loggedIn}}
+    <div class="frontpage-login" style="visibility:hidden;margin:0px;">
+    {{else}}
     <div class="frontpage-login">
+    {{/if}} 
       <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
+      <div class="frontpage-join-us"></div>
     </div>
-    <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in Lyon<br></H1>
-
     {{#if serviceLoginError}}
       <div class="error">{{serviceLoginError}}</div>
     {{/if}}
-    Our current beta version allows you to discover other geeks around you.
+    <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in Lyon<br></H1>
+    discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
     <div class="page-space"></div>
-    <div class="page-space"></div>
+    <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> — <a href="{{pathFor 'about'}}">about hckrs</a></div>
   </div>
 </template>
+
 
 <template name="hackers">
   <div id="hackers" class="page">
@@ -175,6 +180,17 @@
   <div id="agenda" class="page">
     <iframe id="agenda2" src="https://www.google.com/calendar/embed?title=Lyon%20Tech%20Hub&amp;showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=ck2ruq6cqfch3t4gshbd6vdnd4%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis" style=" border-width:0 " width="100%" height="700" frameborder="0" scrolling="no"></iframe>
     <div class="small">source: Lyon Tech Hub<div>
+  </div>
+</template>
+
+
+<template name="about">
+  <div id="about" class="page">
+    <div class="about">
+      <p class="about-paragraph">The idea is to give hackers tools to extend their local communities.</p>
+      <p class="about-paragraph" style="font-weight:700;">We consider a hacker one who likes to figure out how things work and make his own tools by playing with technology in order to push the envelope.</p>
+      <p class="about-paragraph"><strong>hckrs</strong>.io was founded by <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#116;&#111;&#111;&#110;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Toon van Ramshorst</a></strong> & <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#097;&#114;&#110;&#111;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Jarno Le conté</a></strong> in late 2013.</p>
+    </div>
   </div>
 </template>
 
