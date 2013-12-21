@@ -31,6 +31,16 @@ $ git push heroku master && heroku config:add METEOR_SETTINGS="`cat settings-pro
 
 
 
+--------- ADDING REMOTE ---------
+
+Adding a existing remote heroku repository to someones computer
+
+$ heroku git:remote -a hckrs-staging -r staging
+?==  (git remote add staging git@heroku.com:hckrs-staging.git)
+
+$ heroku git:remote -a hckrs -r production
+?==  (git remote add production git@heroku.com:hckrs.git)
+
 
 
 --------- MULTIPLE ENVIRONMENTS ------------
@@ -59,14 +69,22 @@ $ heroku addons:add newrelic:stark --remote staging
 
 
 
-UPDATE 'staging' APP
++--------- UPDATE ----------------------------------+
+| 
+|  UPDATE 'staging' APP
+| 
+|  $ git push staging master && heroku config:add METEOR_SETTINGS="`cat settings-staging.json`" --remote staging
+|
+|
+|  UPDATE 'production' APP (!!!)
+|
+|  $ git push production master && heroku config:add METEOR_SETTINGS="`cat settings-production.json`" --remote production
+|
++---------------------------------------------------+
 
-$ git push staging master && heroku config:add METEOR_SETTINGS="`cat settings-staging.json`" --remote staging
 
 
-UPDATE 'production' APP (!!!)
 
-$ git push production master && heroku config:add METEOR_SETTINGS="`cat settings-production.json`" --remote production
 
 
 
