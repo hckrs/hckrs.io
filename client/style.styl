@@ -4,12 +4,8 @@ $pagePaddingHeight = 20px;
 $pagePaddingWidth = 40px;
 
 
-html {
-  height: 100%;
-}
-
-body {
-  background: #84a3c0;
+html, body{
+  /*background-color: #84a3c0;*/
   font-family: 'open sans';
   position: relative;
   margin: 0;
@@ -18,7 +14,8 @@ body {
   -webkit-font-smoothing: antialiased;
   background-size: cover;
   background-attachment:fixed;
-  color: white; 
+  color: white;
+  /*background-image:linear-gradient(white, #1b3a4b) !important;*/
 }
 
 .clear {
@@ -64,7 +61,7 @@ a {
 
 a:hover{
   text-decoration: none;
-  color: #1466a8;
+  color: #ffea87;
   /*border-bottom: 2px dotted #1466a8;
   margin-bottom: -5px;*/
 }
@@ -76,6 +73,10 @@ a img {
 
 .small{
   font-size:10px;
+}
+
+::selection {
+  background: #fff9d0;
 }
 
 /* bootstrap alerts */
@@ -160,7 +161,7 @@ a.menu {
 
 a.menu:hover{
   text-decoration: none;
-  color: #1466a8;
+  color: #FFF;
   /*border-bottom: 2px dotted #1466a8;
   margin-bottom: -5px;*/
 }
