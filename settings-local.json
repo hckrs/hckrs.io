@@ -6,7 +6,7 @@
     "mapboxPlaces": "ramshorst.gcoejeom",
 
     "siteName": "hckrs.io",
-    "siteEmail": "info@hckrs.io"
+    "siteEmail": "mail@hckrs.io"
   },
 
 
@@ -15,7 +15,7 @@
 
 
   "env": {
-    "MAIL_URL": "smtp://smtp@hckrs.io:eT6AmOLrHjxldxGI6aKdvFyB@mail.gandi.net:587/"
+    "MAIL_URL": "smtp://mail@hckrs.io:bpYvKzYDKSPRwjyIFGuxratPob4DvtBHR8ScsUZ@mail.gandi.net:587/"
   },
 
   "newrelic": {
