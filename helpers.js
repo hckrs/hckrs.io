@@ -62,6 +62,18 @@ replaceHostname = function(url, newHostname) {
   return url.replace(/\/\/([^\/:]*)/, '//' + newHostname);
 }
 
+// make sure that extern urls includes http:// or https://
+externUrl = function(url) {
+  if (!/^(http(s?):\/\/)/i.test(url))
+    url = "http://" + url;
+  return url;
+}
+
+// remove protocal (http:// or https://) of an url
+removeUrlProtocol = function(url) {
+  return url.replace(/^(http(s)?:\/\/(www.)?)/i, "");
+}
+
 // geocoder for openstreet
 geocode = function(address, cb) {
   var url = "http://nominatim.openstreetmap.org/search";
@@ -167,6 +179,12 @@ if (Meteor.isClient) {
   Handlebars.registerHelper('SessionEquals', function(key, val) {
     return Session.equals('key', val);
   });
+
+  // template helper for stripping the protocol of an url
+  Handlebars.registerHelper('ShowUrl', function(url) {
+    return removeUrlProtocol(url);
+  });
+
 
 }
 

@@ -236,7 +236,7 @@
       <label class="control-label">Facebook</label>
       <div class="controls">
         {{#if profile.social.facebook}}
-          <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>
+          <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
           <a href="#" class="toggle toggleService" data-service="facebook"><span class="icon icon-remove icon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
@@ -252,7 +252,7 @@
       <label class="control-label">Twitter</label>
       <div class="controls">
         {{#if profile.social.twitter}}
-          <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a> 
+          <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a> 
           <a href="#" class="toggle toggleService" data-service="twitter"><span class="icon icon-remove icon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
@@ -268,7 +268,7 @@
       <label class="control-label">GitHub</label>
       <div class="controls">
         {{#if profile.social.github}}
-          <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
+          <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
           <a href="#" class="toggle toggleService" data-service="github"><span class="icon icon-remove icon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
@@ -322,7 +322,7 @@
         homepage
       </div>
       <div class="output">
-        <a href="{{profile.homepage}}" target="_blank">{{profile.homepage}}</a>
+        <a href="{{profile.homepage}}" target="_blank">{{ShowUrl profile.homepage}}</a>
       </div>
       <div class="clear"></div>
     </div>
@@ -334,7 +334,7 @@
         Facebook
       </div>
       <div class="output">
-        <a href="{{profile.social.facebook}}" target="_blank">{{profile.social.facebook}}</a>  
+        <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>  
       </div>
       <div class="clear"></div>
     </div>
@@ -346,7 +346,7 @@
         GitHub
       </div>
       <div class="output">
-        <a href="{{profile.social.github}}" target="_blank">{{profile.social.github}}</a>
+        <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
       </div>
       <div class="clear"></div>
     </div>
@@ -358,7 +358,7 @@
         Twitter
       </div>
       <div class="output">
-        <a href="{{profile.social.twitter}}" target="_blank">{{profile.social.twitter}}</a>
+        <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
       </div>
       <div class="clear"></div>
     </div>

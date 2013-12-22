@@ -20,6 +20,14 @@ Meteor.users.deny({
       return true; //DENY
 
 
+    /* custom fields */
+
+    // make sure that urls start with http:// or https://
+    if (modifier.$set && modifier.$set['profile.homepage'])
+      modifier.$set['profile.homepage'] = externUrl(modifier.$set['profile.homepage']);
+    if (modifier.$set && modifier.$set['profile.companyUrl'])
+      modifier.$set['profile.companyUrl'] = externUrl(modifier.$set['profile.companyUrl']);
+
 
     /* handle modifier */
 
