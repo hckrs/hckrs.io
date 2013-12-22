@@ -57,7 +57,15 @@ Template.invitations.helpers({
   'screenName': function() { return this.name || 'anonymous'; },
 });
 
-
+/* ABOUT */
+// bind absolute domain to about template
+Template.about.helpers({
+  "absoluteUrl": function() { 
+    var full = window.location.host
+    var parts = full.split('.')
+    return parts[0] + '.hckrs.io';
+  }
+});
 
 /* GENERAL */
 
