@@ -13,6 +13,12 @@ allIn = function(values, allowedValues) {
   return _.all(values, function(v) { return _.contains(allowedValues, v); });
 }
 
+// return an array with uniq value
+// compared by the _.isEqual function
+uniqFilter = function(arr) {
+  return _.reject(arr, function(val, i) { return _.some(_.first(arr, i), _.partial(_.isEqual, val)); });
+}
+
 omitNull = function(obj) {
   obj = _.clone(obj);
   _.each(obj, function(val, key) {

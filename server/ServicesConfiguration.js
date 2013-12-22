@@ -324,7 +324,7 @@ var mergeUserData = function(firstUser, secondUser) {
   // but objects in arrays are compared on their pointer (no deep equality testing)
 
   // remove duplicate emails
-  mergedData.emails = _.uniq(mergedData.emails, _.isEqual);
+  mergedData.emails = uniqFilter(mergedData.emails);
 
   // properties that must take the highest value of the two users
   // this is required for some Boolean / Number types.
