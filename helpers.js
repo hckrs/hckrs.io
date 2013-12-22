@@ -52,6 +52,7 @@ bitHashInv = function(hash) {
 }
 
 // hostname as specified in the environment variable ROOT_URL
+// ex. staging.hckrs.io
 appHostname = function() {
   return new RegExp(/\/\/([^\/:]*)/).exec(Meteor.absoluteUrl())[1];
 }
