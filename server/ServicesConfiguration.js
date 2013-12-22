@@ -450,10 +450,10 @@ Accounts.onCreateUser(function (options, user) {
     user.isAccessDenied = true;
     user.isHidden = true;
 
-  }
+    // let admins know that a new user has registered the site
+    SendEmailOnNewUser(user);
 
-  // let admins know that a new user has registered the site
-  SendEmailOnNewUser(user);
+  }
   
   // create new user account
   return user; 
