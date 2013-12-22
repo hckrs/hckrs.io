@@ -451,7 +451,8 @@ Accounts.onCreateUser(function (options, user) {
     user.isHidden = true;
 
     // let admins know that a new user has registered the site
-    SendEmailOnNewUser(user);
+    if (Meteor.settings.public.environment === 'production')
+      SendEmailOnNewUser(user);
 
   }
   
