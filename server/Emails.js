@@ -16,7 +16,7 @@ Accounts.emailTemplates.from = siteFrom;
 
 // verify your mail address
 Accounts.emailTemplates.verifyEmail.subject = function (user) {
-  return siteName + " e-mail validation ";
+  return "email validation";
 }
 Accounts.emailTemplates.verifyEmail.text = function (user, url) {
   
@@ -26,7 +26,7 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
   var url = url.replace('/#', ''); 
 
   var text = "If you are a real person please place your input device pointer " + 
-             "above the following anchor, followed by an single onclick action:\n\n" + url;
+             "above the following anchor, followed by the onclick action:\n\n" + url;
 
   return text;
 }

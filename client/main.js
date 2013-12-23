@@ -58,6 +58,7 @@ Template.invitations.helpers({
 });
 
 /* ABOUT */
+
 // bind absolute domain to about template
 Template.about.helpers({
   "absoluteUrl": function() { 
@@ -67,8 +68,8 @@ Template.about.helpers({
   }
 });
 
-/* GENERAL */
 
+/* GENERAL */
 
 // html document fully loaded and rendered
 $(document).ready(function() {
