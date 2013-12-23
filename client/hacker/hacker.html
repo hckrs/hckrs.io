@@ -4,32 +4,36 @@
 
     <div class="main-alerts">
       {{#if isCurrentUser}}
-        {{#if invitationLimitReached}}
-          <div class="alert alert-error">
-            <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
-          </div>
-        {{/if}}
-        
         {{#if isAccessDenied}}
-          {{#unless isInvited}}
+
+          {{#if invitationLimitReached}}
+            <div class="alert alert-error">
+              <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
+            </div>
+          {{/if}}
+          
+          {{#unless isVerifiedEmail}}
             <div class="access-denied alert alert-info">
-              <h1>Invite only</h1>
-              <p>Right now there are no open slots in the community. You can still complete your profile, because, every now an then we handpick some of the people who entered the waiting list. If this is the case we will notify you.</p>
-              <p><strong>You can also ask a member to vouch for you by providing you his invitation url. This will result in instant activation.</strong></p>
+              <h1>check your e-mail :)</h1>
+              <p>we have sent you an email with a validation link</p>
             </div>
           {{else}}
-            {{#if incompleteProfile}}
+            {{#if tellUsMore}}
               <div class="access-denied alert alert-info">
                 <h1>tell us more</h1>
                 <p>before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
               </div>
             {{else}}
-              <div class="access-denied alert alert-info">
-                <h1>check your e-mail :)</h1>
-                <p>we have sent you an email with a validation link</p>
-              </div>
+              {{#unless isInvited}}
+                <div class="access-denied alert alert-info">
+                  <h1>Invite only</h1>
+                  <p>Right now there are no open slots in the community. You can still complete your profile, because, every now an then we handpick some of the people who entered the waiting list. If this is the case we will notify you.</p>
+                  <p><strong>You can also ask a member to vouch for you by providing you his invitation url. This will result in instant activation.</strong></p>
+                </div>
+              {{/unless}}
             {{/if}}
           {{/unless}}
+
         {{/if}}
       {{/if}}
     </div>
@@ -279,6 +283,19 @@
         {{/if}}
       </div>
     </div>
+
+    {{#if tellUsMore}}
+      <div class="control-group">
+        <div class="controls profile-ready">
+          {{#if isInvited}}
+            Are you ready to enter the website? 
+          {{else}}
+            Are you ready filling in your profile?
+          {{/if}}
+          <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
+        </div>
+      </div>
+    {{/if}}
 
   </form>
 

@@ -65,8 +65,14 @@ Handlebars.registerHelper('previousLoginSession', function() {
 Handlebars.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
-Handlebars.registerHelper('incompleteProfile', function() {
-  return !checkCompletedProfile();
+Handlebars.registerHelper('tellUsMore', function() {
+  return Meteor.user().isIncompleteProfile;
+});
+Handlebars.registerHelper('isInvited', function() {
+  return checkInvited();
+});
+Handlebars.registerHelper('isVerifiedEmail', function() {
+  return verifiedEmail();
 });
 
 // check if there is an other existing user account
@@ -106,7 +112,7 @@ var checkInvitation = function() {
   var phrase = Session.get('invitationPhrase');
   var broadcastUser = Session.get('invitationBroadcastUser');
 
-  if (!checkInvited() && Session.get('invitationPhrase')) {
+  if (!checkInvited() && phrase) {
   
     // make a server call to check the invitation
     Meteor.call('verifyInvitation', phrase, function(err) {
@@ -153,37 +159,52 @@ var checkInvitation = function() {
   }
 };
 
+// user let us know that he has filled in his profile
+// check on server if this is correct
+checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
+  if (Meteor.user().isIncompleteProfile) {
+    Meteor.call('requestProfileCompleted', function(err) {
+      $(document).scrollTop(0);
+      if (err) log(err);
+      else {
+        setupSubscriptions();
+        Router.go('hackers');
+      }
+    });
+  }
+}
+
 // new users have no access to the site until their profile is complete
 // observe if the fields email and name are filled in, after saving
 // also the user must have filled in a verified e-mailaddress
-checkAccess = function() { /* GLOBAL, called from hacker.js, router.js */
+checkAccess = function() { /* GLOBAL, called from router.js */
   exec(function() {
     var user = Meteor.user();
     var profile = user.profile;
-    if (user.isAccessDenied && checkInvited() && checkCompletedProfile() && verifiedEmail())
+    if (user.isAccessDenied && !user.isIncompleteProfile && checkInvited() && verifiedEmail()) {
       Meteor.call('requestAccess', function(err) {
+        $(document).scrollTop(0);
         if (err) log(err);
-        else setupSubscriptions();
+        else {
+          setupSubscriptions();
+          Router.go('hackers');
+        }
       });
+    }
   });
 };
 
 // check if user is invited
-checkInvited = function() { //GLOBAL, used in hacker.js
+var checkInvited = function() { //GLOBAL, used in hacker.js
   return !!(Invitations.findOne({receivingUser: Meteor.userId()}) || Meteor.user().isMayor);
 }
 
 // check if user uses a verified e-mailaddress
-var verifiedEmail = function() {
+var verifiedEmail = function() { //GLOBAL, used in hacker.js
   var user = Meteor.user();
   return !!_.findWhere(user.emails, {address: user.profile.email, verified: true});
 }
 
-// check if user has completed his profile data
-var checkCompletedProfile = function() {
-  var profile = Meteor.user().profile;
-  return profile.email && profile.name;
-}
 
 
 

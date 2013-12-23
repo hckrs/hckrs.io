@@ -144,17 +144,15 @@ Template.hacker.events({
 });
 
 Template.hackerEdit.events({
-
   // general autosave input fields
   "blur input.text.save": function(evt) {
+    var callback;
     
-    var isEmailField = $(evt.currentTarget).hasClass('email');
-    
-    saveChangedField(evt, function(err) {
-      if (isEmailField) // run after saving new email
-        updateEmailCallback(err); 
-      checkAccess(); // run after changing a field
-    });
+    // callback after changing email field
+    if ($(evt.currentTarget).hasClass('email')) 
+      callback = updateEmailCallback;
+
+    saveChangedField(evt, callback);
     
   },
   "keyup input.text.save": fieldChanged,
@@ -165,6 +163,10 @@ Template.hackerEdit.events({
   "mouseleave .picture-choser": hidePictureChoser,
   "click input[name='picture']": pictureChanged,
 
+  "click .button-ready": function(evt) {
+    evt.preventDefault();
+    checkCompletedProfile();
+  },
 });
 
 
@@ -172,7 +174,6 @@ Template.hackerEdit.events({
 // TEMPLATE DATA
 
 Template.hacker.helpers({
-  "isInvited": function() { return checkInvited(); },
   "hacker": function() { return hacker(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'editMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },

@@ -61,6 +61,7 @@ var user = { /* scheme */
   /* administration details */
 
   isAccessDenied: Boolean,  // user isn't allowed to enter the site unless he is invited, profile complete, email verified 
+  isIncompleteProfile: Boolean, // new users starts with an incomplete profile until user pressed the 'ready' button
   isHidden: Boolean,        // this user isn't visible to others (denied users & admins)
   isMayor: Boolean,         // this user is the mayor of a city
   isAdmin: Boolean,         // true if this user has admin privilege

@@ -15,23 +15,36 @@ var migrations = [
       
       // change (allowAccess & isInvited) to isAccessDenied
       Meteor.users.update({$or: [{allowAccess: {$ne: true}}, {isInvited: {$ne: true}}]}, {$set: {isAccessDenied: true, isHidden: true}}, {multi: true});
-      log('1');
+      log('1/5');
 
       // unset allowAccess
       Meteor.users.update({}, {$unset: {allowAccess: true}}, {multi: true});
-      log('2');
+      log('2/5');
 
       // unset isInvited
       Meteor.users.update({}, {$unset: {isInvited: true}}, {multi: true});  
-      log('3');
+      log('3/5');
       
       // hide deleted accounts
       Meteor.users.update({isDeleted: true}, {$set: {isHidden: true}}, {multi: true});      
-      log('4');
+      log('4/5');
 
       // make users with localRank===1 mayor
       Meteor.users.update({localRank: 1}, {$set: {isMayor: true}}, {multi: true});      
-      log('5');
+      log('5/5');
+
+      // done
+      callback();
+    }
+  },
+
+  { // 23 dec 2013
+    name: "Complete your profile",
+    task: function(callback) {
+      
+      // change (allowAccess & isInvited) to isAccessDenied
+      Meteor.users.update({isAccessDenied: true}, {$set: {isIncompleteProfile: true}}, {multi: true});
+      log('1/1');
 
       // done
       callback();
@@ -75,7 +88,7 @@ Meteor.startup(function() {
   
   // loop through migration
   async.eachSeries(migrations, function(migration, callback) {
-    
+      
     // check if migration is already processed
     var processed = Migrations.findOne({name: migration.name});
     

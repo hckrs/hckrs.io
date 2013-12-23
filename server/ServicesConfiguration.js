@@ -332,6 +332,9 @@ var mergeUserData = function(firstUser, secondUser) {
   
   if (!_.isUndefined(mergedData.isAccessDenied))
     mergedData.isAccessDenied = !!(firstUser.isAccessDenied && secondUser.isAccessDenied);
+
+  if (!_.isUndefined(mergedData.isIncompleteProfile))
+    mergedData.isIncompleteProfile = !!(firstUser.isIncompleteProfile && secondUser.isIncompleteProfile);
   
   if (!_.isUndefined(mergedData.isHidden))
     mergedData.isHidden = !!(firstUser.isHidden && secondUser.isHidden);  
@@ -449,6 +452,7 @@ Accounts.onCreateUser(function (options, user) {
     // don't allow access until user completes his profile
     user.isAccessDenied = true;
     user.isHidden = true;
+    user.isIncompleteProfile = true;
 
     // let admins know that a new user has registered the site
     if (Meteor.settings.public.environment === 'production')
@@ -649,6 +653,23 @@ var verifyInvitation = function(phrase) {
 }
 
 
+// user let us know that he is ready filling in his profile
+// check if all required properties are filled in
+var requestProfileCompleted = function() {
+
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user");
+
+  if (!Meteor.user().profile.email || !Meteor.user().profile.name)
+    throw new Meteor.Error(500, "profileIncomplete", "User profile is incomplete.");
+
+  // make user visible to other users
+  Meteor.users.update(Meteor.userId(), {$unset: {isIncompleteProfile: true}});
+
+  // request access for this user
+  requestAccess();
+}
+
 
 // request allow access for a user
 // user will be allowed to access the site if he is invited
@@ -665,7 +686,7 @@ var requestAccess = function() {
   if (!(Invitations.findOne({receivingUser: Meteor.userId()}) || Meteor.user().isMayor))
     throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");
 
-  if (!Meteor.user().profile.email || !Meteor.user().profile.name)
+  if (Meteor.user().isIncompleteProfile)
     throw new Meteor.Error(500, "profileIncomplete", "User profile is incomplete.");
 
   if (!_.findWhere(Meteor.user().emails, {address: Meteor.user().profile.email, verified: true}))
@@ -700,6 +721,8 @@ var requestVisibility = function() {
 }
 
 
+
+
 // test some functionality
 // XXX, check secutiry for client-calls
 var test = function() {
@@ -710,6 +733,7 @@ var test = function() {
 // define methods that can be called from the client-side
 Meteor.methods({
   "requestAccess": requestAccess,
+  "requestProfileCompleted": requestProfileCompleted,
   "verifyInvitation": verifyInvitation,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,

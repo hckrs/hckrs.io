@@ -45,6 +45,7 @@ var publicUserFieldsCurrentUser = _.extend(_.clone(publicUserFieldsEmail), {
   "isAdmin": true,
   "isMayor": true,
   "isAccessDenied": true,
+  "isIncompleteProfile": true,
   "isHidden": true,
   "invitations": true,
   "invitationPhrase": true,
