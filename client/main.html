@@ -80,15 +80,21 @@
   <div id="frontpage" class="page">
     <div class="logo-large"></div>
     {{#if loggedIn}}
-    <div class="frontpage-login" style="visibility:hidden;margin:0px;">
+      <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
     {{else}}
-    <div class="frontpage-login">
-    {{/if}} 
-      <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
-      <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
-      <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
-      <div class="frontpage-join-us"></div>
-    </div>
+      {{#if invitationBroadcastUser}}
+        {{#with invitationBroadcastUser}}
+          <img src="{{profile.picture}}" alt="" />
+          {{profile.name}}
+        {{/with}}
+      {{/if}}
+      <div class="frontpage-login"> 
+        <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
+        <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
+        <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
+        <div class="frontpage-join-us"></div>
+      </div>
+    {{/if}}
     {{#if serviceLoginError}}
       <div class="error">{{serviceLoginError}}</div>
     {{/if}}

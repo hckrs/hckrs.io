@@ -17,6 +17,9 @@ Template.header.helpers({
 Template.frontpage.helpers({
   "totalHackers": function() { 
     return Meteor.users.find().count() || ''; 
+  },
+  "invitationBroadcastUser": function() {
+    return Session.get('invitationBroadcastUser');
   }
 });
 

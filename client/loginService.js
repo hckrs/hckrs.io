@@ -104,10 +104,13 @@ var checkDuplicateIdentity = function() {
 var checkInvitation = function() {
 
   var phrase = Session.get('invitationPhrase');
+  var broadcastUser = Session.get('invitationBroadcastUser');
 
   if (!checkInvited() && Session.get('invitationPhrase')) {
+  
     // make a server call to check the invitation
     Meteor.call('verifyInvitation', phrase, function(err) {
+
       if (err && err.reason === 'limit') {
 
         // show invitation limit reached message
@@ -117,32 +120,37 @@ var checkInvitation = function() {
         }, 5 * 60 * 1000);
         
         // log to google analytics
-        Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
-          if (!err && broadcastUser)
-            GAnalytics.event('Invitations', 'limit reached for user', broadcastUser._id);
-        });
-        
+        if (broadcastUser)
+          GAnalytics.event('Invitations', 'limit reached for user', broadcastUser._id);
       
       } else if (err) {
-        
-        // log
-        GAnalytics.event('Invitations', 'invalid phrase', phrase);
+
         log("Error", err);
+
+        // log to google analytics
+        GAnalytics.event('Invitations', 'invalid phrase', phrase);
       
       } else { //on success
 
         setupSubscriptions(); //rerun subscriptions
         
         // log to google analytics
-        Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
-          if (!err && broadcastUser)
-            GAnalytics.event('Invitations', 'invited by user', broadcastUser._id);
-          else GAnalytics.event('Invitations', 'invalid phrase', phrase);
-        });
-
+        if (broadcastUser)
+          GAnalytics.event('Invitations', 'invited by user', broadcastUser._id);
       }
+
+      // clean
+      Session.set('invitationPhrase', null);
+      Session.set('invitationBroadcastUser', null);
+
     });
-  } 
+
+  } else {
+
+    // clean
+    Session.set('invitationPhrase', null);
+    Session.set('invitationBroadcastUser', null);
+  }
 };
 
 // new users have no access to the site until their profile is complete

@@ -79,7 +79,14 @@ if (Meteor.isClient) {
     this.route('invite', { path: /^\/\+\/(.*)/, template: 'frontpage',
       before: function() {
         var phrase = bitHashInv(this.params[0]);
+        
         Session.set('invitationPhrase', phrase);
+
+        // get associated broadcast user
+        Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
+          Session.set('invitationBroadcastUser', broadcastUser);
+        });
+
         this.redirect('frontpage');
       }
     });
