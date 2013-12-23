@@ -1,0 +1,87 @@
+— message path —
+
+{1min after opening hackers list}
+title: 2 new invitations
+content: you can <a href="{{pathFor 'hacker'}}">give them</a> to hackers you like in {City}
+
+
+
+
+
+
+
+
+
+
+
+
+— email path —
+
+var Mayor.signature = 'Toon';
+var Mayor.mail = 'toon@hckrs.io';
+var Site.signature = 'Mean machine @http://hckrs.io';
+var cityUrl = 'http://lyon.hckrs.io';
+
+start = {creationDate}
+
+delay{0.5h-3h} range{8.00am-1.30am}
+from: {Mayor.mail}
+bcc: {Mayor.mail}
+subject: bienvenue
+message: Bonjour,
+Ca fais plaisir que tu nous rejoigne.
+Si tu à des questions hésite pas à m'écrire, tout feedback est la bienvenue aussi :)
+Tu peut inviter {{availableInvites}} autres personnes grace à cette URL personelle : {{inviteURL}}
+Bien à toi,
+{Mayor.signature}
+{cityUrl}
+
+--
+onInvite(1)
+delay{0.25h-3h} range{8.00am-1.30am}
+from: toon@hckrs.io
+bcc: {Mayor.mail}
+subject: Inscription
+message: Salut,
+Je viens de voir que {invitedPersonName} s'est inscris.
+{invitedPersonURL}
+Merci à toi,
+{Mayor.signature}
+{cityUrl}
+
+onInvite(2)
+delay{0.25h-3h} range{8.00am-1.30am} addInvite(2)
+from: toon@hckrs.io
+bcc: {Mayor.mail}
+subject: 2ème invité!
+message: Salut,
+Une deuxième hacker viens de s'inscire grâce à toi !
+{invitedPersonName} — {invitedPersonURL}
+Je viens de te libérer 2 nouveaux accès si jamais tu veux inviter d'autre hackers sur {city} :
+{invitedPersonURL}
+Un grand merci,
+{Mayor.signature}
+{cityUrl}
+
+onInvite(>3)
+delay{0.25h-3h} range{0.00am-0.00am}
+from: mail@hckrs.io
+bcc: {Mayor.mail}
+subject: Inscription grâce à toi
+message: Suite a ton invitation {invitedPersonName} viens de s'inscrire : {invitedPersonURL}
+Il te reste {availableInvites} invitations mais tu peux nous écrire si il t'en faut.
+{Site.signature}
+{cityUrl}
+
+--
+onWaitingList(1)
+delay{1d-4d} range{8.00am-1.30am} activate{userId}
+from: toon@hckrs.io
+bcc: {Mayor.mail}
+subject: compte activé 
+message: Salut,
+J'ai le plaisir de t'annoncer que je viens d'activer ton compte.
+Tu est la bienvenue dans la communautée.
+À bientôt,
+{Mayor.signature}
+{cityUrl}
