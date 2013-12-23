@@ -76,6 +76,7 @@
 </template>
   
 
+
 <template name="frontpage">
   <div id="frontpage" class="page">
     <div class="logo-large"></div>
@@ -173,10 +174,10 @@
     <div class="main-alerts">
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h1>Login with {{previousLoginSession.service}}</h1>
-        <p>You have previously logged in with {{previousLoginSession.service}}. To merge accounts with the current one please <strong>login with {{previousLoginSession.service}}</strong>.</p>
+        <h1>Merge with {{previousLoginSession.service}}</h1>
+        <p>Do you want to add your previously used {{previousLoginSession.service}} account with the current one ?</p>
         <p>
-          <button class="btn btn-warning toggleService" data-service="{{previousLoginSession.service}}">{{previousLoginSession.service}} login</button>
+          <button class="btn toggleService" data-service="{{previousLoginSession.service}}">Login with {{previousLoginSession.service}}</button>
         </p>
         <div class="clear"></div>
       </div>
