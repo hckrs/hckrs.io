@@ -18,6 +18,9 @@ var manuallyLoggedIn = function() {
 
 // when user becomes logged in
 var afterLogin = function() {
+
+  // log
+  GAnalytics.event("LoginService", "login", "automatically");
   
   checkDuplicateIdentity();
   checkInvitation();
@@ -30,10 +33,11 @@ var afterLogin = function() {
   
   if (redirectUrl)
     Router.go(redirectUrl);
-  else if (currentRoute === 'frontpage')
+  else if(currentRoute === 'frontpage')
     Router.go('hackers');
-  
-  Session.set('redirectUrl', null);
+  else
+    Router.go(location.pathname + location.search + location.hash); //reload route
+
 }
 
 // when user becomes logged out
@@ -99,21 +103,43 @@ var checkDuplicateIdentity = function() {
 // check if he has signed up with a valid invite code
 var checkInvitation = function() {
 
-  var isInvited = Invitations.findOne({receivingUser: Meteor.userId()});
+  var phrase = Session.get('invitationPhrase');
 
   if (!checkInvited() && Session.get('invitationPhrase')) {
     // make a server call to check the invitation
-    Meteor.call('verifyInvitation', Session.get('invitationPhrase'), function(err) {
+    Meteor.call('verifyInvitation', phrase, function(err) {
       if (err && err.reason === 'limit') {
+
         // show invitation limit reached message
         Session.set('invitationLimitReached', true);
         Meteor.setTimeout(function() {
           Session.set('invitationLimitReached', false);
         }, 5 * 60 * 1000);
+        
+        // log to google analytics
+        Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
+          if (!err && broadcastUser)
+            GAnalytics.event('Invitations', 'limit reached for user', broadcastUser._id);
+        });
+        
+      
       } else if (err) {
+        
+        // log
+        GAnalytics.event('Invitations', 'invalid phrase', phrase);
         log("Error", err);
+      
       } else { //on success
-        setupSubscriptions() //rerun subscriptions
+
+        setupSubscriptions(); //rerun subscriptions
+        
+        // log to google analytics
+        Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
+          if (!err && broadcastUser)
+            GAnalytics.event('Invitations', 'invited by user', broadcastUser._id);
+          else GAnalytics.event('Invitations', 'invalid phrase', phrase);
+        });
+
       }
     });
   } 
@@ -234,6 +260,9 @@ Handlebars.registerHelper('serviceLoginError', function() {
 var loginCallback = function(err) {
   if (err) {
 
+    // log
+    GAnalytics.event("LoginService", "login failure");
+
     // on error
     var message = "Something went wrong";
     
@@ -262,6 +291,9 @@ var loginWithService = function(event) {
   var options = serviceOptions[service];
   var Service = capitaliseFirstLetter(service);
 
+  // log
+  GAnalytics.event("LoginService", "login", service);
+
   // set used service as cookie
   amplify.store('currentLoginService', service);
 
@@ -272,6 +304,9 @@ var loginWithService = function(event) {
 // log out the current user
 var logout = function() {
   
+  // log
+  GAnalytics.event("LoginService", "logout");
+
   // first redirect to frontpage to make sure there are no helpers
   // active that making use of the user session information
   // this prevent from errors in the console
@@ -315,7 +350,13 @@ var _addService = function(service, options) {
         } else {
           log(err);
         }
-      } 
+
+        // log
+        GAnalytics.event("LoginService", "link failure", service);
+      } else {
+        // log
+        GAnalytics.event("LoginService", "link service", service);
+      }
     });       
   });
 }
@@ -323,7 +364,11 @@ var _addService = function(service, options) {
 // remove an external service from user's account
 var _removeService = function(service) {
   Meteor.call("removeServiceFromUser", service, function(err, res) {
-    if (err) throw new Meteor.Error(500, err.reason);    
+    if (err)
+      throw new Meteor.Error(500, err.reason);    
+    else
+      // log
+      GAnalytics.event("LoginService", "unlink service", service);
   });  
 }
 

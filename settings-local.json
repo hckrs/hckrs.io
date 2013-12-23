@@ -2,11 +2,13 @@
   "public": {
     "environment": "local",
     
+    "siteName": "hckrs.io",
+    "siteEmail": "mail@hckrs.io",
+
     "mapboxDefault": "ramshorst.gd0ekbb3",
     "mapboxPlaces": "ramshorst.gcoejeom",
 
-    "siteName": "hckrs.io",
-    "siteEmail": "mail@hckrs.io"
+    "ga": null
   },
 
 

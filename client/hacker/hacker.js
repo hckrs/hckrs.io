@@ -30,6 +30,10 @@ var addToSet = function(event) {
     var action = checked ? '$addToSet' : '$pull';
     var modifier = _.object([ action ], [ _.object([field], [value]) ]);
     Meteor.users.update(Meteor.userId(), modifier);
+
+    // log
+    if (checked)
+      GAnalytics.event("EditProfile", field, value);
   });
 }
 

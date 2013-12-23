@@ -68,8 +68,16 @@ var user = { /* scheme */
   deletedAt: Date,          // date of deletion
   mergedWith: String,       // userId of the user where this accounts is merged with
 
-  services: {             // meteor stores login information here...
-    resume: { /* ... */ },
+
+  /* fields assigned by meteor */
+
+  services: {               // meteor stores login information here...
+    resume: {  
+      loginTokens: [ { token: String, when: Date } ]
+    },
+    email: {
+      verificationTokens: [ { token: String, address: String, when: Date } ]
+    },
     facebook: { /* ... */ },
     github: { /* ... */ },
     twitter: { /* ... */ },

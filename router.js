@@ -27,14 +27,35 @@ if (Meteor.isClient) {
     });
 
     this.route('verifyEmail', {path: '/verify-email/:token',
+      load: function() {
+        var token = this.params.token;
+        
+        // log to google analytics
+        Meteor.call('getEmailVerificationTokenUser', token, function(err, user) {
+          if (!err && user) 
+            GAnalytics.event('EmailVerification', 'verified user', user._id);
+          else GAnalytics.event('EmailVerification', 'invalid token', token);
+        });
+      },
       action: function() {
         Accounts.verifyEmail(this.params.token, checkAccess);
-        Router.go('hackers'); 
+        Router.go('hackers');
         this.stop();
       }
     });
     
     this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
+      load: function() {
+        var city = 'lyon';
+        var localRankHash = this.params.localRankHash;
+        var localRank = bitHashInv(localRankHash);
+        var hacker = Meteor.users.findOne({city: city, localRank: localRank}, {reactive: false});
+        
+        // log to google analytics
+        if (hacker)
+          GAnalytics.event('Views', 'profile', hacker._id);
+        else GAnalytics.event('Views', 'profile unknow', city+' '+localRank);
+      },
       before: function() { 
         var city = 'lyon';
         var localRankHash = this.params.localRankHash;
@@ -55,7 +76,7 @@ if (Meteor.isClient) {
     });
 
 
-    this.route('invite', { path: /^\/\+\/(.*)/, template: 'frontpage', 
+    this.route('invite', { path: /^\/\+\/(.*)/, template: 'frontpage',
       before: function() {
         var phrase = bitHashInv(this.params[0]);
         Session.set('invitationPhrase', phrase);
@@ -82,7 +103,36 @@ if (Meteor.isClient) {
   // XXX in iron-router you can't call this.redirect() if you want
   // that the unload event must be triggered. Instead you must use
   // Router.go() and then stopping the current route with this.stop()
+  //
+  // It is not recommend to set session variables in the before/load functions
+  // this will trigger a recomputation of the route
 
+
+  // wait to the subscriptions are fully loaded before rendering a template
+  var waitOnSubscriptionsReady = function() {
+    if (!Session.get('subscriptionsReady'))
+      this.stop();  
+  }
+
+  // when login is required, render the frontpage
+  var loginRequired = function() {
+
+    switch (Session.get('currentLoginState')) {
+      
+      case 'loggedOut':
+        // redirect to frontpage so that the user can login
+        Session.set('redirectUrl', location.pathname + location.search + location.hash);
+        Router.go('frontpage'); 
+        this.stop();  
+        break;
+
+      case 'loggingIn':
+        // make sure that the user subscriptions are ready first
+        this.stop();
+        break;
+    }
+
+  }
 
   // check if there are duplicate accounts, if so request for merge
   var checkDuplicateAccounts = function() {
@@ -90,25 +140,6 @@ if (Meteor.isClient) {
       this.render('requestMergeDuplicateAccount');
       this.stop();
     }
-  }
-
-  // when login is required, render the frontpage
-  var loginRequired = function() {
-    
-    if (!isLoggedIn() && Meteor.userId())
-      return this.stop(); // login in progress, wait!
-    
-    if (!isLoggedIn()) {
-      
-      // hold current route so we can redirect after login
-      var url = location.pathname + location.search + location.hash;
-      Session.set('redirectUrl', url);
-
-      // redirect to frontpage so that the user can login
-      Router.go('frontpage'); 
-      this.stop();
-    }
-
   }
 
   // make sure that user is allowed to enter the site
@@ -120,21 +151,30 @@ if (Meteor.isClient) {
   }
 
 
-
-  // check for duplicate accounts, if so request for merge
-  Router.before(checkDuplicateAccounts, {except: ['frontpage', 'invite', 'verifyEmail', 'about']});
+  // make sure the subscriptions are fully loaded
+  var except = ['frontpage', 'invite', 'verifyEmail', 'about'];
+  Router.load(waitOnSubscriptionsReady, {except: except});
+  Router.before(waitOnSubscriptionsReady, {except: except});
 
   // make sure the user is logged in, except for the pages below
-  Router.before(loginRequired, {except: ['frontpage', 'invite', 'verifyEmail', 'about']});
+  var exceptLogin = ['frontpage', 'invite', 'verifyEmail', 'about'];
+  Router.load(loginRequired, {except: exceptLogin});
+  Router.before(loginRequired, {except: exceptLogin});
+
+  // check for duplicate accounts, if so request for merge
+  Router.before(checkDuplicateAccounts, {except: exceptLogin});
 
   // make sure that user is allowed to enter the site
-  Router.before(allowedAccess, {except: ['invite', 'hacker', 'verifyEmail']})
+  Router.before(allowedAccess, {except: ['hacker', 'invite', 'verifyEmail']})
+
+  // log pageview to Google Analytics
+  Router.load(GAnalytics.pageview);
+
 
   // global router configuration
   Router.configure({
     autoRender: false
   });
-
 
 }
 
