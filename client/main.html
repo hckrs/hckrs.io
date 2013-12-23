@@ -76,6 +76,7 @@
 </template>
   
 
+
 <template name="frontpage">
   <div id="frontpage" class="page">
     <div class="logo-large"></div>
@@ -84,8 +85,10 @@
     {{else}}
       {{#if invitationBroadcastUser}}
         {{#with invitationBroadcastUser}}
-          <img src="{{profile.picture}}" alt="" />
-          {{profile.name}}
+          <div class="invited-by-container">
+            <div style="background-image:url({{profile.picture}});float:left;" class="pictureView"></div>
+            <div style="" class="speach-bubble"><div class="larger">... welcome</div><br/><div class="name">— {{profile.name}}</div></div>
+          </div>
         {{/with}}
       {{/if}}
       <div class="frontpage-login"> 
@@ -171,10 +174,10 @@
     <div class="main-alerts">
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h1>Login with {{previousLoginSession.service}}</h1>
-        <p>You have previously logged in with {{previousLoginSession.service}}. To access your account please <strong>login with {{previousLoginSession.service}}</strong> once again.</p>
+        <h1>Merge with {{previousLoginSession.service}}</h1>
+        <p>Do you want to add your previously used {{previousLoginSession.service}} account with the current one ?</p>
         <p>
-          <button class="btn btn-primary toggleService" data-service="{{previousLoginSession.service}}">{{previousLoginSession.service}} login</button>
+          <button class="btn toggleService" data-service="{{previousLoginSession.service}}">Login with {{previousLoginSession.service}}</button>
         </p>
         <div class="clear"></div>
       </div>

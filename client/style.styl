@@ -287,6 +287,7 @@ a.menu:hover{
   line-height: 78px;
   vertical-align: top;
   border-left: 24px solid rgba(0,0,0,0);
+  clear: both;
 }
 
 .social-logo{
@@ -330,6 +331,60 @@ a.menu:hover{
   margin-bottom: 12px !important;
   font-size: 48px !important;
 }
+
+.invited-by-container{
+
+  $speackBubbleBackground = rgba(255,255,255,0.15);
+
+  margin: auto;
+  margin-bottom: -50px;
+  margin-top: 48px;
+  width: 480px;
+  height: 180px;
+
+    .speach-bubble{
+      position: relative;
+      width: 200px;
+      height: 50px;
+      padding: 24px;
+      background: $speackBubbleBackground;
+      color: #FFF;
+      margin: auto;
+      float: left;
+      margin-left: 32px;
+      margin-top: 42px;
+
+      .larger{
+        font-size: 1.8em;
+        font-weight: 400;
+        line-height: 32px;
+        color:#FFF;
+        float: left;
+        margin-bottom: 8px;
+      }
+
+      .name{
+        float: right;
+        color: #FFF;
+      }
+     
+    }.speach-bubble:after{
+
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 15px 17px 15px 0;
+        border-color: transparent $speackBubbleBackground;
+        display: block;
+        width: 0;
+        z-index: 1;
+        left: -17px;
+        top: 34px;
+
+    }
+}
+
+
 
 /* ABOUT */
 
