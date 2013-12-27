@@ -19,12 +19,22 @@
             </div>
           {{else}}
             {{#if tellUsMore}}
-              <div class="access-denied alert alert-info">
-                <h1>Tell us more</h1>
-                <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
-              </div>
+              {{#if isInvited}} 
+                {{! XXX user must only complete his profile to enter website (already invited) }}
+                <div class="access-denied alert alert-info">
+                  <h1>Tell us more</h1>
+                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+                </div>
+              {{else}}
+                {{! XXX user must complete his profile AND needs to be invited by someone }}
+                <div class="access-denied alert alert-info">
+                  <h1>Tell us more</h1>
+                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+                </div>
+              {{/if}}
             {{else}}
               {{#unless isInvited}}
+                {{! XXX profile is completely filled in but user needs to be invited by someone }}
                 <div class="access-denied alert alert-info">
                   <h1>Invite only</h1>
                   <p>Right now there are no open slots in the community. <strong>You can still complete your profile</strong>, because, every now an then we handpick some of the people who entered the waiting list. If this is the case we will notify you.</p>
