@@ -29,16 +29,17 @@
                 {{! XXX user must complete his profile AND needs to be invited by someone }}
                 <div class="access-denied alert alert-info">
                   <h1>Tell us more</h1>
-                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+                  <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
+                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
                 </div>
               {{/if}}
             {{else}}
               {{#unless isInvited}}
                 {{! XXX profile is completely filled in but user needs to be invited by someone }}
                 <div class="access-denied alert alert-info">
-                  <h1>Invite only</h1>
-                  <p>Right now there are no open slots in the community. <strong>You can still complete your profile</strong>, because, every now an then we handpick some of the people who entered the waiting list. If this is the case we will notify you.</p>
-                  <p>You can also ask a member to vouch for you by providing you his invitation url.</p>
+                  <h1>Thank you</h1>
+                  <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
+                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
                 </div>
               {{/unless}}
             {{/if}}

@@ -68,7 +68,7 @@ Template.editSkills.helpers({
 
 
 Template.editSkills.rendered = function() {
-  $(".input-skills").chosen().change(function(event) {
+  $(".input-skills").chosen({search_contains:true}).change(function(event) {
     var values = $(event.currentTarget).val();
     updateSkills(values);
   });
