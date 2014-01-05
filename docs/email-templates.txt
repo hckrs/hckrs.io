@@ -29,9 +29,9 @@ from: {Mayor.mail}
 bcc: {Mayor.mail}
 subject: bienvenue
 message: Bonjour,
-Ca fais plaisir que tu nous rejoigne.
-Si tu à des questions hésite pas à m'écrire, tout feedback est la bienvenue aussi :)
-Tu peut inviter {{availableInvites}} autres personnes grace à cette URL personelle : {{inviteURL}}
+C'est avec plaisir que nous te recevons.
+Si tu as des questions n'hésite pas à m'écrire, tout feedback est le bienvenu aussi :)
+Tu peux inviter {{availableInvites}} autres personnes grâce à cette URL personelle : {{inviteURL}}
 Bien à toi,
 {Mayor.signature}
 {cityUrl}
@@ -43,9 +43,9 @@ from: toon@hckrs.io
 bcc: {Mayor.mail}
 subject: Inscription
 message: Salut,
-Je viens de voir que {invitedPersonName} s'est inscris.
+Je viens de voir que {invitedPersonName} s'est inscrit.
 {invitedPersonURL}
-Merci à toi,
+Merci de l'avoir invité,
 {Mayor.signature}
 {cityUrl}
 
@@ -53,11 +53,11 @@ onInvite(2)
 delay{0.25h-3h} range{8.00am-1.30am} addInvite(2)
 from: toon@hckrs.io
 bcc: {Mayor.mail}
-subject: 2ème invité!
+subject: 2ème invité !
 message: Salut,
-Une deuxième hacker viens de s'inscire grâce à toi !
+Un deuxième hacker vient de s'inscire grâce à toi !
 {invitedPersonName} — {invitedPersonURL}
-Je viens de te libérer 2 nouveaux accès si jamais tu veux inviter d'autre hackers sur {city} :
+Je viens de te libérer 2 nouveaux accès si jamais tu veux inviter d'autres hackers sur {city} :
 {invitedPersonURL}
 Un grand merci,
 {Mayor.signature}
@@ -68,8 +68,8 @@ delay{0.25h-3h} range{0.00am-0.00am}
 from: mail@hckrs.io
 bcc: {Mayor.mail}
 subject: Inscription grâce à toi
-message: Suite a ton invitation {invitedPersonName} viens de s'inscrire : {invitedPersonURL}
-Il te reste {availableInvites} invitations mais tu peux nous écrire si il t'en faut.
+message: Suite à ton invitation, {invitedPersonName} vient de s'inscrire : {invitedPersonURL}
+Il te reste {availableInvites} invitations mais tu peux nous écrire si il t'en faut encore.
 {Site.signature}
 {cityUrl}
 
@@ -81,7 +81,7 @@ bcc: {Mayor.mail}
 subject: compte activé 
 message: Salut,
 J'ai le plaisir de t'annoncer que je viens d'activer ton compte.
-Tu est la bienvenue dans la communautée.
+Bienvenue dans la communauté.
 À bientôt,
 {Mayor.signature}
 {cityUrl}

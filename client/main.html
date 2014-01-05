@@ -143,15 +143,15 @@
   <div id="invitations" class="page">
     
     <H2>Share the love</h2>
-    <p>
-      <strong>We trust you</strong> to invite awesome hackers to the community.<br/>
+    <p><br/>
+      We trust you to invite awesome hackers to the community.<br/>You can use this personal URL to invite another <strong>{{unusedTotal}}</strong> people:
     </p>
     
     <p><strong>{{link}}</strong></p>
 
     {{#if invitedUsers}}
-      <p> 
-        <strong>{{invitedTotal}}</strong> hackers invited:
+      <p><br/>
+        You already invited:
         {{#each invitedUsers}}
           <span class="invite used">
             <a href="{{pathFor 'hacker'}}"><strong>{{screenName}}</strong></a>
@@ -159,10 +159,6 @@
         {{/each}}
       </p>
     {{/if}}
-
-    <p>
-      You can use this personal URL to invite another <strong>{{unusedTotal}}</strong> people.
-    </p>
 
   </div>
 </template>
@@ -175,7 +171,7 @@
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h1>Merge with {{previousLoginSession.service}}</h1>
-        <p>Do you want to add your previously used {{previousLoginSession.service}} account with the current one ?</p>
+        <p>Do you want to link your current session to your previously used {{previousLoginSession.service}} account?</p>
         <p>
           <button class="btn toggleService" data-service="{{previousLoginSession.service}}">Login with {{previousLoginSession.service}}</button>
         </p>
@@ -202,7 +198,7 @@
       <div class="content">
         <p class="paragraph">The idea is to give hackers tools to extend their local communities.</p>
         <p class="paragraph" style="font-weight:700;">We consider a hacker one who likes to figure out how things work and make his own tools by playing with technology in order to push the envelope.</p>
-        <p class="paragraph"><strong>hckrs</strong>.io was founded by <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#116;&#111;&#111;&#110;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Toon van Ramshorst</a></strong> & <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#097;&#114;&#110;&#111;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Jarno Le conté</a></strong> in late 2013.</p>
+        <p class="paragraph"><strong>hckrs</strong>.io was founded by <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#116;&#111;&#111;&#110;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Toon van Ramshorst</a></strong> & <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#097;&#114;&#110;&#111;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Jarno Le Conté</a></strong> in late 2013.</p>
       </div>
     </div>
   </div>
