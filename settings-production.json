@@ -3,7 +3,7 @@
     "environment": "production",
 
     "siteName": "hckrs.io",
-    "siteEmail": "mail@hckrs.io",
+    "siteEmail": "machine@hckrs.io",
     
     "mapboxDefault": "ramshorst.gd0ekbb3",
     "mapboxPlaces": "ramshorst.gcoejeom",
@@ -17,7 +17,7 @@
   
 
   "env": {
-    "MAIL_URL": "smtp://mail@hckrs.io:bpYvKzYDKSPRwjyIFGuxratPob4DvtBHR8ScsUZ@mail.gandi.net:587/",
+    "MAIL_URL": "smtp://machine@hckrs.io:IN2MR8K1RmnOxjGoSIIIQYMNHVSUIevNQqasdaW@mail.gandi.net:587/",
     "MAIL_URL_MAYOR": "smtp://toon@hckrs.io:WJeCLaTKs5IIQYMNHVSUIevNQ9KCqpzaQdHwkIk@mail.gandi.net:587/"
   },
 
