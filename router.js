@@ -7,7 +7,16 @@ if (Meteor.isClient) {
     
     this.route('frontpage', { path: '/', template: 'frontpage' });
 
-    this.route('highlights', { path: '/highlights', template: 'highlights' });
+    this.route('highlights', { path: '/highlights', template: 'highlights',
+      load: function() { 
+        Session.set('absoluteHeader', true); 
+        Session.set('inversedHeader', true); 
+      },
+      unload: function() {
+        Session.set('absoluteHeader', false); 
+        Session.set('inversedHeader', false); 
+      }
+    });
     
     this.route('hackers', { path: '/hackers', template: 'hackers' });
 
