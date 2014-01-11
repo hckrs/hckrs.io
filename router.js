@@ -130,7 +130,8 @@ if (Meteor.isClient) {
       
       case 'loggedOut':
         // redirect to frontpage so that the user can login
-        Session.set('redirectUrl', location.pathname + location.search + location.hash);
+        if (location.pathname != "/")
+          Session.set('redirectUrl', location.pathname + location.search + location.hash);
         Router.go('frontpage'); 
         this.stop();  
         break;
