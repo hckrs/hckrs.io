@@ -12,7 +12,7 @@
             </div>
           {{/if}}
           
-          {{#unless isVerifiedEmail}}
+          {{#if isUnverifiedEmail}}
             <div class="access-denied alert alert-info">
               <h1>Check your e-mail :)</h1>
               <p>We have sent you an email with a validation link</p>
@@ -43,7 +43,7 @@
                 </div>
               {{/unless}}
             {{/if}}
-          {{/unless}}
+          {{/if}}
 
         {{/if}}
       {{/if}}
