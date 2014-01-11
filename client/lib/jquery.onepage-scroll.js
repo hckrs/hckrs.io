@@ -348,7 +348,7 @@
     if(settings.keyboard == true) {
       onKeyboard = function(e) {
         var tag = e.target.tagName.toLowerCase();
-        log(1)
+        
         if (!$("body").hasClass("disabled-onepage-scroll")) {
           switch(e.which) {
             case 38:
