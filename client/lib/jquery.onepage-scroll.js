@@ -88,7 +88,19 @@
         topPos = 0,
         lastAnimation = 0,
         quietPeriod = 500,
-        paginationList = "";
+        paginationList = "",
+        onMouseScroll = null,
+        onKeyboard = null;
+
+    // modified by Jarno Le Conté
+    $.fn.stop = function() {
+      $('.onepage-pagination').remove();
+      $("body").addClass('disabled-onepage-scroll');
+      $(document).unbind('mousewheel DOMMouseScroll', onMouseScroll);
+      $(document).unbind('keydown', onKeyboard);
+    }
+    $("body").removeClass('disabled-onepage-scroll');
+
     
     $.fn.transformPage = function(settings, pos, index) {
       $(this).css({
@@ -313,12 +325,14 @@
       });
     }
     
-    
-    $(document).bind('mousewheel DOMMouseScroll', function(event) {
+
+    // modified by Jarno Le Conté
+    onMouseScroll = function(event) {
       event.preventDefault();
       var delta = event.originalEvent.wheelDelta || -event.originalEvent.detail;
       if(!$("body").hasClass("disabled-onepage-scroll")) init_scroll(event, delta);
-    });
+    }
+    $(document).bind('mousewheel DOMMouseScroll', onMouseScroll);
     
     
     if(settings.responsiveFallback != false) {
@@ -329,10 +343,12 @@
       responsive();
     }
     
+
+    // modified by Jarno Le Conté
     if(settings.keyboard == true) {
-      $(document).keydown(function(e) {
+      onKeyboard = function(e) {
         var tag = e.target.tagName.toLowerCase();
-        
+        log(1)
         if (!$("body").hasClass("disabled-onepage-scroll")) {
           switch(e.which) {
             case 38:
@@ -346,11 +362,14 @@
         }
         
         e.preventDefault(); 
-      });
+      }
+      $(document).bind('keydown', onKeyboard);
     }
-    return false;
+    
+    return el; //modified by Jarno Le Conté
   }
   
+
   
 }(window.jQuery);
 
