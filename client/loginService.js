@@ -72,10 +72,10 @@ Handlebars.registerHelper('isInvited', function() {
   return checkInvited();
 });
 Handlebars.registerHelper('isVerifiedEmail', function() {
-  return verifiedEmail(); // user has minimal 1 verified email
+  return verifiedEmail(); // user's profile email is verified
 });
 Handlebars.registerHelper('isUnverifiedEmail', function() {
-  return isUnverifiedEmail(); // user's added addresses are all unverified
+  return isUnverifiedEmail(); // user's profile email is not verified
 });
 
 // check if there is an other existing user account
@@ -202,16 +202,15 @@ var checkInvited = function() { //GLOBAL, used in hacker.js
   return !!(Invitations.findOne({receivingUser: Meteor.userId()}) || Meteor.user().isMayor);
 }
 
-// check if user has some verified e-mailaddress
+// check if user's profile e-mail address is verified
 var verifiedEmail = function() { //GLOBAL, used in hacker.js
   var user = Meteor.user();
   return !!_.findWhere(user.emails, {address: user.profile.email, verified: true});
 }
 
-// check if user's added e-mail addresses are all unverified
+// check if user's profile e-mail address is not verified
 var isUnverifiedEmail = function() {
-  var emails = Meteor.user().emails || [];
-  return emails.length && !verifiedEmail();
+  return Meteor.user().profile.email && !verifiedEmail();
 }
 
 
