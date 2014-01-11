@@ -26,20 +26,9 @@ html, body{
 /* wrapper around all */
 
 .wrapper {
-	height: 100% !important;
+	width: 100%;
 	height: 100%;
-	margin: 0 auto; 
-
-  & > .main { /* nested exactly 1 level lower */
-    float: left;
-    width: 100%;
-    height: auto;
-    margin: 0 auto;
-  
-    & > .content{  /* nested exactly 1 level lower */
-      height: auto;
-    }
-  }
+  overflow: auto;
 }
 
 .page {
