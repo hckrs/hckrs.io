@@ -93,7 +93,7 @@
         onKeyboard = null;
 
     // modified by Jarno Le Conté
-    $.fn.stop = function() {
+    $.fn.disable = function() {
       $('.onepage-pagination').remove();
       $("body").addClass('disabled-onepage-scroll');
       $(document).unbind('mousewheel DOMMouseScroll', onMouseScroll);

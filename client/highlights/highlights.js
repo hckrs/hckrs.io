@@ -38,6 +38,6 @@ Template.highlights.rendered = function() {
 }
 
 Template.highlights.destroyed = function() {
-  this.onePageScroll.stop();
+  this.onePageScroll.disable();
 }
 
