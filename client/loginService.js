@@ -34,9 +34,9 @@ var afterLogin = function() {
   if (redirectUrl)
     Router.go(redirectUrl);
   else if(currentRoute === 'frontpage')
-    Router.go('hackers');
-  else
-    Router.go(location.pathname + location.search + location.hash); //reload route
+    goToEntryPage();
+  else // reload page to trigger route actions again
+    Router.go(location.pathname + location.search + location.hash); 
 
 }
 
@@ -48,6 +48,11 @@ var afterLogout = function() {
 // when logging in is in progress
 var loggingInInProgress = function() {
   /* do nothing */
+}
+
+// which page should be loaded for logged in users which enter the site
+var goToEntryPage = function() {
+  Router.go('highlights');
 }
 
 
@@ -171,7 +176,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
       if (err) log(err);
       else {
         setupSubscriptions();
-        Router.go('hackers');
+        goToEntryPage();
       }
     });
   }
@@ -190,7 +195,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
         if (err) log(err);
         else {
           setupSubscriptions();
-          Router.go('hackers');
+          goToEntryPage();
         }
       });
     }

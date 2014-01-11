@@ -6,6 +6,8 @@ if (Meteor.isClient) {
   Router.map(function () {
     
     this.route('frontpage', { path: '/', template: 'frontpage' });
+
+    this.route('highlights', { path: '/highlights', template: 'highlights' });
     
     this.route('hackers', { path: '/hackers', template: 'hackers' });
 
@@ -172,7 +174,8 @@ if (Meteor.isClient) {
   Router.before(checkDuplicateAccounts, {except: exceptLogin});
 
   // make sure that user is allowed to enter the site
-  Router.before(allowedAccess, {except: ['hacker', 'invite', 'verifyEmail']})
+  var exceptAllowAccess = ['hacker', 'invite', 'verifyEmail'];
+  Router.before(allowedAccess, {except: exceptAllowAccess});
 
   // log pageview to Google Analytics
   Router.load(GAnalytics.pageview);
