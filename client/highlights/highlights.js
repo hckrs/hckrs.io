@@ -16,7 +16,7 @@ Template.highlights.helpers({
   /* feed templates with data */
 
   'highlights': function() { 
-    return highlights(); 
+    return _.sortBy(highlights().reverse(), function(item) { return item.createdAt; }); 
   },
   'user': function(userId) {
     return Meteor.users.findOne(userId);
@@ -51,34 +51,34 @@ Template.highlights.destroyed = function() {
 
 // CONTENT
 
-// Highlight Content Section
+// Highlight Content Section (add NEWER items to the bottom)
 // - only the 'createdAt' property is required.
 // - other properties are optional.
 // - dates must be represented as an newDate("YYYY-MM-DD hh:mm") object.
 // - refer to an user by user id, ( retrieve with userIdFromUrl() )
 
 var highlights = function() {
-  return [
+  return [ /* OLD to NEWER */
 
     {
       "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
-      "title": "Test Title",
+      "title": "Event 1",
       "subtitle": "Test Subtitle",
       "description": "Hier komt de description...",
       "website": "http://www.google.nl",
       "eventLocation": "Utrecht",
-      "eventDate": newDate("2014-01-14 14:12"), //date YYYY-MM-DD mm:ss
+      "eventDate": newDate("2014-01-08 14:12"), //date YYYY-MM-DD mm:ss
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
     
     {
       "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
-      "title": "Test Title",
+      "title": "Event 2",
       "subtitle": "Test Subtitle",
       "description": "Hier komt de description...",
       "website": "http://www.google.nl",
       "eventLocation": "Utrecht",
-      "eventDate": newDate("2014-03-01 14:12"), //date YYYY-MM-DD mm:ss
+      "eventDate": newDate("2014-01-14 14:12"), //date YYYY-MM-DD mm:ss
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
