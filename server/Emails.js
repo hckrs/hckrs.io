@@ -1,6 +1,7 @@
 
 var siteName = Meteor.settings.public.siteName;
 var siteEmail = Meteor.settings.public.siteEmail;
+var siteOwnerEmail = Meteor.settings.public.siteOwnerEmail;
 var siteUrl = Meteor.absoluteUrl();
 var siteFrom = siteName + " <" + siteEmail + ">";
 var siteUrlShort = function() { return appHostname(); } // defined in helpers.js 
@@ -43,7 +44,7 @@ SendEmailOnNewUser = function(user) {
   var subject = "New hacker on " + siteUrlShort();
   var text = "Hacker '" + user.profile.name + "' joined " + siteUrlShort() + ".\n\n" + userUrl;
 
-  Email.send({from: siteFrom, to: siteFrom, subject: subject, text: text});
+  Email.send({from: siteFrom, to: siteOwnerEmail, subject: subject, text: text});
 }
 
 

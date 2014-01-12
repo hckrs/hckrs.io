@@ -4,6 +4,7 @@
 
     "siteName": "hckrs.io",
     "siteEmail": "machine@hckrs.io",
+    "siteOwnerEmail": "mail@hckrs.io",
     
     "mapboxDefault": "ramshorst.gd0ekbb3",
     "mapboxPlaces": "ramshorst.gcoejeom",
