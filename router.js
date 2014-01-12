@@ -57,10 +57,7 @@ if (Meteor.isClient) {
     
     this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
       load: function() {
-        var city = 'lyon';
-        var localRankHash = this.params.localRankHash;
-        var localRank = bitHashInv(localRankHash);
-        var hacker = Meteor.users.findOne({city: city, localRank: localRank}, {reactive: false});
+        var hacker = userFromUrl(window.location.href, {reactive: false});
         
         // log to google analytics
         if (hacker)
@@ -68,10 +65,7 @@ if (Meteor.isClient) {
         else GAnalytics.event('Views', 'profile unknow', city+' '+localRank);
       },
       before: function() { 
-        var city = 'lyon';
-        var localRankHash = this.params.localRankHash;
-        var localRank = bitHashInv(localRankHash);
-        var hacker = Meteor.users.findOne({city: city, localRank: localRank});
+        var hacker = userFromUrl(window.location.href, {reactive: false});
         
         if (!hacker)
           return this.redirect('frontpage');

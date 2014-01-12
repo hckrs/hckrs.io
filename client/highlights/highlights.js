@@ -14,6 +14,13 @@ Template.highlights.events({
 
 Template.highlights.helpers({
   /* feed templates with data */
+
+  'highlights': function() { 
+    return highlights(); 
+  },
+  'user': function(userId) {
+    return Meteor.users.findOne(userId);
+  }
 });
 
 
@@ -41,3 +48,39 @@ Template.highlights.destroyed = function() {
   this.onePageScroll.disable();
 }
 
+
+// CONTENT
+
+// Highlight Content Section
+// - only the 'createdAt' property is required.
+// - other properties are optional.
+// - dates must be represented as an newDate("YYYY-MM-DD hh:mm") object.
+// - refer to an user by user id, ( retrieve with userIdFromUrl() )
+
+var highlights = function() {
+  return [
+
+    {
+      "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
+      "title": "Test Title",
+      "subtitle": "Test Subtitle",
+      "description": "Hier komt de description...",
+      "website": "http://www.google.nl",
+      "eventLocation": "Utrecht",
+      "eventDate": newDate("2014-01-14 14:12"), //date YYYY-MM-DD mm:ss
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+    },
+    
+    {
+      "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
+      "title": "Test Title",
+      "subtitle": "Test Subtitle",
+      "description": "Hier komt de description...",
+      "website": "http://www.google.nl",
+      "eventLocation": "Utrecht",
+      "eventDate": newDate("2014-03-01 14:12"), //date YYYY-MM-DD mm:ss
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+    },
+
+  ];
+}

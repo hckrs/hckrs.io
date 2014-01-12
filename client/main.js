@@ -65,9 +65,8 @@ Template.invitations.helpers({
 // bind absolute domain to about template
 Template.about.helpers({
   "absoluteUrl": function() { 
-    var full = window.location.host
-    var parts = full.split('.')
-    return parts[0] + '.hckrs.io';
+    var city = cityFromUrl(window.location.href);
+    return city + '.' + appHostname();
   }
 });
 
@@ -101,6 +100,13 @@ Template.main.rendered = function() {
   });
   
 }
+
+
+// determine language and formatting of dates
+Meteor.startup(function() {
+  // var userLang = navigator.language || navigator.userLanguage; 
+  moment.lang('en-gb'); // XXX use English with Europe formatting
+});
 
 
 // reset local storage after running 

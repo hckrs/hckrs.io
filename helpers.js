@@ -45,6 +45,10 @@ exec = function(func) {
   Meteor.setTimeout(func, 50);
 }
 
+// get new Date() object by using format YYYY-MM-DD hh::mm:ss
+newDate = function(dateString) {
+  return moment(dateString, "YYYY-MM-DD hh:mm:ss").toDate();
+}
 
 // calculate bithash of a number
 // transform into a string where 0 and 1 are replaced by the given characters
@@ -57,13 +61,40 @@ bitHashInv = function(hash) {
   return parseInt(hash.replace(/_/g, '0').replace(/-/g, '1'), 2);
 }
 
+// get the current city from the url
+cityFromUrl = function(url) {
+  var city = hostnameFromUrl(url).split('.')[0];
+  return (city === 'localhost') ? 'lyon' : city; //use lyon instead of localhost
+}
+
+// get user object from given url
+userFromUrl = function(url, options) {
+  var city = cityFromUrl(url);
+  var localRankHash = _.last(url.split('/'));
+  var localRank = bitHashInv(localRankHash);
+  return Meteor.users.findOne({city: city, localRank: localRank}, options || {});
+}
+
+// get userId from given url
+userIdFromUrl = function(url, options) {
+  var user = userFromUrl(url, options);
+  return user && user._id;
+}
+
 // hostname as specified in the environment variable ROOT_URL
-// ex. staging.hckrs.io
+// e.g. staging.hckrs.io
 appHostname = function() {
-  return new RegExp(/\/\/([^\/:]*)/).exec(Meteor.absoluteUrl())[1];
+  return hostnameFromUrl(Meteor.absoluteUrl());
+}
+
+// extract hostname from the given url
+// e.g. http://lyon.hckrs.io/home => lyon.hckrs.io
+hostnameFromUrl = function(url) {
+  return new RegExp(/\/\/([^\/:]*)/).exec(url)[1];
 }
 
 // replace url's hostname
+// e.g. newHostname: lyon.hckrs.io, lyon.staging.hckrs.io
 replaceHostname = function(url, newHostname) {
   return url.replace(/\/\/([^\/:]*)/, '//' + newHostname);
 }
@@ -191,6 +222,15 @@ if (Meteor.isClient) {
     return removeUrlProtocol(url);
   });
 
+  // template helper to transform Date() object to readable tring
+  Handlebars.registerHelper('Calendar', function(date) {
+    return moment(date).calendar();
+  });
+
+  // template helper to transform Date() object to readable tring
+  Handlebars.registerHelper('Date', function(date, format) {
+    return moment(date).format(format);
+  });
 
 }
 
