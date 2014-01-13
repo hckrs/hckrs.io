@@ -31,6 +31,15 @@ Template.goodStuff.helpers({
 
 Template.goodStuff.rendered = function() {
   var msnry = new Masonry("#goodStuffGrid");
+
+  // XXX set overlay colors (experimental: no efficient implementation)
+  $("#goodStuffGrid .item").each(function(i, elm) {
+    var imageUrl = $(elm).css('background-image').replace('url(','').replace(')','');
+    AverageImageRGB(imageUrl, function(rgb) {
+      var rgba = 'rgba('+rgb.r+','+rgb.g+','+rgb.b+', 0.7)';
+      $(elm).find('.item-overlay').css('background-color', rgba);
+    })
+  });
 }
 
 
@@ -57,7 +66,7 @@ var goodStuff = function() {
       "website": "http://www.google.nl",
       "eventLocation": "Utrecht",
       "eventDate": newDate("2014-01-14 14:12"), //date YYYY-MM-DD mm:ss
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-"),
     },
 
     {
