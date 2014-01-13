@@ -52,7 +52,7 @@ Template.goodStuff.rendered = function() {
 // - dates must be represented as an newDate("YYYY-MM-DD hh:mm") object.
 // - refer to an user by user id, ( retrieve with userIdFromUrl() )
 // - prices must be (floating point) number
-// - start relative image urls with a slah (e.g. /img/...)
+// - start relative image urls with a slash (e.g. /img/...)
 
 var goodStuff = function() {
   return [ /* NEW to OLD */
@@ -68,18 +68,26 @@ var goodStuff = function() {
 
     {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
-      "imageUrl": "/img/highlights/arduino.jpg",
-      "title": "Event 1",
-      "subtitle": "Test Subtitle",
-      "description": "Hier komt de description...",
-      "website": "http://www.google.nl",
-      "costs": 15.00,
-      "eventLocation": "Utrecht",
-      "eventDate": newDate("2014-01-16 17:10"), //date YYYY-MM-DD mm:ss
+      "imageUrl": "/img/highlights/startupweekend-geneve.jpg",
+      "title": "Startupweekend Lyon",
+      "subtitle": "Digital Open Labs",
+      "eventLocation": "INSA Lyon",
+      "eventDate": newDate("2014-02-21 19:00"), //date YYYY-MM-DD mm:ss
+      "costs": 50.00,
+      "website": "http://lyon.startupweekend.org",
+
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
+      "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
+      "imageUrl": "/img/highlights/arduino.jpg",
+      "title": "Ardruino serial shield",
+      "costs": 25.00,
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+    },
+
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/slim-fold.jpg",
       "title": "Slim fold",
@@ -89,7 +97,7 @@ var goodStuff = function() {
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/4K-screen.jpg",
       "title": "Seiki 4K TV",
@@ -98,17 +106,16 @@ var goodStuff = function() {
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/amazon-drone.jpg",
-      "title": "20\" delivery by Amazon",
+      "title": "20' delivery by Amazon",
       "subtitle": "welcome to the future",
       "website": "http://www.youtube.com/watch?v=98BIu9dpwHU",
-      "costs": 15.00,
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/dell-4K.jpg",
       "title": "Dell 4K",
@@ -118,7 +125,7 @@ var goodStuff = function() {
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/rasbery-pi.jpg",
       "title": "Rasbery Pi",
@@ -128,7 +135,7 @@ var goodStuff = function() {
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/seth-godin.jpg",
       "title": "Seth godin",
@@ -137,7 +144,7 @@ var goodStuff = function() {
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/spark-core.jpg",
       "title": "Skark core",
@@ -148,7 +155,7 @@ var goodStuff = function() {
       "eventLocation": "",
     },
 
-   {
+    {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/tim-ferris.png",
       "title": "Tim Ferris",
