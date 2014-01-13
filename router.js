@@ -67,7 +67,7 @@ if (Meteor.isClient) {
         else GAnalytics.event('Views', 'profile unknow', city+' '+localRank);
       },
       before: function() { 
-        var hacker = userFromUrl(window.location.href, {reactive: false});
+        var hacker = userFromUrl(window.location.href);
         
         if (!hacker)
           return this.redirect('frontpage');
