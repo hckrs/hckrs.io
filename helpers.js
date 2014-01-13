@@ -111,6 +111,17 @@ removeUrlProtocol = function(url) {
   return url.replace(/^(http(s)?:\/\/(www.)?)/i, "");
 }
 
+fixedDecimals = function(value, decimals) {
+  return parseFloat(value).toFixed(decimals);
+}
+
+convertToCurrency = function(value) {
+  if (typeof(value) !== 'number') return "";
+  var val = fixedDecimals(value, 2);
+  return "€ " + val.replace('.00', '.-').replace('.', ',');
+}
+
+
 // geocoder for openstreet
 geocode = function(address, cb) {
   var url = "http://nominatim.openstreetmap.org/search";
@@ -224,12 +235,19 @@ if (Meteor.isClient) {
 
   // template helper to transform Date() object to readable tring
   Handlebars.registerHelper('Calendar', function(date) {
+    if (!date) return "";
     return moment(date).calendar();
   });
 
   // template helper to transform Date() object to readable tring
   Handlebars.registerHelper('Date', function(date, format) {
+    if (!date) return "";
     return moment(date).format(format);
+  });
+
+  // template helper to convert number to valuta string 
+  Handlebars.registerHelper('Currency', function(value) { 
+    return convertToCurrency(value);
   });
 
 }

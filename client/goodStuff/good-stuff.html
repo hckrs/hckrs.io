@@ -1,0 +1,34 @@
+<template name="goodStuff">
+  <div id="goodStuff" class="page">
+  	
+  	<div id="goodStuffGrid">
+	  	{{#each goodStuff}}
+		  	<div class="item" style="background-image:url({{imageUrl}});">
+		  		<a href="{{website}}" target="_blank" class="item-overlay">
+		  			<div class="item-content">
+			  			<div class="title">{{title}}</div>
+			  			<div class="subtitle">{{subtitle}}</div>
+			  			<div class="description">{{description}}</div>
+			  			<div class="price">{{Currency costs}}</div>
+			  			<div class="event">
+			  				<span class="event-location">{{eventLocation}}</span>
+			  				<span class="event-date">{{Calendar eventDate}}</span>
+			  			</div>
+			  			{{#if userId}}
+					  		<div class="user">
+					  			{{#with user userId}}
+					  			<a href="{{pathFor 'hacker'}}" class="hackers-name">
+						  			<div style="background-image:url({{profile.picture}});" class="pictureView small" style="cursor: pointer;"></div>
+						  			{{profile.name}}
+						  		</a>
+						  		{{/with}}
+					  		</div>
+						  {{/if}}
+			  		</div>
+		  		</a>
+			 	</div>
+		 	{{/each}}
+		</div>
+  	
+  </div>
+</template>
