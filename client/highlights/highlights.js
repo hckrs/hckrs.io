@@ -64,12 +64,9 @@ var highlights = function() {
     {
       "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/app-dernier-metro.jpg",
-      "title": "Event 3",
-      "subtitle": "Test Subtitle",
-      "description": "Hier komt de description...",
-      "website": "http://www.google.nl",
-      "eventLocation": "Utrecht",
-      "eventDate": newDate("2014-01-14 14:12"), //date YYYY-MM-DD mm:ss
+      "title": "Dernier métro",
+      "subtitle": "web app Lyonnaise",
+      "website": "http://github.com/yannlombard/derniermetro",
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
