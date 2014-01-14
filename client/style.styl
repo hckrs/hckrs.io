@@ -171,7 +171,7 @@ a.menu:hover{
   color: #fff; 
 }
 
-/* user menu */
+/* karma + user menu */
 
 .header {
 
@@ -179,6 +179,13 @@ a.menu:hover{
     position: absolute;
     right: $pagePaddingWidth;
     top: 0px;
+  }
+
+  .karma{
+    font-size: 1.8em;
+    float: left;
+    margin-top: 40px;
+    margin-right: 24px;
   }
 
   .pictureViewSmall {
@@ -446,8 +453,33 @@ a.menu:hover{
   line-height: 48px;
 }
 
-#invitations .invite {
-  padding-right: 5px;
+#invitations{
+
+  .available-slots{
+    margin-top: 24px;
+    margin-bottom: 24px;
+    float: left;
+  }
+
+  .available-slot{
+    width: 64px;
+    height: 64px;
+    float: left;
+    border-radius: 32px;
+    border: 3px dashed white;
+    margin-right: 12px;
+    opacity: 0.5;
+  }
+
+  .invitations-text{ /* can't make this work, problem with selector ? */
+    margin-top: 40px;
+    clear: both;
+  }
+
+  .invite{
+    padding-right: 5px;
+  }
+
 }
 
 

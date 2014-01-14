@@ -91,7 +91,7 @@ var goodStuff = function() {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/good-stuff/slim-fold.jpg",
       "title": "Slim fold",
-      "subtitle": "croud funded paper walet",
+      "subtitle": "crowd funded paper wallet",
       "website": "http://www.slimfoldwallet.com",
       "costs": 20.00,
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
