@@ -214,8 +214,7 @@ if (Meteor.isClient) {
 
   // return the current environment (local|production)
   Handlebars.registerHelper('environment', function() {
-    return (Meteor.settings && Meteor.settings.public.environment) ||
-           (/localhost/.test(Meteor.absoluteUrl()) ? 'local' : 'production');
+    return Meteor.settings && Meteor.settings.public.environment;
   });  
 
   // template helper to use the value of a Session variable directly in the template
@@ -248,6 +247,10 @@ if (Meteor.isClient) {
   // template helper to convert number to valuta string 
   Handlebars.registerHelper('Currency', function(value) { 
     return convertToCurrency(value);
+  });
+
+  Handlebars.registerHelper('HTML', function(html) {
+    return new Handlebars.SafeString(html);
   });
 
 }
