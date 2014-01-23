@@ -48,6 +48,7 @@
           </div>
           {{/unless}}
           <div class="right">
+            <div class="karma">67</div>
             <div class="pull-right">
               <a href="{{pathFor 'hacker'}}" data-toggle="dropdown">
                 <div style="background-image:url({{profile.picture}});" class="pictureViewSmall" style="cursor: pointer;"></div>
@@ -140,9 +141,15 @@
   <div id="invitations" class="page">
     
     <H2>Share the love</h2>
-    <p><br/>
-      We trust you to invite awesome hackers to the community.<br/>You can use this personal URL to invite another <strong>{{unusedTotal}}</strong> people:
-    </p>
+
+    <div class="available-slots"></div>
+      <div class="available-slot"></div>
+      <div class="available-slot"></div>
+      <div class="available-slot"></div>
+    </div>
+    <div class="available-slots">
+      <br>We trust you to invite awesome hackers to the community.<br/>You can use this personal URL to invite <strong>{{unusedTotal}}</strong> people:
+    </div>
     
     <p><strong>{{link}}</strong></p>
 
