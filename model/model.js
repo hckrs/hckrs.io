@@ -87,14 +87,6 @@ var user = { /* scheme */
   }
 }
 
-if (Meteor.isClient) {
-  Users._transform = function(user) {
-    user.localRankHash = bitHash(user.localRank);
-    user.globalRankHash = bitHash(user.globalRank);
-    return user;
-  }
-}
-
 
 
 
@@ -112,20 +104,7 @@ var invitation = { /* scheme */
   signedupAt: Date,       // date when the receiving user has signed up
 }
 
-if (Meteor.isClient) {
-  Invitations._transform = function(doc) {
-    if (doc.receivingUser) {
-      var receiver = Meteor.users.findOne(doc.receivingUser);
-      if (receiver) { 
-        // add info of receiver
-        doc.name = receiver.profile.name;
-        doc.localRankHash = bitHash(receiver.localRank);
-        doc.globalRankHash = bitHash(receiver.globalRank);
-      }
-    }
-    return doc;  
-  }
-}
+
 
 
 /* GOOD-STUFF */

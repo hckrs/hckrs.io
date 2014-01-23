@@ -24,20 +24,6 @@ Meteor.startup(function() {
 
 
 
-/* SUBSCRIPTIONS */
-
-Subscriptions = [
-  'publicUserDataCurrentUser', 
-  'publicUserDataEmail', 
-  'publicUserData',
-  'invitations', 
-  'goodStuffItems',
-];
-
-
-
-
-
 // reset local storage after running 
 // "meteor reset" on the terminal
 var resetMeteor = function() {
