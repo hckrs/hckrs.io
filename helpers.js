@@ -47,6 +47,8 @@ exec = function(func) {
 
 // get new Date() object by using format YYYY-MM-DD hh::mm:ss
 newDate = function(dateString) {
+  if (!dateString)
+    return moment().toDate();
   return moment(dateString, "YYYY-MM-DD hh:mm:ss").toDate();
 }
 
@@ -283,6 +285,11 @@ Match.AllIn = function(allowedValues) {
 // match e-mailaddress
 Match.Email = Match.Where(function(email) {
   return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+});
+
+// match url
+Match.URL = Match.Where(function(url) {
+  return /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi.test(url);
 });
 
 // match empty or the given pattern

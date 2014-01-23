@@ -4,10 +4,12 @@
   	<div id="goodStuffGrid">
 	  	{{#each goodStuff}}
 		  	<div class="item" style="background-image:url({{imageUrl}});">
-		  		<a href="{{website}}" target="_blank" class="item-overlay">
+		  		<a href="{{website}}" target="_blank" class="item-overlay" style="background-color: rgba({{color.r}}, {{color.g}}, {{color.b}}, 0.7);">
 		  			<div class="item-content">
 			  			<div class="title">{{title}}</div>
+			  			{{#if costs}}
 			  			<div class="price">{{Currency costs}}</div>
+			  			{{/if}}
 			  			<div class="subtitle">{{subtitle}}</div>
 			  			<div class="description">{{description}}</div>
 			  			<div class="event">

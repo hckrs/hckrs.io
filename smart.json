@@ -1,6 +1,7 @@
 {
   "packages": {
     "iron-router": {},
-    "GAnalytics": {}
+    "GAnalytics": {},
+    "collection-hooks": {}
   }
 }

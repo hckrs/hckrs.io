@@ -102,20 +102,3 @@ Template.main.rendered = function() {
 }
 
 
-// determine language and formatting of dates
-Meteor.startup(function() {
-  // var userLang = navigator.language || navigator.userLanguage; 
-  moment.lang('en-gb'); // XXX use English with Europe formatting
-});
-
-
-// reset local storage after running 
-// "meteor reset" on the terminal
-Meteor.startup(function() {
-  Deps.autorun(function() {
-    if (Meteor.users.find().count() === 0 && Session.get('subscriptionsReady')) {
-      _.each(_.keys(amplify.store()), function(key) { amplify.store(key, null); });
-      log('Meteor resetted!')
-    }
-  });
-});

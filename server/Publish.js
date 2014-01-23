@@ -103,6 +103,17 @@ Meteor.publish("invitations", function (hash) {
 
 
 
+/* GOOD-STUFF */
+
+Meteor.publish("goodStuffItems", function(hash) {
+  if(!this.userId) {
+    return [];
+  } else {
+    return GoodStuffItems.find({});
+  }
+});
+
+
 
 // helper functions
 

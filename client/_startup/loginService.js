@@ -222,7 +222,7 @@ var isUnverifiedEmail = function() {
 /* OBSERVE when user becomes logged in */
 
 // handle actions when login state is changed
-var loginStateHandler = function(c) {
+loginStateHandler = function(c) {
   var state = Session.get('currentLoginState');
   if (c.firstRun) return;
   Deps.nonreactive(function() {
@@ -235,7 +235,7 @@ var loginStateHandler = function(c) {
 }
 
 // keep updating the currentLoginState when user is loggin in or out
-var observeLoginState = function() {
+observeLoginState = function() {
   if (Meteor.user() && Session.get('userSubscriptionsReady')) // logged in and rady
     Session.set('currentLoginState', 'loggedIn'); 
   else if (Meteor.user()) // logged in but wait to subscriptions are reloaded
@@ -246,30 +246,17 @@ var observeLoginState = function() {
     Session.set('currentLoginState', 'loggedOut');
 }
 
-// keep track of the login session
-Meteor.startup(function() {
-  Session.set('currentLoginState', 'loggedOut');
-  Session.set('subscriptionsReady', false);
-  Session.set('userSubscriptionsReady', false);
-  setupSubscriptions();
-  Deps.autorun(loginStateHandler);
-  Deps.autorun(observeLoginState);
-});
-
 
 /* SUBSCRIPTIONS */
 
-
-var setupSubscriptions = function() {
-
-  var subscribeTo = ['invitations', 'publicUserDataCurrentUser', 'publicUserDataEmail', 'publicUserData'];
+setupSubscriptions = function() {  
 
   // reset subscriptions ready
   Session.set('subscriptionsReady', false);
   Session.set('userSubscriptionsReady', false);
   
   // mark subscriptions as ready when they are completely loaded
-  var callback = _.after(subscribeTo.length, function() {
+  var callback = _.after(Subscriptions.length, function() {
     Session.set('subscriptionsReady', true);
     if (Meteor.user()) // XXX can we assume that Meteor.user() is always setted at this point?
       Session.set('userSubscriptionsReady', true);
@@ -280,11 +267,11 @@ var setupSubscriptions = function() {
   var hash = Random.id();
   
   // subscribe to collections
-  _.each(subscribeTo, function(collection) {
+  _.each(Subscriptions, function(collection) {
     Meteor.subscribe(collection, hash, callback);
   });
 
-  if (subscribeTo.length === 0)
+  if (Subscriptions.length === 0)
     callback();
 }
 
