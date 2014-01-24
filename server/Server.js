@@ -1,5 +1,24 @@
 
+// edit the security policy
+BrowserPolicy.framing.disallow();
+BrowserPolicy.content.disallowInlineScripts();
+BrowserPolicy.content.disallowEval();
+BrowserPolicy.content.allowInlineStyles();
 
+// security policy for specific content types
+// possible types: script, object, image, media, font, and connect.
+BrowserPolicy.content.allowScriptOrigin("http://api.tiles.mapbox.com");
+BrowserPolicy.content.allowScriptOrigin('http://www.google-analytics.com');
+BrowserPolicy.content.allowStyleOrigin('http://api.tiles.mapbox.com');
+BrowserPolicy.content.allowStyleOrigin('http://fonts.googleapis.com');
+BrowserPolicy.content.allowFontOrigin('http://themes.googleusercontent.com');
+BrowserPolicy.content.allowImageOrigin("*"); // XXX security issue !!!
+BrowserPolicy.content.allowConnectOrigin("*");  // XXX security issue ??? (default in Meteor)
+
+
+
+
+// server startup
 Meteor.startup(function() {
   
   /* server startup */
