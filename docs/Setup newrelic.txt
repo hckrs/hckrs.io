@@ -1,0 +1,15 @@
+
+
+1. add package newrelic
+this package is developed by my own
+
+2. set newrelic license keys in settings.json
+{ 
+  "newrelic": {
+    "NEW_RELIC_LICENSE_KEY": ".....",
+    "NEW_RELIC_APP_NAME": "hckrs"
+  }
+}
+
+3. let newrelic ping the site
+app > settings > availability monitoring
