@@ -1,10 +1,19 @@
 
 
+
 // EVENTS
 // handle user interactions
 
 Template.goodStuff.events({
-  
+  /* empty */
+});
+
+Template.newGoodStuffItem.events({
+  'submit form': function(e) {
+    e.preventDefault();
+    var data = $(e.currentTarget).serializeObject();
+    GoodStuffItems.insert(data);
+  }
 });
 
 
@@ -23,6 +32,10 @@ Template.goodStuff.helpers({
   }
 });
 
+Template.newGoodStuffItem.events({
+  /* empty */
+});
+
 
 
 
@@ -33,9 +46,20 @@ Template.goodStuff.rendered = function() {
   var msnry = new Masonry("#goodStuffGrid");
 }
 
+Template.newGoodStuffItem.rendered = function() {
+  /* empty */
+}
 
 
-// CONTENT
+
+
+
+
+
+
+
+// DEMO
+// adding demo items on startup
 
 Meteor.startup(function() {
   Deps.autorun(function(c) {
@@ -130,10 +154,7 @@ var addDemoItems = function() {
 
   _.each(items, function(item) {
     if (!GoodStuffItems.findOne(item)) {
-      AverageImageRGB(item.imageUrl, function(rgb) {
-        item.color = rgb;
-        GoodStuffItems.insert(item);
-      });
+      GoodStuffItems.insert(item);
     }
   });
 }

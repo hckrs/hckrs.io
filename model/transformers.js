@@ -98,3 +98,14 @@ if (Meteor.isServer) {
 
 }
 
+if (Meteor.isServer) {
+
+  // after updating
+  GoodStuffItems.after.insert(function (userId, doc) {
+    if (doc.imageUrl) { // set overlay color
+      var rgb = ProcesssImageResource(doc.imageUrl, AverageImageColor);  
+      GoodStuffItems.update(doc._id, {$set: {'color': rgb}});
+    }
+  });
+
+}

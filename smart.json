@@ -2,6 +2,7 @@
   "packages": {
     "iron-router": {},
     "GAnalytics": {},
-    "collection-hooks": {}
+    "collection-hooks": {},
+    "imagemagick": {}
   }
 }

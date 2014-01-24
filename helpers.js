@@ -26,6 +26,11 @@ omitNull = function(obj) {
   }); return obj;
 }
 
+omitEmpty = function(o) {
+  _.each(o, function(v, k){ if(!v) delete o[k]; });
+  return o;
+}
+
 // find a value in an object by giving a path
 // pathValue(user, "profile.name") --> user['profile']['name']
 pathValue = function(obj, path) {
