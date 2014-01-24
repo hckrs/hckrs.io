@@ -12,6 +12,10 @@ Template.newGoodStuffItem.events({
   'submit form': function(e) {
     e.preventDefault();
     var data = $(e.currentTarget).serializeObject();
+    if (data.costs)
+      data.costs = parseInt(data.costs);
+    if (data.eventDate)
+      data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
     GoodStuffItems.insert(data);
   }
 });
@@ -32,7 +36,7 @@ Template.goodStuff.helpers({
   }
 });
 
-Template.newGoodStuffItem.events({
+Template.newGoodStuffItem.helpers({
   /* empty */
 });
 
