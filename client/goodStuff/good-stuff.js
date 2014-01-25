@@ -18,7 +18,7 @@ Template.newGoodStuffItem.events({
       data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
     GoodStuffItems.insert(data);
   },
-  'keyup, paste #gs_website': function(e) {
+  'keydown, keypress, keyup, paste, blur, focus #gs_website': function(e) {
     Meteor.setTimeout(function() {
       var url = $(e.target).val();
       if (Session.equals('newGoodStuffItemUrl', url))
@@ -80,6 +80,7 @@ analyzeWebpage = function(url) {
     meta.subtitle = decodeHtmlEntities( meta.subtitle );
     meta.description = decodeHtmlEntities( meta.description );
 
+    // fill data into form
     $("#newGoodStuffItem .details").removeClass('hide');
     $("#newGoodStuffItem #gs_title").val( meta.title );
     $("#newGoodStuffItem #gs_subtitle").val( meta.subtitle );
@@ -88,25 +89,29 @@ analyzeWebpage = function(url) {
 
     /* handle images */
 
+    // load an image into the DOM, so we can retrieve the image size
     var loadImage = function(url, cb) {
       $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
     }
 
+    // filter the largest 20 pictures
     var imagesLoaded = function(images) {
       var minSize = function(img) { return Math.min(img.width, img.height); };
       var maxSize = function(img) { return Math.max(img.width, img.height); };
-      images = _.reject(images, function(img) { return minSize(img) < 200; });
+      images = _.reject(images, function(img) { return minSize(img) < 180; });
       images = _.sortBy(images, maxSize).reverse();
-      images = _.first(images, 10);
+      images = _.first(images, 20);
       createImageChooser(images);
     }
 
+    // create image chooser
     var createImageChooser = function(images) {
       $("#newGoodStuffItem .images").append(images);
     }
 
+    // get the 20 largest pictures, then create the image chooser
     async.map(meta.images, loadImage, succeed(imagesLoaded));
-    
+
   });
 }
 
