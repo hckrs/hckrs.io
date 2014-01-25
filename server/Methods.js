@@ -66,7 +66,7 @@ var requestWebpageMetadata = function(url) {
 
   // using Yahoo YQL to query an url and
   // parse some content based on a CSS selector 
-  var selector = "title, meta[name='description'], img";
+  var selector = "title, meta[name='description'], meta[name='DESCRIPTION'], img";
   var data = YQL.queryHTML(selector, url); 
 
   var title = _.isString(data.title) && data.title || "";
@@ -75,7 +75,7 @@ var requestWebpageMetadata = function(url) {
 
   // if title contains components, split them
   // and use it to override the subtitle from above
-  var titleParts = title.split(/\s[\|\-\/]\s/);
+  var titleParts = title.split(/\s[\|\-\–\/]\s/);
   if (titleParts.length) {
     title = _.first(titleParts);
     subtitle = _.last(titleParts);
