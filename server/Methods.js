@@ -71,16 +71,7 @@ var requestWebpageMetadata = function(url) {
 
   var title = _.isString(data.title) && data.title || "";
   var description = data.meta && _.isString(data.meta.content) && data.meta.content || "";
-  var images = _.isArray(data.img) ? data.img : _.isObject(data.img) ? [data.img] : [];
-
-  // resolve image sources, remove empty ones
-  images = _.filter(images, function(img) { return _.isObject(img) && img.src; })
-  _.each(images, function(img) { img.src = Url.resolve(url, img.src); });
-  
-  // exclude image smaller than 200px
-  var sizes = ProcesssImageResources(_.pluck(images, 'src'), ImageSize);
-  _.each(images, function(img, i) { _.extend(img, sizes[i]); });
-  images = _.reject(images, function(img) { return img.width < 200 || img.height < 200; });
+  var images = _.compact(_.pluck(_.isArray(data.img) ? data.img : _.isObject(data.img) ? [data.img] : [], 'src'));
 
   // if title contains components, split them
   // and use it to override the subtitle from above

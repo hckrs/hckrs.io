@@ -80,18 +80,33 @@ analyzeWebpage = function(url) {
     meta.subtitle = decodeHtmlEntities( meta.subtitle );
     meta.description = decodeHtmlEntities( meta.description );
 
-    // sort images from large to small
-    meta.images = _.sortBy(meta.images, function(img) { return Math.max(img.width, img.height); }).reverse();
-    var $images = $("<div />");
-    _.each(meta.images, function(img) {
-      $images.append("<img src='"+img.src+"' alt='' />");
-    });
-
     $("#newGoodStuffItem .details").removeClass('hide');
     $("#newGoodStuffItem #gs_title").val( meta.title );
     $("#newGoodStuffItem #gs_subtitle").val( meta.subtitle );
     $("#newGoodStuffItem #gs_description").val( meta.description );
-    $("#newGoodStuffItem .images").html( $images );
+
+
+    /* handle images */
+
+    var loadImage = function(url, cb) {
+      $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
+    }
+
+    var imagesLoaded = function(images) {
+      var minSize = function(img) { return Math.min(img.width, img.height); };
+      var maxSize = function(img) { return Math.max(img.width, img.height); };
+      images = _.reject(images, function(img) { return minSize(img) < 200; });
+      images = _.sortBy(images, maxSize).reverse();
+      images = _.first(images, 10);
+      createImageChooser(images);
+    }
+
+    var createImageChooser = function(images) {
+      $("#newGoodStuffItem .images").append(images);
+    }
+
+    async.map(meta.images, loadImage, succeed(imagesLoaded));
+    
   });
 }
 

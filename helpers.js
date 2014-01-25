@@ -52,6 +52,19 @@ pathValue = function(obj, path) {
   }); return current;
 }
 
+errorSuccess = function(errHandler, sucHandler) {
+  return function(err, result) {
+    if (err) errHandler(err, result)
+    else sucHandler(err, result)
+  };
+}
+
+// remove the error part of a callback
+succeed = function(func) {
+  return function() {
+    func.apply(this, Array.prototype.slice.apply(arguments).slice(1));
+  }
+}
 
 // execute a performance intensive function after a short delay
 // this delay is used to update UI elements.
@@ -292,13 +305,6 @@ if (Meteor.isServer) {
       Fiber(function() {
         func.apply(this, args);
       }).run();
-    };
-  }
-
-  errorSuccess = function(errHandler, sucHandler) {
-    return function(err, result) {
-      if (err) errHandler(err, result)
-      else sucHandler(err, result)
     };
   }
 }
