@@ -70,29 +70,28 @@ Template.newGoodStuffItem.rendered = function() {
 
 // HELPERS
 
-var analyzeWebpage = function(url) {
+analyzeWebpage = function(url) {
   log('analyze webpage: ' + url);
-  Meteor.call('request', url, function(err, content) {
+  Meteor.call('requestWebpageMetadata', url, function(err, meta) {
     if (err) return log(err);
-    var title = "", subtitle = "", description = "";
+    
+    // decode html entities
+    meta.title = decodeHtmlEntities( meta.title );
+    meta.subtitle = decodeHtmlEntities( meta.subtitle );
+    meta.description = decodeHtmlEntities( meta.description );
 
-    if (title = /<title>((.|\n)*)<\/title>/i.exec(content))
-      title = title[1] && title[1].trim() || "";
-    if (subtitle = /<h1(.*)>(.*)<\/h1>/i.exec(content))
-      subtitle = subtitle[2] && subtitle[2].trim() || "";
-    if (description = /<meta(\s*)name=\"description\"(\s*)content=\"(.*)\"/i.exec(content))
-      description = description[3] || "";
-
-    var titleParts = title.split(/\s[\|\-\/]\s/);
-    if (titleParts.length) {
-      title = _.first(titleParts);
-      subtitle = _.last(titleParts);
-    }
+    // sort images from large to small
+    meta.images = _.sortBy(meta.images, function(img) { return Math.max(img.width, img.height); }).reverse();
+    var $images = $("<div />");
+    _.each(meta.images, function(img) {
+      $images.append("<img src='"+img.src+"' alt='' />");
+    });
 
     $("#newGoodStuffItem .details").removeClass('hide');
-    $("#newGoodStuffItem #gs_title").val( title );
-    $("#newGoodStuffItem #gs_subtitle").val( subtitle );
-    $("#newGoodStuffItem #gs_description").val( description );
+    $("#newGoodStuffItem #gs_title").val( meta.title );
+    $("#newGoodStuffItem #gs_subtitle").val( meta.subtitle );
+    $("#newGoodStuffItem #gs_description").val( meta.description );
+    $("#newGoodStuffItem .images").html( $images );
   });
 }
 

@@ -1,5 +1,5 @@
 
-String.prototype.trim= function() {
+String.prototype.trim = function() {
   return this.replace(/^\s+|\s+$/g, '');
 }
 
@@ -7,8 +7,14 @@ log = function() {
   console.log.apply(console, arguments);
 }
 
+
+
 capitaliseFirstLetter = function(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+decodeHtmlEntities = function(str) {
+  return $('<div />').html(str).text();
 }
 
 // check if all values from the first array
@@ -266,6 +272,36 @@ if (Meteor.isClient) {
 
 }
 
+
+if (Meteor.isServer) {
+
+  var Fiber = Npm.require('fibers');
+  var Future = Npm.require('fibers/future');
+  
+  sync = function() {
+    var future = new Future();
+    var args = Array.prototype.slice.apply(arguments).slice(1);
+    args.push(future.resolver());
+    arguments[0].apply(this, args);
+    return future.wait();
+  }
+
+  fiber = function(func) {
+    return function() {
+      var args = arguments;
+      Fiber(function() {
+        func.apply(this, args);
+      }).run();
+    };
+  }
+
+  errorSuccess = function(errHandler, sucHandler) {
+    return function(err, result) {
+      if (err) errHandler(err, result)
+      else sucHandler(err, result)
+    };
+  }
+}
 
 
 /* MATCH helpers */
