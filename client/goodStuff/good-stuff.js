@@ -17,6 +17,17 @@ Template.newGoodStuffItem.events({
     if (data.eventDate)
       data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
     GoodStuffItems.insert(data);
+  },
+  'keyup, paste #gs_website': function(e) {
+    Meteor.setTimeout(function() {
+      var url = $(e.target).val();
+      if (Session.equals('newGoodStuffItemUrl', url))
+        return; // url not changed
+      if (Match.test(url, Match.URL)) {
+        Session.set('newGoodStuffItemUrl', url);
+        analyzeWebpage(url); // fetch webpage content
+      }
+    }, 100);
   }
 });
 
@@ -53,6 +64,38 @@ Template.goodStuff.rendered = function() {
 Template.newGoodStuffItem.rendered = function() {
   /* empty */
 }
+
+
+
+
+// HELPERS
+
+var analyzeWebpage = function(url) {
+  log('analyze webpage: ' + url);
+  Meteor.call('request', url, function(err, content) {
+    if (err) return log(err);
+    var title = "", subtitle = "", description = "";
+
+    if (title = /<title>((.|\n)*)<\/title>/i.exec(content))
+      title = title[1] && title[1].trim() || "";
+    if (subtitle = /<h1(.*)>(.*)<\/h1>/i.exec(content))
+      subtitle = subtitle[2] && subtitle[2].trim() || "";
+    if (description = /<meta(\s*)name=\"description\"(\s*)content=\"(.*)\"/i.exec(content))
+      description = description[3] || "";
+
+    var titleParts = title.split(/\s[\|\-\/]\s/);
+    if (titleParts.length) {
+      title = _.first(titleParts);
+      subtitle = _.last(titleParts);
+    }
+
+    $("#newGoodStuffItem .details").removeClass('hide');
+    $("#newGoodStuffItem #gs_title").val( title );
+    $("#newGoodStuffItem #gs_subtitle").val( subtitle );
+    $("#newGoodStuffItem #gs_description").val( description );
+  });
+}
+
 
 
 

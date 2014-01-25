@@ -37,5 +37,13 @@ Meteor.methods({
       throw new Meteor.Error(500, "Unknow broadcast user");
 
     return broadcastUser;
+  },
+
+  // fetching a webpage and return the content
+  'request': function(url) {
+    if (!Meteor.userId()) 
+      throw new Meteor.Error(500, "Not authorized")
+    return HTTP.get(url).content;
   }
+
 });
