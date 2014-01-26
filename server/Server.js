@@ -1,19 +1,24 @@
+// XXX temporary disabled because of lacking support for allowFrameOrigin()
+//
+// // Browser Policy
 
-// edit the security policy
-BrowserPolicy.framing.disallow();
-BrowserPolicy.content.disallowInlineScripts();
-BrowserPolicy.content.disallowEval();
-BrowserPolicy.content.allowInlineStyles();
+// // global rules
+// BrowserPolicy.framing.disallow();
+// BrowserPolicy.content.disallowInlineScripts();
+// BrowserPolicy.content.disallowEval();
+// BrowserPolicy.content.allowInlineStyles();
+// BrowserPolicy.content.allowImageOrigin("*"); // XXX security issue !!!
+// BrowserPolicy.content.allowConnectOrigin("*");  // XXX security issue ??? (default in Meteor)
 
-// security policy for specific content types
-// possible types: script, object, image, media, font, and connect.
-BrowserPolicy.content.allowScriptOrigin("http://api.tiles.mapbox.com");
-BrowserPolicy.content.allowScriptOrigin('http://www.google-analytics.com');
-BrowserPolicy.content.allowStyleOrigin('http://api.tiles.mapbox.com');
-BrowserPolicy.content.allowStyleOrigin('http://fonts.googleapis.com');
-BrowserPolicy.content.allowFontOrigin('http://themes.googleusercontent.com');
-BrowserPolicy.content.allowImageOrigin("*"); // XXX security issue !!!
-BrowserPolicy.content.allowConnectOrigin("*");  // XXX security issue ??? (default in Meteor)
+// // restricted rules, allow some website
+// BrowserPolicy.content.allowFrameOrigin("http://a.tiles.mapbox.com");
+// BrowserPolicy.content.allowScriptOrigin("http://api.tiles.mapbox.com");
+// BrowserPolicy.content.allowScriptOrigin('http://www.google-analytics.com');
+// BrowserPolicy.content.allowStyleOrigin('http://api.tiles.mapbox.com');
+// BrowserPolicy.content.allowStyleOrigin('http://fonts.googleapis.com');
+// BrowserPolicy.content.allowFontOrigin('http://themes.googleusercontent.com');
+
+
 
 
 
