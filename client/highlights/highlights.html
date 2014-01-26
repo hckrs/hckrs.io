@@ -1,49 +1,51 @@
 <template name="highlights">
   <div id="highlights">
+  	<div id="onePageScroll">
   	
-  	{{#each highlights}}
-	  	<section>
-	  		<div class="photo" style="background-image:url({{imageUrl}});"></div>
-		  	<div class="details">
-		  		
-		  		{{#if title}}
-			  		<span class="title">{{title}}</span>
-			  	{{/if}}
-		  		
-		  		{{#if subtitle}}
-			  		<span class="subtitle">{{subtitle}}</span>
-			  	{{/if}}
-			  	
-			  	{{#if eventLocation}}
-			  		<span class="event-location"><strong>{{eventLocation}}</strong></span>
-			  	{{/if}}
+	  	{{#each highlights}}
+		  	<section>
+		  		<div class="photo" style="background-image:url({{imageUrl}});"></div>
+			  	<div class="details">
+			  		
+			  		{{#if title}}
+				  		<span class="title">{{title}}</span>
+				  	{{/if}}
+			  		
+			  		{{#if subtitle}}
+				  		<span class="subtitle">{{subtitle}}</span>
+				  	{{/if}}
+				  	
+				  	{{#if eventLocation}}
+				  		<span class="event-location"><strong>{{eventLocation}}</strong></span>
+				  	{{/if}}
 
-			  	{{#if eventDate}}
-			  		<span class="event-date">{{Calendar eventDate}}</span>
-			  	{{/if}}
-			  	
-			  	{{#if description}}
-			  		<div class="description">{{description}}</div>
-				  {{/if}}
-				  
-				  {{#if website}}
-			  		<a href="{{website}}" class="website">{{website}}</a>
-				  {{/if}}
-				  
-				  {{#if userId}}
-					  {{#with user userId}}
-				  		<div class="user">
-				  			<a href="{{pathFor 'hacker'}}" class="hackers-name">
-					  			<div style="background-image:url({{profile.picture}});" class="pictureView small" style="cursor: pointer;"></div>
-					  			{{profile.name}}
-					  		</a>
-				  		</div>
-			  		{{/with}}
-				  {{/if}}
+				  	{{#if eventDate}}
+				  		<span class="event-date">{{Calendar eventDate}}</span>
+				  	{{/if}}
+				  	
+				  	{{#if description}}
+				  		<div class="description">{{description}}</div>
+					  {{/if}}
+					  
+					  {{#if website}}
+				  		<a href="{{website}}" class="website">{{website}}</a>
+					  {{/if}}
+					  
+					  {{#if userId}}
+						  {{#with user userId}}
+					  		<div class="user">
+					  			<a href="{{pathFor 'hacker'}}" class="hackers-name">
+						  			<div style="background-image:url({{profile.picture}});" class="pictureView small" style="cursor: pointer;"></div>
+						  			{{profile.name}}
+						  		</a>
+					  		</div>
+				  		{{/with}}
+					  {{/if}}
 
-		  	</div>
-		  </section>
-		 {{/each}}
+			  	</div>
+			  </section>
+			 {{/each}}
 
+		</div>
   </div>
 </template>
