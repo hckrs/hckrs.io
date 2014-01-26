@@ -1,5 +1,8 @@
 if (Meteor.isClient) {
 
+  Router.reload = function() {
+    Router.go(location.pathname + location.search + location.hash); 
+  }
   
   // ROUTES 
 

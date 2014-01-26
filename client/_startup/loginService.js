@@ -36,7 +36,7 @@ var afterLogin = function() {
   else if(currentRoute === 'frontpage')
     goToEntryPage();
   else // reload page to trigger route actions again
-    Router.go(location.pathname + location.search + location.hash); 
+    Router.reload();
 
 }
 
@@ -175,8 +175,8 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
       $(document).scrollTop(0);
       if (err) log(err);
       else {
-        setupSubscriptions();
         goToEntryPage();
+        setupSubscriptions();
       }
     });
   }
@@ -194,8 +194,8 @@ checkAccess = function() { /* GLOBAL, called from router.js */
         $(document).scrollTop(0);
         if (err) log(err);
         else {
-          setupSubscriptions();
           goToEntryPage();
+          setupSubscriptions();
         }
       });
     }
