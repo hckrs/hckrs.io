@@ -18,9 +18,10 @@ Template.newGoodStuffItem.events({
       data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
     GoodStuffItems.insert(data);
   },
-  'keydown, keypress, keyup, paste, blur, focus #gs_website': function(e) {
+  'paste #gs_website, keyup #gs_website': function(e) {
+    var $input = $(e.currentTarget);
     Meteor.setTimeout(function() {
-      var url = $(e.target).val();
+      var url = $input.val();
       if (Session.equals('newGoodStuffItemUrl', url))
         return; // url not changed
       if (Match.test(url, Match.URL)) {
