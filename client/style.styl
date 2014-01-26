@@ -108,10 +108,21 @@ a img {
   margin: 0 auto;
   width: 100%;
 
+  .logo-small{
+    float: left;
+    height: 63px;
+    width: 190px;
+    background-image: url('/img/logo.svg');
+
+  }
+
   .content {
+    position: relative;
     margin: $pagePaddingHeight $pagePaddingWidth;
   }
 }
+
+
 
 .header.absolute {
   position: absolute;
@@ -120,14 +131,6 @@ a img {
   left: 0px;
   z-index: 2; 
   background-color: rgba(0,0,0,0.4);
-}
-
-.logo-small{
-  float: left;
-  height: 63px;
-  width: 190px;
-  background-image: url('/img/logo.svg');
-
 }
 
 .header.inversed {
@@ -175,43 +178,28 @@ a.menu:hover{
 
 .header {
 
-  .right {
-    position: absolute;
-    right: $pagePaddingWidth;
-    top: 0px;
+  .account {
+    float: right;
   }
 
   .karma{
     font-size: 1.8em;
     float: left;
-    margin-top: 40px;
+    margin-top: 27px;
     margin-right: 24px;
   }
 
-  .pictureViewSmall {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    margin: 0px;
+  .dropdown {
+    float: right;
+  }
+
+  .dropdown-toggle {
     padding: 0px;
-    border-radius: 32px;
-    background-position: center; 
-    background-size: cover;
-    text-align: center;
-    color: white;
-    margin: auto;
+    margin: 0px;
   }
 
-  .pull-right{
-    float: right;
-  }
-
-  .dropdown-toggle{
-    float: right;
-    font-size: 2em;
-  }
-
-  .dropdown-menu{
+  .dropdown-menu {
+    left: -90px;
     margin-top: -13px;
   }
 
