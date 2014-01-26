@@ -222,6 +222,8 @@ var addDemoItems = function() {
   ];
 
   _.each(items, function(item) {
+    if (_.first(item.imageUrl) == '/')
+      item.imageUrl = Meteor.absoluteUrl(item.imageUrl.substring(1));
     if (!GoodStuffItems.findOne(item)) {
       GoodStuffItems.insert(item);
     }
