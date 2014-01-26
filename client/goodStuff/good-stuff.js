@@ -71,53 +71,56 @@ Template.newGoodStuffItem.rendered = function() {
 // HELPERS
 
 analyzeWebpage = function(url) {
-  log('analyze webpage: ' + url);
-  Meteor.call('requestWebpageMetadata', url, function(err, meta) {
-    if (err) return log(err);
+  
+  // we use YQL to query the webpage
+  var yql = new YQL(url);
+  
+  // retrieve meta data from webpage
+  yql.metadata(function(meta) {
+    log('meta', meta)
     
-    // decode html entities
-    meta.title = decodeHtmlEntities( meta.title );
-    meta.subtitle = decodeHtmlEntities( meta.subtitle );
-    meta.description = decodeHtmlEntities( meta.description );
-
     // fill data into form
     $("#newGoodStuffItem .details").removeClass('hide');
-    $("#newGoodStuffItem #gs_title").val( meta.title );
-    $("#newGoodStuffItem #gs_subtitle").val( meta.subtitle );
+    $("#newGoodStuffItem #gs_title").val( _.first(meta.titleParts) );
+    $("#newGoodStuffItem #gs_subtitle").val( _.last(meta.titleParts) );
     $("#newGoodStuffItem #gs_description").val( meta.description );
 
+    // retrieve images form webpage
+    yql.contentSearch('img', function(images) {
+      images = _.pluck(images, 'src');
+      log('img', images);
 
-    /* handle images */
+      /* handle images */
 
-    // load an image into the DOM, so we can retrieve the image size
-    var loadImage = function(url, cb) {
-      $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
-    }
+      // load an image into the DOM, so we can retrieve the image size
+      var loadImage = function(url, cb) {
+        $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
+      }
 
-    // filter the largest 20 pictures
-    var imagesLoaded = function(images) {
-      var minSize = function(img) { return Math.min(img.width, img.height); };
-      var maxSize = function(img) { return Math.max(img.width, img.height); };
-      images = _.reject(images, function(img) { return minSize(img) < 180; });
-      images = _.sortBy(images, maxSize).reverse();
-      images = _.first(images, 20);
-      createImageChooser(images);
-    }
+      // filter the largest 20 pictures
+      var imagesLoaded = function(images) {
+        var minSize = function(img) { return Math.min(img.width, img.height); };
+        var maxSize = function(img) { return Math.max(img.width, img.height); };
+        images = _.reject(images, function(img) { return minSize(img) < 180; });
+        images = _.sortBy(images, maxSize).reverse();
+        images = _.first(images, 20);
+        createImageChooser(images);
+      }
 
-    // create image chooser
-    var createImageChooser = function(images) {
-      $("#newGoodStuffItem .images").append(images);
-    }
+      // create image chooser
+      var createImageChooser = function(images) {
+        $("#newGoodStuffItem .images").append(images);
+      }
 
-    // get the 20 largest pictures, then create the image chooser
-    async.map(meta.images, loadImage, succeed(imagesLoaded));
+      // get the 20 largest pictures, then create the image chooser
+      async.map(images, loadImage, succeed(imagesLoaded));
+
+    });
 
   });
+    
+
 }
-
-
-
-
 
 
 
