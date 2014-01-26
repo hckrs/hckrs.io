@@ -43,7 +43,7 @@ omitEmpty = function(o) {
 
 // find a value in an object by giving a path
 // pathValue(user, "profile.name") --> user['profile']['name']
-var pathValue = function(obj, path) {
+pathValue = function(obj, path) {
   var paths = path.split('.')
   var current = obj;
   _.each(paths, function(path) {
