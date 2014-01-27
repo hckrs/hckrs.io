@@ -5,6 +5,32 @@
   width: 100%;
   height: 100%;
 
+
+  img.up, img.down{
+    height: 30px;
+    width: 55px;
+    padding: 24px;
+  }
+
+  a.up, a.down {
+    margin: auto;
+    left: 50%;
+    right: 50%;
+    position: absolute;
+    z-index: 1000000;
+    cursor: pointer;
+    margin-left: -48px;
+    border: rgba(0,0,0,0); 
+  }
+
+  a.up{
+    top: 100px;
+  }
+
+  a.down{
+    bottom: 0px;
+  }
+
   .photo {
     position: absolute;
     width: 100%;
