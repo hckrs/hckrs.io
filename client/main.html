@@ -142,27 +142,26 @@
     
     <H2>Share the love</h2>
 
-    <div class="available-slots"></div>
-      <div class="available-slot"></div>
-      <div class="available-slot"></div>
-      <div class="available-slot"></div>
-    </div>
-    <div class="available-slots">
-      <br>We trust you to invite awesome hackers to the community.<br/>You can use this personal URL to invite <strong>{{unusedTotal}}</strong> people:
-    </div>
-    
-    <p><strong>{{link}}</strong></p>
-
     {{#if invitedUsers}}
       <p><br/>
-        You already invited:
         {{#each invitedUsers}}
-          <span class="invite used">
-            <a href="{{pathFor 'hacker'}}"><strong>{{screenName}}</strong></a>
+          <span class="invited">
+            <a href="{{pathFor 'hacker'}}" title="{{screenName}}"><div style="background-image:url({{profile.picture}});" class="pictureView small"></div></a>
           </span>
         {{/each}}
       </p>
     {{/if}}
+
+    <div class="available-slots">
+
+      <div class="available-slot"></div>
+      <div class="available-slot"></div>
+      <div class="available-slot"></div>
+
+      <div class="invitation-text"><p>We trust you to invite awesome hackers to the community.<br/>This personal invitation URL gives acces to <strong>{{unusedTotal}}</strong> persons:</p>
+      <p><strong>{{link}}</strong></p></div>
+
+    </div>
 
   </div>
 </template>

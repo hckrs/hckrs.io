@@ -441,33 +441,45 @@ a.menu:hover{
   line-height: 48px;
 }
 
+
+/* HACKERS LIST */
+
 #invitations{
 
   .available-slots{
     margin-top: 24px;
     margin-bottom: 24px;
     float: left;
-  }
-
-  .available-slot{
-    width: 64px;
-    height: 64px;
-    float: left;
-    border-radius: 32px;
-    border: 3px dashed white;
-    margin-right: 12px;
-    opacity: 0.5;
-  }
-
-  .invitations-text{ /* can't make this work, problem with selector ? */
-    margin-top: 40px;
     clear: both;
-  }
 
-  .invite{
-    padding-right: 5px;
-  }
+    .available-slot{
+      width: 64px;
+      height: 64px;
+      float: left;
+      border-radius: 32px;
+      background-color: rgba(255,255,255,0.1);
+      margin-right: 12px;
+      text-align: center;
+    }
 
+    .available-slot:before{
+      content: "?";
+      margin: auto;
+      font-size: 2.5em;
+      line-height: 1.9em;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .invitation-text{ /* can't make this work, problem with selector ? */
+      padding-top: 30px;
+      clear: both;
+    }
+
+    .invited{
+
+    }
+
+  }
 }
 
 
