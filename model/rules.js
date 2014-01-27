@@ -94,7 +94,7 @@ GoodStuffItems.allow({
       '_id': String,
       'title': String,
       "website": Match.URL,
-      'imageUrl': Match.Optional(Match.URL),
+      'imageUrl': Match.URL,
       "subtitle": Match.Optional(String),
       "description": Match.Optional(String),
       "eventLocation": Match.Optional(String),

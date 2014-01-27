@@ -1,36 +1,8 @@
+Session.set('newGoodStuffItem', false);
 
-
-
-// EVENTS
-// handle user interactions
-
-Template.goodStuff.events({
-  /* empty */
-});
-
-Template.newGoodStuffItem.events({
-  'submit form': function(e) {
-    e.preventDefault();
-    var data = $(e.currentTarget).serializeObject();
-    if (data.costs)
-      data.costs = parseInt(data.costs);
-    if (data.eventDate)
-      data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
-    GoodStuffItems.insert(data);
-  },
-  'paste #gs_website, keyup #gs_website': function(e) {
-    var $input = $(e.currentTarget);
-    Meteor.setTimeout(function() {
-      var url = $input.val();
-      if (Session.equals('newGoodStuffItemUrl', url))
-        return; // url not changed
-      if (Match.test(url, Match.URL)) {
-        Session.set('newGoodStuffItemUrl', url);
-        analyzeWebpage(url); // fetch webpage content
-      }
-    }, 100);
-  }
-});
+// use local temporary collection to build up a good-stuff item
+// at the end the item can be inserted in the real collection.
+var previewItem = new Meteor.Collection(null);
 
 
 
@@ -39,18 +11,75 @@ Template.newGoodStuffItem.events({
 // TEMPLATE DATA
 // feed templates with data
 
-Template.goodStuff.helpers({ 
+Template.goodStuffGrid.helpers({ 
   'goodStuff': function() {
     return GoodStuffItems.find({}, {sort: {createdAt: -1}}).fetch();
   },
-  'user': function(userId) {
+});
+
+Template.goodStuffItem.helpers({
+  'relatedUser': function(userId) {
     return Users.findOne(userId);
+  },
+  'active': function() {
+    return this.isActive ? 'active' : '';
   }
 });
 
 Template.newGoodStuffItem.helpers({
-  /* empty */
+  'previewItem': function() {
+    return previewItem.findOne();
+  }
 });
+
+
+
+
+// EVENTS
+// handle user interactions
+
+Template.pasteDroplet.events({
+  'mouseover #pasteDroplet': function() {
+    focusPasteDroplet();
+  },
+  'blur input': function() {
+    blurPasteDroplet();
+  },
+  'paste input': function(event) {
+    var url = getClipboardData(event);
+    if (!Match.test(url, Match.URL))
+      return alert('Invalid URL');
+    openNewItem(url); //create a new item
+  }
+});
+
+Template.newGoodStuffItem.events({
+  'submit form': function(event) {
+    event.preventDefault();
+    saveNewItem(); // save & close
+  },
+  'click .cancel': function() { 
+    cancelNewItem(); // reset & close
+  },
+  'keyup input': function(event) { 
+    var $elm = $(event.currentTarget); //input element
+    var field = $elm.attr('name');
+    var value = $elm.val();
+    updatePreviewItem(field, value, true);
+  },
+  'click .arrow-left': function() {
+    slideImage(1);
+  },
+  'click .arrow-right': function() {
+    slideImage(-1);
+  }
+});
+
+
+
+
+
+
 
 
 
@@ -58,69 +87,172 @@ Template.newGoodStuffItem.helpers({
 // RENDERING
 // managing jquery stuff
 
-Template.goodStuff.rendered = function() {
-  var msnry = new Masonry("#goodStuffGrid");
+Template.pasteDroplet.rendered = function() {
+  focusPasteDroplet();
 }
 
-Template.newGoodStuffItem.rendered = function() {
-  /* empty */
+Template.goodStuffGrid.rendered = function() {
+  var msnry = new Masonry("#goodStuffMasonry");
 }
 
 
 
 
-// HELPERS
 
-analyzeWebpage = function(url) {
-  
-  // we use YQL to query the webpage
+
+
+
+
+// ACTIONS
+
+
+var focusPasteDroplet = function() {
+  $("#pasteDroplet .on-active").show();
+  $("#pasteDroplet .on-inactive").hide();
+  $("#pasteDroplet input").focus();
+}
+
+var blurPasteDroplet = function() {
+  $("#pasteDroplet .on-active").hide();
+  $("#pasteDroplet .on-inactive").show();
+  if (!Session.get('newGoodStuffItem'))
+    setTimeout(focusPasteDroplet, 10); // directly focusing again
+}
+
+var openNewItem = function(url) {
+  previewItem.clear();
+  previewItem.insert({website: url});
+  Session.set('newGoodStuffItem', true);
+  autoFillIn(url);
+}
+
+var closeNewItem = function() {
+  Session.set('newGoodStuffItem', false);  
+  focusPasteDroplet();
+  previewItem.clear();
+}
+
+var cancelNewItem = function() {
+  closeNewItem();  
+}
+
+var updatePreviewItem = function(key, val, showInPreview) {
+  var itemId = previewItem.findOne()._id;  
+  previewItem.update(itemId, {$set: _.object([key], [val])});
+  if (showInPreview)
+    activatePreview();
+}
+
+var saveNewItem = function() {
+  var item = previewItem.findOne();
+  item = _.omit(item, 'images', 'isActive');
+
+  //   if (data.costs)
+  //     data.costs = parseInt(data.costs);
+  //   if (data.eventDate)
+  //     data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
+
+  GoodStuffItems.insert(item);
+  closeNewItem();
+}
+
+var activeTimer;
+var activatePreview = function() {
+  if (activeTimer) Meteor.clearTimeout(activeTimer);
+  var item = previewItem.findOne(); 
+  previewItem.update(item._id, {$set: {'isActive': true}});
+  activeTimer = Meteor.setInterval(function() {
+    previewItem.update(item._id, {$unset: {'isActive': 0}});
+  }, 4000);
+}
+
+var slideImage = function(x) {
+  var item = previewItem.findOne();
+  if (!_.isArray(item.images)) return;
+  var length = item.images.length;
+  var index = _.indexOf(item.images, item.imageUrl) + x;
+  if (index === -1) index = length - 1;
+  if (index === length) index = 0;
+  var imageUrl = item.images[index] || "";
+  updatePreviewItem('imageUrl', imageUrl);
+}
+
+
+
+
+// AUTOFILL 
+// fill the form with webpage data
+
+var autoFillIn = function(url) {
+  async.series([
+    function(cb) { getMetadata(url, _.compose(cb, fillInMetadata)); },
+    function(cb) { getImages(url, _.compose(cb, fillInImages)); },
+    function(cb) { getKeywords(url, _.compose(cb, fillInKeywords)); }
+  ]);
+}
+
+var fillInMetadata = function(meta) {
+  log('meta', meta);
+  updatePreviewItem('title', meta.title);
+  updatePreviewItem('description', meta.description);
+  if (meta.titleParts.length > 1) {
+    updatePreviewItem('title', _.first(meta.titleParts));
+    updatePreviewItem('subtitle', _.last(meta.titleParts));
+  }
+}
+
+var fillInImages = function(images) {
+  log('images', images);
+  updatePreviewItem('images', images || []);
+  updatePreviewItem('imageUrl', images[0] || "");
+}
+
+var fillInKeywords = function(keywords) {
+  log('keywords', keywords);
+}
+
+
+
+
+// GET WEBPAGE DATA
+// retrieve webpage and extract data
+
+var getMetadata = function(url, callback) {
   var yql = new YQL(url);
-  
-  // retrieve meta data from webpage
-  yql.metadata(function(meta) {
-    log('meta', meta)
-    
-    // fill data into form
-    $("#newGoodStuffItem .details").removeClass('hide');
-    $("#newGoodStuffItem #gs_title").val( _.first(meta.titleParts) );
-    $("#newGoodStuffItem #gs_subtitle").val( _.last(meta.titleParts) );
-    $("#newGoodStuffItem #gs_description").val( meta.description );
+  yql.metadata(callback);
+}
 
-    // retrieve images form webpage
-    yql.contentSearch('img', function(images) {
+var getImages = function(url, callback) {
+  var yql = new YQL(url);
+  yql.contentSearch('img', function(images) {
+
+    images = _.pluck(images, 'src');
+
+    // load an image into the DOM, so we can retrieve the image size
+    var loadImage = function(url, cb) {
+      $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
+    }
+
+    // filter the largest 20 pictures
+    var imagesLoaded = function(images) {
+      var minSize = function(img) { return Math.min(img.width, img.height); };
+      var maxSize = function(img) { return Math.max(img.width, img.height); };
+      images = _.reject(images, function(img) { return minSize(img) < 180; });
+      images = _.sortBy(images, maxSize).reverse();
+      images = _.first(images, 20);
       images = _.pluck(images, 'src');
-      log('img', images);
+      callback(images);
+    }
 
-      /* handle images */
-
-      // load an image into the DOM, so we can retrieve the image size
-      var loadImage = function(url, cb) {
-        $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
-      }
-
-      // filter the largest 20 pictures
-      var imagesLoaded = function(images) {
-        var minSize = function(img) { return Math.min(img.width, img.height); };
-        var maxSize = function(img) { return Math.max(img.width, img.height); };
-        images = _.reject(images, function(img) { return minSize(img) < 180; });
-        images = _.sortBy(images, maxSize).reverse();
-        images = _.first(images, 20);
-        createImageChooser(images);
-      }
-
-      // create image chooser
-      var createImageChooser = function(images) {
-        $("#newGoodStuffItem .images").append(images);
-      }
-
-      // get the 20 largest pictures, then create the image chooser
-      async.map(images, loadImage, succeed(imagesLoaded));
-
-    });
+    // get the 20 largest pictures, then create the image chooser
+    async.map(images, loadImage, succeed(imagesLoaded));
 
   });
-    
+}
 
+var getKeywords = function(url, callback) {
+  // XXX TODO
+  callback({});
 }
 
 
@@ -128,7 +260,18 @@ analyzeWebpage = function(url) {
 
 
 
-// DEMO
+
+
+
+
+
+
+
+
+
+
+
+// DEMO items
 // adding demo items on startup
 
 Meteor.startup(function() {

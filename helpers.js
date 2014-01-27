@@ -171,6 +171,20 @@ geocode = function(address, cb) {
 
 if (Meteor.isClient) {
 
+  Meteor.Collection.prototype.clear = function() {
+    var remove = function(doc) { this.remove(doc._id); }.bind(this);
+    this.find().forEach(remove);
+  }
+
+  // get clipboard dat from paste-event
+  getClipboardData = function() {
+    if (window.clipboardData && window.clipboardData.getData) // IE
+      return window.clipboardData.getData('Text');
+    if (event.clipboardData && event.clipboardData.getData)
+      return event.clipboardData.getData('text/plain');
+    throw "Can't access the clipboard.";
+  }
+
   // check if user is logged in
   isLoggedIn = function() {
     return Session.equals('currentLoginState', 'loggedIn');
@@ -251,12 +265,12 @@ if (Meteor.isClient) {
 
   // template helper to use the value of a Session variable directly in the template
   Handlebars.registerHelper('Session', function(key) {
-    return Session.get('key');
+    return Session.get(key);
   });
 
   // template helper for testing if a Session variable equals a specified value
   Handlebars.registerHelper('SessionEquals', function(key, val) {
-    return Session.equals('key', val);
+    return Session.equals(key, val);
   });
 
   // template helper for stripping the protocol of an url

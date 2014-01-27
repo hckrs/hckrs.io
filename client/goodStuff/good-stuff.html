@@ -1,59 +1,91 @@
 <template name="goodStuff">
-  <div id="goodStuff" class="page">
-  	
-  	<div id="goodStuffGrid">
-	  	{{#each goodStuff}}
-		  	<div class="item" style="background-image:url({{imageUrl}});">
-		  		<a href="{{website}}" target="_blank" class="item-overlay" style="background-color: rgba({{color.r}}, {{color.g}}, {{color.b}}, 0.7);">
-		  			<div class="item-content">
-			  			<div class="title">{{title}}</div>
-			  			{{#if costs}}
-			  			<div class="price">{{Currency costs}}</div>
-			  			{{/if}}
-			  			<div class="subtitle">{{subtitle}}</div>
-			  			<div class="description">{{description}}</div>
-			  			<div class="event">
-			  				<span class="event-location">{{eventLocation}}</span>
-			  				<span class="event-date">{{Calendar eventDate}}</span>
-			  			</div>
-			  			{{#if userId}}
-					  		<div class="user">
-					  			{{#with user userId}}
-					  			<a href="{{pathFor 'hacker'}}" class="hackers-name">
-						  			<div style="background-image:url({{profile.picture}});" class="pictureView small" style="cursor: pointer;"></div>
-						  		</a>
-						  		{{/with}}
-					  		</div>
-						  {{/if}}
-			  		</div>
-		  		</a>
-			 	</div>
-		 	{{/each}}
-		 	{{> newGoodStuffItem}}
-		</div>
-  	
+  <div id="goodStuff">
+  	{{#if Session 'newGoodStuffItem'}}
+	  	{{> newGoodStuffItem}}
+  	{{/if}}
+  	{{> goodStuffGrid}}
   </div>
+</template>
+
+<template name="goodStuffGrid">
+	<div id="goodStuffGrid" class="page">
+		{{> pasteDroplet}}
+		<div id="goodStuffMasonry">
+	  	{{#each goodStuff}}
+		  	{{> goodStuffItem}}
+		 	{{/each}}
+		</div>
+	</div>
+</template>
+
+<template name="pasteDroplet">
+	<div id="pasteDroplet">
+		<div class="on-inactive">
+			Focus this block to add a new item
+		</div>
+		<div class="on-active hide">
+			Paste an URL (cmd + v)
+			<input type="text" id="goodStuffPasteUrl" />
+		</div>
+	</div>
+</template>
+
+<template name="goodStuffItem">
+	<div class="item {{active}}" style="background-image:url({{imageUrl}});">
+		<a href="{{website}}" target="_blank" class="item-overlay" style="background-color: rgba({{color.r}}, {{color.g}}, {{color.b}}, 0.7);">
+			<div class="item-content">
+  			<div class="title">{{title}}</div>
+  			{{#if costs}}
+  			<div class="price">{{Currency costs}}</div>
+  			{{/if}}
+  			<div class="subtitle">{{subtitle}}</div>
+  			<div class="description">{{description}}</div>
+  			<div class="event">
+  				<span class="event-location">{{eventLocation}}</span>
+  				<span class="event-date">{{Calendar eventDate}}</span>
+  			</div>
+  			{{#if userId}}
+		  		<div class="user">
+		  			{{#with relatedUser userId}}
+		  			<a href="{{pathFor 'hacker'}}" class="hackers-name">
+			  			<div style="background-image:url({{profile.picture}});" class="pictureView small" style="cursor: pointer;"></div>
+			  		</a>
+			  		{{/with}}
+		  		</div>
+			  {{/if}}
+  		</div>
+		</a>
+ 	</div>
 </template>
 
 <template name="newGoodStuffItem">
 	<div id="newGoodStuffItem">
-		<form id="newGoodStuffItemForm">
-			<input type="text" name="website" id="gs_website" placeholder="website"><sup>*</sup><br/>
+		<div class="container">
+			
+			<a href="#" class="cancel close-button">&times;</a>
 
-			<div class="details hide">
-				<input type="text" name="title" id="gs_title" placeholder="title"><sup>*</sup><br/>
-				<br/>
-				<input type="text" name="subtitle"  id="gs_subtitle" placeholder="subtitle"><br/>
-				<input type="text" name="description"  id="gs_description" placeholder="description"><br/>
-				<input type="text" name="eventLocation"  id="gs_eventLocation" placeholder="event location"><br/>
-				<input type="text" name="eventDate"  id="gs_eventDate" placeholder="event date DD-MM-YYYY (hh:mm)"><br/>
-				<input type="number" name="costs"  id="gs_costs" placeholder="costs"><br/>
-				<div class="images">
-					
+			{{#with previewItem}}
+			<form id="newGoodStuffItemForm">
+			
+				<div class="preview">
+					<a href="#" class="arrow-left">&lt;</a>
+					{{> goodStuffItem}}
+					<a href="#" class="arrow-right">&gt;</a>
 				</div>
-				<input type="text" name="imageUrl"  id="gs_imageUrl" placeholder="image url"><br/>
-				<input type="submit" value="submit" />
-			</div>
-		</form>
+
+				<div class="details">
+					<input type="text" name="title" id="gs_title" value="{{title}}" placeholder="title"><sup>*</sup><br/>
+					<input type="text" name="subtitle" value="{{subtitle}}"  id="gs_subtitle" placeholder="subtitle">
+				</div>
+
+				<div class="footer">
+					<button class="btn cancel">Cancel</button>
+					<button class="btn btn-primary" type="submit">Add</button>
+				</div>
+
+			</form>	
+			{{/with}}	
+
+		</div>
 	</div>
 </template>
