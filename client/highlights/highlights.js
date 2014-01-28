@@ -42,6 +42,7 @@ Template.highlights.rendered = function() {
     loop: false, // You can have the page loop back to the top/bottom when the user navigates at up/down on the first/last page.
     responsiveFallback: false // You can fallback to normal page scroll by defining the width of the browser in which you want the responsive fallback to be triggered. For example, set this to 600 and whenever the browser's width is less than 600, the fallback will kick in.
   });
+
 }
 
 Template.highlights.destroyed = function() {
@@ -64,7 +65,7 @@ var highlights = function() {
     {
       "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/app-dernier-metro.jpg",
-      "title": "Dernier métro",
+      "title": "Dernier métro asdasdasd asd asd asd",
       "subtitle": "web app Lyonnaise",
       "website": "http://github.com/yannlombard/derniermetro",
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
@@ -73,24 +74,18 @@ var highlights = function() {
     {
       "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/4K-screen.jpg",
-      "title": "Event 2",
-      "subtitle": "Test Subtitle",
-      "description": "Hier komt de description...",
+      "title": "4K is comming",
+      "subtitle": "Dell an Seiki launch cheap models",
       "website": "http://www.google.nl",
-      "eventLocation": "Utrecht",
-      "eventDate": newDate("2014-01-08 14:12"), //date YYYY-MM-DD mm:ss
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
     {
       "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/arduino.jpg",
-      "title": "Event 1",
-      "subtitle": "Test Subtitle",
-      "description": "Hier komt de description...",
-      "website": "http://www.google.nl",
-      "eventLocation": "Utrecht",
-      "eventDate": newDate("2014-01-16 17:10"), //date YYYY-MM-DD mm:ss
+      "title": "Ardruino shield",
+      "subtitle": "Available now",
+      "website": "http://www.ardruino.cc",
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
