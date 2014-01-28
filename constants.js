@@ -1,5 +1,22 @@
 // CONSTANTS 
 
+HACKING = ['web','apps','software','game','design','life','hardware','opensource'];
+
+ITEM_TYPES = [
+  'hack',
+  'video',
+  'book',
+  'article',
+  'audio',
+  'picture',
+  'event',
+  'work',
+  'show', // ???
+  'ask', // ???
+  'product',
+  'other'
+];
+
 SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"ActionScript"},{"name":"Ada"},{"name":"Android"},{"name":"Angular.js"},
 {"name":"Apache"},{"name":"ApacheConf"},{"name":"Apex"},

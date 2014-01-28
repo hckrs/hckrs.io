@@ -27,8 +27,19 @@ Template.goodStuffItem.helpers({
 });
 
 Template.newGoodStuffItem.helpers({
+  'hackingTypes': function() {
+    return HACKING;
+  },
+  'itemTypes': function() {
+    return ITEM_TYPES;
+  },
   'previewItem': function() {
     return previewItem.findOne();
+  },
+  'activeTag': function(type) {
+    var item = previewItem.findOne();
+    var tag = this.toString();
+    return hasTag(item, type, tag) ? 'active' : '';
   }
 });
 
@@ -72,6 +83,12 @@ Template.newGoodStuffItem.events({
   },
   'click .arrow-right': function() {
     slideImage(-1);
+  },
+  'click .tag': function(event) {
+    var $elm = $(event.currentTarget); // clicked element
+    var type = $elm.data('type');
+    var tag = $elm.data('tag');
+    toggleTag(type, tag);
   }
 });
 
@@ -98,6 +115,11 @@ Template.goodStuffGrid.rendered = function() {
 
 
 
+// helper function
+
+var hasTag = function(item, type, tag) {
+  return item.tags && _.contains(item.tags[type], tag);
+}
 
 
 
@@ -143,14 +165,22 @@ var updatePreviewItem = function(key, val, showInPreview) {
     activatePreview();
 }
 
-var saveNewItem = function() {
+var toggleTag = function(type, tag) {
   var item = previewItem.findOne();
-  item = _.omit(item, 'images', 'isActive');
+  var action = hasTag(item, type, tag) ? '$pull' : '$addToSet';
+  previewItem.update(item._id, _.object([ action ], [ _.object(['tags.'+type], [tag]) ]));
+}
 
-  //   if (data.costs)
-  //     data.costs = parseInt(data.costs);
-  //   if (data.eventDate)
-  //     data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
+var saveNewItem = function() {
+  var preview = previewItem.findOne();
+  var item = _.pick(preview, [
+    'title', 'subtitle', 'imageUrl',
+    'description', 'website', 'tags'
+  ]);
+
+  // XXX TODO
+  //   if (data.costs) data.costs = parseInt(data.costs);
+  //   if (data.eventDate) data.eventDate = moment(data.eventDate, 'DD-MM-YYYY hh:mm').toDate();
 
   GoodStuffItems.insert(item);
   closeNewItem();
@@ -184,10 +214,10 @@ var slideImage = function(x) {
 // fill the form with webpage data
 
 var autoFillIn = function(url) {
-  async.series([
+  async.parallel([
     function(cb) { getMetadata(url, _.compose(cb, fillInMetadata)); },
     function(cb) { getImages(url, _.compose(cb, fillInImages)); },
-    function(cb) { getKeywords(url, _.compose(cb, fillInKeywords)); }
+    function(cb) { getTags(url, _.compose(cb, fillInTags)); }
   ]);
 }
 
@@ -207,8 +237,12 @@ var fillInImages = function(images) {
   updatePreviewItem('imageUrl', images[0] || "");
 }
 
-var fillInKeywords = function(keywords) {
-  log('keywords', keywords);
+var fillInTags = function(data) {
+  log('tags', data);
+  updatePreviewItem('tags.hacking', data.hacking || []);
+  updatePreviewItem('tags.types', data.types || []);
+  updatePreviewItem('tags.keywords', data.keywords || []);
+  updatePreviewItem('keywords', data.keywords || []);
 }
 
 
@@ -233,26 +267,34 @@ var getImages = function(url, callback) {
       $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
     }
 
-    // filter the largest 20 pictures
+    // filter the largest 5 pictures
     var imagesLoaded = function(images) {
       var minSize = function(img) { return Math.min(img.width, img.height); };
       var maxSize = function(img) { return Math.max(img.width, img.height); };
-      images = _.reject(images, function(img) { return minSize(img) < 180; });
-      images = _.sortBy(images, maxSize).reverse();
-      images = _.first(images, 20);
-      images = _.pluck(images, 'src');
+      var reject = function(img) { return minSize(img) < 180; };
+      var images = _.chain(images).reject(reject).sortBy(maxSize).last(5).pluck('src').value();
       callback(images);
     }
 
-    // get the 20 largest pictures, then create the image chooser
+    // get the 5 largest pictures, then create the image chooser
     async.map(images, loadImage, succeed(imagesLoaded));
 
   });
 }
 
-var getKeywords = function(url, callback) {
-  // XXX TODO
-  callback({});
+var getTags = function(url, callback) {
+  var yql = new YQL(url);
+  yql.contentAnalysis(function(data) {
+    var categories = data.categories;
+    var entities = data.entities;
+    var keywords = _.uniq(_.map(entities, function(e) { return e.text.content; }));
+
+    callback({
+      hacking: [], //XXX find hacking types e.g. web, software, hardware
+      types: [], //XXX type of post e.g. product, article, video, feed 
+      keywords: keywords
+    });
+  });
 }
 
 

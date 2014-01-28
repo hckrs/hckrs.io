@@ -25,7 +25,7 @@ Users.deny({
     if (!_.isEqual(userId, doc._id))
       return true; /* deny */
 
-    var allowedHackingValues = ['web','apps','software','game','design','life','hardware','opensource'];
+    var allowedHackingValues = HACKING;
     var allowedAvailableValues = ['drink','lunch','email'];
     var allowedSocialPictures = _.values(doc.profile.socialPicture);
 
@@ -95,6 +95,11 @@ GoodStuffItems.allow({
       'title': String,
       "website": Match.URL,
       'imageUrl': Match.URL,
+      'tags': Match.Optional({
+        'hacking': Match.Optional(Match.AllIn(HACKING)),
+        'types': Match.Optional(Match.AllIn(ITEM_TYPES)),
+        'keywords': Match.Optional([String]),
+      }),
       "subtitle": Match.Optional(String),
       "description": Match.Optional(String),
       "eventLocation": Match.Optional(String),

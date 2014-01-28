@@ -128,6 +128,11 @@ var goodStuffItem = { /* scheme */
     g: Number, 
     b: Number
   },
+  tags: {
+    hacking: [String], // hacking types e.g. web, hardware, opensource
+    types: [String], // type of content e.g. post, review, product
+    keywords: [String], // associated keywords, any String allowed.
+  }
 }
 
 

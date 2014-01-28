@@ -93,12 +93,20 @@ if (Meteor.isServer) {
   GoodStuffItems.before.insert(function(userId, doc) {
     doc.createdAt = newDate();
     doc.userId = userId;
+    
+    _.defaults(doc, {
+      tags: {}
+    });
+    
+    _.defaults(doc.tags, {
+      hacking: [],
+      types: [],
+      keywords: []
+    });
+    
     return doc;
   });
 
-}
-
-if (Meteor.isServer) {
 
   // after updating
   GoodStuffItems.after.insert(function (userId, doc) {

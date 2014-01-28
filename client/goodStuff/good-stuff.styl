@@ -102,12 +102,15 @@
       width: 650px;
       margin: 80px auto;
       position: relative;
+      background-color: rgba(0,0,0,0.5);
+      box-shadow: 0px 0px 15px #000;
+      border-radius: 15px;
     }
     .close-button {
       display: block;
       position: absolute;
-      top: -20px;
-      right: 0px;
+      top: 20px;
+      right: 20px;
       color: white;
       font-size: 2em;
       font-weight: bold;
@@ -115,7 +118,10 @@
       &:hover { opacity: 1; }
     }
     #newGoodStuffItemForm > div {
-      padding: 0 100px;
+      padding: 15px 100px;
+    }
+    .url {
+      text-align: center;
     }
     .preview {
       position: relative;
@@ -124,8 +130,20 @@
         top: 80px;
         font-size: 2em; 
       }
-      .arrow-left { left: 0px; }
-      .arrow-right { right: 0px; }
+      .arrow-left { left: 40px; }
+      .arrow-right { right: 40px; }
+    }
+    .tags {
+      & > div { /* 1 level div's within .tags */
+        margin: 10px 0px; 
+      }
+      .tag {
+        display: inline-block;
+        cursor: pointer;
+      }
+      .tag.active {
+        color: green;
+      }
     }
     .item {
       width: auto;
