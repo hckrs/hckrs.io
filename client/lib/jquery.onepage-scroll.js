@@ -93,6 +93,26 @@
         onKeyboard = null;
 
     // modified by Jarno Le Conté
+    $.fn.getIndex = function() {
+      return $(settings.sectionContainer +".active").data("index");
+    }
+
+    // modified by Jarno Le Conté
+    $.fn.getTotalSections = function() {
+      return total;
+    }
+
+    // modified by Jarno Le Conté
+    $.fn.isFirstPage = function() {
+      return this.getIndex() === 1;
+    }
+
+    // modified by Jarno Le Conté
+    $.fn.isLastPage = function() {
+      return this.getIndex() === this.getTotalSections();
+    }
+
+    // modified by Jarno Le Conté
     $.fn.disable = function() {
       $('.onepage-pagination').remove();
       $("body").addClass('disabled-onepage-scroll');
