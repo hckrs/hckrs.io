@@ -1,10 +1,18 @@
 @import 'nib'
 
+#goodStuffMasonry{
+
+  /*border:1px solid red;*/
+  padding: 0px;
+  margin: 0px; 
+}
+
 #goodStuff {
 
   .item {
-    margin: 2px;
-    width: 24%;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    width: 24.3%;
     min-height: 220px;
     background-color: rgba(255,255,255,0.7);
     background-position: center;
@@ -20,17 +28,28 @@
       transition: opacity 0.3s, transform 0.2s;
       transform: translateY(300px);
       opacity: 0;
+      margin: 1px;
+
+        .icon{
+          margin: 12px;
+          float: right;
+        }
 
       .item-content {
-        padding: 15px;
+        padding: 24px;
         color: white;
-
+  
         .title {
           font-weight: bold;
           font-size: 1.6em;
+          line-height: 1.3em;
           float: left;
           margin-right: 8px;
-          margin-bottom: 8px;
+        }
+        .subtitle {
+          font-size: 1.6em;
+          line-height: 1.3em;
+          float: left;
         }
         .price{
           font-weight: bold;
@@ -38,15 +57,6 @@
           background-color: rgba(126,180,219,0.7);
           border-radius: 2px;
           padding: 3px 6px 3px 6px;
-        }
-        .subtitle {
-          font-size: 1.6em;
-          float: left;
-        }
-        .description {
-          margin: 1em 0px;
-          clear: both;
-          margin-top: 12px;
         }
         .event {
           clear: both;
@@ -56,7 +66,8 @@
         }
         .user {
           clear: both;
-          margin: 20px 0px;
+          border-top: 50px solid rgba(0,0,0,0); 
+          border: 5px solid red;
           .pictureView {
             float: left;
             margin-right: 5px;

@@ -32,18 +32,8 @@
 
 <template name="goodStuffItem">
 	<div class="item {{active}}" style="background-image:url({{imageUrl}});">
-		<a href="{{website}}" target="_blank" class="item-overlay" style="background-color: rgba({{color.r}}, {{color.g}}, {{color.b}}, 0.7);">
-			<div class="item-content">
-  			<div class="title">{{title}}</div>
-  			{{#if costs}}
-  			<div class="price">{{Currency costs}}</div>
-  			{{/if}}
-  			<div class="subtitle">{{subtitle}}</div>
-  			<div class="description">{{description}}</div>
-  			<div class="event">
-  				<span class="event-location">{{eventLocation}}</span>
-  				<span class="event-date">{{Calendar eventDate}}</span>
-  			</div>
+		<a href="{{website}}" target="_blank" class="item-overlay" style="background-color: rgba({{color.r}}, {{color.g}}, {{color.b}}, 0.85);">
+			<img src="img/icon-product.svg" title="product" class="icon" />
   			{{#if userId}}
 		  		<div class="user">
 		  			{{#with relatedUser userId}}
@@ -52,7 +42,17 @@
 			  		</a>
 			  		{{/with}}
 		  		</div>
-			  {{/if}}
+			{{/if}}	
+			<div class="item-content">
+	  			<div class="title">{{title}}</div>
+	  			{{#if costs}}
+	  			<div class="price">{{Currency costs}}</div>
+	  			{{/if}}
+	  			<div class="subtitle">{{subtitle}}</div>
+	  			<div class="event">
+	  				<span class="event-location">{{eventLocation}}</span>
+	  				<span class="event-date">{{Calendar eventDate}}</span>
+	  			</div>
   		</div>
 		</a>
  	</div>
