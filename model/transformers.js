@@ -68,15 +68,10 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
   
   Invitations._transform = function(doc) {
-    if (doc.receivingUser) {
-      var receiver = Meteor.users.findOne(doc.receivingUser);
-      if (receiver) { 
-        // add info of receiver
-        doc.name = receiver.profile.name;
-        doc.localRankHash = bitHash(receiver.localRank);
-        doc.globalRankHash = bitHash(receiver.globalRank);
-      }
-    }
+    // add info of receiving user
+    doc.receiver = function() {
+      return Meteor.users.findOne(doc.receivingUser);
+    } 
     return doc;  
   }
 }

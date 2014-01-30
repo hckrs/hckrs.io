@@ -425,12 +425,29 @@ a.menu:hover{
   background-size: cover;
   color: white;
   margin: auto;
-  background-color: #999;
+  background-color: rgba(255,255,255,0.1);
 
   &.small { /* element has also class 'small' */
     width: 64px;
     height: 64px;
     border-radius: 32px;
+  }
+
+  &.unknow:before { content: '?'; }
+  &.empty:before { content: '\1F60E'; }
+
+  &.unknow:before,
+  &.empty:before {
+    margin: auto;
+    font-size: 3.5em;
+    line-height: 3.5em;
+    color: rgba(255,255,255,0.4);
+  }
+
+  &.unknow.small:before,
+  &.empty.small:before {
+    font-size: 2.5em;
+    line-height: 2.4em;
   }
 
   &.clickable:hover {
@@ -451,37 +468,25 @@ a.menu:hover{
 
 #invitations{
 
-  .available-slots{
+  .slots{
     margin-top: 24px;
     margin-bottom: 24px;
     float: left;
     clear: both;
 
-    .available-slot{
-      width: 64px;
-      height: 64px;
+    .slot {
       float: left;
-      border-radius: 32px;
-      background-color: rgba(255,255,255,0.1);
       margin-right: 12px;
       text-align: center;
     }
 
-    .available-slot:before{
-      content: "?";
-      margin: auto;
-      font-size: 2.5em;
-      line-height: 1.9em;
-      color: rgba(255,255,255,0.4);
-    }
+    /* classes .pictureView, .small, .empty, .unknow
+       are defined within the .pictureView declaration
+       further in this file */
 
-    .invitation-text{ /* can't make this work, problem with selector ? */
+    .invitation-text { /* can't make this work, problem with selector ? */
       padding-top: 30px;
       clear: both;
-    }
-
-    .invited{
-
     }
 
   }
