@@ -13,7 +13,6 @@ var previewItem = new Meteor.Collection(null);
 
 Template.pasteDroplet.helpers({
   'OS': function() {
-    log($.client.OS)
     return $.client.OS;
   }
 });
@@ -29,7 +28,8 @@ Template.goodStuffItem.helpers({
     return Users.findOne(userId);
   },
   'itemType': function() {
-    return _.first(this.tags.types);
+    var types = this.tags && this.tags.types || [];
+    return _.first(types) || 'other';
   },
   'active': function() {
     return this.isActive ? 'active' : '';
@@ -89,10 +89,10 @@ Template.newGoodStuffItem.events({
     updatePreviewItem(field, value, true);
   },
   'click .arrow-left': function() {
-    slideImage(1);
+    slideImage(-1);
   },
   'click .arrow-right': function() {
-    slideImage(-1);
+    slideImage(1);
   },
   'click .tag': function(event) {
     var $elm = $(event.currentTarget); // clicked element
@@ -306,25 +306,52 @@ var getMetadata = function(url, callback) {
 }
 
 var getImages = function(url, callback) {
+  async.parallel([
+    async.apply(getGoogleImages, url),
+    async.apply(getSiteImages, url),
+  ], function(err, results) {
+    callback(_.uniq(_.flatten(results)));
+  });
+}
+
+var getGoogleImages = function(url, callback) {
+  var maxResults = 5;
+  Meteor.call('requestWebPageImages', url, maxResults, function(err, res) {
+    var images = _.pluck(res || [], 'src');
+    // XXX TODO remove images that doesn't exist
+    callback(err, images);
+  });
+}
+
+var getSiteImages = function(url, callback) {
   var yql = new YQL(url);
   yql.contentSearch('img', function(images) {
 
-    images = _.pluck(images, 'src');
-
     // load an image into the DOM, so we can retrieve the image size
     var loadImage = function(url, cb) {
-      $("<img />").on('load', function() { cb(null, this); }).attr('src', url);  
+      $("<img />")
+      .on('error', function() { cb(null, undefined); })
+      .on('load', function() { cb(null, this); })
+      .attr('src', url);  
     }
 
     // filter the largest 5 pictures
     var imagesLoaded = function(images) {
+      images = _.compact(images); // remove the ones that can't be loaded
       var minSize = function(img) { return Math.min(img.width, img.height); };
       var maxSize = function(img) { return Math.max(img.width, img.height); };
       var reject = function(img) { return minSize(img) < 180; };
       var images = _.chain(images).reject(reject).sortBy(maxSize).last(5).pluck('src').value();
-      callback(images);
+      callback(null, images);
     }
 
+    // extract sources
+    images = _.pluck(images, 'src');
+
+    // create absolute urls
+    var baseUrl = url.replace(/\?.*/, '');
+    images = _.map(images, _.partial(resolveURL, baseUrl));
+    
     // get the 5 largest pictures, then create the image chooser
     async.map(images, loadImage, succeed(imagesLoaded));
 
@@ -469,7 +496,7 @@ var addDemoItems = function() {
   _.each(items, function(item) {
     if (_.first(item.imageUrl) == '/')
       item.imageUrl = Meteor.absoluteUrl(item.imageUrl.substring(1));
-    if (!GoodStuffItems.findOne(item)) {
+    if (!GoodStuffItems.findOne(_.pick(item, 'imageUrl', 'title'))) {
       GoodStuffItems.insert(item);
     }
   });
