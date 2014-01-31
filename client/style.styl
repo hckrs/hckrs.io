@@ -416,6 +416,12 @@ a.menu:hover{
 
 /* HACKERS LIST */
 
+.pictureView-wrapper {
+  line-height: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
 .pictureView {
   position: relative;
   width: 180px;
@@ -431,6 +437,12 @@ a.menu:hover{
     width: 64px;
     height: 64px;
     border-radius: 32px;
+  }
+
+  &.mini { /* element has also class 'xsmall' */
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
   }
 
   &.unknow:before { content: '?'; }
@@ -453,6 +465,9 @@ a.menu:hover{
   &.clickable:hover {
     box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
     cursor: pointer;
+  }
+  &.clickable.mini:hover {
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
   }
 }
 

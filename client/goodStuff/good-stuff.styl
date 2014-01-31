@@ -10,30 +10,33 @@
 #goodStuff {
 
   .item {
+    position: relative;
     margin-right: 6px;
     margin-bottom: 6px;
     width: 24.3%;
-    min-height: 220px;
-    background-color: rgba(255,255,255,0.7);
-    background-position: center;
-    background-size: cover;
-    border-radius: 3px;
+    min-height: auto;
     overflow: hidden;
 
+    .type-icon {
+      position: absolute;
+      z-index: 2;
+      bottom: 5px;
+      right: 5px;
+    }
+
     .item-overlay {
+      position: absolute;
+      z-index: 1;
+      top: 0px;
+      left: 0px;
       display: block;
-      min-height: inherit;
-      border-radius: inherit;
+      min-height: 100%;
+      min-width: 100%;
       background-color: rgba(0,0,0,0.8);
       transition: opacity 0.3s, transform 0.2s;
       transform: translateY(300px);
       opacity: 0;
-      margin: 1px;
-
-        .icon{
-          margin: 12px;
-          float: right;
-        }
+      // margin: 1px;
 
       .item-content {
         padding: 24px;
@@ -51,27 +54,25 @@
           line-height: 1.3em;
           float: left;
         }
-        .price{
-          font-weight: bold;
-          float: right;
-          background-color: rgba(126,180,219,0.7);
-          border-radius: 2px;
-          padding: 3px 6px 3px 6px;
-        }
         .event {
           clear: both;
           .event-location {
             font-weight: bold;
           }
         }
+        .price{
+          position: absolute;
+          bottom: 5px;
+          left: 5px;
+          background-color: rgba(126,180,219,0.7);
+          border-radius: 2px;
+          padding: 3px 6px 3px 6px;
+          font-weight: bold;
+        }
         .user {
-          clear: both;
-          border-top: 50px solid rgba(0,0,0,0); 
-          border: 5px solid red;
-          .pictureView {
-            float: left;
-            margin-right: 5px;
-          }
+          position: absolute;
+          bottom: 5px;
+          right: 40px;
         }
       }
     }
