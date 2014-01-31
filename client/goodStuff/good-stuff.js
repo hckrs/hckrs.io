@@ -109,7 +109,46 @@ Template.pasteDroplet.rendered = function() {
 }
 
 Template.goodStuffGrid.rendered = function() {
-  var msnry = new Masonry("#goodStuffMasonry");
+
+  // settings
+  var _gutter = 6;
+  var _itemWidth = 320;
+  
+  // initialize grid
+  window.msnry = new Masonry("#goodStuffMasonry", {
+    'gutter': _gutter,
+    'itemSelector': '.item'
+  });
+
+  // resize handler
+  var resizeGrid = function() {
+    var width = $('#goodStuffGrid').width();
+    var columnCount = Math.floor(width / (_itemWidth+_gutter));
+    var columnWidth = width / columnCount - _gutter;
+    $('#goodStuffMasonry .item').width(columnWidth);
+    msnry.layout();
+  }
+  
+  // add resize listener (remove previous one)
+  $(window).off('resize', this.resizeHandler);
+  this.resizeHandler = resizeGrid;
+  $(window).on('resize', this.resizeHandler);
+
+  // correct layout after interval
+  // to ensure relayout on when images are loaded
+  if (this.intervalHandler) Meteor.clearInterval(this.intervalHandler);
+  this.intervalHandler = Meteor.setInterval(this.resizeHandler, 1000);
+  
+  // initial layout the grid
+  resizeGrid();
+}
+
+Template.goodStuffGrid.destroyed = function() {
+  // remove resize handler
+  $(window).off('resize', this.resizeHandler);
+
+  // remove interval handler
+  if (this.intervalHandler) Meteor.clearInterval(this.intervalHandler);
 }
 
 

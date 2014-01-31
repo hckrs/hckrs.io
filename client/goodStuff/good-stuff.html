@@ -9,8 +9,8 @@
 
 <template name="goodStuffGrid">
 	<div id="goodStuffGrid" class="page">
-		{{> pasteDroplet}}
 		<div id="goodStuffMasonry">
+      {{> pasteDroplet}}
 	  	{{#each goodStuff}}
 		  	{{> goodStuffItem}}
 		 	{{/each}}
@@ -19,12 +19,12 @@
 </template>
 
 <template name="pasteDroplet">
-	<div id="pasteDroplet">
+	<div id="pasteDroplet" class="item">
 		<div class="on-inactive">
 			Click here to add a new item
 		</div>
 		<div class="on-active hide">
-			Contribute by Pasting an URL (cmd + v)
+			Contribute by<br/>pasting an URL<br/><strong>&#8984;V</strong>
 			<input type="text" id="goodStuffPasteUrl" />
 		</div>
 	</div>
