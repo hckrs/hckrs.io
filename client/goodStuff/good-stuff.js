@@ -28,6 +28,9 @@ Template.goodStuffItem.helpers({
   'relatedUser': function(userId) {
     return Users.findOne(userId);
   },
+  'itemType': function() {
+    return _.first(this.tags.types);
+  },
   'active': function() {
     return this.isActive ? 'active' : '';
   }
@@ -380,6 +383,7 @@ var addDemoItems = function() {
       "title": "Dernier métro",
       "subtitle": "web app pour Lyon",
       "website": "http://yannlombard.github.io/derniermetro/",
+      "tags": { types: ['hack'] },
     },
     {
       "imageUrl": "/img/highlights/startupweekend-geneve.jpg",
@@ -389,6 +393,7 @@ var addDemoItems = function() {
       "eventDate": newDate("2014-02-21 19:00"), //date YYYY-MM-DD mm:ss
       "costs": 50.00,
       "website": "http://lyon.startupweekend.org",
+      "tags": { types: ['event'] },
     },
     // {
     //   "imageUrl": "/img/highlights/arduino.jpg",
@@ -402,18 +407,21 @@ var addDemoItems = function() {
       "subtitle": "crowd funded paper wallet",
       "website": "http://www.slimfoldwallet.com",
       "costs": 20.00,
+      "tags": { types: ['product'] },
     },
     {
       "imageUrl": "/img/highlights/4K-screen.jpg",
       "title": "Seiki 4K TV",
       "website": "http://tiamat.tsotech.com/4k-is-for-programmers",
       "costs": 600,
+      "tags": { types: ['product'] },
     },
     {
       "imageUrl": "/img/good-stuff/amazon-drone.jpg",
       "title": "20' delivery by Amazon",
       "subtitle": "welcome to the future",
       "website": "http://www.youtube.com/watch?v=98BIu9dpwHU",
+      "tags": { types: ['video'] },
     },
     {
       "imageUrl": "/img/good-stuff/dell-4K.jpg",
@@ -421,6 +429,7 @@ var addDemoItems = function() {
       "subtitle": "28\" screen",
       "website": "http://accessories.us.dell.com/sna/productdetail.aspx?c=us&l=en&cs=19&sku=210-ACBL",
       "costs": 600.00,
+      "tags": { types: ['product'] },
     },
     {
       "imageUrl": "/img/good-stuff/rasbery-pi.jpg",
@@ -428,12 +437,14 @@ var addDemoItems = function() {
       "subtitle": "rev.B",
       "website": "http://www.raspberrypi.org",
       "costs": 25.00,
+      "tags": { types: ['product'] },
     },
     {
       "imageUrl": "/img/good-stuff/seth-godin.jpg",
       "title": "Seth godin",
       "subtitle": "20' interview",
       "website": "http://www.youtube.com/watch?v=JecJzrIfdHg",
+      "tags": { types: ['video'] },
     },
     {
       "imageUrl": "/img/good-stuff/spark-core.jpg",
@@ -441,6 +452,7 @@ var addDemoItems = function() {
       "subtitle": "push code over WiFi",
       "description": "Hier komt de description...",
       "website": "https://www.spark.io",
+      "tags": { types: ['product'] },
       "costs": 40.00,
       "eventLocation": "",
     },
@@ -448,6 +460,7 @@ var addDemoItems = function() {
       "imageUrl": "/img/good-stuff/tim-ferris.png",
       "title": "Tim Ferris",
       "subtitle": "47' interview",
+      "tags": { types: ['video'] },
       "description": "How to master any skill",
       "website": "http://www.youtube.com/watch?v=AysWsbrtzMU",
     },

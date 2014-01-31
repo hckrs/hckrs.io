@@ -14,7 +14,8 @@ ITEM_TYPES = [
   'show', // ???
   'ask', // ???
   'product',
-  'other'
+  'other',
+  'location',
 ];
 
 SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
