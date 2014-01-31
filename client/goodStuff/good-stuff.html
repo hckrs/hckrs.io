@@ -21,10 +21,11 @@
 <template name="pasteDroplet">
 	<div id="pasteDroplet" class="item">
 		<div class="on-inactive">
-			Click here to add a new item
+			Click here to<br/>add a new item
 		</div>
 		<div class="on-active hide">
-			Contribute by<br/>pasting an URL<br/><strong>&#8984;V</strong>
+			Contribute by<br/>pasting an URL<br/>
+      <strong>{{#if equals OS 'Mac'}}&#8984;V{{else}}CTRL+V{{/if}}</strong>
 			<input type="text" id="goodStuffPasteUrl" />
 		</div>
 	</div>

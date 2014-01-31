@@ -11,6 +11,13 @@ var previewItem = new Meteor.Collection(null);
 // TEMPLATE DATA
 // feed templates with data
 
+Template.pasteDroplet.helpers({
+  'OS': function() {
+    log($.client.OS)
+    return $.client.OS;
+  }
+});
+
 Template.goodStuffGrid.helpers({ 
   'goodStuff': function() {
     return GoodStuffItems.find({}, {sort: {createdAt: -1}}).fetch();
