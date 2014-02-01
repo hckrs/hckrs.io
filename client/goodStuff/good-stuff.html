@@ -33,9 +33,9 @@
 
 <template name="goodStuffItem">
 	<div class="item {{active}}">
-    
+
     <img src="{{imageUrl}}" class="image" alt="" />
-    
+
     <img src="img/icon-{{itemType}}.svg" title="{{itemType}}" class="type-icon" />
 
 		<a href="{{website}}" target="_blank" class="item-overlay" style="background-color: rgba({{color.r}}, {{color.g}}, {{color.b}}, 0.85);">
@@ -65,25 +65,26 @@
 <template name="newGoodStuffItem">
 	<div id="newGoodStuffItem">
 		<div class="container">
-			
+
 			<a href="#" class="cancel close-button">&times;</a>
 
 			{{#with previewItem}}
 			<form id="newGoodStuffItemForm">
-			
+
         <div class="url">
           <a href="{{website}}" target="_blank">{{website}}</a>
         </div>
 
-				<div class="preview">
-					<a href="#" class="arrow-left">&lt;</a>
-					{{> goodStuffItem}}
-					<a href="#" class="arrow-right">&gt;</a>
-				</div>
+        <div class="details">
+          <input type="text" name="title" id="gs_title" value="{{title}}" placeholder="title">
+          <input type="text" name="subtitle" value="{{subtitle}}"  id="gs_subtitle" placeholder="subtitle">
+        </div>
 
-				<div class="details">
-					<input type="text" name="title" id="gs_title" value="{{title}}" placeholder="title"><br/>
-					<input type="text" name="subtitle" value="{{subtitle}}"  id="gs_subtitle" placeholder="subtitle">
+				<div class="preview">
+					<a href="#" class="arrow-left"><img src="/img/icon-arrow-left.svg" /></a>
+					{{> goodStuffItem}}
+					<a href="#" class="arrow-right"><img src="/img/icon-arrow-right.svg" /></a>
+
 				</div>
 
         <div class="tags">
@@ -109,8 +110,8 @@
 					<button class="btn btn-success" type="submit">Add</button>
 				</div>
 
-			</form>	
-			{{/with}}	
+			</form>
+			{{/with}}
 
 		</div>
 	</div>

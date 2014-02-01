@@ -1,22 +1,8 @@
 // CONSTANTS 
 
-HACKING = ['web','apps','software','game','design','life','hardware','opensource'];
+HACKING = ['web','apps','software','game','design','life','hardware','opensource'].sort();
 
-ITEM_TYPES = [
-  'hack',
-  'video',
-  'book',
-  'article',
-  'audio',
-  'picture',
-  'event',
-  'work',
-  'show', // ???
-  'ask', // ???
-  'product',
-  'other',
-  'location',
-];
+ITEM_TYPES = ["article", "ask", "audio", "book", "event", "hack", "location", "picture", "product", "show", "video", "work"];
 
 SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"ActionScript"},{"name":"Ada"},{"name":"Android"},{"name":"Angular.js"},

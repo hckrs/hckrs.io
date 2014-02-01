@@ -125,7 +125,7 @@ Template.goodStuffGrid.rendered = function() {
   var _itemWidth = 320;
   
   // initialize grid
-  window.msnry = new Masonry("#goodStuffMasonry", {
+  var msnry = new Masonry("#goodStuffMasonry", {
     'gutter': _gutter,
     'itemSelector': '.item'
   });
@@ -161,7 +161,13 @@ Template.goodStuffGrid.destroyed = function() {
   if (this.intervalHandler) Meteor.clearInterval(this.intervalHandler);
 }
 
-
+Template.newGoodStuffItem.rendered = function() {
+  var imageUrl = previewItem.findOne().imageUrl;
+  $("#newGoodStuffItem .item").css({
+    'background-image': 'url("' + (imageUrl || '/img/icon-picture-png.png') + '")', 
+    'background-size': imageUrl ? 'contain' : 'auto'
+  });
+}
 
 
 // helper function
@@ -278,6 +284,7 @@ var fillInMetadata = function(meta) {
     updatePreviewItem('title', _.first(meta.titleParts));
     updatePreviewItem('subtitle', _.last(meta.titleParts));
   }
+  Deps.flush();
 }
 
 var fillInImages = function(images) {
@@ -314,47 +321,34 @@ var getImages = function(url, callback) {
   });
 }
 
-var getGoogleImages = function(url, callback) {
-  var maxResults = 5;
-  Meteor.call('requestWebPageImages', url, maxResults, function(err, res) {
+// filter images that are load correctly and have the right size
+// return the 5 largest.
+var filterImages = function(images, cb) {
+  images = _.compact(images); // remove the ones that can't be loaded
+  var minSize = function(img) { return Math.min(img.width, img.height); };
+  var maxSize = function(img) { return Math.max(img.width, img.height); };
+  var reject = function(img) { return minSize(img) < 180 || minSize(img) > 1000; };
+  var images = _.chain(images).reject(reject).sortBy(maxSize).last(5).pluck('src').value();
+  cb(null, images);
+}
+
+// request Google Image Search from our webserver
+// then load images into DOM and remove the ones that can't be loaded
+var getGoogleImages = function(url, cb) {
+  Meteor.call('requestWebPageImages', url, 8, function(err, res) {
     var images = _.pluck(res || [], 'src');
-    // XXX TODO remove images that doesn't exist
-    callback(err, images);
+    async.waterfall([async.apply(async.map, images, loadImage), filterImages], cb);
   });
 }
 
-var getSiteImages = function(url, callback) {
+var getSiteImages = function(url, cb) {
+  var baseUrl = url.replace(/\?.*/, ''); //helper for creating abs urls
   var yql = new YQL(url);
+
   yql.contentSearch('img', function(images) {
-
-    // load an image into the DOM, so we can retrieve the image size
-    var loadImage = function(url, cb) {
-      $("<img />")
-      .on('error', function() { cb(null, undefined); })
-      .on('load', function() { cb(null, this); })
-      .attr('src', url);  
-    }
-
-    // filter the largest 5 pictures
-    var imagesLoaded = function(images) {
-      images = _.compact(images); // remove the ones that can't be loaded
-      var minSize = function(img) { return Math.min(img.width, img.height); };
-      var maxSize = function(img) { return Math.max(img.width, img.height); };
-      var reject = function(img) { return minSize(img) < 180; };
-      var images = _.chain(images).reject(reject).sortBy(maxSize).last(5).pluck('src').value();
-      callback(null, images);
-    }
-
-    // extract sources
-    images = _.pluck(images, 'src');
-
-    // create absolute urls
-    var baseUrl = url.replace(/\?.*/, '');
+    images = _.pluck(images || [], 'src');
     images = _.map(images, _.partial(resolveURL, baseUrl));
-    
-    // get the 5 largest pictures, then create the image chooser
-    async.map(images, loadImage, succeed(imagesLoaded));
-
+    async.waterfall([async.apply(async.map, images, loadImage), filterImages], cb);
   });
 }
 

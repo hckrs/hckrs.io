@@ -188,6 +188,15 @@ geocode = function(address, cb) {
 
 if (Meteor.isClient) {
 
+  // load an image into the DOM
+  // always return without error but the image can be undefined
+  loadImage = function(url, cb) {
+    $("<img />")
+    .on('error', function() { cb(null, undefined); })
+    .on('load', function() { cb(null, this); })
+    .attr('src', url);  
+  }
+
   Meteor.Collection.prototype.clear = function() {
     var remove = function(doc) { this.remove(doc._id); }.bind(this);
     this.find().forEach(remove);
