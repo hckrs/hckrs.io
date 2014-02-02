@@ -11,8 +11,9 @@
     .type-icon {
       position: absolute;
       z-index: 2;
-      bottom: 5px;
-      right: 5px;
+      bottom: 8px;
+      right: 8px;
+      /*height: 24px;*/
     }
 
     .item-overlay {
@@ -27,7 +28,7 @@
       transition: opacity 0.3s, transform 0.2s;
       transform: translateY(300px);
       opacity: 0;
-      // margin: 1px;
+      margin: 0px;
 
       .item-content {
         padding: 24px;
@@ -80,10 +81,12 @@
   #pasteDroplet {
     min-height: 142px;
     padding: 30px 0px;
-    background-color: rgba(150,150,150,0.4);
+    background-color: rgba(0,0,0,0.4);
     text-align: center;
     font-size: 1.7em;
     line-height: 2em;
+    border-top: 1px solid #828282;
+    border-bottom: 1px solid #373737;
     input {
       padding: 0px;
       margin: 0px;
@@ -108,9 +111,10 @@
       width: 650px;
       margin: 80px auto;
       position: relative;
-      background-color: rgba(0,0,0,0.5);
-      box-shadow: 0px 0px 15px #000;
-      border-radius: 15px;
+      background-color: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-top: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
     }
     .close-button {
       display: block;
@@ -123,11 +127,37 @@
       opacity: 0.7;
       &:hover { opacity: 1; }
     }
+    .top{
+      margin-top: -60px;
+      margin-bottom: 60px;
+    }
     #newGoodStuffItemForm > div {
       padding: 15px 100px;
     }
+    .close-button{
+      padding: 12px;
+      margin: -12px;
+    }
     .url {
       text-align: center;
+      font-size: 12px;
+    }
+    .details{
+      .input{
+        background-color: rgba(0,0,0,0.7);
+        color: #FFF;
+        font-size: 1.35em;
+        line-height: 1.6em;
+        height: 1em;
+        padding: 0.6em;
+        padding-bottom: 1em;
+        width: 42%;
+        padding-top: 18px;
+        padding-left: 18px;
+        border-radius: 1px;
+        border: 1px solid #FFF;
+
+      }
     }
     .preview {
       position: relative;
@@ -141,29 +171,31 @@
       }
       .arrow-left, .arrow-right {
         position: absolute;
-        top: 80px;
-        font-size: 2em; 
+        top: 70px;
+        font-size: 2em;
       }
-      .arrow-left { left: 40px; }
-      .arrow-right { right: 40px; }
+      .arrow-left { left: 12px; padding: 13px; }
+      .arrow-right { right: 12px; padding: 13px; }
     }
     .tags {
       & > div { /* 1 level div's within .tags */
         margin: 10px 0px; 
       }
+      .title{
+      }
       .tag {
         display: inline-block;
         cursor: pointer;
-        border-radius: 2px;
-        margin: 5px 8px 5px 8px;
-        font-weight: bold;
-        background-color: #CCC;
-        color: #333;
+        border-radius: 1px;
+        padding: 4px 10px 4px 10px;
+        margin: 0px 4px 8px 0px;
+        background-color: rgba(255,255,255,0.25);
+        color: #151b1f;
       }
       .tag.active {
-        background-color: #1466a8;
-        font-weight: bold;
-        color: #FFF;
+        background: linear-gradient(#1582d9, #3892da); // top, bottom
+        color: #d2eaf9;
+        box-shadow: 0px 0px 15px rgba(180,222,247,0.35);
       }
     }
     .item {

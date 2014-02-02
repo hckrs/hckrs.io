@@ -24,9 +24,9 @@
 			Click here to<br/>add a new item
 		</div>
 		<div class="on-active hide">
-			Contribute by<br/>pasting an URL<br/>
-      <strong>{{#if equals OS 'Mac'}}&#8984;V{{else}}CTRL+V{{/if}}</strong>
-			<input type="text" id="goodStuffPasteUrl" />
+      <br/>share a URL — <strong>{{#if equals OS 'Mac'}}&#8984;V{{else}}CTRL+V{{/if}}</strong>
+		  <!--<br/>—<br/><a href="#" id="ask">ask a question</a>-->
+      <input type="text" id="goodStuffPasteUrl" />
 		</div>
 	</div>
 </template>
@@ -71,13 +71,13 @@
 			{{#with previewItem}}
 			<form id="newGoodStuffItemForm">
 
-        <div class="url">
+        <div class="url top">
           <a href="{{website}}" target="_blank">{{website}}</a>
         </div>
 
         <div class="details">
-          <input type="text" name="title" id="gs_title" value="{{title}}" placeholder="title">
-          <input type="text" name="subtitle" value="{{subtitle}}"  id="gs_subtitle" placeholder="subtitle">
+          <input type="text" class="input" name="title" id="gs_title" value="{{title}}" placeholder="title">
+          <input type="text" class="input" style="margin-left:6px;" name="subtitle" id="gs_subtitle" value="{{subtitle}}" placeholder="subtitle">
         </div>
 
 				<div class="preview">
@@ -88,16 +88,19 @@
 				</div>
 
         <div class="tags">
+          <div class="title">Subject</div>
           <div class="hacking">
             {{#each hackingTypes}}
               <span class="tag {{activeTag 'hacking'}}" data-type="hacking" data-tag="{{this}}">{{this}}</span>
             {{/each}}
           </div>
+          <div class="title">Type</div>
           <div class="types">
             {{#each itemTypes}}
               <span class="tag {{activeTag 'types'}}" data-type="types" data-tag="{{this}}">{{this}}</span>
             {{/each}}
           </div>
+          <div class="title">Tags</div>
           <div class="tags">
             {{#each keywords}}
               <span class="tag {{activeTag 'keywords'}}" data-type="keywords" data-tag="{{this}}">{{this}}</span>
@@ -106,8 +109,7 @@
         </div>
 
 				<div class="footer">
-					<button class="btn cancel">Cancel</button>
-					<button class="btn btn-success" type="submit">Add</button>
+					<button class="btn" type="submit">Share <small>[{{#if equals OS 'Mac'}}enter{{else}}return{{/if}}]</small></button>
 				</div>
 
 			</form>
