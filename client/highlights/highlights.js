@@ -77,30 +77,30 @@ var highlights = function() {
   return [ /* NEW to OLD */
 
     {
-      "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
+      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
+      "imageUrl": "http://farm9.staticflickr.com/8151/7581131650_3e02c85899_o.jpg",
+      "title": "Startup Weekend",
+      "subtitle": "Digital open labs @ Lyon",
+      "website": "http://lyon.startupweekend.org",
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+    },
+
+    {
+      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/app-dernier-metro.jpg",
-      "title": "Dernier métro asdasdasd asd asd asd",
+      "title": "Dernier métro",
       "subtitle": "web app Lyonnaise",
-      "website": "http://github.com/yannlombard/derniermetro",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+      "website": "http://yannlombard.github.io/derniermetro/",
+      "userId": userIdFromUrl("http://lyon.hckrs.io/--"), 
     },
 
     {
-      "createdAt": newDate("2014-01-12"), //date of post YYYY-MM-DD
-      "imageUrl": "/img/highlights/4K-screen.jpg",
-      "title": "4K is comming",
-      "subtitle": "Dell an Seiki launch cheap models",
-      "website": "http://www.google.nl",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
-    },
-
-    {
-      "createdAt": newDate("2014-01-13"), //date of post YYYY-MM-DD
-      "imageUrl": "/img/highlights/arduino.jpg",
-      "title": "Ardruino shield",
-      "subtitle": "Available now",
-      "website": "http://www.ardruino.cc",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
+      "imageUrl": "http://www.fhacktory.com/images/fhacktory-hackathon-panorama.jpg",
+      "title": "Fhacktory",
+      "subtitle": "Tu code, tu viens. hackaton Lyonnais sur 24h",
+      "website": "http://www.fhacktory.com",
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-_-"), 
     },
 
 
