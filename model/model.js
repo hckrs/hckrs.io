@@ -108,35 +108,6 @@ var invitation = { /* scheme */
 
 
 
-/* GOOD-STUFF */
-
-GoodStuffItems = new Meteor.Collection('goodStuffItems');
-
-var goodStuffItem = { /* scheme */
-  _id: String,
-  createdAt: Date,
-  imageUrl: String,
-  title: String,
-  subtitle: String,
-  description: String,
-  eventLocation: String,
-  eventDate: Date,
-  costs: Number,
-  website: String,
-  userId: String,
-  color: {
-    r: Number, 
-    g: Number, 
-    b: Number
-  },
-  tags: {
-    hacking: [String], // hacking types e.g. web, hardware, opensource
-    types: [String], // type of content e.g. post, review, product
-    keywords: [String], // associated keywords, any String allowed.
-  }
-}
-
-
 
 
 

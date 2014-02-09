@@ -84,32 +84,6 @@ Invitations.deny(ALL);
 
 
 
-/* GOOD-STUFF */
-
-GoodStuffItems.allow({
-  update: FALSE,
-  remove: FALSE,
-  insert: function(userId, doc) { 
-    return Match.test(doc, {
-      '_id': String,
-      'title': String,
-      "website": Match.URL,
-      'imageUrl': Match.URL,
-      'tags': Match.Optional({
-        'hacking': Match.Optional(Match.AllIn(HACKING)),
-        'types': Match.Optional(Match.AllIn(ITEM_TYPES)),
-        'keywords': Match.Optional([String]),
-      }),
-      "subtitle": Match.Optional(String),
-      "description": Match.Optional(String),
-      "eventLocation": Match.Optional(String),
-      "eventDate": Match.Optional(Date),
-      "costs": Match.Optional(Number), 
-    });
-  }
-});
-
-
 
 
 

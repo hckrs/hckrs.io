@@ -80,35 +80,3 @@ if (Meteor.isClient) {
 
 
 
-/* GOOD-STUFF */
-
-if (Meteor.isServer) {
-
-  // before update
-  GoodStuffItems.before.insert(function(userId, doc) {
-    doc.createdAt = newDate();
-    doc.userId = userId;
-    
-    _.defaults(doc, {
-      tags: {}
-    });
-    
-    _.defaults(doc.tags, {
-      hacking: [],
-      types: [],
-      keywords: []
-    });
-    
-    return doc;
-  });
-
-
-  // after updating
-  GoodStuffItems.after.insert(function (userId, doc) {
-    if (doc.imageUrl) { // set overlay color
-      var rgb = ProcesssImageResource(doc.imageUrl, AverageImageColor);  
-      GoodStuffItems.update(doc._id, {$set: {'color': rgb}});
-    }
-  });
-
-}

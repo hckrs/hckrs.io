@@ -12,7 +12,6 @@ if (Meteor.isClient) {
     'publicUserDataEmail', 
     'publicUserData',
     'invitations', 
-    'goodStuffItems',
   ];
 
 }
@@ -126,15 +125,7 @@ if (Meteor.isServer) {
 
 
 
-  /* GOOD-STUFF */
 
-  Meteor.publish("goodStuffItems", function(hash) {
-    if(!this.userId) {
-      return [];
-    } else {
-      return GoodStuffItems.find({});
-    }
-  });
 
 
 
