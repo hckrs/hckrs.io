@@ -332,6 +332,10 @@ if (Meteor.isClient) {
     return new Handlebars.SafeString(html);
   });
 
+  Handlebars.registerHelper('Domain', function(url) {
+    return domainFromUrl(url);
+  });
+
 }
 
 
