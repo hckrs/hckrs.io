@@ -51,6 +51,24 @@ var migrations = [
     }
   },
 
+  { // 8 feb 2014
+    name: "Uninvited",
+    task: function(callback) {
+
+      // change not invited users to isUninvited excepts Mayors
+      
+      Meteor.users.find().forEach(function(user) {
+        var isInvited = !!(user.isMayor || Invitations.findOne({ receivingUser: user._id }));
+        if (!isInvited)
+          Meteor.users.update(user._id, {$set: {isUninvited: true, isAccessDenied: true, isHidden: true}});
+      });
+      log('1/1');
+
+      // done
+      callback();
+    }
+  },
+
 ];
 
 

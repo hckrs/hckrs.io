@@ -20,68 +20,113 @@
 */
 
 
+
+
+
+
 Meteor.startup(function() {
   Meteor.methods({
-    'addInvites': addInvites,
-    'addInvitesToCity': addInvitesToCity,   
-    'addInvitesToUser': addInvitesToUser
+    'inviteUserByToon': inviteUserByToon,
+    'inviteUserByUser': inviteUserByUser,
+    'inviteUser': inviteUser,
   });
 });
 
 
 
-// @param number Number [optional, default=1] (number of invites)
-var addInvites = function(number) {
+var inviteUser = function(userId) {
   verifyAdmin();
 
-  var number = number || 1;
-  check(number, Number);
+  forceInvitationOfUser(userId);
+}
+
+var inviteUserByToon = function(userId) {
+  verifyAdmin();
+
+  var broadcastUser = Meteor.users.findOne({globalRank: 1})
+  var broadcastUserId = broadcastUser && broadcastUser._id;
+  inviteUserByUser(userId, broadcastUserId);
+}
+
+var inviteUserByUser = function(userId, broardcastUserId) {
+  verifyAdmin();
+
+  var broardcastUser = Meteor.users.findOne(broardcastUserId);
+  var phrase = broardcastUser && broardcastUser.invitationPhrase;
   
-  Meteor.users.find().forEach(function(user) {
-    addInvitesToUser(user._id, number);
-  });
-}
-
-// @param city String (name of the city where users receive invites)
-// @param number Number [optional, default=1] (number of invites)
-var addInvitesToCity = function(city, number) {
-  verifyAdmin();
-
-  var number = number || 1;
-  check(city, String);
-  check(number, Number);
+  if (!phrase || !Match.test(phrase, Number))
+    throw new Meteor.Error(500, "invalid phrase");
   
-  Meteor.users.find({city: city}).forEach(function(user) {
-    addInvitesToUser(user._id, number);
-  });
+  verifyInvitationOfUser(phrase, userId);
 }
 
-// @param userId String (userId that receive a new invite)
-// @param number Number [optional, default=1] (number of invites)
-var addInvitesToUser = function(userId, number) {
-  verifyAdmin();
-
-  var number = number || 1;
-  check(userId, String);
-  check(number, Number);
 
 
-  var user = Meteor.users.findOne(userId);
 
-  // check if user exists
-  if (!user)
-    throw new Meteor.Error(500, "User doesn't exists");
 
-  if (number < 1)
-    throw new Meteor.Error(500, "No valid number of invitations");
 
-  // calculate new number of invitations
-  var maxInvites = Meteor.settings.maximumNumberOfUnusedInvitesPerUser || 999;
-  var newNumberOfInvites = Math.min(user.invitations + number, maxInvites);
+// Meteor.startup(function() {
+//   Meteor.methods({
+//     'addInvites': addInvites,
+//     'addInvitesToCity': addInvitesToCity,   
+//     'addInvitesToUser': addInvitesToUser
+//   });
+// });
 
-  // add invitations to this user
-  Meteor.users.update(userId, {$set: {invitations: newNumberOfInvites}});
-}
+
+
+// // // @param number Number [optional, default=1] (number of invites)
+// // var addInvites = function(number) {
+// //   verifyAdmin();
+
+// //   var number = number || 1;
+// //   check(number, Number);
+  
+// //   Meteor.users.find().forEach(function(user) {
+// //     addInvitesToUser(user._id, number);
+// //   });
+// // }
+
+// // // @param city String (name of the city where users receive invites)
+// // // @param number Number [optional, default=1] (number of invites)
+// // var addInvitesToCity = function(city, number) {
+// //   verifyAdmin();
+
+// //   var number = number || 1;
+// //   check(city, String);
+// //   check(number, Number);
+  
+// //   Meteor.users.find({city: city}).forEach(function(user) {
+// //     addInvitesToUser(user._id, number);
+// //   });
+// // }
+
+// // // @param userId String (userId that receive a new invite)
+// // // @param number Number [optional, default=1] (number of invites)
+// // var addInvitesToUser = function(userId, number) {
+// //   verifyAdmin();
+
+// //   var number = number || 1;
+// //   check(userId, String);
+// //   check(number, Number);
+
+
+// //   var user = Meteor.users.findOne(userId);
+
+// //   // check if user exists
+// //   if (!user)
+// //     throw new Meteor.Error(500, "User doesn't exists");
+
+// //   if (number < 1)
+// //     throw new Meteor.Error(500, "No valid number of invitations");
+
+// //   // calculate new number of invitations
+// //   var maxInvites = Meteor.settings.maximumNumberOfUnusedInvitesPerUser || 999;
+// //   var newNumberOfInvites = Math.min(user.invitations + number, maxInvites);
+
+// //   // add invitations to this user
+// //   Meteor.users.update(userId, {$set: {invitations: newNumberOfInvites}});
+// // }
 
 
 

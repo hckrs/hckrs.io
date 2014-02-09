@@ -336,6 +336,9 @@ var mergeUserData = function(firstUser, secondUser) {
   if (!_.isUndefined(mergedData.isIncompleteProfile))
     mergedData.isIncompleteProfile = !!(firstUser.isIncompleteProfile && secondUser.isIncompleteProfile);
   
+  if (!_.isUndefined(mergedData.isUninvited))
+    mergedData.isUninvited = !!(firstUser.isUninvited && secondUser.isUninvited);
+
   if (!_.isUndefined(mergedData.isHidden))
     mergedData.isHidden = !!(firstUser.isHidden && secondUser.isHidden);  
 
@@ -450,6 +453,8 @@ Accounts.onCreateUser(function (options, user) {
     user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
 
     // don't allow access until user completes his profile
+    if (!user.isMayor)
+      user.isUninvited = true;
     user.isAccessDenied = true;
     user.isHidden = true;
     user.isIncompleteProfile = true;
@@ -613,21 +618,36 @@ var removeServiceFromCurrentUser = function(service) {
 
 
 
+
 // when user created an account he hasn't directly full access
 // the client can call this function to verify the invitation phrase
 // so we can permit access for this user
 var verifyInvitation = function(phrase) {
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user.");
+
+  verifyInvitationOfUser(phrase, Meteor.userId());
+}
+
+// when this function is called, is must already be verified that 
+// the user is allowed to do this operation
+// (also called from Admin.js)
+verifyInvitationOfUser = function(phrase, userId) { 
   check(phrase, Number);
-  
+  check(userId, String);
+
   // search broadcast user
   var broadcastUser = Meteor.users.findOne({invitationPhrase: phrase});
   if (broadcastUser.mergedWith)
     broadcastUser = Meteor.users.findOne(broadcastUser.mergedWith);
 
-  if (!Meteor.user())
-    throw new Meteor.Error(500, "Unknow user: " + this.userId);
+  // receiving user
+  var receivingUser = Meteor.users.findOne(userId);
 
-  if (Invitations.findOne({receivingUser: Meteor.userId()}))
+  if (!receivingUser)
+    throw new Meteor.Error(500, "Unknow user: " + userId);
+
+  if (!receivingUser.isUninvited)
     throw new Meteor.Error(500, "User is already invited.");
 
   if (!broadcastUser)
@@ -641,15 +661,32 @@ var verifyInvitation = function(phrase) {
   // insert invitation couple in database
   Invitations.insert({
     broadcastUser: broadcastUser._id,
-    receivingUser: Meteor.userId(), 
+    receivingUser: userId, 
     signedupAt: new Date()
   });  
 
+  // mark as invited
+  forceInvitationOfUser(receivingUser._id);
+
   // decrement broadcast user's unused invitations
   Meteor.users.update(broadcastUser._id, {$inc: {invitations: -1}});
+}
+
+// when this function is called, is must already be verified that 
+// the user is allowed to do this operation
+// (also called from Admin.js)
+forceInvitationOfUser = function(userId) {
+  check(userId, String);
+
+  // receiving user
+  if (!Meteor.users.findOne(userId))
+    throw new Meteor.Error(500, "Unknow user: " + userId);
+
+  // mark as invited
+  Meteor.users.update(userId, {$unset: {isUninvited: true}});
 
   // check if user now get access to the website
-  requestAccess(); 
+  requestAccessOfUser(userId); 
 }
 
 
@@ -676,29 +713,39 @@ var requestProfileCompleted = function() {
 // and his profile is complete
 // and has filled in a valid e-mailaddress
 var requestAccess = function() {
-
   if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user.");
+
+  requestAccessOfUser(Meteor.userId());
+}
+
+// when this function is called, is must already be verified that 
+// the user is allowed to do this operation
+var requestAccessOfUser = function(userId) {
+  var user = Meteor.users.findOne(userId);
+
+  if (!user)
     throw new Meteor.Error(500, "Unknow user");
 
-  if (Meteor.user().isAccessDenied != true)
+  if (user.isAccessDenied != true)
     throw new Meteor.Error(500, "User has already access to the site.");
 
-  if (!(Invitations.findOne({receivingUser: Meteor.userId()}) || Meteor.user().isMayor))
+  if (user.isUninvited)
     throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");
 
-  if (Meteor.user().isIncompleteProfile)
+  if (user.isIncompleteProfile)
     throw new Meteor.Error(500, "profileIncomplete", "User profile is incomplete.");
 
-  if (!_.findWhere(Meteor.user().emails, {address: Meteor.user().profile.email, verified: true}))
+  if (!_.findWhere(user.emails, {address: user.profile.email, verified: true}))
     throw new Meteor.Error(500, "emailNotVerified", "e-mailaddress isn't verified.");
 
   // access allowed!
 
   // allow access for this user
-  Meteor.users.update(Meteor.userId(), {$unset: {isAccessDenied: true}});
+  Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
 
   // request visibility
-  requestVisibility();
+  requestVisibilityOfUser(userId);
 }
 
 
@@ -707,20 +754,27 @@ var requestAccess = function() {
 // until he is allowed to access the site.
 // also admins are hidden
 var requestVisibility = function() {
-
   if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user.");
+
+  requestVisibilityOfUser(Meteor.userId());
+}
+
+// when this function is called, is must already be verified that 
+// the user is allowed to do this operation
+var requestVisibilityOfUser = function(userId) {
+  var user = Meteor.users.findOne(userId);
+
+  if (!user)
     throw new Meteor.Error(500, "Unknow user");
 
   // user must have allow access to become visible
-  if (Meteor.user().isAccessDenied == true)
+  if (user.isAccessDenied == true)
     throw new Meteor.Error(500, "User don't allowed to be visible");
 
   // make user visible to other users
-  Meteor.users.update(Meteor.userId(), {$unset: {isHidden: true}});
-
+  Meteor.users.update(userId, {$unset: {isHidden: true}});
 }
-
-
 
 
 // test some functionality

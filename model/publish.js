@@ -67,6 +67,7 @@ if (Meteor.isServer) {
     "isAdmin": true,
     "isMayor": true,
     "isAccessDenied": true,
+    "isUninvited": true,
     "isIncompleteProfile": true,
     "isHidden": true,
     "invitations": true,

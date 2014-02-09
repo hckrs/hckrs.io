@@ -204,7 +204,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
 
 // check if user is invited
 var checkInvited = function() { //GLOBAL, used in hacker.js
-  return !!(Invitations.findOne({receivingUser: Meteor.userId()}) || Meteor.user().isMayor);
+  return !Meteor.user().isUninvited;
 }
 
 // check if user's profile e-mail address is verified
