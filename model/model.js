@@ -38,7 +38,7 @@ var user = { /* scheme */
     homepage: String,     // external website of user
     company: String,      // name of company
     conpanyUrl: String,   // the website of the company 
-    hacking: [ String ],  // array of types: (web|apps|software|game|design|life|hardware|opensource)*
+    hacking: [ String ],  // array of types: (web|apps|software|game|design|life|hardware|opensource|growth)*
     available: [ String ],// array with items where user is available for (drink|lunch|email)*
     social: {
       facebook: String,   // url to user's facebook profile

@@ -1,6 +1,6 @@
 // CONSTANTS 
 
-HACKING = ['web','apps','software','game','design','life','hardware','opensource'].sort();
+HACKING = ['web','apps','software','game','design','life','hardware','opensource','growth'].sort();
 
 ITEM_TYPES = ["article", "ask", "audio", "book", "event", "hack", "location", "picture", "product", "show", "video", "work"];
 
