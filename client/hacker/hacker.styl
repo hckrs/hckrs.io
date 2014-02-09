@@ -5,13 +5,22 @@
   position: relative;
 
   .btn-edit-mode {
-    position absolute;
+    position: absolute;
     top: 105px;
-    left: 900px;
+    left: 990px;
     .icon {
       margin-right: 3px;
       margin-bottom: 2px;
       vertical-align: middle;
+    }
+  }
+
+  @media screen and (max-width: 1114px) {
+    .btn-edit-mode {
+      position: relative;
+      top: 85px;
+      left: auto;
+      float: right;
     }
   }
 
