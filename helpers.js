@@ -123,6 +123,13 @@ hostnameFromUrl = function(url) {
   return new RegExp(/\/\/([^\/:]*)/).exec(url)[1];
 }
 
+// extract the most basic name including extension
+// e.g. http://lyon.hckrs.io/test => hckrs.io
+domainFromUrl = function(url) {
+  var hostname = hostnameFromUrl(url);
+  return new RegExp(/([^.]*.[a-zA-Z]{2,4}(.uk)?)$/).exec(hostname)[1];
+}
+
 // replace url's hostname
 // e.g. newHostname: lyon.hckrs.io, lyon.staging.hckrs.io
 replaceHostname = function(url, newHostname) {
