@@ -68,7 +68,8 @@
               <ul class="dropdown-menu">
                 <li><a href="{{pathFor 'hacker'}}"><i class="icon-user"></i> {{profile.name}}</a></li>
                 {{#unless isAccessDenied}}
-                  <li><a href="{{pathFor 'invitations'}}"><i class="icon-gift"></i> invitations ({{currentUser.invitations}})</a></li>
+                  <li><a href="{{pathFor 'invitations'}}"><i class="icon-plus"></i> invite hackers ({{currentUser.invitations}})</a></li>
+                  <li><a href="{{pathFor 'sponsors'}}"><i class="icon-gift"></i> gifts</a></li>
                 {{/unless}}
                 <li class="divider"></li>
                 <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
@@ -152,7 +153,7 @@
 <template name="invitations">
   <div id="invitations" class="page">
     
-    <H2>Share the love</h2>
+    <H2>Invite hackers</h2>
     <div class="slots">
 
       {{#each invitedUsers}}
@@ -163,13 +164,47 @@
 
       {{#each availableSlots}}
         <div class="slot">
-          <div class="pictureView small unknow"></div>
+          <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small"></div>
         </div>
+
+
       {{/each}}
 
       <div class="invitation-text"><p>We trust you to invite awesome hackers for the community.<br/>This personal invitation URL gives acces to <strong>{{unusedTotal}}</strong> persons:</p>
       <p><strong>{{link}}</strong></p></div>
 
+    </div>
+
+  </div>
+</template>
+
+<template name="sponsors">
+  <div id="sponsors" class="page">
+    
+    <H2>Gifts</h2>
+
+    <div class="sponsor-item">
+      <p>
+        <div class="offer">co-working — 1 day</div>
+        <H3><a href="http://www.la-cordee.net" target="_blank">@ La cordée</a></h3>
+        <div class="discription">Valid in any of the La cordée offices.</div>
+      </p>
+    </div>
+
+    <div class="sponsor-item">
+      <p>
+        <div class="offer">maps — 3 months</div>
+        <H3><a href="https://www.mapbox.com" target="_blank">@ MapBox</a></h3>
+        <div class="discription">Beautiful custom maps.</div>
+      </p>
+    </div>
+
+    <div class="sponsor-item">
+      <p>
+        <div class="offer">5 private repos — 6 months</div>
+        <H3><a href="https://github.com" target="_blank">@ GitHub</a></h3>
+        <div class="discription">value €50.</div>
+      </p>
     </div>
 
   </div>

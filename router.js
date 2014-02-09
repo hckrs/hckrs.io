@@ -25,6 +25,8 @@ if (Meteor.isClient) {
 
     this.route('invitations', { path: '/invitations', template: 'invitations' });
 
+    this.route('sponsors', { path: '/sponsors', template: 'sponsors' });
+
     this.route('agenda', { path: '/agenda', template: 'agenda' });
 
     this.route('goodStuff', { path: '/good-stuff', template: 'goodStuff' });
