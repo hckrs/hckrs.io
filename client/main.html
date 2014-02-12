@@ -30,14 +30,11 @@
 
 </head>
 
-<body>
-  
-</body>
 
-<template name="main">
+<template name="layout">
   <div class="wrapper">
     {{> header}}
-    {{renderRouter}}
+    {{yield}}
   </div>
 </template>
 

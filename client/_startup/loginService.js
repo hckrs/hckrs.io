@@ -59,7 +59,7 @@ var goToEntryPage = function() {
 
 /* ACCOUNT & ACCESS & INVITATIONS */
 
-Template.main.events({
+Template.layout.events({
   "click #requestMergeDuplicateAccount .close": function() {
     Session.set('requestMergeDuplicateAccount', false);
   }
@@ -344,12 +344,12 @@ var logout = function() {
 
 
 // bind the sign up buttons to the corresponding actions
-Template.main.events({
+Template.layout.events({
   "click .signupService": loginWithService
 });
 
 // bind the sign out button to the sign out action
-Template.main.events({
+Template.layout.events({
   "click #signOutButton": logout
 });
 
@@ -410,7 +410,7 @@ var toggleService = function (event) {
   isLinked ? _removeService(service) : _addService(service, options);
 }
 
-Template.main.events({
+Template.layout.events({
   "click .toggleService": toggleService
 });
 
