@@ -446,28 +446,68 @@ Accounts.onCreateUser(function (options, user) {
     if (user.localRank === 1)
       user.isMayor = true;
 
+    // if this is the first user ever, make them an admin
+    if (!Meteor.users.find().count() )
+      user.isAdmin = true;
+
     // set invitation phrase
     user.invitationPhrase = user.globalRank * 2 + 77;
 
     // give this user the default number of invite codes
     user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
 
-    // don't allow access until user completes his profile
-    if (!user.isMayor)
-      user.isUninvited = true;
+    // don't allow access until user completes his profile 
+    // and is invited
     user.isAccessDenied = true;
     user.isHidden = true;
     user.isIncompleteProfile = true;
+    if (!user.isMayor)
+      user.isUninvited = true;
+
+    // set counters
+    user.karma = 0;
+    user.postCount = 0;
+    user.commentCount = 0;
+
+    // set notifications default preferences
+    user.profile.notifications = {
+      users: false,
+      posts: false,
+      comments: true,
+      replies: true
+    }
+
+    // create slug from username
+    user.slug = slugify(getUserName(user));
 
     // let admins know that a new user has registered the site
     if (Meteor.settings.public.environment === 'production')
       SendEmailOnNewUser(user);
 
+    trackEvent('new user', {username: getUserName(user), email: user.profile.email});
+
+    // send notifications to admins
+    var admins = Meteor.users.find({isAdmin: true});
+    admins.forEach(function(admin){
+      if(getUserSetting('notifications.users', false, admin)){
+        var notification = getNotificationContents({
+          event: 'newUser',
+          properties: {
+            username: getUserName(user),
+            profileUrl: getProfileUrl(user)
+          },
+          userId: admin._id
+        }, 'email');
+        sendNotification(notification, admin);
+      }
+    });
   }
   
   // create new user account
   return user; 
 });
+
+
 
 
 // Remove an account
