@@ -12,10 +12,10 @@ Meteor.methods({
       });
     }
   },
-  giveInvites: function () {
-    if(isAdmin(Meteor.user()))
-      Meteor.users.update({}, {$inc:{inviteCount: 1}}, {multi:true});
-  },
+  // giveInvites: function () {
+  //   if(isAdmin(Meteor.user()))
+  //     Meteor.users.update({}, {$inc:{inviteCount: 1}}, {multi:true});
+  // },
   updateCategoryInPosts: function (categoryId) {
     check(categoryId, String);
 

@@ -8,9 +8,9 @@ if (Meteor.isClient) {
   // to receive documents on the client  
 
   Subscriptions = [
-    'publicUserDataCurrentUser', 
-    'publicUserDataEmail', 
-    'publicUserData',
+    'currentUser', 
+    'allUsersWithEmail', 
+    'allUsers',
     'invitations', 
   ];
 
@@ -37,7 +37,7 @@ if (Meteor.isServer) {
   // on the client you must subscribe all publish rules.
   // note: we not publish all users, only the ones that are allowed to access
 
-  var publicUserFields = {
+  publicUserFields = {
     "createdAt": true,
     "city": true,
     "localRank": true,
@@ -78,37 +78,68 @@ if (Meteor.isServer) {
 
   // 1. current logged in user
   // publish additional fields 'emails' and 'profile' for the current user
-  Meteor.publish("publicUserDataCurrentUser", function (hash) {
-    if(!this.userId) {
-      return [];
-    } else {
+  Meteor.publish("currentUser", function (hash) {
+    if(this.userId) {
       var selector = {_id: this.userId};
       return Users.find(selector, {fields: publicUserFieldsCurrentUser});
     }
+    return [];
   });
 
   // 2. users with public e-mailaddress
   // we make emailaddresses public of the users that are available for drink/lunch
   // publish their public information including emailaddress
-  Meteor.publish("publicUserDataEmail", function (hash) {
-    if(!this.userId || !allowedAccess(this.userId)) {
-      return []; 
-    } else {
+  Meteor.publish("allUsersWithEmail", function (hash) {
+    if(this.userId && allowedAccess(this.userId)) {
       var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, isHidden: {$ne: true}};
       return Users.find(selector, {fields: publicUserFieldsEmail}); 
     }
+    return [];
   });
 
   // 3. otherwise only the default public user data is published
   // publish all public profile data of all users
-  Meteor.publish("publicUserData", function (hash) {
+  Meteor.publish("allUsers", function (hash) {
     var selector = {isHidden: {$ne: true}};
-    if(!this.userId || !allowedAccess(this.userId)) {
-      return Users.find(selector, {fields: {_id: true}});   
-    } else {
+    if(this.userId && allowedAccess(this.userId)) {
       return Users.find(selector, {fields: publicUserFields}); 
     }
+    return Users.find(selector, {fields: {_id: true}});   
   });
+
+
+
+  // ?. single user
+  // publish additional fields 'emails' and 'profile' for the current user
+  Meteor.publish("singleUser", function (userIdOrSlug) {
+    return []; // XXX We already published all users
+  });
+
+  // Publish authors of the current post and its comments
+
+  Meteor.publish('postUsers', function(postId) {
+    return []; // XXX We already published all users
+  });
+
+  // Publish author of the current comment
+
+  Meteor.publish('commentUser', function(commentId) {
+    return []; // XXX We already published all users
+  });
+
+  // Publish all the users that have posted the currently displayed list of posts
+
+  Meteor.publish('postsListUsers', function(terms) {
+    return []; // XXX We already published all users
+  });
+
+
+  // publish all users for admins to make autocomplete work
+  // TODO: find a better way
+
+  Meteor.publish('allUsersAdmin', function() {
+    return []; // XXX We already published all users
+});
 
 
 

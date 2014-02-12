@@ -63,48 +63,48 @@
 //   return user;
 // });
 
-getEmailHash = function(user){
-  // todo: add some kind of salt in here
-  return CryptoJS.MD5(getEmail(user).trim().toLowerCase() + user.createdAt).toString();
-}
+// getEmailHash = function(user){
+//   // todo: add some kind of salt in here
+//   return CryptoJS.MD5(getEmail(user).trim().toLowerCase() + user.createdAt).toString();
+// }
 
-addToMailChimpList = function(user){
-  // add a user to a MailChimp list.
-  // called when a new user is created, or when an existing user fills in their email
-  if((MAILCHIMP_API_KEY=getSetting('mailChimpAPIKey')) && (MAILCHIMP_LIST_ID=getSetting('mailChimpListId'))){
+// addToMailChimpList = function(user){
+//   // add a user to a MailChimp list.
+//   // called when a new user is created, or when an existing user fills in their email
+//   if((MAILCHIMP_API_KEY=getSetting('mailChimpAPIKey')) && (MAILCHIMP_LIST_ID=getSetting('mailChimpListId'))){
 
-    var email = getEmail(user);
-    if (! email)
-      throw 'User must have an email address';
+//     var email = getEmail(user);
+//     if (! email)
+//       throw 'User must have an email address';
 
-    console.log('adding "'+email+'" to MailChimp list…');
+//     console.log('adding "'+email+'" to MailChimp list…');
     
-    var mailChimp = new MailChimpAPI(MAILCHIMP_API_KEY, { version : '1.3', secure : false });
+//     var mailChimp = new MailChimpAPI(MAILCHIMP_API_KEY, { version : '1.3', secure : false });
     
-    mailChimp.listSubscribe({
-      id: MAILCHIMP_LIST_ID,
-      email_address: email,
-      double_optin: false
-    });
-  }
-}
+//     mailChimp.listSubscribe({
+//       id: MAILCHIMP_LIST_ID,
+//       email_address: email,
+//       double_optin: false
+//     });
+//   }
+// }
 
 Meteor.methods({
-  changeEmail: function(newEmail) {
-    Meteor.users.update(Meteor.userId(), {$set: {emails: [{address: newEmail}]}});
-  },
+  // changeEmail: function(newEmail) {
+  //   Meteor.users.update(Meteor.userId(), {$set: {emails: [{address: newEmail}]}});
+  // },
   numberOfPostsToday: function(){
     console.log(numberOfItemsInPast24Hours(Meteor.user(), Posts));
   },
   numberOfCommentsToday: function(){
     console.log(numberOfItemsInPast24Hours(Meteor.user(), Comments));
   },
-  testEmail: function(){
-    Email.send({from: 'test@test.com', to: getEmail(Meteor.user()), subject: 'Telescope email test', text: 'lorem ipsum dolor sit amet.'});
-  },
-  testBuffer: function(){
-    // TODO
-  },
+  // testEmail: function(){
+  //   Email.send({from: 'test@test.com', to: getEmail(Meteor.user()), subject: 'Telescope email test', text: 'lorem ipsum dolor sit amet.'});
+  // },
+  // testBuffer: function(){
+  //   // TODO
+  // },
   getScoreDiff: function(id){
     var object = Posts.findOne(id);
     var baseScore = object.baseScore;
@@ -112,11 +112,11 @@ Meteor.methods({
     var newScore = baseScore / Math.pow(ageInHours + 2, 1.3);
     return Math.abs(object.score - newScore);
   },
-  setEmailHash: function(user){
-    var email_hash = CryptoJS.MD5(getEmail(user).trim().toLowerCase()).toString();
-    Meteor.users.update(user._id, {$set : {email_hash : email_hash}});
-  },
-  addCurrentUserToMailChimpList: function(){
-    addToMailChimpList(Meteor.user());
-  }
+  // setEmailHash: function(user){
+  //   var email_hash = CryptoJS.MD5(getEmail(user).trim().toLowerCase()).toString();
+  //   Meteor.users.update(user._id, {$set : {email_hash : email_hash}});
+  // },
+  // addCurrentUserToMailChimpList: function(){
+  //   addToMailChimpList(Meteor.user());
+  // }
 });
