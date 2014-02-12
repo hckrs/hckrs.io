@@ -13,7 +13,6 @@ facebook
 github
 twitter
 oauth1
-stylus
 preserve-inputs
 http
 newrelic
@@ -40,4 +39,5 @@ crypto-md5
 mailchimp
 rss
 telescope-i18n
-bootstrap
+accounts-ui
+stylus

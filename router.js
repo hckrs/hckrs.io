@@ -1,201 +1,201 @@
-if (Meteor.isClient) {
+// if (Meteor.isClient) {
 
-  Router.reload = function() {
-    Router.go(location.pathname + location.search + location.hash); 
-  }
+//   Router.reload = function() {
+//     Router.go(location.pathname + location.search + location.hash); 
+//   }
   
-  // ROUTES 
+//   // ROUTES 
 
-  Router.map(function () {
+//   Router.map(function () {
     
-    this.route('frontpage', { path: '/', template: 'frontpage' });
+//     this.route('frontpage', { path: '/', template: 'frontpage' });
 
-    this.route('highlights', { path: '/highlights', template: 'highlights',
-      load: function() { 
-        Session.set('absoluteHeader', true); 
-        Session.set('inversedHeader', true); 
-      },
-      unload: function() {
-        Session.set('absoluteHeader', false); 
-        Session.set('inversedHeader', false); 
-      }
-    });
+//     this.route('highlights', { path: '/highlights', template: 'highlights',
+//       load: function() { 
+//         Session.set('absoluteHeader', true); 
+//         Session.set('inversedHeader', true); 
+//       },
+//       unload: function() {
+//         Session.set('absoluteHeader', false); 
+//         Session.set('inversedHeader', false); 
+//       }
+//     });
     
-    this.route('hackers', { path: '/hackers', template: 'hackers' });
+//     this.route('hackers', { path: '/hackers', template: 'hackers' });
 
-    this.route('invitations', { path: '/invitations', template: 'invitations' });
+//     this.route('invitations', { path: '/invitations', template: 'invitations' });
 
-    this.route('sponsors', { path: '/sponsors', template: 'sponsors' });
+//     this.route('sponsors', { path: '/sponsors', template: 'sponsors' });
 
-    this.route('agenda', { path: '/agenda', template: 'agenda' });
+//     this.route('agenda', { path: '/agenda', template: 'agenda' });
     
-    this.route('about', { path: '/about', template: 'about' });
+//     this.route('about', { path: '/about', template: 'about' });
 
-    this.route('places', { path: '/places', template: 'places',
-      load: function() { 
-        Session.set('absoluteHeader', true); 
-        Session.set('inversedHeader', true); 
-      },
-      unload: function() {
-        Session.set('absoluteHeader', false); 
-        Session.set('inversedHeader', false); 
-      }
-    });
+//     this.route('places', { path: '/places', template: 'places',
+//       load: function() { 
+//         Session.set('absoluteHeader', true); 
+//         Session.set('inversedHeader', true); 
+//       },
+//       unload: function() {
+//         Session.set('absoluteHeader', false); 
+//         Session.set('inversedHeader', false); 
+//       }
+//     });
 
-    this.route('verifyEmail', {path: '/verify-email/:token',
-      load: function() {
-        var token = this.params.token;
+//     this.route('verifyEmail', {path: '/verify-email/:token',
+//       load: function() {
+//         var token = this.params.token;
         
-        // log to google analytics
-        Meteor.call('getEmailVerificationTokenUser', token, function(err, user) {
-          if (!err && user) 
-            GAnalytics.event('EmailVerification', 'verified user', user._id);
-          else GAnalytics.event('EmailVerification', 'invalid token', token);
-        });
-      },
-      action: function() {
-        Accounts.verifyEmail(this.params.token, checkAccess);
-        Router.go('hackers');
-        this.stop();
-      }
-    });
+//         // log to google analytics
+//         Meteor.call('getEmailVerificationTokenUser', token, function(err, user) {
+//           if (!err && user) 
+//             GAnalytics.event('EmailVerification', 'verified user', user._id);
+//           else GAnalytics.event('EmailVerification', 'invalid token', token);
+//         });
+//       },
+//       action: function() {
+//         Accounts.verifyEmail(this.params.token, checkAccess);
+//         Router.go('hackers');
+//         this.stop();
+//       }
+//     });
     
-    this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
-      load: function() {
-        var hacker = userFromUrl(window.location.href, {reactive: false});
+//     this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
+//       load: function() {
+//         var hacker = userFromUrl(window.location.href, {reactive: false});
         
-        // log to google analytics
-        if (hacker)
-          GAnalytics.event('Views', 'profile', hacker._id);
-        else GAnalytics.event('Views', 'profile unknow', city+' '+localRank);
-      },
-      before: function() { 
-        var hacker = userFromUrl(window.location.href);
+//         // log to google analytics
+//         if (hacker)
+//           GAnalytics.event('Views', 'profile', hacker._id);
+//         else GAnalytics.event('Views', 'profile unknow', city+' '+localRank);
+//       },
+//       before: function() { 
+//         var hacker = userFromUrl(window.location.href);
         
-        if (!hacker)
-          return this.redirect('frontpage');
+//         if (!hacker)
+//           return this.redirect('frontpage');
         
-        Session.set('hackerId', hacker._id);
-        Session.set('hacker', hacker);
-        Session.set('hackerEditMode', true);
-      },
-      unload: function() {
-        Session.set('hackerId', null);
-        Session.set('hacker', null);
-      }
-    });
+//         Session.set('hackerId', hacker._id);
+//         Session.set('hacker', hacker);
+//         Session.set('hackerEditMode', true);
+//       },
+//       unload: function() {
+//         Session.set('hackerId', null);
+//         Session.set('hacker', null);
+//       }
+//     });
 
 
-    this.route('invite', { path: /^\/\+\/(.*)/, template: 'frontpage',
-      before: function() {
-        var phrase = bitHashInv(this.params[0]);
+//     this.route('invite', { path: /^\/\+\/(.*)/, template: 'frontpage',
+//       before: function() {
+//         var phrase = bitHashInv(this.params[0]);
         
-        Session.set('invitationPhrase', phrase);
+//         Session.set('invitationPhrase', phrase);
 
-        // get associated broadcast user
-        Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
-          Session.set('invitationBroadcastUser', broadcastUser);
-        });
+//         // get associated broadcast user
+//         Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
+//           Session.set('invitationBroadcastUser', broadcastUser);
+//         });
 
-        this.redirect('frontpage');
-      }
-    });
+//         this.redirect('frontpage');
+//       }
+//     });
   
 
-  });
+//   });
 
 
 
 
-  /* resolve url helpers */
+//   /* resolve url helpers */
 
-  Router.routes['invite'].url = function(params) {
-    return Meteor.absoluteUrl('+/' + params.phrase);
-  }
-
-
-
-  /* custom functionality */
-
-  // XXX in iron-router you can't call this.redirect() if you want
-  // that the unload event must be triggered. Instead you must use
-  // Router.go() and then stopping the current route with this.stop()
-  //
-  // It is not recommend to set session variables in the before/load functions
-  // this will trigger a recomputation of the route
+//   Router.routes['invite'].url = function(params) {
+//     return Meteor.absoluteUrl('+/' + params.phrase);
+//   }
 
 
-  // wait to the subscriptions are fully loaded before rendering a template
-  var waitOnSubscriptionsReady = function() {
-    if (!Session.get('subscriptionsReady'))
-      this.stop();  
-  }
 
-  // when login is required, render the frontpage
-  var loginRequired = function() {
+//   /* custom functionality */
 
-    switch (Session.get('currentLoginState')) {
+//   // XXX in iron-router you can't call this.redirect() if you want
+//   // that the unload event must be triggered. Instead you must use
+//   // Router.go() and then stopping the current route with this.stop()
+//   //
+//   // It is not recommend to set session variables in the before/load functions
+//   // this will trigger a recomputation of the route
+
+
+//   // wait to the subscriptions are fully loaded before rendering a template
+//   var waitOnSubscriptionsReady = function() {
+//     if (!Session.get('subscriptionsReady'))
+//       this.stop();  
+//   }
+
+//   // when login is required, render the frontpage
+//   var loginRequired = function() {
+
+//     switch (Session.get('currentLoginState')) {
       
-      case 'loggedOut':
-        // redirect to frontpage so that the user can login
-        if (location.pathname != "/")
-          Session.set('redirectUrl', location.pathname + location.search + location.hash);
-        Router.go('frontpage'); 
-        this.stop();  
-        break;
+//       case 'loggedOut':
+//         // redirect to frontpage so that the user can login
+//         if (location.pathname != "/")
+//           Session.set('redirectUrl', location.pathname + location.search + location.hash);
+//         Router.go('frontpage'); 
+//         this.stop();  
+//         break;
 
-      case 'loggingIn':
-        // make sure that the user subscriptions are ready first
-        this.stop();
-        break;
-    }
+//       case 'loggingIn':
+//         // make sure that the user subscriptions are ready first
+//         this.stop();
+//         break;
+//     }
 
-  }
+//   }
 
-  // check if there are duplicate accounts, if so request for merge
-  var checkDuplicateAccounts = function() {
-    if (Session.get('requestMergeDuplicateAccount')) {
-      this.render('requestMergeDuplicateAccount');
-      this.stop();
-    }
-  }
+//   // check if there are duplicate accounts, if so request for merge
+//   var checkDuplicateAccounts = function() {
+//     if (Session.get('requestMergeDuplicateAccount')) {
+//       this.render('requestMergeDuplicateAccount');
+//       this.stop();
+//     }
+//   }
 
-  // make sure that user is allowed to enter the site
-  var allowedAccess = function() {
-    if(Meteor.user() && Meteor.user().isAccessDenied) {
-      Router.go('hacker', Meteor.user()); 
-      this.stop();
-    }
-  }
-
-
-  // make sure the subscriptions are fully loaded
-  var except = ['frontpage', 'invite', 'verifyEmail', 'about'];
-  Router.load(waitOnSubscriptionsReady, {except: except});
-  Router.before(waitOnSubscriptionsReady, {except: except});
-
-  // make sure the user is logged in, except for the pages below
-  var exceptLogin = ['frontpage', 'invite', 'verifyEmail', 'about'];
-  Router.load(loginRequired, {except: exceptLogin});
-  Router.before(loginRequired, {except: exceptLogin});
-
-  // check for duplicate accounts, if so request for merge
-  Router.before(checkDuplicateAccounts, {except: exceptLogin});
-
-  // make sure that user is allowed to enter the site
-  var exceptAllowAccess = ['hacker', 'invite', 'verifyEmail'];
-  Router.before(allowedAccess, {except: exceptAllowAccess});
-
-  // log pageview to Google Analytics
-  Router.load(GAnalytics.pageview);
+//   // make sure that user is allowed to enter the site
+//   var allowedAccess = function() {
+//     if(Meteor.user() && Meteor.user().isAccessDenied) {
+//       Router.go('hacker', Meteor.user()); 
+//       this.stop();
+//     }
+//   }
 
 
-  // global router configuration
-  Router.configure({
-    autoRender: false
-  });
+//   // make sure the subscriptions are fully loaded
+//   var except = ['frontpage', 'invite', 'verifyEmail', 'about'];
+//   Router.load(waitOnSubscriptionsReady, {except: except});
+//   Router.before(waitOnSubscriptionsReady, {except: except});
 
-}
+//   // make sure the user is logged in, except for the pages below
+//   var exceptLogin = ['frontpage', 'invite', 'verifyEmail', 'about'];
+//   Router.load(loginRequired, {except: exceptLogin});
+//   Router.before(loginRequired, {except: exceptLogin});
+
+//   // check for duplicate accounts, if so request for merge
+//   Router.before(checkDuplicateAccounts, {except: exceptLogin});
+
+//   // make sure that user is allowed to enter the site
+//   var exceptAllowAccess = ['hacker', 'invite', 'verifyEmail'];
+//   Router.before(allowedAccess, {except: exceptAllowAccess});
+
+//   // log pageview to Google Analytics
+//   Router.load(GAnalytics.pageview);
+
+
+//   // global router configuration
+//   Router.configure({
+//     autoRender: false
+//   });
+
+// }
 
 
 
