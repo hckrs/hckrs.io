@@ -9,7 +9,6 @@ accounts-facebook
 accounts-github
 accounts-twitter
 underscore
-bootstrap
 facebook
 github
 twitter
@@ -29,3 +28,16 @@ collection-hooks
 
 imagemagick
 node-dependencies
+
+momentjs
+database-forms
+nprogress
+spin
+fast-render
+
+crypto-base
+crypto-md5
+mailchimp
+rss
+telescope-i18n
+bootstrap

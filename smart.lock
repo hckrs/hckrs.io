@@ -5,7 +5,17 @@
       "iron-router": {},
       "GAnalytics": {},
       "collection-hooks": {},
-      "imagemagick": {}
+      "imagemagick": {},
+      "momentjs": {},
+      "database-forms": {
+        "git": "git://github.com/SachaG/database-forms.git",
+        "branch": "master"
+      },
+      "nprogress": {},
+      "spin": {},
+      "fast-render": {},
+      "crypto-base": {},
+      "crypto-md5": {}
     },
     "packages": {
       "iron-router": {
@@ -27,6 +37,41 @@
         "git": "https://github.com/sylvaingi/meteor-imagemagick.git",
         "tag": "v0.1.2",
         "commit": "d67bb926356d35cdff1a6d6c3c69750f3f54c059"
+      },
+      "momentjs": {
+        "git": "https://github.com/crapthings/meteor-momentjs.git",
+        "tag": "v2.1.0.2",
+        "commit": "59a762e297082eea8b8cae00374c2b7ac6f89529"
+      },
+      "database-forms": {
+        "git": "git://github.com/SachaG/database-forms.git",
+        "branch": "master",
+        "commit": "b11ac7d5ca10df610ee5ca810cde45bb38ac81b7"
+      },
+      "nprogress": {
+        "git": "https://github.com/zhouzhuojie/meteor-nprogress.git",
+        "tag": "v0.0.3",
+        "commit": "ffd1c5dd400af64121197f4e637a215c4b6b1fc7"
+      },
+      "spin": {
+        "git": "https://github.com/SachaG/meteor-spin.git",
+        "tag": "v0.2.2",
+        "commit": "3f655f0016228e4195acc784c45d3e3a247dc39f"
+      },
+      "fast-render": {
+        "git": "https://github.com/arunoda/meteor-fast-render.git",
+        "tag": "v0.1.15",
+        "commit": "baf79a3e5863acc3abfe2d0d62fb23b21fe880de"
+      },
+      "crypto-base": {
+        "git": "https://github.com/oortcloud/meteor-crypto-base.git",
+        "tag": "v3.1.2.1",
+        "commit": "5df8d82a0595553415bbfae2930c6ecbeece5794"
+      },
+      "crypto-md5": {
+        "git": "https://github.com/oortcloud/meteor-crypto-md5.git",
+        "tag": "v3.1.2.2",
+        "commit": "75bbb3eeace302122d3554a6212a6fe92553fa18"
       }
     }
   }

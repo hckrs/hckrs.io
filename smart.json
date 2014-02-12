@@ -3,6 +3,15 @@
     "iron-router": {},
     "GAnalytics": {},
     "collection-hooks": {},
-    "imagemagick": {}
+    "imagemagick": {},
+    "momentjs": {},
+    "database-forms": {
+        "git": "git://github.com/SachaG/database-forms.git"    
+    },
+    "nprogress": {},
+    "spin": {},
+    "fast-render": {},
+    "crypto-base": {},
+    "crypto-md5": {}
   }
 }
