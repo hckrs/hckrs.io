@@ -28,15 +28,15 @@ var afterLogin = function() {
 
   // if a redirectUrl is present, redirect to that url
   // otherwise if also no route is setted to the hackers list
-  var redirectUrl = Session.get('redirectUrl');
-  var currentRoute = Router._currentController.route.name;
+  // var redirectUrl = Session.get('redirectUrl');
+  // var currentRoute = Router._currentController.route.name;
   
-  if (redirectUrl)
-    Router.go(redirectUrl);
-  else if(currentRoute === 'frontpage')
-    goToEntryPage();
-  else // reload page to trigger route actions again
-    Router.reload();
+  // if (redirectUrl)
+  //   Router.go(redirectUrl);
+  // else if(currentRoute === 'frontpage')
+  //   goToEntryPage();
+  // else // reload page to trigger route actions again
+  //   Router.reload();
 
 }
 

@@ -1,4 +1,5 @@
 <template name="posts_list">
+  <a id="submit" class="submit button" href="{{pathFor 'post_submit'}}">{{i18n "Post"}}</a>
 	<div class="posts grid list">
 		{{#each posts}}
 			{{> post_item}}
