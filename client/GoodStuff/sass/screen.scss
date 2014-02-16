@@ -3,35 +3,41 @@
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
-@import "compass/reset";
-@import "compass/css3";
-@import "compass/typography/lists/horizontal-list";
+.telescope {
 
-@import "partials/variables";
-@import "partials/colors";
-@import "partials/mixins";
-@import "partials/main";
-@import "partials/typography";
-@import "partials/icons";
-@import "partials/pageslide";
-@import "partials/markdown";
-@import "partials/tooltips";
-@import "partials/datepicker";
-@import "partials/dropdown";
-@import "partials/grid";
+  color: black;
 
-@import "modules/header";
-@import "modules/posts";
-@import "modules/comments";
-@import "modules/forms";
-@import "modules/dialogs";
-@import "modules/settings";
-@import "modules/users";
-@import "modules/user-profile";
-@import "modules/errors";
-@import "modules/notifications";
+  @import "compass/reset";
+  @import "compass/css3";
+  @import "compass/typography/lists/horizontal-list";
 
-@import "partials/mobile";
+  @import "partials/variables";
+  @import "partials/colors";
+  @import "partials/mixins";
+  @import "partials/main";
+  @import "partials/typography";
+  @import "partials/icons";
+  @import "partials/pageslide";
+  @import "partials/markdown";
+  @import "partials/tooltips";
+  @import "partials/datepicker";
+  @import "partials/dropdown";
+  @import "partials/grid";
 
-@import "themes/default";
-@import "themes/telescope";
+  @import "modules/header";
+  @import "modules/posts";
+  @import "modules/comments";
+  @import "modules/forms";
+  @import "modules/dialogs";
+  @import "modules/settings";
+  @import "modules/users";
+  @import "modules/user-profile";
+  @import "modules/errors";
+  @import "modules/notifications";
+
+  @import "partials/mobile";
+
+  @import "themes/default";
+  @import "themes/telescope";
+
+}

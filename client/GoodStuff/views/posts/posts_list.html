@@ -1,13 +1,15 @@
 <template name="posts_list">
-  <a id="submit" class="submit button" href="{{pathFor 'post_submit'}}">{{i18n "Post"}}</a>
-	<div class="posts grid list">
-		{{#each posts}}
-			{{> post_item}}
-		{{/each}}
-	</div>
-  {{#if hasMorePosts}}
-  	<div class="grid more-button">
-  		<a class="more-link" href="{{loadMoreUrl}}">{{i18n "Load more"}}</a>
+  <div class="telescope">
+    {{> nav}}
+  	<div class="posts grid list">
+  		{{#each posts}}
+  			{{> post_item}}
+  		{{/each}}
   	</div>
-  {{/if}}
+    {{#if hasMorePosts}}
+    	<div class="grid more-button">
+    		<a class="more-link" href="{{loadMoreUrl}}">{{i18n "Load more"}}</a>
+    	</div>
+    {{/if}}
+  </div>
 </template>

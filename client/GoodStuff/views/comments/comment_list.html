@@ -1,4 +1,5 @@
 <template name="comment_list">
+  <div class="telescope">
   {{#if has_comments}}
     <ul class="comments comment-list">
       {{#each child_comments}}
@@ -8,4 +9,5 @@
   {{else}}
     <p>{{i18n "No comments."}}</p>
   {{/if}}
+  </div>
 </template>
