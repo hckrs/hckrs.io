@@ -62,15 +62,17 @@ if (Meteor.isClient) {
     
     this.route('hacker', { path: '/:localRankHash', template: 'hacker', 
       load: function() {
-        var hacker = userFromUrl(window.location.href, {reactive: false});
+        var city = cityFromUrl(window.location.href);
+        var hacker = userFromCityHash(city, this.params.localRankHash);
         
         // log to google analytics
         if (hacker)
           GAnalytics.event('Views', 'profile', hacker._id);
-        else GAnalytics.event('Views', 'profile unknow', city+' '+localRank);
+        else GAnalytics.event('Views', 'profile unknow', this.params.localRankHash);
       },
       before: function() { 
-        var hacker = userFromUrl(window.location.href);
+        var city = cityFromUrl(window.location.href);
+        var hacker = userFromCityHash(city, this.params.localRankHash);
         
         if (!hacker)
           return this.redirect('frontpage');
