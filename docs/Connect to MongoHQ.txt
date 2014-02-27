@@ -67,5 +67,10 @@ $ mongorestore -h paulo.mongohq.com:10066 -d app20031891 -u heroku -p bf681c855a
 $ mongodump -h paulo.mongohq.com:10066 -d app20031891 -u heroku -p bf681c855a5f09418e7e6b647fac539a -o /Users/dev/dev/projects/dev/hckrs/backup/mongohq && mongorestore -h dharma.mongohq.com:10012 -d app20276747 -u heroku -p 64fb61dd02abec6de871330102fb582e /Users/dev/dev/projects/dev/hckrs/backup/mongohq/app20031891
 
 
+--- Clone PRODUCTION database to the LOCAL app ---
+
+$ mongodump -h paulo.mongohq.com:10066 -d app20031891 -u heroku -p bf681c855a5f09418e7e6b647fac539a -o /Users/dev/dev/projects/dev/hckrs/backup/mongohq && mongorestore -h localhost:3002 -d meteor /Users/dev/dev/projects/dev/hckrs/backup/mongohq/app20031891
+
+
 
 
