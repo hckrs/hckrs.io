@@ -1,20 +1,9 @@
 {
   "public": {
     "environment": "local",
-    
-    "siteName": "hckrs.io",
-    "siteEmail": "machine@hckrs.io",
-    "siteOwnerEmail": "mail@hckrs.io",
-
-    "mapboxDefault": "ramshorst.gd0ekbb3",
-    "mapboxPlaces": "ramshorst.gcoejeom",
-
-    "ga": { "account": null }
+    "ga": { "account": null },
+    "sendEmailOnNewUser": false
   },
-
-
-  "defaultNumberOfInvitesForNewUsers": 2,
-  "maximumNumberOfUnusedInvitesPerUser": 6,
 
 
   "env": {

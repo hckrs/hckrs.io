@@ -293,7 +293,7 @@ if (Meteor.isClient) {
 
   // return the current environment (local|production)
   Handlebars.registerHelper('environment', function() {
-    return Meteor.settings && Meteor.settings.public.environment;
+    return Settings['environment'];
   });  
 
   // template helper to use the value of a Session variable directly in the template

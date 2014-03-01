@@ -13,12 +13,6 @@ Session.set('sessionId', Meteor.default_connection._lastSessionId);
 
 // TODO: add session variable that tracks when all global subscriptions have loaded
 
-// Settings
-Meteor.subscribe('settings', function(){
-  // runs once after settings have loaded
-  Session.set('settingsLoaded',true);
-  analyticsInit();
-});
 
 // Categories
 Meteor.subscribe('categories');

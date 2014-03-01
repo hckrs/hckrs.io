@@ -1,21 +1,9 @@
 {
   "public": {
     "environment": "staging",
-
-    "siteName": "hckrs.io",
-    "siteEmail": "machine@hckrs.io",
-    "siteOwnerEmail": "mail@hckrs.io",
-    
-    "mapboxDefault": "ramshorst.gd0ekbb3",
-    "mapboxPlaces": "ramshorst.gcoejeom",
-
-    "ga": { "account": null }
+    "ga": { "account": null },
+    "sendEmailOnNewUser": true
   },
-
-
-  "defaultNumberOfInvitesForNewUsers": 2,
-  "maximumNumberOfUnusedInvitesPerUser": 6,
-
 
   "env": {
     "MAIL_URL": "smtp://machine@hckrs.io:IN2MR8K1RmnOxjGoSIIIQYMNHVSUIevNQqasdaW@mail.gandi.net:587/",

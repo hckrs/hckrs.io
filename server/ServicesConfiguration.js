@@ -13,29 +13,29 @@ var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'tw
 Meteor.startup(function() {
 
   // register facebook
-  if(!facebookConfigured && Meteor.settings.facebook) {
+  if(!facebookConfigured && Settings['facebook']) {
     Accounts.loginServiceConfiguration.insert({
       service: "facebook",
-      appId: Meteor.settings.facebook.appId,
-      secret: Meteor.settings.facebook.secret
+      appId: Settings['facebook'].appId,
+      secret: Settings['facebook'].secret
     });
   }
 
   // register github app
-  if(!githubConfigured && Meteor.settings.github) {
+  if(!githubConfigured && Settings['github']) {
     Accounts.loginServiceConfiguration.insert({
       service: "github",
-      clientId: Meteor.settings.github.clientId,
-      secret: Meteor.settings.github.secret
+      clientId: Settings['github'].clientId,
+      secret: Settings['github'].secret
     });
   }
 
   // register twitter app
-  if(!twitterConfigured && Meteor.settings.twitter) {
+  if(!twitterConfigured && Settings['twitter']) {
     Accounts.loginServiceConfiguration.insert({
       service: "twitter",
-      consumerKey: Meteor.settings.twitter.consumerKey,
-      secret: Meteor.settings.twitter.secret
+      consumerKey: Settings['twitter'].consumerKey,
+      secret: Settings['twitter'].secret
     });
   }
   
@@ -454,7 +454,7 @@ Accounts.onCreateUser(function (options, user) {
     user.invitationPhrase = user.globalRank * 2 + 77;
 
     // give this user the default number of invite codes
-    user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
+    user.invitations = getSetting('defaultNumberOfInvitesForNewUsers', 2);
 
     // don't allow access until user completes his profile 
     // and is invited
@@ -481,8 +481,7 @@ Accounts.onCreateUser(function (options, user) {
     user.slug = slugify(getUserName(user));
 
     // let admins know that a new user has registered the site
-    if (Meteor.settings.public.environment === 'production')
-      SendEmailOnNewUser(user);
+    SendEmailOnNewUser(user);
 
     trackEvent('new user', {username: getUserName(user), email: user.profile.email});
 

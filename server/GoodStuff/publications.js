@@ -162,18 +162,18 @@ Meteor.publish('singleComment', function(commentId) {
 
 // -------------------------------------------- Other -------------------------------------------- //
 
-Meteor.publish('settings', function() {
-  var options = {};
-  if(!isAdminById(this.userId)){
-    options = _.extend(options, {
-      fields: {
-        mailChimpAPIKey: false,
-        mailChimpListId: false
-      }
-    });
-  }
-  return Settings.find({}, options);
-});
+// Meteor.publish('settings', function() {
+//   var options = {};
+//   if(!isAdminById(this.userId)){
+//     options = _.extend(options, {
+//       fields: {
+//         mailChimpAPIKey: false,
+//         mailChimpListId: false
+//       }
+//     });
+//   }
+//   return Settings.find({}, options);
+// });
 
 Meteor.publish('notifications', function() {
   // only publish notifications belonging to the current user
