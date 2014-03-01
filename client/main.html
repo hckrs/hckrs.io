@@ -31,7 +31,12 @@
 </head>
 
 
+
 <template name="layout">
+  {{! 
+    This template is the website wrapper and is rendered by default. 
+    All routes loads there template in the {yield} section. 
+  }}
   <div class="wrapper">
     {{> header}}
     {{yield}}
