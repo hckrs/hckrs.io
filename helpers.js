@@ -101,6 +101,11 @@ cityFromUrl = function(url) {
 userFromUrl = function(url, options) {
   var city = cityFromUrl(url);
   var localRankHash = _.last(url.split('/'));
+  return userFromCityRankHash(city, localRankHash, options);
+}
+
+// get user by city and localrank
+userFromCityRankHash = function(city, localRankHash, options) {
   var localRank = bitHashInv(localRankHash);
   return Meteor.users.findOne({city: city, localRank: localRank}, options || {});
 }
