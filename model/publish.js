@@ -1,23 +1,4 @@
 
-
-// SUBSCRIBE
-
-if (Meteor.isClient) {
-  
-  // subscribe to published collections
-  // to receive documents on the client  
-
-  Subscriptions = [
-    'currentUser', 
-    'allUsersWithEmail', 
-    'allUsers',
-    'invitations', 
-  ];
-
-}
-
-
-
 // PUBLISH
 
 if (Meteor.isServer) {

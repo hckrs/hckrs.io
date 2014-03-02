@@ -25,19 +25,11 @@ var afterLogin = function() {
   checkDuplicateIdentity();
   checkInvitation();
   checkAccess();
-
-  // if a redirectUrl is present, redirect to that url
-  // otherwise if also no route is setted to the hackers list
-  // var redirectUrl = Session.get('redirectUrl');
-  // var currentRoute = Router._currentController.route.name;
   
-  // if (redirectUrl)
-  //   Router.go(redirectUrl);
-  // else if(currentRoute === 'frontpage')
-  //   goToEntryPage();
-  // else // reload page to trigger route actions again
-  //   Router.reload();
-
+  // when user enters the site on the frontpage
+  // redirect to entry page after login
+  if (getCurrentRoute() === '/')
+    goToEntryPage();
 }
 
 // when user becomes logged out
@@ -145,8 +137,6 @@ var checkInvitation = function() {
         GAnalytics.event('Invitations', 'invalid phrase', phrase);
       
       } else { //on success
-
-        setupSubscriptions(); //rerun subscriptions
         
         // log to google analytics
         if (broadcastUser)
@@ -176,7 +166,6 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
       if (err) log(err);
       else {
         goToEntryPage();
-        setupSubscriptions();
       }
     });
   }
@@ -195,7 +184,6 @@ checkAccess = function() { /* GLOBAL, called from router.js */
         if (err) log(err);
         else {
           goToEntryPage();
-          setupSubscriptions();
         }
       });
     }
@@ -236,10 +224,8 @@ loginStateHandler = function(c) {
 
 // keep updating the currentLoginState when user is loggin in or out
 observeLoginState = function() {
-  if (Meteor.user() && Session.get('userSubscriptionsReady')) // logged in and rady
+  if (Meteor.user()) // logged in and rady
     Session.set('currentLoginState', 'loggedIn'); 
-  else if (Meteor.user()) // logged in but wait to subscriptions are reloaded
-    setupSubscriptions();
   else if (Meteor.loggingIn()) // meteor is busy with logging in the user
     Session.set('currentLoginState', 'loggingIn');
   else // user is logged out
@@ -247,33 +233,6 @@ observeLoginState = function() {
 }
 
 
-/* SUBSCRIPTIONS */
-
-setupSubscriptions = function() {  
-
-  // reset subscriptions ready
-  Session.set('subscriptionsReady', false);
-  Session.set('userSubscriptionsReady', false);
-  
-  // mark subscriptions as ready when they are completely loaded
-  var callback = _.after(Subscriptions.length, function() {
-    Session.set('subscriptionsReady', true);
-    if (Meteor.user()) // XXX can we assume that Meteor.user() is always setted at this point?
-      Session.set('userSubscriptionsReady', true);
-  });
-
-  // this unique hash makes it sure that all subscriptions rerun 
-  // when this method "setupSubscriptions" called again
-  var hash = Random.id();
-  
-  // subscribe to collections
-  _.each(Subscriptions, function(collection) {
-    Meteor.subscribe(collection, hash, callback);
-  });
-
-  if (Subscriptions.length === 0)
-    callback();
-}
 
 
 

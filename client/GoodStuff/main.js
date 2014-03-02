@@ -17,10 +17,6 @@ Session.set('sessionId', Meteor.default_connection._lastSessionId);
 // Categories
 Meteor.subscribe('categories');
 
-// Current User
-// We need to subscribe to the currentUser subscription because by itself, 
-// Meteor doesn't send all the user properties that we need
-Meteor.subscribe('currentUser');
 
 // Subscribe to all users for now to make user selection autocomplete work
 Meteor.subscribe('allUsersAdmin');

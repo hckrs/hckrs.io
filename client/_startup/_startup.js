@@ -6,9 +6,7 @@ Meteor.startup(function() {
 
   // keep track of the login session
   Session.set('currentLoginState', 'loggedOut');
-  Session.set('subscriptionsReady', false);
-  Session.set('userSubscriptionsReady', false);
-  setupSubscriptions();
+  
   Deps.autorun(loginStateHandler);
   Deps.autorun(observeLoginState);
 
@@ -22,6 +20,10 @@ Meteor.startup(function() {
 });
 
 
+// Current User
+// We need to subscribe to the currentUser subscription because by itself, 
+// Meteor doesn't send all the user properties that we need
+Meteor.subscribe('currentUser');
 
 
 // reset local storage after running 
