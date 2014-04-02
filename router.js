@@ -9,7 +9,6 @@ if (Meteor.isClient) {
   Router.map(function () {
     
     this.route('frontpage', { path: '/', template: 'frontpage' });
-
     this.route('highlights', { path: '/highlights', template: 'highlights',
       load: function() { 
         Session.set('absoluteHeader', true); 
@@ -20,17 +19,12 @@ if (Meteor.isClient) {
         Session.set('inversedHeader', false); 
       }
     });
-    
     this.route('hackers', { path: '/hackers', template: 'hackers' });
-
     this.route('invitations', { path: '/invitations', template: 'invitations' });
-
     this.route('sponsors', { path: '/sponsors', template: 'sponsors' });
-
     this.route('agenda', { path: '/agenda', template: 'agenda' });
-    
     this.route('about', { path: '/about', template: 'about' });
-
+    this.route('books', { path: '/books', template: 'books' });
     this.route('places', { path: '/places', template: 'places',
       load: function() { 
         Session.set('absoluteHeader', true); 
