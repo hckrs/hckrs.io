@@ -73,13 +73,13 @@ $ heroku addons:add newrelic:stark --remote staging
 
 +--------- UPDATE ----------------------------------+
 |
-|  git tag v1.2-test
+|  git tag v1.2.0
 |
 |  git push origin master --tags
 | 
 |  UPDATE 'staging' APP
 | 
-|  $ git push staging master:master —-tags && heroku config:add METEOR_SETTINGS="`cat settings-staging.json`" --remote staging
+|  $ git push staging master:maste && heroku config:add METEOR_SETTINGS="`cat settings-staging.json`" --remote staging
 |
 |
 |  UPDATE 'production' APP (!!!)

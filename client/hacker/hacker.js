@@ -200,6 +200,9 @@ Template.hackerEdit.helpers({
   },
   "isAddServiceError": function(service) {
     return Session.equals('isAddServiceError_'+service, true);
+  },
+  "displayCity": function() {
+    return capitaliseFirstLetter('lyon'); // TODO : set right city variable
   }
 });
 

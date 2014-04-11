@@ -78,10 +78,19 @@ var highlights = function() {
 
     {
       "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
-      "imageUrl": "http://farm9.staticflickr.com/8151/7581131650_3e02c85899_o.jpg",
-      "title": "Startup Weekend",
-      "subtitle": "Digital open labs @ Lyon",
-      "website": "http://lyon.startupweekend.org",
+      "imageUrl": "http://www.le-mixeur.org/wp-content/uploads/sites/6/2014/03/museomix.png",
+      "title": "Museomix",
+      "subtitle": "7-8-9 Novembre",
+      "website": "http://www.museomix.org/",
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+    },
+
+    {
+      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
+      "imageUrl": "/img/highlights/blendWebMix.jpg",
+      "title": "Blend Web Mix",
+      "subtitle": "29 & 30 Octobre LaCuisineDuWeb",
+      "website": "http://www.blendwebmix.com/",
       "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
@@ -92,15 +101,6 @@ var highlights = function() {
       "subtitle": "web app Lyonnaise",
       "website": "http://yannlombard.github.io/derniermetro/",
       "userId": userIdFromUrl("http://lyon.hckrs.io/--"), 
-    },
-
-    {
-      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
-      "imageUrl": "http://www.fhacktory.com/images/fhacktory-hackathon-panorama.jpg",
-      "title": "Fhacktory",
-      "subtitle": "Tu code, tu viens. hackaton Lyonnais sur 24h",
-      "website": "http://www.fhacktory.com",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-_-"), 
     },
 
 

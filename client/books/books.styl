@@ -13,10 +13,8 @@ h1{
 	section{
 
 		height: 200px;
-		min-height: 200px;
-		max-height: 200px;
 	    background-color: rgba(0,0,0,0.55);
-	    margin: 0px 0px 12px 0px; 
+	    margin: 0px 12px 12px 0px; 
 	    overflow: hidden;
 	    width: 100%;
 
@@ -26,8 +24,7 @@ h1{
 			float: left;
 			background-color: rgba(255,255,255,0.1);
 			padding: 0px;
-			display: inline-block;
-			margin: 0px 0px 0px -2px; /* fix to avoid line on the left site of image, the right side won't go away */
+			margin: 0px 18px 0px -2px; /* fix to avoid line on the left site of image, the right side won't go away */
 			img{
 				height: 200px;
 				width: auto;
@@ -36,42 +33,43 @@ h1{
 
 		.description{
 			height: 176px;
-			padding: 12px 8px 10px 14px;
-			width: auto;
-			overflow: hidden;
-			display: inline-block;
+			padding: 12px 8px 10px 0px;
+			width: 100%;
 
 			.name{
 				font-size: 1.8em;
-				line-height: 1.5em;
+				line-height: 1.1em;
 				font-weight: bold;
-				float: left;
-				clear: both;
+				width: auto;
+				margin-bottom: 4px;
 			}
 			.subname{
 				font-size: 1.3em;
 				line-height: 1.3em;
 				font-weight: 100;
-				float: left;
-				clear: both;
+				width: auto;
+				margin-bottom: 6px;
 			}
 			.author{
-				float: left;
-				clear: both;
 				margin-top: 12px;
 				font-weight: bold;
 				margin-right: 8px;
+				width: auto;
 			}
 			.information{
-				float: left;
 				margin-top: 12px;
 				margin-bottom: 12px;
-
+				width: auto;
 			}
 			.lanquages{
-				float: left;
-				clear: both;
+				width: auto;
+				margin-top: 6px;
 			}
+			
+		}
+
+		a {
+			margin-left: 0px; /* fix */
 		}
 
 	}
@@ -81,15 +79,9 @@ h1{
 
 @media all and (min-width: 1200px) {
 	.block {
-		-webkit-column-break-inside: avoid;
-		-webkit-column-count: 2;
-		-webkit-column-gap: 12px; /* Saf3, Chrome*/
-		-moz-column-count: 2;   
-		-moz-column-gap: 12px; /* FF3.5+ */
-		column-count: 255;        
-		column-gap: 12px; /* Opera 11+*/	
-
 		section{
+			float: left;
+			width: 48.9%;
 			display : inline-block
 		}
 	}
@@ -97,15 +89,9 @@ h1{
 
 @media all and (min-width: 1600px) {
 	.block {
-		-webkit-column-break-inside: avoid;
-		-webkit-column-count: 3;
-		-webkit-column-gap: 12px; /* Saf3, Chrome*/
-		-moz-column-count: 3;   
-		-moz-column-gap: 12px; /* FF3.5+ */
-		column-count: 3;        
-		column-gap: 12px; /* Opera 11+*/
-		
 			section{
+				float: left;
+				width: 32.5%;
 				display : inline-block
 			}
 	}
@@ -113,7 +99,7 @@ h1{
 
 
 
-.page a.btn{
+.page .btn-suggest{
 	float: left;
 	clear: both;
 	margin-bottom: 48px;
