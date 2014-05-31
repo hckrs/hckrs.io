@@ -77,21 +77,21 @@ var highlights = function() {
   return [ /* NEW to OLD */
 
     {
-      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
-      "imageUrl": "http://www.le-mixeur.org/wp-content/uploads/sites/6/2014/03/museomix.png",
-      "title": "Museomix",
-      "subtitle": "7-8-9 Novembre",
-      "website": "http://www.museomix.org/",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+      "createdAt": newDate("2014-14-06"), //date of post YYYY-MM-DD
+      "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
+      "title": "l’Atelier des Objets Connectés #2",
+      "subtitle": "14-15 Juin @ Pôle Pixel",
+      "website": "http://www.atelier-objets-connectes.org/",
+      "userId": userIdFromUrl("http://lyon.hckrs.io/-____--"), 
     },
 
     {
       "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
       "imageUrl": "/img/highlights/blendWebMix.jpg",
       "title": "Blend Web Mix",
-      "subtitle": "29 & 30 Octobre LaCuisineDuWeb",
+      "subtitle": "29-30 Octobre Cité internationale",
       "website": "http://www.blendwebmix.com/",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+      "userId": userIdFromUrl("http://lyon.hckrs.io/----_"), 
     },
 
     {
