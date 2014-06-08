@@ -1,0 +1,46 @@
+
+
+<template name="skills">
+  <div id="skills">
+    <ul class="floating-skills">
+      {{#each hackerSkills}}
+      <li class="skill">
+        {{#if isFavorite}}
+          <span class="label label-info">
+            <span class="icon-star icon-white"></span>
+          </span>
+        {{/if}}
+        <span class="text">{{name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>
+
+
+<template name="editSkills">
+  <div id="skills">
+
+    <select class="chosen-select input-skills" multiple data-placeholder=" programming languages" >
+      {{#each allSkills}}
+        <option {{selected}}>{{name}}</option>
+      {{/each}}
+    </select>
+    <a href="mailto:toon@hckrs.io?subject=Feedback">feedback</a>
+
+    <!--<h3>My Skills</h3>
+    <ul class="floating-skills">
+      {{#each hackerSkills}}
+      <li class="skill">
+        <span class="label {{#if isFavorite}}label-info{{else}}rollover{{/if}} toggle-favorite">
+          <span class="icon-star icon-white"></span>
+        </span>
+        <span class="text">{{name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    <div class="clear"></div>
+    -->
+    
+  </div>
+</template>

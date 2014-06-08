@@ -4,13 +4,15 @@
 // that can be used for user account creation and login.
 // This will be done once, at the first time you run meteor.
 
-// check which services are already configured
-var facebookConfigured = Accounts.loginServiceConfiguration.findOne({service: 'facebook'});
-var githubConfigured = Accounts.loginServiceConfiguration.findOne({service: 'github'});
-var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'twitter'});
+
 
 
 Meteor.startup(function() {
+
+  // check which services are already configured
+  var facebookConfigured = Accounts.loginServiceConfiguration.findOne({service: 'facebook'});
+  var githubConfigured = Accounts.loginServiceConfiguration.findOne({service: 'github'});
+  var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'twitter'});
 
   // register facebook
   if(!facebookConfigured && Meteor.settings.facebook) {
@@ -441,6 +443,10 @@ Accounts.onCreateUser(function (options, user) {
     var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
     user.localRank = (local && local.localRank || 0) + 1;
     user.globalRank = (global && global.globalRank || 0) + 1;
+
+    // make the first user within the system admin
+    if (user.globalRank === 1)
+      user.isAdmin = true;
 
     // make the first user of a city the mayor
     if (user.localRank === 1)

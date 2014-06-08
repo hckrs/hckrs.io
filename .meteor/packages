@@ -15,7 +15,6 @@ github
 twitter
 oauth1
 stylus
-preserve-inputs
 http
 newrelic
 amplify
@@ -29,3 +28,7 @@ collection-hooks
 
 imagemagick
 node-dependencies
+
+
+blaze-layout
+iron-router-progress

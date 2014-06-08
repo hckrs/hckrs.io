@@ -1,0 +1,27 @@
+<template name="invitations">
+  <div id="invitations" class="page">
+    
+    <H2>Invite hackers</h2>
+    <div class="slots">
+
+      {{#each invitedUsers}}
+        <a href="{{pathFor 'hacker'}}" class="slot" title="{{profile.name}}">
+          <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}"></div>
+        </a>
+      {{/each}}
+
+      {{#each availableSlots}}
+        <div class="slot">
+          <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small"></div>
+        </div>
+
+
+      {{/each}}
+
+      <div class="invitation-text"><p>We trust you to invite awesome hackers for the community.<br/>This personal invitation URL gives acces to <strong>{{unusedTotal}}</strong> persons:</p>
+      <p><strong>{{link}}</strong></p></div>
+
+    </div>
+
+  </div>
+</template>

@@ -1,23 +1,5 @@
 
 
-// SUBSCRIBE
-
-if (Meteor.isClient) {
-  
-  // subscribe to published collections
-  // to receive documents on the client  
-
-  Subscriptions = [
-    'publicUserDataCurrentUser', 
-    'publicUserDataEmail', 
-    'publicUserData',
-    'invitations', 
-  ];
-
-}
-
-
-
 // PUBLISH
 
 if (Meteor.isServer) {
@@ -78,7 +60,8 @@ if (Meteor.isServer) {
 
   // 1. current logged in user
   // publish additional fields 'emails' and 'profile' for the current user
-  Meteor.publish("publicUserDataCurrentUser", function (hash) {
+  Meteor.publish("publicUserDataCurrentUser", function (currentUser) {
+    // ignore 'currentUser' and use the secure 'this.userId' instead
     if(!this.userId) {
       return [];
     } else {
@@ -90,25 +73,37 @@ if (Meteor.isServer) {
   // 2. users with public e-mailaddress
   // we make emailaddresses public of the users that are available for drink/lunch
   // publish their public information including emailaddress
-  Meteor.publish("publicUserDataEmail", function (hash) {
+  Meteor.publish("publicUserDataEmail", function (userIds) {
     if(!this.userId || !allowedAccess(this.userId)) {
       return []; 
     } else {
-      var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, isHidden: {$ne: true}};
+      var userIdSelector = userIds === "all" ? {$exists: true} : {$in: uniformInput(userIds)};
+      var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, isHidden: {$ne: true}, _id: userIdSelector};
       return Users.find(selector, {fields: publicUserFieldsEmail}); 
     }
   });
 
   // 3. otherwise only the default public user data is published
   // publish all public profile data of all users
-  Meteor.publish("publicUserData", function (hash) {
-    var selector = {isHidden: {$ne: true}};
+  Meteor.publish("publicUserData", function (userIds) {
     if(!this.userId || !allowedAccess(this.userId)) {
-      return Users.find(selector, {fields: {_id: true}});   
+      return [];   
     } else {
+      var userIdSelector = userIds === "all" ? {$exists: true} : {$in: uniformInput(userIds)};
+      var selector = {isHidden: {$ne: true}, _id: userIdSelector};
       return Users.find(selector, {fields: publicUserFields}); 
     }
   });
+
+  // 4. always publish empty objects representing all users
+  Meteor.publish("publicUsers", function (hash) {
+    var selector = {isHidden: {$ne: true}};
+    return Users.find(selector, {fields: {_id: true}});  
+  });
+
+
+
+  
 
 
 
@@ -136,6 +131,29 @@ if (Meteor.isServer) {
   var allowedAccess = function(userId) {
     var user = Users.findOne(userId);
     return user && user.isAccessDenied != true;
+  }
+
+
+  // return an uniform list of userIds
+  // valid input can be:
+  // 1. some userId string "..."
+  // 2. some object {city: ..., localRank: ...}
+  // 3. some array with either values from 1 or 2
+  var uniformInput = function(users) {
+    if (_.isArray(users))
+      users = _.map(users, _uniformInput);
+    else 
+      users = [ _uniformInput(users) ];
+    return _.compact(users);
+  }
+
+  var _uniformInput = function(user) {
+    if (Match.test(user, String)) // passed in a single userId
+      return user;
+    if (Match.test(user, {city: String, localRank: Number})) // passed in a single localRank
+      if (user = Meteor.users.findOne(user)) 
+        return user._id;
+    return null;
   }
 
 

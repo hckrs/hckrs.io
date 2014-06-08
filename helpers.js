@@ -93,15 +93,29 @@ bitHashInv = function(hash) {
 
 // get the current city from the url
 cityFromUrl = function(url) {
+  url = url ? url : window.location.href;
   var city = hostnameFromUrl(url).split('.')[0];
   return (city === 'localhost') ? 'lyon' : city; //use lyon instead of localhost
 }
 
+// get user identifier object of the form:
+// {city: String, localRank: Number}
+userIdentifierFromUrl = function(url) {
+  url = url ? url : window.location.href;
+  var city = cityFromUrl(url);
+  var localRank = bitHashInv(_.last(url.split('/')));
+  return {city: city, localRank: localRank};
+}
+
+// get userId from given url
+userIdFromUrl = function(url) {
+  var selector = userIdentifierFromUrl(url);
+  return (Users.findOne(selector, {fields: {_id: true}}) || {})._id;
+}
+
 // get user object from given url
 userFromUrl = function(url, options) {
-  var city = cityFromUrl(url);
-  var localRankHash = _.last(url.split('/'));
-  return userFromCityHash(city, localRankHash);
+  return Users.findOne(userIdFromUrl(url), options || {});
 }
 
 // get user object from given url
@@ -110,11 +124,9 @@ userFromCityHash = function(city, hash, options) {
   return Meteor.users.findOne({city: city, localRank: localRank}, options || {});
 }
 
-// get userId from given url
-userIdFromUrl = function(url, options) {
-  var user = userFromUrl(url, options);
-  return user && user._id;
-}
+
+
+
 
 // hostname as specified in the environment variable ROOT_URL
 // e.g. staging.hckrs.io
@@ -209,6 +221,20 @@ if (Meteor.isClient) {
     .attr('src', url);  
   }
 
+
+  // auto grow input fields
+  // resizing fields depending on their text size
+  initializeAutoGrow = function() {
+    $("input.text").each(function() {
+      $(this).autoGrowInput({
+        comfortZone: parseInt($(this).css('font-size')),
+        minWidth: 150,
+        maxWidth: 500
+      });
+    });
+  }
+
+
   Meteor.Collection.prototype.clear = function() {
     var remove = function(doc) { this.remove(doc._id); }.bind(this);
     this.find().forEach(remove);
@@ -223,121 +249,77 @@ if (Meteor.isClient) {
     throw "Can't access the clipboard.";
   }
 
-  // check if user is logged in
-  isLoggedIn = function() {
-    return Session.equals('currentLoginState', 'loggedIn');
+  // adding a class to a html element for a specified duration (in ms)  
+  addTemporaryClass = function($elm, className, duration) {
+    $elm.addClass(className);
+    Meteor.setTimeout(function() {
+      $elm.removeClass(className);
+    }, duration || 1000);
   }
 
-  // adding a class to a html element for a specified duration (in ms)
-  addDynamicClass = function($elm, className, duration) {
-    var id = $elm; 
-    
-    if ($elm instanceof $) {
-      id = $elm.attr('id');
-      $elm.addClass(className); //direct feedback for better usability
-    }
 
-    var setupTimer = function(err, docId) {
-      if(duration) {
-        Meteor.setTimeout(function() {
-          if ($elm instanceof $)
-            $elm.removeClass(className); //direct feedback for better usability
-          DynamicClasses.remove(docId);
-        }, duration);  
-      }
-    }
+  
 
-    exec(function() {
-      DynamicClasses.insert({ elementId: id, className: className }, setupTimer);
-    });
-  }
-
-  // remove a dynamic class
-  removeDynamicClass = function($elm, className) {
-    var id = $elm; 
-    
-    if ($elm instanceof $) {
-      id = $elm.attr('id');
-      $elm.removeClass(className); //direct feedback for better usability
-    }
-
-    exec(function() {
-      DynamicClasses.find({ elementId: id }).forEach(function(doc) {
-        DynamicClasses.remove(doc._id);  
-      });
-    });
-  }
-
-  // dynamic class helper that returns additional classes that 
-  // are setted on the html element specified by its id
-  Handlebars.registerHelper('dynamicClass', function(elementId) {
-    return _.pluck(DynamicClasses.find({ elementId: elementId }).fetch(), 'className').join(' ');
+  // return the class name(s) if predicate holds
+  UI.registerHelper('classIf', function(classes, predicate) {
+    return predicate ? classes : "";
   });
-
-  Handlebars.registerHelper('loggedIn', function() {
-    return isLoggedIn();
-  });
-
-  // _currentUser helper that only contains the user id
-  // this helper is less reactive than the default currentUser helper,
-  // because it doesn't rerun each time the user information is changing
-  Handlebars.registerHelper('_currentUser', function() {
-    var id = Meteor.userId();
-    return id ? { _id: id } : null;
+  UI.registerHelper('classUnless', function(classes, predicate) {
+    return !predicate ? classes : "";
   });
 
   // check if the two values are equal (weak comparison)
-  Handlebars.registerHelper('equals', function(val1, val2) {
+  UI.registerHelper('equals', function(val1, val2) {
     return val1 == val2;
   });
 
   // check if the given value is in the array
-  Handlebars.registerHelper('contains', function(array, value) {
+  UI.registerHelper('contains', function(array, value) {
     return _.contains(array, value);
   });
 
   // return the current environment (local|production)
-  Handlebars.registerHelper('environment', function() {
+  UI.registerHelper('environment', function() {
     return Meteor.settings && Meteor.settings.public.environment;
   });  
 
   // template helper to use the value of a Session variable directly in the template
-  Handlebars.registerHelper('Session', function(key) {
+  UI.registerHelper('Session', function(key) {
     return Session.get(key);
   });
 
   // template helper for testing if a Session variable equals a specified value
-  Handlebars.registerHelper('SessionEquals', function(key, val) {
+  UI.registerHelper('SessionEquals', function(key, val) {
     return Session.equals(key, val);
   });
 
   // template helper for stripping the protocol of an url
-  Handlebars.registerHelper('ShowUrl', function(url) {
+  UI.registerHelper('ShowUrl', function(url) {
     return removeUrlProtocol(url);
   });
 
   // template helper to transform Date() object to readable tring
-  Handlebars.registerHelper('Calendar', function(date) {
+  UI.registerHelper('Calendar', function(date) {
     if (!date) return "";
     return moment(date).calendar();
   });
 
   // template helper to transform Date() object to readable tring
-  Handlebars.registerHelper('Date', function(date, format) {
+  UI.registerHelper('Date', function(date, format) {
     if (!date) return "";
     return moment(date).format(format);
   });
 
   // template helper to convert number to valuta string 
-  Handlebars.registerHelper('Currency', function(value) { 
+  UI.registerHelper('Currency', function(value) { 
     return convertToCurrency(value);
   });
 
-  Handlebars.registerHelper('HTML', function(html) {
-    return new Handlebars.SafeString(html);
+  UI.registerHelper('HTML', function(html) {
+    return new Spacebar.SafeString(html);
   });
 
-  Handlebars.registerHelper('Domain', function(url) {
+  UI.registerHelper('Domain', function(url) {
     return domainFromUrl(url);
   });
 

@@ -1,0 +1,62 @@
+<template name="highlights">
+  <div id="highlights" class="route-transition">
+    <a href="#" class="up"><img src="img/icon-arrow-up.svg" title="previous" class="up" /></a>
+    <a href="#" class="down"><img src="img/icon-arrow-down.svg" class="down" title="next" /></a>
+    <div id="onePageScroll">
+    
+      {{#each highlights}}
+        <section>
+          <div class="photo" style="background-image:url({{imageUrl}});"></div>
+          {{#if website}}
+            <a href="{{website}}" target="_blank">
+              {{> highlightSectionDetails}}
+            </a>
+          {{else}}
+            {{> highlightSectionDetails}}
+          {{/if}}
+        </section>
+      {{/each}}
+
+    </div>
+  </div>
+</template>
+
+<template name="highlightSectionDetails">
+  <div class="details">
+    
+    {{#if userId}}
+    {{#with relatedUser userId}}
+      <div class="user">
+        <a href="{{pathFor 'hacker'}}" class="hackers-name">
+          <div style="background-image:url({{profile.picture}});" class="pictureView small clickable"></div>
+        </a>
+      </div>
+    {{/with}}
+    {{/if}}
+            
+    {{#if title}}
+      <span class="title">{{title}}</span>
+    {{/if}}
+              
+    {{#if subtitle}}
+      <span class="subtitle">{{subtitle}}</span>
+    {{/if}}
+    
+    {{#if eventLocation}}
+      <span class="event-location"><strong>{{eventLocation}}</strong></span>
+    {{/if}}
+
+    {{#if eventDate}}
+      <span class="event-date">{{Calendar eventDate}}</span>
+    {{/if}}
+    
+    {{#if description}}
+      <div class="description">{{description}}</div>
+    {{/if}}
+
+    {{#if website}}
+      <div class="url">{{Domain website}}</div>
+    {{/if}}
+
+  </div>        
+</template>

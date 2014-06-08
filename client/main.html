@@ -31,24 +31,23 @@
 </head>
 
 <body>
-  {{> main}}
+  <!-- router will determine which template to load -->
 </body>
 
 <template name="main">
-  <div class="wrapper">
+  <div id="mainWrapper" class="wrapper">
     {{> header}}
-    {{renderRouter}}
+    {{> yield}}
   </div>
 </template>
 
 
+
 <template name="header">
-
-  <div class="header {{absoluteHeader}} {{inversedHeader}}">
-    <div class="content">
-  
-      {{#if loggedIn}}
-
+  <div id="header" class="{{headerStyle}} {{hidden}} {{active}}">
+    <div class="floating">
+      <div class="background"></div>
+      <div class="content">
         <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
         {{#with currentUser}}
           {{#unless isAccessDenied}}
@@ -77,180 +76,19 @@
             </div>
           </div>
         {{/with}}
-
-        <div class="clear"></div>
-
-      {{/if}}
-
-    </div>
-  </div>
-</template>
-  
-
-
-<template name="frontpage">
-  <div id="frontpage" class="page">
-    <div class="logo-large"></div>
-    {{#if loggedIn}}
-      <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
-    {{else}}
-      {{#if invitationBroadcastUser}}
-        {{#with invitationBroadcastUser}}
-          <div class="invited-by-container">
-            <div style="background-image:url({{profile.picture}});float:left;" class="pictureView"></div>
-            <div style="" class="speach-bubble"><div class="larger">... welcome</div><br/><div class="name">— {{profile.name}}</div></div>
-          </div>
-        {{/with}}
-      {{/if}}
-      <div class="frontpage-login"> 
-        <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
-        <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
-        <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
-        <div class="frontpage-join-us"></div>
-      </div>
-    {{/if}}
-    {{#if serviceLoginError}}
-      <div class="error">{{serviceLoginError}}</div>
-    {{/if}}
-    <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in Lyon<br></H1>
-    discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
-    <div class="page-space"></div>
-    <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> — <a href="{{pathFor 'about'}}">about hckrs</a></div>
-  </div>
-</template>
-
-
-<template name="hackers">
-  <div id="hackers" class="page">
-    
-    {{#each hackers}}
-    <div class="hacker">
-      <a class="hackers-name" href="{{pathFor 'hacker'}}">
-      <div style="background-image:url({{profile.picture}});" class="pictureView" style="cursor: pointer;"></div>
-      {{profile.name}}</a><br/>
-      <!--<div class="age">{{profile.age}}</div>-->
-      <!--{{#if profile.social.facebook}}
-        <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
-      {{/if}}
-      {{#if profile.social.github}}
-        <a href="{{profile.social.github}}" class="hackers-social social-github" target="_blank">Github</a>
-      {{/if}}
-      {{#if profile.social.twitter}}
-        <a href="{{profile.social.twitter}}" class="hackers-social social-twitter" target="_blank">Twitter</a>
-      {{/if}}-->
-    </div>
-    {{/each}}
-   
-    <div style="clear:both;"></div>
-
-    {{> invitations}}
-
-    <div class="page-space"></div>
-  </div>
-</template>
-
-
-<template name="invitations">
-  <div id="invitations" class="page">
-    
-    <H2>Invite hackers</h2>
-    <div class="slots">
-
-      {{#each invitedUsers}}
-        <a href="{{pathFor 'hacker'}}" class="slot" title="{{profile.name}}">
-          <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}"></div>
-        </a>
-      {{/each}}
-
-      {{#each availableSlots}}
-        <div class="slot">
-          <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small"></div>
-        </div>
-
-
-      {{/each}}
-
-      <div class="invitation-text"><p>We trust you to invite awesome hackers for the community.<br/>This personal invitation URL gives acces to <strong>{{unusedTotal}}</strong> persons:</p>
-      <p><strong>{{link}}</strong></p></div>
-
-    </div>
-
-  </div>
-</template>
-
-<template name="sponsors">
-  <div id="sponsors" class="page">
-    
-    <H2>Gifts</h2>
-
-    <div class="sponsor-item">
-      <p>
-        <div class="offer">co-working — 1 day</div>
-        <H3><a href="http://www.la-cordee.net" target="_blank">@ La cordée</a></h3>
-        <div class="discription">Valid in the office space of your choice.</div>
-      </p>
-    </div>
-    <!--
-    <div class="sponsor-item">
-      <p>
-        <div class="offer">maps — 3 months</div>
-        <H3><a href="https://www.mapbox.com" target="_blank">@ MapBox</a></h3>
-        <div class="discription">Beautiful custom maps.</div>
-      </p>
-    </div>
-
-    <div class="sponsor-item">
-      <p>
-        <div class="offer">5 private repos — 6 months</div>
-        <H3><a href="https://github.com" target="_blank">@ GitHub</a></h3>
-        <div class="discription">value €50.</div>
-      </p>
-    </div>
-    -->
-
-  </div>
-</template>
-
-
-<template name="requestMergeDuplicateAccount">
-  <div id="requestMergeDuplicateAccount">
-
-    <div class="main-alerts">
-      <div class="alert alert-info">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h1>Merge with {{previousLoginSession.service}}</h1>
-        <p>Do you want to link your current session to your previously used {{previousLoginSession.service}} account?</p>
-        <p>
-          <button class="btn toggleService" data-service="{{previousLoginSession.service}}">Login with {{previousLoginSession.service}}</button>
-        </p>
         <div class="clear"></div>
       </div>
     </div>
-    
   </div>
 </template>
 
 
-<template name="agenda">
-  <div id="agenda" class="page">
-    <iframe id="agenda2" src="https://www.google.com/calendar/embed?title=Lyon%20Tech%20Hub&amp;showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=ck2ruq6cqfch3t4gshbd6vdnd4%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis" style=" border-width:0 " width="100%" height="700" frameborder="0" scrolling="no"></iframe>
-    <div class="small">source: Lyon Tech Hub<div>
-  </div>
-</template>
 
 
-<template name="about">
-  <div id="about" class="page">
-    <div class="container">
-      <div class="before"><a href="{{pathFor 'frontpage'}}">← {{absoluteUrl}}</a></div>
-      <div class="content">
-        <p class="paragraph">The idea is to give hackers tools to extend their local communities.</p>
-        <p class="paragraph" style="font-weight:700;">We consider a hacker one who likes to figure out how things work and make his own tools by playing with technology in order to push the envelope.</p>
-        <p class="paragraph"><strong>hckrs</strong>.io was founded by <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#116;&#111;&#111;&#110;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Toon van Ramshorst</a></strong> & <strong><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#097;&#114;&#110;&#111;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Jarno Le Conté</a></strong> in late 2013.</p>
-      </div>
-    </div>
-  </div>
-</template>
+
+
+
+
 
 
 

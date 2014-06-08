@@ -3,6 +3,7 @@
     "iron-router": {},
     "GAnalytics": {},
     "collection-hooks": {},
-    "imagemagick": {}
+    "imagemagick": {},
+    "iron-router-progress": {}
   }
 }
