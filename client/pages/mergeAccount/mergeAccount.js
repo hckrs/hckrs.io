@@ -10,8 +10,11 @@ MergeAccountController = DefaultController.extend({
 
 
 Template.mergeAccount.events({
-  'click .cancel': function(evt) {
+  'click .cancel': function(evt) { // defined in loginService.js
     Session.set('requestMergeDuplicateAccount', false);
     goToEntryPage();
+  },
+  'click .mergeService': function(evt) { // defined in loginService.js
+    toggleService(evt, goToEntryPage); 
   }
 })

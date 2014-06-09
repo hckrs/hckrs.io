@@ -182,6 +182,8 @@ Template.hackerEdit.events({
   "mouseleave .picture-choser": hidePictureChoser,
   "click input[name='picture']": pictureChanged,
 
+  "click .toggleService": toggleService,
+
   "click .button-ready": function(evt) {
     evt.preventDefault();
     checkCompletedProfile();

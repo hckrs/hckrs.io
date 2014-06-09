@@ -113,7 +113,7 @@ checkDuplicateIdentity = function() {
   var previousSession = amplify.store('previousLoginSession');
   
   var isRecentlyCreated = new Date().getTime() - Meteor.user().createdAt.getTime() < 2*60*1000; //5min
-  var isOtherService = previousSession && previousSession.service != currentService;
+  var isOtherService = previousSession && currentService && previousSession.service != currentService;
   var isOtherAccount = previousSession && previousSession.userId != Meteor.userId();
 
   // when this is a new account (created in the last 2 minutes), then we check
@@ -338,7 +338,7 @@ Template.main.events({
 
 // add an external service to current user's account
 var global = this;
-var _addService = function(service, options) {
+var _addService = function(service, options, onSuccessCallback) {
   var Service = window[capitaliseFirstLetter(service)];
   
   // request a token from the external service
@@ -359,7 +359,11 @@ var _addService = function(service, options) {
 
         // log
         GAnalytics.event("LoginService", "link failure", service);
-      } else {
+      } else { //success
+        
+        if(_.isFunction(onSuccessCallback))
+          onSuccessCallback();
+        
         // log
         GAnalytics.event("LoginService", "link service", service);
       }
@@ -380,18 +384,15 @@ var _removeService = function(service) {
 
 // user toggles an external service
 // add or remove the service from user's account
-var toggleService = function (event) {
+toggleService = function (event, onSuccessCallback) {
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
   var options = serviceOptions[service];
   var isLinked = !!Meteor.user().profile.social[service];
 
-  isLinked ? _removeService(service) : _addService(service, options);
+  isLinked ? _removeService(service) : _addService(service, options, onSuccessCallback);
 }
 
-Template.main.events({
-  "click .toggleService": toggleService
-});
 
 
 
