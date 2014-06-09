@@ -209,6 +209,10 @@ a.menu {
   margin: 0px;
   padding: 0px 8px 0px 8px;
   float: none;
+  padding-top: 12px;
+  margin-top: -12px;
+  padding-bottom: 12px;
+  margin-bottom: -12px;
 }
 
 a.menu:hover{
@@ -511,11 +515,9 @@ a.menu:hover{
   }
 
   &.clickable:hover {
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
     cursor: pointer;
   }
   &.clickable.mini:hover {
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
   }
 }
 
@@ -617,18 +619,18 @@ input.text {
   transition: none;
 }
 input.text:hover {
-  border-color: white;
+  border: 1px solid rgba(0,0,0,0);
   background-color: rgba(255,255,255,0.1);
 }
 input.text:focus {
-  border-style: solid;
-  border-color: white;
-  background-color: rgba(255,255,255,0.1);
+  border: 1px solid rgba(0,0,0,0);
+  background-color: rgba(255,255,255,0.2);
+  box-shadow: none;
 }
 input.text.saved {
-  border-color: #aaeeaa;
-  background-color: rgba(64,163,195,0.2);
-  border: 1px solid rgba(255,255,255,0.5);
+  background-color: rgba(255,255,255,0.1);
+  border: 1px solid rgba(0,0,0,0);
+  color: #ffea87;
 }
 input.text.invalid {
   border-color: orange;
