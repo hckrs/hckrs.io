@@ -55,7 +55,7 @@ MONGOHQ_URL: mongodb://heroku:bf681c855a5f09418e7e6b647fac539a@paulo.mongohq.com
 $ mongo paulo.mongohq.com:10066/app20031891 -u heroku -p bf681c855a5f09418e7e6b647fac539a
 
 [ database backup ]
-$ mongodump -h paulo.mongohq.com:10066 -d app20031891 -u heroku -p bf681c855a5f09418e7e6b647fac539a -o /Users/dev/dev/projects/dev/hckrs/backup/mongohq
+$ mongodump -h paulo.mongohq.com:10066 -d app20031891 -u heroku -p bf681c855a5f09418e7e6b647fac539a -o /Users/Toon/dev/projects/dev/hckrs/backup/mongohq
 
 [ restore database ]
 $ mongorestore -h paulo.mongohq.com:10066 -d app20031891 -u heroku -p bf681c855a5f09418e7e6b647fac539a /Users/dev/dev/projects/dev/hckrs/backup/mongohq/app20031891
