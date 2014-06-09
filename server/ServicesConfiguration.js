@@ -509,8 +509,9 @@ cleanEmailAddress = function(userId) {
 // @param service String (facebook, github, twitter, etc.)
 // @effect (updating the user object with an additional service attached)
 var _lastUsedToken;
-var addServiceToCurrentUser = function(token, service) {
+var addServiceToCurrentUser = function(token, secret, service) {
   check(token, String);
+  check(secret, String);
   check(service, String);
 
   var userId = this.userId; //current logged in user
@@ -539,7 +540,7 @@ var addServiceToCurrentUser = function(token, service) {
     throw new Meteor.Error(500, "Unknow service: " + service);
 
   // retrieve user data from the external service
-  var serviceResponse = Service.retrieveCredential(token);
+  var serviceResponse = Service.retrieveCredential(token, secret);
   var serviceData = serviceResponse && serviceResponse.serviceData;
 
   if(!serviceData)

@@ -343,10 +343,11 @@ var _addService = function(service, options) {
   
   // request a token from the external service
   Service.requestCredential(options, function(token, more) {
+    var secret = OAuth._retrieveCredentialSecret(token);
 
     // send the token to our server-side method, which will handle 
     // updating the user with the new service information
-    Meteor.call("addServiceToUser", token, service, function(err, res) {
+    Meteor.call("addServiceToUser", token, secret, service, function(err, res) {
       if (err) {
         if (err.reason === "duplicateEmail") {
           // emailadres is in use by another user  
