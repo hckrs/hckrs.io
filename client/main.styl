@@ -41,6 +41,12 @@ html, body{
 
 #iron-router-progress {
   background-color: #fff;
+  opacity: 0.8;
+  -webkit-filter: blur(2px);
+  -moz-filter: blur(2px);
+  -o-filter: blur(2px);
+  -ms-filter: blur(2px);
+  filter: blur(2px);
 }
 #iron-router-progress.spinner:before {
     border-color : #fff;
@@ -115,8 +121,8 @@ a img {
 /* page transition effects on outer most div containing the current page */
 
 #mainWrapper > .route-transition {
-  transition: transform 0.8s ease-out, opacity 0.7s ease-out;
-  transform: scale(0.7);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transform: scale(1.3);
   opacity: 0.01;
   &.activated {
     transform: scale(1.0);
@@ -127,7 +133,7 @@ a img {
 
 /* HEADER */
 
-$headerHeight = 105px;
+$headerHeight = 100px;
 
 #header {
   width: 100%;
@@ -151,13 +157,20 @@ $headerHeight = 105px;
       top: 0px;
       width: 100%;
       height: $headerHeight;
-      background-color: rgba(0,0,0,0.4);
+      background-color: black;
+      background-size: cover;
+      opacity: 0.75;
+      -webkit-filter: blur(3px);
+      -moz-filter: blur(3px);
+      -o-filter: blur(3px);
+      -ms-filter: blur(3px);
+      filter: blur(3px);
     }
 
     .content {
       position: relative;
       z-index: 3;
-      padding: $pagePaddingHeight $pagePaddingWidth;
+      padding: 20px $pagePaddingWidth 0px $pagePaddingWidth;
     }
 
     .logo-small {
@@ -169,17 +182,13 @@ $headerHeight = 105px;
   }
 
   /* transition */
-  transition: height 0.4s 0s ease-out;
   .floating {
-    transition: transform 0.4s 0.4s ease-out;
+    transition: transform 0.4s 0.0s ease-out;
     transform: translateY(-($headerHeight));
-    .background {
-      transition: background-color 0.7s 0.4s ease-out;
-    }
   }
   &.active {
     .floating {
-      transform: translateY(0px)
+      transform: translateY(-10px)
     }
   }
 
@@ -187,6 +196,18 @@ $headerHeight = 105px;
 
 #header.fixed {
   height: 0px;
+  .floating {
+    .background {
+      background-image: none !important;
+      background-color: black;
+      opacity: 0.4;
+      -webkit-filter: blur(0px);
+      -moz-filter: blur(0px);
+      -o-filter: blur(0px);
+      -ms-filter: blur(0px);
+      filter: blur(0px);
+    }
+  }
 }
 
 
@@ -218,7 +239,6 @@ a.menu {
 a.menu:hover{
   text-decoration: none;
   color: #fff; 
-  transition: color 0.7s 0.4s;
   /*border-bottom: 2px dotted #1466a8;
   margin-bottom: -5px;*/
 }

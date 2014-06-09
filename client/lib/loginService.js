@@ -314,9 +314,10 @@ var logout = function() {
   // active that making use of the user session information
   // this prevent from errors in the console
   Router.go('frontpage');
+  Deps.flush();
   Meteor.setTimeout(function() {
     Meteor.logout(afterLogout); 
-  }, 500);
+  }, 200);
 }
 
 

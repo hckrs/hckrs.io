@@ -46,7 +46,7 @@
 <template name="header">
   <div id="header" class="{{headerStyle}} {{hidden}} {{active}}">
     <div class="floating">
-      <div class="background"></div>
+      <div class="background" style="background-image:url('{{backgroundImage}}');"></div>
       <div class="content">
         <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
         {{#with currentUser}}
