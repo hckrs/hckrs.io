@@ -42,11 +42,12 @@ html, body{
 #iron-router-progress {
   background-color: #fff;
   opacity: 0.8;
-  -webkit-filter: blur(2px);
-  -moz-filter: blur(2px);
-  -o-filter: blur(2px);
-  -ms-filter: blur(2px);
-  filter: blur(2px);
+  -webkit-filter: blur(0px);
+  -moz-filter: blur(0px);
+  -o-filter: blur(0px);
+  -ms-filter: blur(0px);
+  filter: blur(0px);
+  height: 2px;
 }
 #iron-router-progress.spinner:before {
     border-color : #fff;
@@ -140,7 +141,8 @@ $headerHeight = 100px;
   height: $headerHeight;
   overflow: visible;
   position: relative;
-  z-index: 2;
+  z-index: 100; /* fix to above map on hackers page */
+  border-bottom: 0px solid rgba(0,0,0,0);
 
   .floating {
     position: fixed;
@@ -159,12 +161,8 @@ $headerHeight = 100px;
       height: $headerHeight;
       background-color: black;
       background-size: cover;
-      opacity: 0.75;
-      -webkit-filter: blur(3px);
-      -moz-filter: blur(3px);
-      -o-filter: blur(3px);
-      -ms-filter: blur(3px);
-      filter: blur(3px);
+      opacity: 0.95;
+      border: 0px;
     }
 
     .content {
@@ -188,14 +186,78 @@ $headerHeight = 100px;
   }
   &.active {
     .floating {
-      transform: translateY(-10px)
+      transform: translateY(-10px);
+    }
+    .background{
+      border-bottom: 1px solid rgba(255,255,255,0.3);
     }
   }
+  
+
+}
+
+#header {
+  width: 100%;
+  height: $headerHeight;
+  overflow: visible;
+  position: relative;
+  z-index: 100; /* fix to above map on hackers page */
+  border-bottom: 0px solid rgba(0,0,0,0);
+
+  .floating {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    
+    width: 100%;
+    height: $headerHeight;
+
+    .background {
+      position: absolute;
+      z-index: 2;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: $headerHeight;
+      background-color: black;
+      background-size: cover;
+      opacity: 0.95;
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      padding: 20px $pagePaddingWidth 0px $pagePaddingWidth;
+    }
+
+    .logo-small {
+      float: left;
+      height: 63px;
+      width: 190px;
+      background-image: url('/img/logo-inversed.svg');  
+    }
+  }
+
+  /* transition */
+  .floating {
+    transition: transform 0.3s 0.0s ease-out;
+    transform: translateY(-($headerHeight));
+  }
+  &.active {
+    .floating {
+      transform: translateY(-10px);
+    }
+    .background{
+      border-bottom: 0px;
+    }
+  }
+  
 
 }
 
 #header.fixed {
   height: 0px;
+  border-bottom: 0px solid rgba(255,255,255,0.3);
   .floating {
     .background {
       background-image: none !important;
@@ -218,7 +280,7 @@ $headerHeight = 100px;
 
 .menu{
   float: left;
-  padding-top: 24px;
+  padding-top: 25px;
   padding-left: 48px;
   font-size: 18px;
   font-weight: 700;

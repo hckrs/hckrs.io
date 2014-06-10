@@ -39,7 +39,12 @@ Template.main.rendered = function() {
   var prevY = 0, newY = 0;
   $("#mainWrapper").on('scroll', function(evt) {
     newY = $("#mainWrapper").scrollTop();
-    Session.set('pageScrollDirection', newY > prevY && newY > 50 ? 'down' : 'up')
+    Session.set('pageScrollDirection', newY > prevY && newY > 50 ? 'down' : 'up');
+    if(newY<5){
+      $(".background").css( "borderBottom", "0px" );
+    }else{
+      $(".background").css( "borderBottom", "1px solid rgba(255,255,255,0.3)" );
+    }
     prevY = newY;
   });
 }

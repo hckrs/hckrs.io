@@ -87,3 +87,66 @@
 
   
 }
+
+/* adjustments for Onpage plugin */
+
+.onepage-pagination li a {
+  padding: 0px;
+  width: 23px;
+  height: 32px;
+  display: block;
+}
+
+.onepage-pagination li a.active:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,1);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+  left: 8px;
+
+}
+
+.onepage-pagination li a:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  padding: 0px;
+  margin: 0px;
+  left: 8px;
+
+}
+
+
+/*
+
+.onepage-pagination li a.active:before {
+width: 16px;
+height: 16px;
+background: none;
+border: 2px solid white;
+margin-top: -8px;
+left: 8px;
+}
+.onepage-pagination li a:before {
+content: '';
+position: absolute;
+width: 6px;
+height: 6px;
+background: rgba(255,255,255,0.85);
+border-radius: 10px;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+}
+*/
