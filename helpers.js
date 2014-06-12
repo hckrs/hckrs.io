@@ -138,6 +138,19 @@ deg2rad = function(deg) {
   return deg * (Math.PI/180)
 }
 
+// request the location for some IP address
+// using the service of Telize.com
+requestLocationForIp = function(ip) {
+  if (ip === "127.0.0.1") 
+    ip = ""; // if on localhost, let telize determine my ip.
+  try {
+    var data = HTTP.get("http://www.telize.com/geoip/" + ip, {timeout: 2000}).data;
+    return _.pick(data, 'longitude', 'latitude');
+  } catch(err) {
+    console.log("request client-IP error:", err);
+  }
+}
+
 findClosestCity = function(latlon) {
   if (!latlon) return null;
   return _.min(CITIES, _.partial(getDistanceFromLatLonObj, latlon));

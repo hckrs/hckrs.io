@@ -454,10 +454,11 @@ Accounts.onCreateUser(function (options, user) {
 // attach user to some city, which is an additonal step
 // in the registration process, because the city is unknow
 // within the onCreateUser function exposed by meteor.
-var attachUserToCity = function(city) {
+var attachUserToCity = function(userId, city) {
   check(city, Match.In(_.pluck(CITIES, 'key')));
-  check(this.userId, String);
-  var user = Users.findOne(this.userId);
+  check(userId, String);
+  var user = Users.findOne(userId);
+  
   if (!user)
     throw new Meteor.Error(0, "user doesn't exist!") 
   if (user.city)
@@ -498,6 +499,32 @@ var newUserCityInfo = function(city) {
   return user;
 }
 
+
+
+// check when user tries to login
+// we will verify if the user is
+Accounts.validateLoginAttempt(function(info) {
+  if (!info.user) return;
+
+  var userCity = info.user.city;
+  var currentCity = Url.city("http://" + info.connection.httpHeaders.host);
+
+  if (!currentCity) { // try to find closest city based on ip
+    var userIp = info.connection.clientAddress;
+    var location = requestLocationForIp(userIp);
+    currentCity = (findClosestCity(location) || {}).key; 
+  } 
+  
+  if (!currentCity) { // we can't verify if user is logged in at correct city
+    return;
+  } else if (!userCity) { // this new user isn't attached to a city yet, attach now!
+    attachUserToCity(info.user._id, currentCity);
+  } else if (userCity !== currentCity) { // check if existing user is logging in at his own city
+    throw new Meteor.Error(1, "city unmatch", userCity);
+  }
+    
+  return true;
+});
 
 
 
@@ -823,7 +850,6 @@ Meteor.methods({
   "verifyInvitation": verifyInvitation,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
-  "attachUserToCity": attachUserToCity,
   "test": test 
 });
 

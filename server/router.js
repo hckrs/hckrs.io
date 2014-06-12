@@ -24,11 +24,7 @@ Router.map(function () {
         if (closestCity) {
 
           // if closest city is found we redirect the user to a new url
-          // we handle 'localhost' (for development) seperately.
-          // case 'localhost': add city in querystring
-          // case 'production': replace city in subdomain
-          var addToUrl = isLocalhost ? Url.addCityToParams : Url.replaceCity;
-          var cityUrl = addToUrl(closestCity, url);
+          var cityUrl = Url.replaceCity(closestCity, url);
           return redirect(cityUrl, this.response);
           
         } else {
@@ -76,17 +72,6 @@ var getClientIp = function(request) {
   return ip1 || ip2;
 }
 
-// request the location for some IP address
-// using the service of Telize.com
-var requestLocationForIp = function(ip) {
-  if (ip === "127.0.0.1") 
-    ip = ""; // if on localhost, let telize determine my ip.
-  try {
-    var data = HTTP.get("http://www.telize.com/geoip/" + ip, {timeout: 2000}).data;
-    return _.pick(data, 'longitude', 'latitude');
-  } catch(err) {
-    console.log("request client-IP error:", err);
-  }
-}
+
 
 

@@ -45,7 +45,8 @@ var afterLogin = function() {
   // subscibe to user information
   Meteor.subscribe('publicUserDataCurrentUser', Meteor.userId(), function() {
 
-    checkAttachedToCity();
+    // XXX maybe we can do this on the server side, because
+    // meteor introduces a function called Accounts.validateLoginAttempt()
     checkDuplicateIdentity();
     checkInvitation();
     checkAccess();
@@ -106,21 +107,6 @@ UI.registerHelper('isUnverifiedEmail', function() {
 });
 
 
-// check if user is attached to a city
-// if not, then we attach it to the current city
-var checkAttachedToCity = function() {
-  var city = Session.get('currentCity');
-  if (!Meteor.user().city) {
-    Meteor.call('attachUserToCity', city.key, function(err) {
-      if (err) {
-        Router.reload();
-      } else {
-        resetSubscriptions();
-        goToEntryPage();
-      }
-    });
-  }
-}
 
 // check if there is an other existing user account
 // that probably match the current user idenity
@@ -294,6 +280,13 @@ var loginCallback = function(err) {
     // emailadres is in use by another user 
     if (err.reason === "duplicateEmail")
       message = "Try one of the other services!";
+
+    if (err.reason === "city unmatch") {
+      var userCity = err.details;
+      var cityUrl = Url.replaceCity(userCity);
+      var cityDomain = Url.hostname(cityUrl);
+      message = 'Go to <a href="'+cityUrl+'">'+cityDomain+'</a> and try to login again!';
+    }
 
     Session.set('serviceLoginError', message);
     Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 10000);
