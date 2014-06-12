@@ -39,12 +39,15 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
 // this e-mail will be sent to the admins 
 // when a new user joined the site
 SendEmailOnNewUser = function(user) {
-  var userUrl = Meteor.absoluteUrl(Url.bitHash(user.localRank));
-
-  var subject = "New hacker on " + siteUrlShort();
-  var text = "Hacker '" + user.profile.name + "' joined " + siteUrlShort() + ".\n\n" + userUrl;
-
-  Email.send({from: siteFrom, to: siteOwnerEmail, subject: subject, text: text});
+  
+  if (Meteor.settings.public.environment === 'production') { // only in production
+    
+    var userUrl = Meteor.absoluteUrl(Url.bitHash(user.localRank));
+    var subject = "New hacker on " + siteUrlShort();
+    var text = "Hacker '" + user.profile.name + "' joined " + siteUrlShort() + ".\n\n" + userUrl;
+    
+    Email.send({from: siteFrom, to: siteOwnerEmail, subject: subject, text: text});
+  }
 }
 
 

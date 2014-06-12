@@ -19,13 +19,16 @@ if (Meteor.isServer) {
   // on the client you must subscribe all publish rules.
   // note: we not publish all users, only the ones that are allowed to access
 
-  var publicUserFields = {
-    "createdAt": true,
+  var globalPublicUserFields = {
     "city": true,
     "localRank": true,
     "globalRank": true,
-    "profile.picture": true,
     "profile.name": true,
+    "profile.picture": true,
+  }
+
+  var publicUserFields = _.extend(_.clone(globalPublicUserFields), {
+    "createdAt": true,
     "profile.location": true,
     "profile.homepage": true,
     "profile.company": true,
@@ -38,7 +41,7 @@ if (Meteor.isServer) {
 
     // DON'T INCLUDE
     // "profile.socialPicture": true,
-  };
+  });
 
   var publicUserFieldsEmail = _.extend(_.clone(publicUserFields), {
     "profile.email": true
@@ -62,43 +65,57 @@ if (Meteor.isServer) {
   // publish additional fields 'emails' and 'profile' for the current user
   Meteor.publish("publicUserDataCurrentUser", function (currentUser) {
     // ignore 'currentUser' and use the secure 'this.userId' instead
-    if(!this.userId) {
+    if(!this.userId)
       return [];
-    } else {
-      var selector = {_id: this.userId};
-      return Users.find(selector, {fields: publicUserFieldsCurrentUser});
-    }
+    
+    var selector = {
+      "_id": this.userId
+    };
+    return Users.find(selector, {fields: publicUserFieldsCurrentUser});
   });
 
   // 2. users with public e-mailaddress
   // we make emailaddresses public of the users that are available for drink/lunch
   // publish their public information including emailaddress
   Meteor.publish("publicUserDataEmail", function (userIds) {
-    if(!this.userId || !allowedAccess(this.userId)) {
+    var user = Users.findOne(this.userId);
+    userIds = uniformUserIds(userIds);
+
+    if(!user || !allowedAccess(user._id) || !user.city)
       return []; 
-    } else {
-      var userIdSelector = userIds === "all" ? {$exists: true} : {$in: uniformInput(userIds)};
-      var selector = {"profile.available": {$exists: true, $not: {$size: 0}}, isHidden: {$ne: true}, _id: userIdSelector};
-      return Users.find(selector, {fields: publicUserFieldsEmail}); 
-    }
+    
+    var selector = {
+      "_id": userIds === "all" ? {$exists: true} : {$in: userIds},
+      "city": user.city,
+      "profile.available": {$exists: true, $not: {$size: 0}}, 
+      "isHidden": {$ne: true}, 
+    };
+    return Users.find(selector, {fields: publicUserFieldsEmail}); 
   });
 
   // 3. otherwise only the default public user data is published
   // publish all public profile data of all users
   Meteor.publish("publicUserData", function (userIds) {
-    if(!this.userId || !allowedAccess(this.userId)) {
+    var user = Users.findOne(this.userId);
+    userIds = uniformUserIds(userIds);
+
+    if(!user || !allowedAccess(user._id) || !user.city)
       return [];   
-    } else {
-      var userIdSelector = userIds === "all" ? {$exists: true} : {$in: uniformInput(userIds)};
-      var selector = {isHidden: {$ne: true}, _id: userIdSelector};
-      return Users.find(selector, {fields: publicUserFields}); 
+    
+    var selector = {
+      "_id": userIds === "all" ? {$exists: true} : {$in: userIds},
+      "city": user.city,
+      "isHidden": {$ne: true},
     }
+    return Users.find(selector, {fields: publicUserFields}); 
   });
 
-  // 4. always publish empty objects representing all users
+  // 4. always publish global user information for everyone (even if not logged in)
   Meteor.publish("publicUsers", function (hash) {
-    var selector = {isHidden: {$ne: true}};
-    return Users.find(selector, {fields: {_id: true}});  
+    var selector = {
+      "isHidden": {$ne: true},
+    };
+    return Users.find(selector, {fields: globalPublicUserFields});  
   });
 
 
@@ -111,11 +128,11 @@ if (Meteor.isServer) {
 
   // Only publish invitation codes for the logged in user
   Meteor.publish("invitations", function (hash) {
-    if(!this.userId) {
+   
+    if(!this.userId) 
       return [];
-    } else {
-      return Invitations.find({});
-    }
+    
+    return Invitations.find({});
   });
 
 
@@ -139,15 +156,15 @@ if (Meteor.isServer) {
   // 1. some userId string "..."
   // 2. some object {city: ..., localRank: ...}
   // 3. some array with either values from 1 or 2
-  var uniformInput = function(users) {
+  var uniformUserIds = function(users) {
     if (_.isArray(users))
-      users = _.map(users, _uniformInput);
+      users = _.map(users, _uniformUserIds);
     else 
-      users = [ _uniformInput(users) ];
+      users = [ _uniformUserIds(users) ];
     return _.compact(users);
   }
 
-  var _uniformInput = function(user) {
+  var _uniformUserIds = function(user) {
     if (Match.test(user, String)) // passed in a single userId
       return user;
     if (Match.test(user, {city: String, localRank: Number})) // passed in a single localRank
@@ -155,6 +172,7 @@ if (Meteor.isServer) {
         return user._id;
     return null;
   }
+
 
 
 }

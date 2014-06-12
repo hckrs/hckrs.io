@@ -45,6 +45,7 @@ var afterLogin = function() {
   // subscibe to user information
   Meteor.subscribe('publicUserDataCurrentUser', Meteor.userId(), function() {
 
+    checkAttachedToCity();
     checkDuplicateIdentity();
     checkInvitation();
     checkAccess();
@@ -103,6 +104,23 @@ UI.registerHelper('isVerifiedEmail', function() {
 UI.registerHelper('isUnverifiedEmail', function() {
   return isUnverifiedEmail(); // user's profile email is not verified
 });
+
+
+// check if user is attached to a city
+// if not, then we attach it to the current city
+var checkAttachedToCity = function() {
+  var city = Session.get('currentCity');
+  if (!Meteor.user().city) {
+    Meteor.call('attachUserToCity', city.key, function(err) {
+      if (err) {
+        Router.reload();
+      } else {
+        resetSubscriptions();
+        goToEntryPage();
+      }
+    });
+  }
+}
 
 // check if there is an other existing user account
 // that probably match the current user idenity

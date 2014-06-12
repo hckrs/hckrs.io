@@ -424,56 +424,81 @@ Accounts.onCreateUser(function (options, user) {
   // find an existing user that probaly match this identity
   var existingUser = findExistingUser(user);  
 
-  // merge data from existing user if exists
-  if (existingUser) {
 
+  if (existingUser) { 
+
+    // merge data from existing user if exists
     user = mergeUserData(existingUser, user);
     Meteor.users.remove(existingUser._id);
 
-  }
-    
-  // additional information, for new user only!
-  if (!existingUser) {
-
-    // set the city where this user becomes registered
-    user.city = "lyon";
-
-    // determine and set the hacker ranking
-    var local = Meteor.users.findOne({city: user.city}, {sort: {localRank: -1}});
-    var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
-    user.localRank = (local && local.localRank || 0) + 1;
-    user.globalRank = (global && global.globalRank || 0) + 1;
+  } else { 
+    // additional information, for new user only!  
 
     // make the first user within the system admin
-    if (user.globalRank === 1)
+    if (Meteor.users.find().count() === 0)
       user.isAdmin = true;
 
-    // make the first user of a city the mayor
-    if (user.localRank === 1)
-      user.isMayor = true;
-
-    // set invitation phrase
-    user.invitationPhrase = user.globalRank * 2 + 77;
-
-    // give this user the default number of invite codes
-    user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
-
     // don't allow access until user completes his profile
-    if (!user.isMayor)
-      user.isUninvited = true;
+    user.isUninvited = !user.isAdmin;
     user.isAccessDenied = true;
     user.isHidden = true;
     user.isIncompleteProfile = true;
-
-    // let admins know that a new user has registered the site
-    if (Meteor.settings.public.environment === 'production')
-      SendEmailOnNewUser(user);
 
   }
   
   // create new user account
   return user; 
 });
+
+
+// attach user to some city, which is an additonal step
+// in the registration process, because the city is unknow
+// within the onCreateUser function exposed by meteor.
+var attachUserToCity = function(city) {
+  check(city, Match.In(_.pluck(CITIES, 'key')));
+  check(this.userId, String);
+  var user = Users.findOne(this.userId);
+  if (!user)
+    throw new Meteor.Error(0, "user doesn't exist!") 
+  if (user.city)
+    throw new Meteor.Error(0, "already attached to a city!") 
+  
+  // get city info including ranks for this (new) user
+  var userCityInfo = newUserCityInfo(city);
+
+  // update user with city information
+  Users.update(user._id, {$set: userCityInfo});
+
+  // let admins know that a new user has registered the site
+  SendEmailOnNewUser(user);
+}
+
+var newUserCityInfo = function(city) {
+  var user = {}; // create object to build city info for new user
+
+  // set the city where this user becomes registered
+  user.city = city;
+
+  // determine and set the hacker ranking
+  var local = Meteor.users.findOne({city: city}, {sort: {localRank: -1}});
+  var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
+  user.localRank = (local && local.localRank || 0) + 1;
+  user.globalRank = (global && global.globalRank || 0) + 1;
+
+  // make the first user of a city the mayor
+  if (user.localRank === 1)
+    user.isMayor = true;
+
+  // set invitation phrase
+  user.invitationPhrase = user.globalRank * 2 + 77;
+
+  // give this user the default number of invite codes
+  user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
+
+  return user;
+}
+
+
 
 
 // Remove an account
@@ -798,6 +823,7 @@ Meteor.methods({
   "verifyInvitation": verifyInvitation,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
+  "attachUserToCity": attachUserToCity,
   "test": test 
 });
 
