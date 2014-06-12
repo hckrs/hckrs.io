@@ -12,15 +12,15 @@
           </div>
         {{/with}}
       {{/if}}
+      {{#if serviceLoginError}}
+        <div class="error">{{{serviceLoginError}}}</div>
+      {{/if}}
       <div class="frontpage-login"> 
         <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
         <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
         <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
         <div class="frontpage-join-us"></div>
       </div>
-    {{/if}}
-    {{#if serviceLoginError}}
-      <div class="error">{{serviceLoginError}}</div>
     {{/if}}
     <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
     discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned

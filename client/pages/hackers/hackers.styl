@@ -1,8 +1,6 @@
 @import 'nib'
 
 #hackers {
-  
-
   .pictureView.route-transition {
     transition: transform 0.8s ease-out;
     transform: scale(0);
@@ -11,4 +9,83 @@
     }
   }
 
+}
+
+
+/* HACKER */
+
+.picture {
+  max-width: 200px;
+}
+
+.hacker{
+  float:left;
+  width: 260px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+
+/* HACKERS LIST */
+
+.pictureView-wrapper {
+  line-height: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.pictureView {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 90px;
+  background-position: center; 
+  background-size: cover;
+  color: white;
+  margin: auto;
+  background-color: rgba(255,255,255,0.1);
+
+  &.small { /* element has also class 'small' */
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+  }
+
+  &.mini { /* element has also class 'xsmall' */
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+  }
+
+  &.unknow:before { content: '?'; }
+  &.empty:before { content: '\1F60E'; }
+
+  &.unknow:before,
+  &.empty:before {
+    margin: auto;
+    font-size: 3.5em;
+    line-height: 3.5em;
+    color: rgba(255,255,255,0.4);
+  }
+
+  &.unknow.small:before,
+  &.empty.small:before {
+    font-size: 2.5em;
+    line-height: 2.4em;
+  }
+
+  &.clickable:hover {
+    cursor: pointer;
+  }
+  &.clickable.mini:hover {
+  }
+}
+
+.hackers-name{
+  font-weight: 400;
+  color: #FFF;
+  font-size: 130%;
+  line-height: 48px;
+  white-space: nowrap;
 }
