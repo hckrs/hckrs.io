@@ -69,8 +69,18 @@ var scrollToTop = function() {
   var timer = Meteor.setInterval(scrollTo, 200);
 }
 
+// set city in session from url
+var setCity = function() {
+  var city = CITYMAP[Url.city()];
+  if (city) Session.set('currentCity', city);
+}
+
+
 // scroll to top when user enters a route
 Router.onRun(scrollToTop);
+
+// set city
+Router.onRun(setCity);
 
 // make sure the user is logged in, except for the pages below
 Router.onRun(loginRequired, {except: noLoginRequired});

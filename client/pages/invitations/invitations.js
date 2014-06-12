@@ -20,7 +20,7 @@ Template.invitations.helpers({
   'invitedUsers': function() { return _.invoke(Invitations.find({broadcastUser: Meteor.userId()}, {sort: {signedupAt: 1}}).fetch(), 'receiver'); },
   'availableSlots': function() { return _.range(Meteor.user().invitations); },
   'link': function() { 
-    var phrase = bitHash(Meteor.user().invitationPhrase);
+    var phrase = Url.bitHash(Meteor.user().invitationPhrase);
     return Router.routes['invite'].url({phrase: phrase}); 
   },
 });

@@ -87,7 +87,7 @@ Template.highlights.destroyed = function() {
 // - only the 'createdAt' property is required.
 // - other properties are optional.
 // - dates must be represented as an newDate("YYYY-MM-DD hh:mm") object.
-// - refer to an user by user id, ( retrieve with userIdFromUrl() )
+// - refer to an user by user id, ( retrieve with Url.userIdFromUrl() )
 // - start relative image urls with a slah (e.g. /img/...)
 
 var highlights = function() {
@@ -99,7 +99,7 @@ var highlights = function() {
       "title": "l’Atelier des Objets Connectés #2",
       "subtitle": "14-15 Juin @ Pôle Pixel",
       "website": "http://www.atelier-objets-connectes.org/",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/-"), 
+      "userId": Url.userIdFromUrl("http://lyon.hckrs.io/-"), 
     },
 
     {
@@ -108,7 +108,7 @@ var highlights = function() {
       "title": "Blend Web Mix",
       "subtitle": "29-30 Octobre Cité internationale",
       "website": "http://www.blendwebmix.com/",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/----_"), 
+      "userId": Url.userIdFromUrl("http://lyon.hckrs.io/----_"), 
     },
 
     {
@@ -117,7 +117,7 @@ var highlights = function() {
       "title": "Dernier métro",
       "subtitle": "web app Lyonnaise",
       "website": "http://yannlombard.github.io/derniermetro/",
-      "userId": userIdFromUrl("http://lyon.hckrs.io/--"), 
+      "userId": Url.userIdFromUrl("http://lyon.hckrs.io/--"), 
     },
 
 

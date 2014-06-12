@@ -5,13 +5,13 @@ HackerController = DefaultController.extend({
   template: 'hacker',
   waitOn: function () {
     return [ 
-      Meteor.subscribe('publicUserDataEmail', userIdentifierFromUrl()) 
-    , Meteor.subscribe('publicUserData', userIdentifierFromUrl()) 
+      Meteor.subscribe('publicUserDataEmail', Url.userIdentifierFromUrl()) 
+    , Meteor.subscribe('publicUserData', Url.userIdentifierFromUrl()) 
     ];
   },
   onBeforeAction: function() { 
     if (!this.ready()) return;
-    Session.set('hackerId', userIdFromUrl());
+    Session.set('hackerId', Url.userIdFromUrl());
     Session.set('hackerEditMode', true);
   }
 });

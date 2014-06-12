@@ -80,110 +80,6 @@ newDate = function(dateString) {
   return moment(dateString, "YYYY-MM-DD hh:mm:ss").toDate();
 }
 
-// calculate bithash of a number
-// transform into a string where 0 and 1 are replaced by the given characters
-bitHash = function(num) {
-  return parseInt(num).toString(2).replace(/0/g, '_').replace(/1/g, '-');
-}
-
-// invert the bithash opration
-bitHashInv = function(hash) {
-  return parseInt(hash.replace(/_/g, '0').replace(/-/g, '1'), 2);
-}
-
-// get the current city from the url
-cityFromUrl = function(url) {
-  url = url ? url : window.location.href;
-  var city = hostnameFromUrl(url).split('.')[0];
-  return (city === 'localhost') ? 'lyon' : city; //use lyon instead of localhost
-}
-
-// get user identifier object of the form:
-// {city: String, localRank: Number}
-userIdentifierFromUrl = function(url) {
-  url = url ? url : window.location.href;
-  var city = cityFromUrl(url);
-  var localRank = bitHashInv(_.last(url.split('/')));
-  return {city: city, localRank: localRank};
-}
-
-// get userId from given url
-userIdFromUrl = function(url) {
-  var selector = userIdentifierFromUrl(url);
-  return (Users.findOne(selector, {fields: {_id: true}}) || {})._id;
-}
-
-// get user object from given url
-userFromUrl = function(url, options) {
-  return Users.findOne(userIdFromUrl(url), options || {});
-}
-
-// get user object from given url
-userFromCityHash = function(city, hash, options) {
-  var localRank = bitHashInv(hash);
-  return Meteor.users.findOne({city: city, localRank: localRank}, options || {});
-}
-
-
-
-
-
-// hostname as specified in the environment variable ROOT_URL
-// e.g. staging.hckrs.io
-appHostname = function() {
-  return hostnameFromUrl(Meteor.absoluteUrl());
-}
-
-// extract hostname from the given url
-// e.g. http://lyon.hckrs.io/home => lyon.hckrs.io
-hostnameFromUrl = function(url) {
-  return new RegExp(/\/\/([^\/:]*)/).exec(url)[1];
-}
-
-// extract the most basic name including extension
-// e.g. http://lyon.hckrs.io/test => hckrs.io
-domainFromUrl = function(url) {
-  var hostname = hostnameFromUrl(url);
-  return new RegExp(/([^.]*.[a-zA-Z]{2,4}(.uk)?)$/).exec(hostname)[1];
-}
-
-// replace url's hostname
-// e.g. newHostname: lyon.hckrs.io, lyon.staging.hckrs.io
-replaceHostname = function(url, newHostname) {
-  return url.replace(/\/\/([^\/:]*)/, '//' + newHostname);
-}
-
-// make sure that extern urls includes http:// or https://
-externUrl = function(url) {
-  if (!/^(http(s?):\/\/)/i.test(url))
-    url = "http://" + url;
-  return url;
-}
-
-// remove protocal (http:// or https://) of an url
-removeUrlProtocol = function(url) {
-  return url.replace(/^(http(s)?:\/\/(www.)?)/i, "");
-}
-
-resolveURL = function(base_url, url) {
-  var doc      = document
-    , old_base = doc.getElementsByTagName('base')[0]
-    , old_href = old_base && old_base.href
-    , doc_head = doc.head || doc.getElementsByTagName('head')[0]
-    , our_base = old_base || doc_head.appendChild(doc.createElement('base'))
-    , resolver = doc.createElement('a')
-    , resolved_url
-    ;
-  our_base.href = base_url;
-  resolver.href = url;
-  resolved_url  = resolver.href; // browser magic at work here
- 
-  if (old_base) old_base.href = old_href;
-  else doc_head.removeChild(our_base);
- 
-  return resolved_url;
-}
-
 fixedDecimals = function(value, decimals) {
   return parseFloat(value).toFixed(decimals);
 }
@@ -194,6 +90,12 @@ convertToCurrency = function(value) {
   return "€ " + val.replace('.00', '.-').replace('.', ',');
 }
 
+
+
+
+
+
+// GEO
 
 // geocoder for openstreet
 geocode = function(address, cb) {
@@ -209,6 +111,41 @@ geocode = function(address, cb) {
   else
     HTTP.get(url, options, function(err, res) { cb(response(res)); });
 }
+
+getDistanceFromLatLonObj = function(latlong1, latlong2) {
+  var lat1 = latlong1.latitude || latlong1.lat;
+  var lon1 = latlong1.longitude || latlong1.lon;
+  var lat2 = latlong2.latitude || latlong2.lat;
+  var lon2 = latlong2.longitude || latlong2.lon;
+  return getDistanceFromLatLon(lat1, lon1, lat2, lon2);
+}
+
+getDistanceFromLatLon = function(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d; // km
+}
+
+deg2rad = function(deg) {
+  return deg * (Math.PI/180)
+}
+
+findClosestCity = function(latlon) {
+  if (!latlon) return null;
+  return _.min(CITIES, _.partial(getDistanceFromLatLonObj, latlon));
+}
+
+
+
+// CLIENT ONLY
 
 if (Meteor.isClient) {
 
@@ -295,7 +232,7 @@ if (Meteor.isClient) {
 
   // template helper for stripping the protocol of an url
   UI.registerHelper('ShowUrl', function(url) {
-    return removeUrlProtocol(url);
+    return Url.show(url);
   });
 
   // template helper to transform Date() object to readable tring
@@ -320,7 +257,17 @@ if (Meteor.isClient) {
   });
 
   UI.registerHelper('Domain', function(url) {
-    return domainFromUrl(url);
+    url = _.isString(url) ? url : null;
+    return Url.domain(url);
+  });
+
+  UI.registerHelper('Hostname', function(url) {
+    url = _.isString(url) ? url : null;
+    return Url.hostname(url);
+  });
+
+  UI.registerHelper('CurrentCity', function() {
+    return Session.get('currentCity');
   });
 
 }

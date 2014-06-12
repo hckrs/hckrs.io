@@ -6,8 +6,8 @@
 if (Meteor.isClient) {
   
   Users._transform = function(user) {
-    user.localRankHash = bitHash(user.localRank);
-    user.globalRankHash = bitHash(user.globalRank);
+    user.localRankHash = Url.bitHash(user.localRank);
+    user.globalRankHash = Url.bitHash(user.globalRank);
     return user;
   }
 }
@@ -19,9 +19,9 @@ if (Meteor.isServer) {
 
     // make sure that urls start with http:// or https://
     if (modifier.$set && modifier.$set['profile.homepage'])
-      modifier.$set['profile.homepage'] = externUrl(modifier.$set['profile.homepage']);
+      modifier.$set['profile.homepage'] = Url.externUrl(modifier.$set['profile.homepage']);
     if (modifier.$set && modifier.$set['profile.companyUrl'])
-      modifier.$set['profile.companyUrl'] = externUrl(modifier.$set['profile.companyUrl']);
+      modifier.$set['profile.companyUrl'] = Url.externUrl(modifier.$set['profile.companyUrl']);
 
     return modifier;
   });

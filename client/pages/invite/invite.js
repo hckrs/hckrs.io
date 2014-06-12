@@ -10,7 +10,7 @@ InviteController = DefaultController.extend({
     return [];
   },
   onBeforeAction: function() { 
-    var phrase = bitHashInv(this.params[0]);
+    var phrase = Url.bitHashInv(this.params[0]);
         
     Session.set('invitationPhrase', phrase);
 

@@ -1,4 +1,29 @@
 // CONSTANTS 
+// some of this data can be moved to the database in the future
+
+CITIES = [
+  { 
+    key: "lyon",
+    name: "Lyon", 
+    latitude: 45.764043, 
+    longitude: 4.835659,
+    backgroundImage: "/img/background.jpg",
+    backgroundImageNight: "/img/background_night.jpg"
+  },
+  { 
+    key: "utrecht",
+    name: "Utrecht", 
+    latitude: 52.0809819, 
+    longitude: 5.1060363,
+    backgroundImage: "/img/background.jpg",
+    backgroundImageNight: "/img/background_night.jpg"
+  },
+];
+
+// another representation of cities using a map datastructure
+// where you can access a city by lookup the key in this map/object.
+CITYMAP = _.object(_.pluck(CITIES, 'key'), CITIES);
+
 
 HACKING = ['web','apps','software','game','design','life','hardware','opensource','growth'].sort();
 
@@ -74,4 +99,9 @@ SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"mupad"},{"name":"ooc"},{"name":"reStructuredText"},{"name":"Zope"},{"name":"ZURB Foundation"}];
 
 SKILL_NAMES = _.map(SKILLS, function(skill) { return skill.name; });
+
+
+
+
+
 

@@ -3,6 +3,9 @@
 
 // change background image depending on time 
 // 1. night,  2. in daytime
+
+// XXX let depend on city
+
 var currentTime = new Date().getHours();
 var isNight = currentTime < 7 || currentTime >= 19;
 var image = isNight ? "/img/background_night.jpg" : "/img/background.jpg";

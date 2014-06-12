@@ -1,80 +1,92 @@
+var URL = Npm.require('url');
+
+
+
 // SERVER SIDE routes
-
-var url = Npm.require('url');
-
-// make use of the correct domain (canonical)
-// redirect when not at the same hostname as specified in environment variable "ROOT_URL"
-var useCanonicalDomain = function(currentUrlData, appUrlData) {
-  if (currentUrlData.host.indexOf(appUrlData.host) === -1)
-    return url.format(_.defaults({host: appUrlData.host}, currentUrlData));
-  return null;
-}
-
-// redirect to city if not present in subdomain
-var redirectToCity = function(currentUrlData, appUrlData) {
-
-  // all cities on this app
-  var allowedCities = ['lyon']; 
-
-  // city where to redirect to
-  var defaultCity = 'lyon';
-
-  // current subdomain
-  var subdomain = currentUrlData.host.replace(appUrlData.host, '').replace(/\.$/, '');
-
-  // redirect if no valid city is specified in the subdomain
-  if (!_.contains(allowedCities, subdomain))
-    return url.format(_.defaults({host: defaultCity+'.'+appUrlData.host}, currentUrlData));   
-
-  return null;
-}
-
-var redirect = function(url, res) {
-  res.writeHead(302, {'Location': url});
-  res.end();
-}
-
-// parse url specified in environment ROOT_URL
-var getAppUrlData = function() {
-  return url.parse(Meteor.absoluteUrl());
-}
-
-// parse current request url
-// XXX: not all properties can be resolved
-var getUrlData = function(request) {
-  var currentUrlData = request._parsedUrl;
-  currentUrlData.protocol = getAppUrlData().protocol;
-  currentUrlData.host = request.headers.host;
-  currentUrlData.hostname = request.headers.host.split(':')[0];
-  currentUrlData.port = request.headers.host.split(':')[1] || null;
-  currentUrlData.href = undefined;
-  return currentUrlData
-}
-
 
 Router.map(function () {
   this.route('any', {
     where: 'server',
     path: '/*',
-    action: function () {
-      var currentUrlData = getUrlData(this.request);
-      var appUrlData = getAppUrlData();
-      var redirectUrl;
+    action: function (test1,test2) {
+      var url = getRequestUrl(this.request); 
+      var city = Url.city(url);
+      var isLocalhost = Url.isLocalhost(url);
       
-      // only run this code on a online server
-      if (currentUrlData.hostname !== 'localhost') {
+      // check if there is a valid city present in the url
+      if (!city || city === "www" || !CITYMAP[city]) {
+        
+        // if not, then find the closest city
+        var userIp = getClientIp(this.request);
+        var location = requestLocationForIp(userIp);
+        var closestCity = (findClosestCity(location) || {}).key;    
+        
+        if (closestCity) {
 
-        // make use of the correct domain (canonical)
-        if (redirectUrl = useCanonicalDomain(currentUrlData, appUrlData))
-          return redirect(redirectUrl, this.response);
-
-        // redirect to the default city if not present in subdomain
-        if (redirectUrl = redirectToCity(currentUrlData, appUrlData))
-          return redirect(redirectUrl, this.response);            
+          // if closest city is found we redirect the user to a new url
+          // we handle 'localhost' (for development) seperately.
+          // case 'localhost': add city in querystring
+          // case 'production': replace city in subdomain
+          var addToUrl = isLocalhost ? Url.addCityToParams : Url.replaceCity;
+          var cityUrl = addToUrl(closestCity, url);
+          return redirect(cityUrl, this.response);
+          
+        } else {
+          // XXX TODO 
+          // What to do if no closest city isn't found?
+        }
       }
-
-      // otherwise default meteor behaviour
+      
+      // done!
       this.next();
     }
   });
 });
+
+
+
+
+// parse current request url
+var getRequestUrl = function(request) {
+  // XXX: not all properties can be resolved through '_parsedUrl'
+  // Therefor we try to add some properties ourself.
+  var parsed = {};
+  parsed.protocol = request.headers['x-forwarded-proto'] || "http";
+  parsed.host     = request.headers['host'];
+  parsed.hostname = request.headers.host.split(':')[0];
+  parsed.port     = request.headers.host.split(':')[1] || null;
+  parsed.pathname = request._parsedUrl.pathname;
+  parsed.path     = request._parsedUrl.path;
+  parsed.query    = request._parsedUrl.query;
+  parsed.search   = request._parsedUrl.search;
+  parsed.hash     = request._parsedUrl.hash;
+  return URL.format(parsed);
+}
+
+// redirect to new url
+var redirect = function(url, res) {
+  res.writeHead(302, {'Location': url});
+  res.end();
+}
+
+// get client IP from request data
+var getClientIp = function(request) {
+  var ip1 = (request.headers['x-forwarded-for'] || "").split(',')[0]; // find ip even after proxy
+  var ip2 = request.connection.remoteAddress; // default method
+  return ip1 || ip2;
+}
+
+// request the location for some IP address
+// using the service of Telize.com
+var requestLocationForIp = function(ip) {
+  if (ip === "127.0.0.1") 
+    ip = ""; // if on localhost, let telize determine my ip.
+  try {
+    var data = HTTP.get("http://www.telize.com/geoip/" + ip).data;
+    return _.pick(data, 'longitude', 'latitude');
+  } catch(err) {
+    console.log("request client-IP error:", err);
+  }
+}
+
+
