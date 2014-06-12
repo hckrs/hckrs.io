@@ -1,0 +1,28 @@
+{
+  "format": "unipackage-slice-pre1",
+  "packageVariables": [
+    {
+      "name": "OAuth",
+      "export": true
+    },
+    {
+      "name": "Oauth",
+      "export": true
+    }
+  ],
+  "uses": [
+    {
+      "package": "meteor"
+    }
+  ],
+  "resources": [
+    {
+      "type": "prelink",
+      "file": "browser/packages/oauth.js",
+      "length": 10311,
+      "offset": 0,
+      "servePath": "/packages/oauth.js",
+      "sourceMap": "browser/packages/oauth.js.map"
+    }
+  ]
+}

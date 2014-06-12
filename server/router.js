@@ -8,7 +8,7 @@ Router.map(function () {
   this.route('any', {
     where: 'server',
     path: '/*',
-    action: function (test1,test2) {
+    action: function () {
       var url = getRequestUrl(this.request); 
       var city = Url.city(url);
       var isLocalhost = Url.isLocalhost(url);
@@ -82,7 +82,7 @@ var requestLocationForIp = function(ip) {
   if (ip === "127.0.0.1") 
     ip = ""; // if on localhost, let telize determine my ip.
   try {
-    var data = HTTP.get("http://www.telize.com/geoip/" + ip).data;
+    var data = HTTP.get("http://www.telize.com/geoip/" + ip, {timeout: 2000}).data;
     return _.pick(data, 'longitude', 'latitude');
   } catch(err) {
     console.log("request client-IP error:", err);

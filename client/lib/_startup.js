@@ -14,9 +14,24 @@ Meteor.startup(function() {
 
   // setup page transitions
   initPageTransitions();
+
+  // extract city from domain
+  extractCityFromDomain();
 });
 
 
+// extract city from domain
+var extractCityFromDomain = function() {
+  var city = CITYMAP[Url.city()];
+  if (!city) return;
+  Session.set('currentCity', city);
+    
+  // relaxing the same origin policy so that javascript
+  // can communicate between different city domains
+  // this is required to do OAuth request.
+  // In the oauth package this same line must be included too. 
+  document.domain = Url.root(); 
+}
 
 
 // automatically activate page transitions after templates are loaded

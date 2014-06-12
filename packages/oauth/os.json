@@ -1,0 +1,57 @@
+{
+  "format": "unipackage-slice-pre1",
+  "packageVariables": [
+    {
+      "name": "OAuth",
+      "export": true
+    },
+    {
+      "name": "OAuthTest",
+      "export": "tests"
+    },
+    {
+      "name": "Oauth",
+      "export": true
+    },
+    {
+      "name": "middleware"
+    }
+  ],
+  "uses": [
+    {
+      "package": "meteor"
+    },
+    {
+      "package": "routepolicy"
+    },
+    {
+      "package": "webapp"
+    },
+    {
+      "package": "mongo-livedata"
+    },
+    {
+      "package": "underscore"
+    },
+    {
+      "package": "service-configuration"
+    },
+    {
+      "package": "logging"
+    },
+    {
+      "package": "oauth-encryption",
+      "weak": true
+    }
+  ],
+  "resources": [
+    {
+      "type": "prelink",
+      "file": "os/packages/oauth.js",
+      "length": 42955,
+      "offset": 0,
+      "servePath": "/packages/oauth.js",
+      "sourceMap": "os/packages/oauth.js.map"
+    }
+  ]
+}

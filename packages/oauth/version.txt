@@ -1,0 +1,7 @@
+c03bb01b6d
+
+MODIFICATIONS
+
+/os/oauth.js
+line 216: host = Npm.require("url").parse(Meteor.absoluteUrl()).hostname, 
+line 217: 'document.domain="'+host+'";' +
