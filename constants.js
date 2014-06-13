@@ -8,7 +8,11 @@ CITIES = [
     latitude: 45.764043, 
     longitude: 4.835659,
     backgroundImage: "/img/backgrounds/lyon.jpg",
-    backgroundImageNight: "/img/backgrounds/lyon_night.jpg"
+    backgroundImageNight: "/img/backgrounds/lyon_night.jpg",
+    email: "toon@hckrs.io",
+    agenda: "https://www.google.com/calendar/embed?title=Lyon%20Tech%20Hub&amp;showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=ck2ruq6cqfch3t4gshbd6vdnd4%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
+    mapbox: "https://a.tiles.mapbox.com/v3/ramshorst.gcoejeom.html",
+    twitter: "",
   },
   { 
     key: "utrecht",
@@ -16,7 +20,11 @@ CITIES = [
     latitude: 52.0809819, 
     longitude: 5.1060363,
     backgroundImage: "/img/backgrounds/utrecht.jpg",
-    backgroundImageNight: "/img/backgrounds/utrecht_night.jpg"
+    backgroundImageNight: "/img/backgrounds/utrecht_night.jpg",
+    email: "",
+    agenda: "",
+    mapbox: "",
+    twitter: "",
   },
 ];
 

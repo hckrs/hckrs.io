@@ -19,7 +19,6 @@ Settings["siteEmail"] = "machine@hckrs.io";
 Settings["siteOwnerEmail"] = "mail@hckrs.io";
 
 Settings["mapboxDefault"] = "ramshorst.gd0ekbb3";
-Settings["mapboxPlaces"] = "ramshorst.gcoejeom";
 
 Settings['defaultNumberOfInvitesForNewUsers'] = 2;
 Settings['maximumNumberOfUnusedInvitesPerUser'] = 6;

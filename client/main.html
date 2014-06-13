@@ -53,8 +53,12 @@
           {{#unless isAccessDenied}}
           <div class="menu">
             <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
+            {{#if CurrentCity.agenda}}
             <a href="{{pathFor 'agenda'}}" class="menu">agenda</a> •
+            {{/if}}
+            {{#if CurrentCity.mapbox}}
             <a href="{{pathFor 'places'}}" class="menu">places</a> •
+            {{/if}}
             <a href="{{pathFor 'books'}}" class="menu">books</a>
           </div>
           {{/unless}}

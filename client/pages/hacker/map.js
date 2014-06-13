@@ -4,7 +4,7 @@ var map; // instance to the leaflet map
 var marker; // marker for user's location
 var popup; // popup of the marker
 var defaultLocation; // the default location of the map
-var zoom = 13; // the default zoom value;
+var zoom = 11; // the default zoom value;
 var mouseTimer = null; // delay to increase map
 var increasedMode = false; // map is in increased mode
 
@@ -20,23 +20,36 @@ Meteor.startup(function() {
 
 
 // initialize the map so the user can pick a location
-initializeMap = function(mapElement, user, editable) {
+initializeMap = function(mapElement, latlng, user, editable) {
   $map = $(mapElement);
-  defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
+  defaultLocation = latlng; // location of city
 
   var mapStyle = Settings['mapboxDefault'];
   var location = user.profile.location || defaultLocation;
 
   // map options
   var mapOptions = {
-    scrollWheelZoom: false
+    scrollWheelZoom: true
   };
 
   // set up the map
   map = L.mapbox.map(mapElement, mapStyle, mapOptions);
 
-  if (editable)
-    map.on('click', setMarker);
+  if (editable) {
+    var timer;
+    map.on('click', function(evt) {
+      console.log(timer)
+      if (timer){
+        clearTimeout(timer);
+        timer = null
+      } else {
+        timer = setTimeout(function() {
+          setMarker(evt);
+          timer = null;
+        }, 600);
+      }
+    });
+  }
 
   // start the map in Lyon
   map.setView(location, zoom);

@@ -246,14 +246,19 @@ Template.hackerView.helpers({
 
 Template.hackerEdit.rendered = function() {
   initializeAutoGrow();
+
   if (this.find('#editMap')) {
-    initializeMap(this.find('#editMap'), Meteor.user(), true); // initialize map
+    var city = CITYMAP[Session.get('currentCity')] || {};
+    var latlng = {lat: city.latitude, lng: city.longitude};
+    initializeMap(this.find('#editMap'), latlng, Meteor.user(), true); // initialize map
   }
 }
 
 Template.hackerView.rendered = function() {
   if (this.find('#viewMap')) {
-    initializeMap(this.find('#viewMap'), hacker(), false); // initialize map
+    var city = Session.get('currentCity') || {};
+    var latlng = {lat: city.latitude, lng: city.longitude};
+    initializeMap(this.find('#viewMap'), latlng, hacker(), false); // initialize map
   }
 }
 
