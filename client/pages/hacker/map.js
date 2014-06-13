@@ -24,7 +24,7 @@ initializeMap = function(mapElement, user, editable) {
   $map = $(mapElement);
   defaultLocation = { lat: 45.764043, lng: 4.835659 }; // Lyon
 
-  var mapStyle = Meteor.settings.public.mapboxDefault;
+  var mapStyle = Settings['mapboxDefault'];
   var location = user.profile.location || defaultLocation;
 
   // map options
