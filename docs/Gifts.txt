@@ -1,0 +1,18 @@
+To add a gift to gifts collection,
+put the following code into a new mongo document. 
+
+NOTES:
+- The first 2 properties must stay the same.
+
+
+
+{
+ "_id": ObjectId().str,
+ "createdAt": new Date(),
+
+ "city": "utrecht",
+ "title": "co-working — 1 day",
+ "websiteUrl": "http://www.la-cordee.net",
+ "websiteName": "@ La cordée",
+ "description": "Valid in the office space of your choice."
+}

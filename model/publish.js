@@ -150,6 +150,19 @@ if (Meteor.isServer) {
   });
 
 
+  /* GIFTS */
+
+  // Only publish gifts for the city of the logged in user
+  Meteor.publish("gifts", function () {
+    var user = Users.findOne(this.userId);
+
+    if(!user || !allowedAccess(user._id))
+      return [];   
+
+    return Gifts.find({city: user.city});
+  });
+
+
 
 
 

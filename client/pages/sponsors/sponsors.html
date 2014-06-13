@@ -3,13 +3,21 @@
     
     <H2>Gifts from our partners</h2>
 
+    {{#each gifts}}
     <div class="area">
       <p>
-        <div class="highlighted">co-working — 1 day</div>
-        <H3><a href="http://www.la-cordee.net" target="_blank">@ La cordée</a></h3>
-        <div class="discription">Valid in the office space of your choice.</div>
+        {{#if title}}
+          <div class="highlighted">{{title}}</div>
+        {{/if}}
+        {{#if websiteUrl}}
+          <H3><a href="{{websiteUrl}}" target="_blank">{{websiteName}}</a></h3>
+        {{/if}}
+        {{#if description}}
+          <div class="discription">{{description}}</div>
+        {{/if}}
       </p>
     </div>
+    {{/each}}
 
   </div>
 </template>
