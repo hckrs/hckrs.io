@@ -16,14 +16,21 @@ Meteor.startup(function() {
   initPageTransitions();
 
   // extract city from domain
-  extractCityFromDomain();
+  checkCurrentCity();
 });
 
 
 // extract city from domain
-var extractCityFromDomain = function() {
-  var city = CITYMAP[Url.city()];
-  if (!city) return;
+var checkCurrentCity = function() {
+  var subdomain = Url.city()
+  var city = CITYMAP[subdomain];
+  
+  if (subdomain === 'city') 
+    return exec(function() { Router.go('frontpage'); });
+  else if (!city) 
+    return;
+  
+  // set current city in session
   Session.set('currentCity', city);
     
   // relaxing the same origin policy so that javascript

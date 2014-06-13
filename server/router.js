@@ -12,9 +12,9 @@ Router.map(function () {
       var url = getRequestUrl(this.request); 
       var city = Url.city(url);
       var isLocalhost = Url.isLocalhost(url);
-      
+
       // check if there is a valid city present in the url
-      if (!city || city === "www" || !CITYMAP[city]) {
+      if (!city || !CITYMAP[city] && city !== 'city') {
         
         // if not, then find the closest city
         var userIp = getClientIp(this.request);
@@ -28,8 +28,10 @@ Router.map(function () {
           return redirect(cityUrl, this.response);
           
         } else {
-          // XXX TODO 
-          // What to do if no closest city isn't found?
+  
+          // If closest city can't be found, let user choose
+          var cityUrl = Url.replaceCity('city', url);
+          return redirect(cityUrl, this.response);
         }
       }
       
