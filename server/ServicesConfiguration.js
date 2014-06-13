@@ -480,8 +480,9 @@ var attachUserToCity = function(userId, city) {
   if (userCityInfo.localRank <= Settings['firstNumberOfUsersAutoInvited'])
     Users.update(user._id, {$unset: {isUninvited: true}});
 
-  // let admins know that a new user has registered the site
-  SendEmailOnNewUser(user);
+  // let mayor/admins know that a new user has registered the site
+  user = Users.findOne(user._id);
+  SendEmailsOnNewUser(user);
 }
 
 var newUserCityInfo = function(city) {

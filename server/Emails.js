@@ -4,14 +4,12 @@
 var siteName, siteEmail, siteOwnerEmail, siteUrl, siteFrom, siteUrlShort;
 
 Meteor.startup(function() {
-  siteName = Settings.siteName;
-  siteEmail = Settings.siteEmail;
   siteOwnerEmail = Settings.siteOwnerEmail;
   siteUrl = Meteor.absoluteUrl();
-  siteFrom = siteName + " <" + siteEmail + ">";
+  siteFrom = Settings["siteName"] + " <" + Settings['siteEmail'] + ">";
   siteUrlShort = function() { return Url.hostname(); } // defined in /lib/Url.js 
 
-  Accounts.emailTemplates.siteName = siteName;
+  Accounts.emailTemplates.siteName = Settings["siteName"];
   Accounts.emailTemplates.from = siteFrom;
 });
 
@@ -43,15 +41,30 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
 
 // this e-mail will be sent to the admins 
 // when a new user joined the site
-SendEmailOnNewUser = function(user) {
+SendEmailsOnNewUser = function(user) {
   
   if (Settings['environment'] === 'production') { // only in production
     
-    var userUrl = Meteor.absoluteUrl(Url.bitHash(user.localRank));
-    var subject = "New hacker on " + siteUrlShort();
-    var text = "Hacker '" + user.profile.name + "' joined " + siteUrlShort() + ".\n\n" + userUrl;
+    var city = user.city;
+    var hash = Url.bitHash(user.localRank);
+    var url = Meteor.absoluteUrl(hash);
+    var cityUrl = Url.replaceCity(city, url);
+    var cityHost = Url.hostname(cityUrl);  
+    var toMayor = _.compact([CITYMAP[city].email]);
+    var toAdmin = _.compact([Settings["siteOwnerEmail"]]);
+    var userEmail = user.profile.email;
+
+    var email = {};
+    email.to = toMayor;
+    email.bcc = toAdmin;
+    email.from = siteFrom;
+    email.subject = "New hacker on " + cityHost;
+    email.text = "Hacker '" + user.profile.name + "' joined " + cityHost + ".\n\n" + cityUrl;
+    if (userEmail)
+      email.replyTo = userEmail;
     
-    Email.send({from: siteFrom, to: siteOwnerEmail, subject: subject, text: text});
+    // send to admins and mayors of city
+    Email.send(email);
   }
 }
 

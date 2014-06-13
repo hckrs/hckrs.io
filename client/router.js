@@ -126,7 +126,11 @@ Router.reload = function() {
 
 Router.goToCity = function(city) {
   var url = Url.replaceCity(city);
-  Router.go(url);
+  window.location.href = url;
+}
+
+Router.routes['hacker'].path = function(user) {
+  return "/" + user.localRankHash + (Url.isLocalhost() ? "?currentCity=" + user.city : "");
 }
 
 Router.routes['invite'].url = function(params) {
