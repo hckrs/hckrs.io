@@ -57,11 +57,10 @@ Template.main.rendered = function() {
   $("#mainWrapper").on('scroll', function(evt) {
     newY = $("#mainWrapper").scrollTop();
     Session.set('pageScrollDirection', newY > prevY && newY > 50 ? 'down' : 'up');
-    if(newY<5){
-      $(".background").css( "borderBottom", "0px" );
-    }else{
-      $(".background").css( "borderBottom", "1px solid rgba(255,255,255,0.3)" );
-    }
+    if (newY > 70)
+      $("#header .floating").addClass('float');
+    else
+      $("#header .floating").removeClass('float');
     prevY = newY;
   });
 }

@@ -158,7 +158,7 @@ a img {
 
 /* HEADER */
 
-$headerHeight = 100px;
+$headerHeight = 93px;
 
 #header {
   width: 100%;
@@ -166,7 +166,6 @@ $headerHeight = 100px;
   overflow: visible;
   position: relative;
   z-index: 100; /* fix to above map on hackers page */
-  border-bottom: 0px solid rgba(0,0,0,0);
 
   .floating {
     position: fixed;
@@ -183,67 +182,6 @@ $headerHeight = 100px;
       top: 0px;
       width: 100%;
       height: $headerHeight;
-      background-color: black;
-      background-size: cover;
-      opacity: 0.95;
-      border: 0px;
-    }
-
-    .content {
-      position: relative;
-      z-index: 3;
-      padding: 20px $pagePaddingWidth 0px $pagePaddingWidth;
-    }
-
-    .logo-small {
-      float: left;
-      height: 63px;
-      width: 190px;
-      background-image: url('/img/logo-inversed.svg');  
-    }
-  }
-
-  /* transition */
-  .floating {
-    transition: transform 0.4s 0.0s ease-out;
-    transform: translateY(-($headerHeight));
-  }
-  &.active {
-    .floating {
-      transform: translateY(-10px);
-    }
-    .background{
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-  }
-  
-
-}
-
-#header {
-  width: 100%;
-  height: $headerHeight;
-  overflow: visible;
-  position: relative;
-  z-index: 100; /* fix to above map on hackers page */
-  border-bottom: 0px solid rgba(0,0,0,0);
-
-  .floating {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    
-    width: 100%;
-    height: $headerHeight;
-
-    .background {
-      position: absolute;
-      z-index: 2;
-      left: 0px;
-      top: 0px;
-      width: 100%;
-      height: $headerHeight;
-      background-color: black;
       background-size: cover;
       opacity: 0.95;
     }
@@ -251,7 +189,7 @@ $headerHeight = 100px;
     .content {
       position: relative;
       z-index: 3;
-      padding: 20px $pagePaddingWidth 0px $pagePaddingWidth;
+      padding: 10px $pagePaddingWidth 0px $pagePaddingWidth;
     }
 
     .logo-small {
@@ -269,10 +207,11 @@ $headerHeight = 100px;
   }
   &.active {
     .floating {
-      transform: translateY(-10px);
+      transform: translateY(0px);
     }
-    .background{
-      border-bottom: 0px;
+    .floating.float {
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0px 0px 10px black;
     }
   }
   
@@ -281,17 +220,11 @@ $headerHeight = 100px;
 
 #header.fixed {
   height: 0px;
-  border-bottom: 0px solid rgba(255,255,255,0.3);
   .floating {
     .background {
       background-image: none !important;
       background-color: black;
       opacity: 0.4;
-      -webkit-filter: blur(0px);
-      -moz-filter: blur(0px);
-      -o-filter: blur(0px);
-      -ms-filter: blur(0px);
-      filter: blur(0px);
     }
   }
 }
