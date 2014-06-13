@@ -8,6 +8,7 @@ NOTES:
 - imageUrl can be an absolute or relative path (relative paths must start with '/').
 
 
+TROUGH MongoHQ (add new document):
 
 {
  "_id": ObjectId().str,
@@ -22,3 +23,42 @@ NOTES:
 }
 
 
+
+TROUGH mongo console:
+1. open another terminal window while meteor is running
+2. voer het volgende commando uit: meteor mongo
+3. plak onderstaande insert statements (met juiste content)
+
+
+  db.highlights.insert({
+    "_id": ObjectId().str,
+    "createdAt": new Date(),
+    "city": "utrecht",
+    "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
+    "title": "l’Atelier des Objets Connectés #2",
+    "subtitle": "14-15 Juin @ Pôle Pixel",
+    "website": "http://www.atelier-objets-connectes.org/",
+    "userId": "cYBfkE26dKXGWTHSj"
+  });
+
+  db.highlights.insert({
+    "_id": ObjectId().str,
+    "createdAt": new Date(),
+    "city": "utrecht",
+    "imageUrl": "/img/highlights/blendWebMix.jpg",
+    "title": "Blend Web Mix",
+    "subtitle": "29-30 Octobre Cité internationale",
+    "website": "http://www.blendwebmix.com/",
+    "userId": "cYBfkE26dKXGWTHSj"
+  });
+
+  db.highlights.insert({
+    "_id": ObjectId().str,
+    "createdAt": new Date(),
+    "city": "utrecht",
+    "imageUrl": "/img/highlights/app-dernier-metro.jpg",
+    "title": "Dernier métro",
+    "subtitle": "web app Lyonnaise",
+    "website": "http://yannlombard.github.io/derniermetro/",
+    "userId": "cYBfkE26dKXGWTHSj"
+  });
