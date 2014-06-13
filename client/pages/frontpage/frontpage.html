@@ -32,6 +32,25 @@
         </div>
       {{/if}}
     {{/if}}
+    <div class="ambassadors-container">
+      <div class="ambassadors">
+        <div class="hacker">
+            <div style="background-image:url(https://graph.facebook.com/toon.vanramshorst/picture?type=large);" class="pictureView route-transition activated"></div>
+            <div class="name">Toon van Ramshorst</div>
+            <div class="ambassador">Ambassador of {{CurrentCity.name}}</div>
+            <a class="" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Email</a> • 
+            <a class="" href="https://twitter.com/intent/tweet?text=.@hckrsLyon%20">Tweet</a>
+        </div>
+        <div class="hacker">
+            <div style="background-image:url(https://graph.facebook.com/toon.vanramshorst/picture?type=large);" class="pictureView route-transition activated"></div>
+            <div class="name">Toon van Ramshorst</div>
+            <div class="ambassador">Ambassador of {{CurrentCity.name}}</div>
+            <a class="" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">Email</a> • 
+            <a class="" href="https://twitter.com/intent/tweet?text=.@hckrsLyon%20">Tweet</a>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
     {{#if CurrentCity}}
       <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
       {{#if totalHackers}}
@@ -39,6 +58,6 @@
       {{/if}}
     {{/if}}
     <div class="page-space"></div>
-    <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> — <a href="{{pathFor 'about'}}">about hckrs</a></div>
+    <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> • <a href="{{pathFor 'about'}}">about hckrs</a></div>
   </div>
 </template>

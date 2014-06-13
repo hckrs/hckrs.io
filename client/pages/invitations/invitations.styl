@@ -2,27 +2,30 @@
 
 /* INVITATIONS */
 
-#invitations{
+#invitations_partial{
 
   .slots{
-    margin-top: 24px;
-    margin-bottom: 24px;
-    float: left;
     clear: both;
 
     .slot {
       float: left;
       margin-right: 12px;
+      margin-top: 8px;
       text-align: center;
     }
 
     /* classes .pictureView, .small, .empty, .unknow
        are defined within the .pictureView declaration
-       further in this file */
+       elsewhere */
 
-    .invitation-text { /* can't make this work, problem with selector ? */
-      padding-top: 30px;
-      clear: both;
+    .invitation-text {
+      line-height: 28px;
+      margin-left: 18px;
+      float: left;
+    }
+
+    .area{
+      margin-top: 0px;
     }
 
   }

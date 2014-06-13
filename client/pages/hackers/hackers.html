@@ -8,16 +8,6 @@
         {{profile.name}}
       </a>
       <br/>
-      <!--<div class="age">{{profile.age}}</div>-->
-      <!--{{#if profile.social.facebook}}
-        <a href="{{profile.social.facebook}}" class="hackers-social social-facebook" target="_blank">Facebook</a>
-      {{/if}}
-      {{#if profile.social.github}}
-        <a href="{{profile.social.github}}" class="hackers-social social-github" target="_blank">Github</a>
-      {{/if}}
-      {{#if profile.social.twitter}}
-        <a href="{{profile.social.twitter}}" class="hackers-social social-twitter" target="_blank">Twitter</a>
-      {{/if}}-->
     </div>
     {{/each}}
    
@@ -25,7 +15,7 @@
     <strong>{{totalHackers}}</strong> hackers in {{CurrentCity.name}}.
 
 
-    {{> invitations}}
+    {{> invitations_partial}}
 
     <div class="page-space"></div>
   </div>
