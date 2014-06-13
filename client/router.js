@@ -124,6 +124,11 @@ Router.reload = function() {
   Router.go(path); 
 }
 
+Router.goToCity = function(city) {
+  var url = Url.replaceCity(city);
+  Router.go(url);
+}
+
 Router.routes['invite'].url = function(params) {
   return Meteor.absoluteUrl('+/' + params.phrase);
 }

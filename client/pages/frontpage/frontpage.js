@@ -25,6 +25,21 @@ Template.frontpage.helpers({
   },
   "invitationBroadcastUser": function() {
     return Session.get('invitationBroadcastUser');
+  },
+  "cities": function() {
+    return CITIES;
+  },
+  "selected": function(city) {
+    log(city)
+    return Session.equals('currentCity', city) ? 'selected' : '';
+  }
+});
+
+// events
+Template.frontpage.events({
+  "change #city": function(evt) {
+    var city = $(evt.currentTarget).val();
+    Router.goToCity(city);
   }
 });
 

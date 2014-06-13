@@ -3,10 +3,10 @@
     <div class="logo-large"></div>
     <form id="newCity">
       <select id="city" class="input-xlarge city">
-        <option value="Lyon">Lyon</option>
-        <option value="Utrecht">Utrecht</option>
-        <option value="Grenoble">Grenoble</option>
-        <option value="Enschede">Enschede</option>
+        <option selected disabled>Choose your city</option>
+        {{#each cities}}
+        <option value="{{key}}" {{selected key}}>{{name}}</option>
+        {{/each}}
       </select>
     </form>
     {{#if currentUser}}

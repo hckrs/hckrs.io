@@ -284,6 +284,7 @@ if (Meteor.isClient) {
     return CITYMAP[city];
   });
 
+
 }
 
 
