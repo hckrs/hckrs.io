@@ -1,25 +1,7 @@
 {
   "public": {
     "environment": "staging",
-
-    "siteName": "hckrs.io",
-    "siteEmail": "machine@hckrs.io",
-    "siteOwnerEmail": "mail@hckrs.io",
-    
-    "mapboxDefault": "ramshorst.gd0ekbb3",
-    "mapboxPlaces": "ramshorst.gcoejeom",
-
     "ga": { "account": null }
-  },
-
-
-  "defaultNumberOfInvitesForNewUsers": 2,
-  "maximumNumberOfUnusedInvitesPerUser": 6,
-
-
-  "env": {
-    "MAIL_URL": "smtp://machine@hckrs.io:IN2MR8K1RmnOxjGoSIIIQYMNHVSUIevNQqasdaW@mail.gandi.net:587/",
-    "MAIL_URL_MAYOR": "smtp://toon@hckrs.io:WJeCLaTKs5IIQYMNHVSUIevNQ9KCqpzaQdHwkIk@mail.gandi.net:587/"
   },
 
   "newrelic": {

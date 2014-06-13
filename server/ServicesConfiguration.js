@@ -14,30 +14,34 @@ Meteor.startup(function() {
   var githubConfigured = Accounts.loginServiceConfiguration.findOne({service: 'github'});
   var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'twitter'});
 
+  var fb = Settings['facebook'];
+  var gh = Settings['github'];
+  var tw = Settings['twitter'];
+
   // register facebook
-  if(!facebookConfigured && Meteor.settings.facebook) {
+  if(!facebookConfigured && fb) {
     Accounts.loginServiceConfiguration.insert({
       service: "facebook",
-      appId: Meteor.settings.facebook.appId,
-      secret: Meteor.settings.facebook.secret
+      appId: fb.appId,
+      secret: fb.secret
     });
   }
 
   // register github app
-  if(!githubConfigured && Meteor.settings.github) {
+  if(!githubConfigured && gh) {
     Accounts.loginServiceConfiguration.insert({
       service: "github",
-      clientId: Meteor.settings.github.clientId,
-      secret: Meteor.settings.github.secret
+      clientId: gh.clientId,
+      secret: gh.secret
     });
   }
 
   // register twitter app
-  if(!twitterConfigured && Meteor.settings.twitter) {
+  if(!twitterConfigured && tw) {
     Accounts.loginServiceConfiguration.insert({
       service: "twitter",
-      consumerKey: Meteor.settings.twitter.consumerKey,
-      secret: Meteor.settings.twitter.secret
+      consumerKey: tw.consumerKey,
+      secret: tw.secret
     });
   }
   
@@ -434,15 +438,17 @@ Accounts.onCreateUser(function (options, user) {
   } else { 
     // additional information, for new user only!  
 
-    // make the first user within the system admin
-    if (Meteor.users.find().count() === 0)
-      user.isAdmin = true;
-
     // don't allow access until user completes his profile
-    user.isUninvited = !user.isAdmin;
+    user.isUninvited = true;
     user.isAccessDenied = true;
-    user.isHidden = true;
     user.isIncompleteProfile = true;
+    user.isHidden = true;
+
+    // make the first user within the system admin and mayor and invited
+    if (Meteor.users.find().count() === 0) {
+      user.isAdmin = true;
+      user.isMayor = true;
+    }
 
   }
   
@@ -470,6 +476,10 @@ var attachUserToCity = function(userId, city) {
   // update user with city information
   Users.update(user._id, {$set: userCityInfo});
 
+  // automatic invite the first n users
+  if (userCityInfo.localRank <= Settings['firstNumberOfUsersAutoInvited'])
+    Users.update(user._id, {$unset: {isUninvited: true}});
+
   // let admins know that a new user has registered the site
   SendEmailOnNewUser(user);
 }
@@ -486,15 +496,11 @@ var newUserCityInfo = function(city) {
   user.localRank = (local && local.localRank || 0) + 1;
   user.globalRank = (global && global.globalRank || 0) + 1;
 
-  // make the first user of a city the mayor
-  if (user.localRank === 1)
-    user.isMayor = true;
-
   // set invitation phrase
   user.invitationPhrase = user.globalRank * 2 + 77;
 
   // give this user the default number of invite codes
-  user.invitations = Meteor.settings.defaultNumberOfInvitesForNewUsers || 0;
+  user.invitations = Settings['defaultNumberOfInvitesForNewUsers'] || 0;
 
   return user;
 }
@@ -512,7 +518,7 @@ Accounts.validateLoginAttempt(function(info) {
   if (!currentCity) { // try to find closest city based on ip
     var userIp = info.connection.clientAddress;
     var location = requestLocationForIp(userIp);
-    currentCity = (findClosestCity(location) || {}).key; 
+    currentCity = findClosestCity(location);
   } 
   
   if (!currentCity) { // we can't verify if user is logged in at correct city
@@ -788,6 +794,9 @@ var requestAccessOfUser = function(userId) {
 
   if (user.isAccessDenied != true)
     throw new Meteor.Error(500, "User has already access to the site.");
+
+  if (!user.city) 
+    throw new Meteor.Error(500, "User isn't attached to some city.");    
 
   if (user.isUninvited)
     throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");

@@ -18,9 +18,10 @@ FrontpageController = DefaultController.extend({
 // bind total number of hackers to template
 Template.frontpage.helpers({
   "totalHackers": function() { 
-    if(Meteor.users.find().count()>=100){
-      return Meteor.users.find().count() || ''; 
-    }
+    var city = Session.get('currentCity');
+    var total = Meteor.users.find({city: city}).count();
+    var minimum = Settings['minimumUserCountToShow'];
+    return (total >= minimum) ? total : ''; 
   },
   "invitationBroadcastUser": function() {
     return Session.get('invitationBroadcastUser');

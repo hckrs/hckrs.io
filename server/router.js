@@ -19,7 +19,7 @@ Router.map(function () {
         // if not, then find the closest city
         var userIp = getClientIp(this.request);
         var location = requestLocationForIp(userIp);
-        var closestCity = (findClosestCity(location) || {}).key;    
+        var closestCity = findClosestCity(location);    
         
         if (closestCity) {
 

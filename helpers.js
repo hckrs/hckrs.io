@@ -153,7 +153,7 @@ requestLocationForIp = function(ip) {
 
 findClosestCity = function(latlon) {
   if (!latlon) return null;
-  return _.min(CITIES, _.partial(getDistanceFromLatLonObj, latlon));
+  return _.min(CITIES, _.partial(getDistanceFromLatLonObj, latlon)).key;
 }
 
 
@@ -230,7 +230,7 @@ if (Meteor.isClient) {
 
   // return the current environment (local|production)
   UI.registerHelper('environment', function() {
-    return Meteor.settings && Meteor.settings.public.environment;
+    return Settings['environment'];
   });  
 
   // template helper to use the value of a Session variable directly in the template
@@ -280,7 +280,8 @@ if (Meteor.isClient) {
   });
 
   UI.registerHelper('CurrentCity', function() {
-    return Session.get('currentCity');
+    var city = Session.get('currentCity');
+    return CITYMAP[city];
   });
 
 }

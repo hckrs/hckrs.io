@@ -1,16 +1,21 @@
 
-var siteName = Meteor.settings.public.siteName;
-var siteEmail = Meteor.settings.public.siteEmail;
-var siteOwnerEmail = Meteor.settings.public.siteOwnerEmail;
-var siteUrl = Meteor.absoluteUrl();
-var siteFrom = siteName + " <" + siteEmail + ">";
-var siteUrlShort = function() { return Url.hostname(); } // defined in /lib/Url.js 
+/* MAIL TEMPLATES */
+
+var siteName, siteEmail, siteOwnerEmail, siteUrl, siteFrom, siteUrlShort;
+
+Meteor.startup(function() {
+  siteName = Settings.siteName;
+  siteEmail = Settings.siteEmail;
+  siteOwnerEmail = Settings.siteOwnerEmail;
+  siteUrl = Meteor.absoluteUrl();
+  siteFrom = siteName + " <" + siteEmail + ">";
+  siteUrlShort = function() { return Url.hostname(); } // defined in /lib/Url.js 
+
+  Accounts.emailTemplates.siteName = siteName;
+  Accounts.emailTemplates.from = siteFrom;
+});
 
 
-/* SETTINGS */
-
-Accounts.emailTemplates.siteName = siteName;
-Accounts.emailTemplates.from = siteFrom;
 
 
 /* METEOR E-MAIL TEMPLATES */
@@ -40,7 +45,7 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
 // when a new user joined the site
 SendEmailOnNewUser = function(user) {
   
-  if (Meteor.settings.public.environment === 'production') { // only in production
+  if (Settings['environment'] === 'production') { // only in production
     
     var userUrl = Meteor.absoluteUrl(Url.bitHash(user.localRank));
     var subject = "New hacker on " + siteUrlShort();

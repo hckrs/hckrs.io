@@ -31,7 +31,7 @@ var checkCurrentCity = function() {
     return;
   
   // set current city in session
-  Session.set('currentCity', city);
+  Session.set('currentCity', city.key);
     
   // relaxing the same origin policy so that javascript
   // can communicate between different city domains
