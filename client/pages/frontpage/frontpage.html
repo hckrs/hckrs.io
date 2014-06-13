@@ -1,6 +1,14 @@
 <template name="frontpage">
   <div id="frontpage" class="page">
     <div class="logo-large"></div>
+    <form id="newCity">
+      <select id="city" class="input-xlarge city">
+        <option value="Lyon">Lyon</option>
+        <option value="Utrecht">Utrecht</option>
+        <option value="Grenoble">Grenoble</option>
+        <option value="Enschede">Enschede</option>
+      </select>
+    </form>
     {{#if currentUser}}
       <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
     {{else}}
@@ -26,7 +34,9 @@
     {{/if}}
     {{#if CurrentCity}}
       <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
-      discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
+      {{#if totalHackers}}
+        discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
+      {{/if}}
     {{/if}}
     <div class="page-space"></div>
     <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> — <a href="{{pathFor 'about'}}">about hckrs</a></div>

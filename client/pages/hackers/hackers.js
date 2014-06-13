@@ -17,6 +17,9 @@ HackersController = DefaultController.extend({
 // bind hackers to template
 Template.hackers.helpers({
   "hackers": function() { return Meteor.users.find().fetch(); },
-  "transitionDelay": function() { return Math.random(); }
+  "transitionDelay": function() { return Math.random(); },
+  "totalHackers": function() { 
+    return Meteor.users.find().count() || ''; 
+  },
 });
 

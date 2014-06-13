@@ -18,7 +18,9 @@ FrontpageController = DefaultController.extend({
 // bind total number of hackers to template
 Template.frontpage.helpers({
   "totalHackers": function() { 
-    return Meteor.users.find().count() || ''; 
+    if(Meteor.users.find().count()>=100){
+      return Meteor.users.find().count() || ''; 
+    }
   },
   "invitationBroadcastUser": function() {
     return Session.get('invitationBroadcastUser');
@@ -38,7 +40,7 @@ Template.frontpage.rendered = function() {
         }    
     }, 500);
   });
-  var texts = ['web','app','software','design','life','hardware','life','game','open source'];
+  var texts = ['web','app','software','game','design','life','hardware','life','open source','growth'];
   $('#target').teletype({ text: texts }); 
   $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
 }
