@@ -83,7 +83,9 @@ Users.deny({
 Invitations.deny(ALL);
 
 
+/* HIGHLIGHTS */
 
+Highlights.deny(ALL);
 
 
 

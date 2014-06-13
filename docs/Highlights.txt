@@ -1,0 +1,22 @@
+To add a highlight component to highlights collection,
+put the following code into a new mongo document. 
+
+NOTES:
+- The first 2 properties must stay the same.
+- userId must be looked up manually.
+- subtitle, website, userId are optional fields
+- imageUrl can be an absolute or relative path (relative paths must start with '/').
+
+
+
+{
+ "_id": ObjectId().str,
+ "createdAt": new Date(),
+
+ "city": "utrecht",
+ "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
+ "title": "l’Atelier des Objets Connectés #2",
+ "subtitle": "14-15 Juin @ Pôle Pixel",
+ "website": "http://www.atelier-objets-connectes.org/",
+ "userId": "cYBfkE26dKXGWTHSj"
+}

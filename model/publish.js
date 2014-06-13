@@ -137,6 +137,18 @@ if (Meteor.isServer) {
 
 
 
+  /* HIGHLIGHTS */
+
+  // Only publish highlights for the city of the logged in user
+  Meteor.publish("highlights", function () {
+    var user = Users.findOne(this.userId);
+
+    if(!user || !allowedAccess(user._id))
+      return [];   
+
+    return Highlights.find({city: user.city});
+  });
+
 
 
 

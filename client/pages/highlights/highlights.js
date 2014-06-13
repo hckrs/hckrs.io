@@ -6,11 +6,10 @@ HighlightsController = DefaultController.extend({
   onRun: function() { 
     Interface.setHeaderStyle('fixed');
   },
-  waitOn: function () {
-    var authorIds = _.pluck(highlights(), 'userId');
-    return [ 
-      Meteor.subscribe('publicUserData', authorIds)
-    ];
+  onBeforeAction: function() {
+    var authorIds = _.pluck(Highlights.find().fetch(), 'userId');
+    this.subscribe('highlights').wait();
+    this.subscribe('publicUserData', authorIds).wait();
   }
 });
 
@@ -22,7 +21,7 @@ HighlightsController = DefaultController.extend({
 
 Template.highlights.helpers({
   'highlights': function() { 
-    return highlights(); 
+    return Highlights.find({}, {sort: {createdAt: -1}}).fetch(); 
   }
 });
 
@@ -80,46 +79,3 @@ Template.highlights.destroyed = function() {
 
 
 
-
-// CONTENT
-
-// Highlight Content Section (add NEWER items to the top of the array)
-// - only the 'createdAt' property is required.
-// - other properties are optional.
-// - dates must be represented as an newDate("YYYY-MM-DD hh:mm") object.
-// - refer to an user by user id, ( retrieve with Url.userIdFromUrl() )
-// - start relative image urls with a slah (e.g. /img/...)
-
-var highlights = function() {
-  return [ /* NEW to OLD */
-
-    {
-      "createdAt": newDate("2014-14-06"), //date of post YYYY-MM-DD
-      "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
-      "title": "l’Atelier des Objets Connectés #2",
-      "subtitle": "14-15 Juin @ Pôle Pixel",
-      "website": "http://www.atelier-objets-connectes.org/",
-      "userId": Url.userIdFromUrl("http://lyon.hckrs.io/-"), 
-    },
-
-    {
-      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
-      "imageUrl": "/img/highlights/blendWebMix.jpg",
-      "title": "Blend Web Mix",
-      "subtitle": "29-30 Octobre Cité internationale",
-      "website": "http://www.blendwebmix.com/",
-      "userId": Url.userIdFromUrl("http://lyon.hckrs.io/----_"), 
-    },
-
-    {
-      "createdAt": newDate("2014-02-08"), //date of post YYYY-MM-DD
-      "imageUrl": "/img/highlights/app-dernier-metro.jpg",
-      "title": "Dernier métro",
-      "subtitle": "web app Lyonnaise",
-      "website": "http://yannlombard.github.io/derniermetro/",
-      "userId": Url.userIdFromUrl("http://lyon.hckrs.io/--"), 
-    },
-
-
-  ];
-}
