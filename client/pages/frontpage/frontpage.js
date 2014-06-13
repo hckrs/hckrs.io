@@ -30,7 +30,6 @@ Template.frontpage.helpers({
     return CITIES;
   },
   "selected": function(city) {
-    log(city)
     return Session.equals('currentCity', city) ? 'selected' : '';
   }
 });
@@ -39,7 +38,9 @@ Template.frontpage.helpers({
 Template.frontpage.events({
   "change #city": function(evt) {
     var city = $(evt.currentTarget).val();
-    Router.goToCity(city);
+    exec(function() {
+      Router.goToCity(city);  
+    });
   }
 });
 

@@ -1,19 +1,33 @@
 
 /* GENERAL */
 
+// update datetime in session every second 
+// reactive templates will update automatically
+
+Session.set('date', new Date());
+Meteor.setInterval(function() {
+  Session.set('date', new Date());
+}, 60000);
+
+
 // change background image depending on time 
 // 1. night,  2. in daytime
 
-// XXX let depend on city
 
-var currentTime = new Date().getHours();
-var isNight = currentTime < 7 || currentTime >= 19;
-var image = isNight ? "/img/background_night.jpg" : "/img/background.jpg";
-Session.set('backgroundImage', image);
+var getBackground = function() {
+  var city = CITYMAP[Session.get('currentCity')];
+  var date = Session.get('date');
+  if (!city || !date) return;
+  var currentTime = date.getHours();
+  var isNight = currentTime < 7 || currentTime >= 19;
+  return isNight ? city.backgroundImageNight : city.backgroundImage;
+}
 
 UI.body.rendered = function() {
-  var bg = Session.get('backgroundImage');
-  $("body").css('background-image', 'url("' + bg + '")');
+  Deps.autorun(function() {
+    var bg = getBackground();
+    $("body").css('background-image', 'url("' + bg + '")');
+  });
 }
 
 
@@ -22,7 +36,7 @@ UI.body.rendered = function() {
 
 Template.header.helpers({
   'backgroundImage': function() {
-    return Session.get('backgroundImage');
+    return getBackground();
   },
   'headerStyle': function() { 
     return Interface.getHeaderStyle();

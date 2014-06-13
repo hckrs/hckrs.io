@@ -7,16 +7,16 @@ CITIES = [
     name: "Lyon", 
     latitude: 45.764043, 
     longitude: 4.835659,
-    backgroundImage: "/img/background.jpg",
-    backgroundImageNight: "/img/background_night.jpg"
+    backgroundImage: "/img/backgrounds/lyon.jpg",
+    backgroundImageNight: "/img/backgrounds/lyon_night.jpg"
   },
   { 
     key: "utrecht",
     name: "Utrecht", 
     latitude: 52.0809819, 
     longitude: 5.1060363,
-    backgroundImage: "/img/background.jpg",
-    backgroundImageNight: "/img/background_night.jpg"
+    backgroundImage: "/img/backgrounds/utrecht.jpg",
+    backgroundImageNight: "/img/backgrounds/utrecht_night.jpg"
   },
 ];
 
