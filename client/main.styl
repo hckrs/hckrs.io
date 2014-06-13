@@ -23,7 +23,6 @@ html, body{
   clear: both;
 }
 
-
 /* wrapper around all */
 
 .wrapper {
@@ -62,6 +61,7 @@ a {
   text-decoration: none;
   color: #FFF;
   margin: 0px 2px 0px 2px;
+  font-weight: bold;
 }
 
 a:hover{
@@ -129,6 +129,29 @@ a img {
   &.activated {
     transform: scale(1.0);
     opacity: 1.0;
+  }
+}
+
+/* area */
+
+.area{
+  padding: 24px;
+  padding-top: 20px;
+  padding-bottom: 12px;
+  margin-top: 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
+
+  .highlighted{
+    float: left;
+    background-color: rgba(255,255,255,1);
+    color: #111;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    padding: 4px 8px 4px 8px;
+    margin-bottom: 12px;
   }
 }
 

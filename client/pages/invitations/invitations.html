@@ -1,27 +1,41 @@
 <template name="invitations">
   <div id="invitations" class="page">
-    
-    <H2>Invite hackers</h2>
-    <div class="slots">
+    {{> invitations_partial}}
+  </div>
+</template>
 
-      {{#each invitedUsers}}
-        <a href="{{pathFor 'hacker'}}" class="slot" title="{{profile.name}}">
-          <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}"></div>
-        </a>
-      {{/each}}
+<template name="invitations_partial">
+  <div id="invitations_partial">
 
-      {{#each availableSlots}}
-        <div class="slot">
-          <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small"></div>
+    <H2>Invite friends</h2>
+    <div class="slots area">
+
+        <div class="highlighted">{{link}}</div>
+        <div class="invitation-text">
+          This invitation URL contains your <strong>{{unusedTotal}}</strong> available invites. Please share !
+          <a target="_blank" href="https://twitter.com/intent/tweet?text=Local hackers community — Password : {{linkUrl}} %23hackers %23meetup %23job %23{{CurrentCity.name}}">Tweet</a> • 
+          <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{linkUrl}}">Facebook</a>
+
         </div>
+        <div style='clear:both;'></div>
+        {{#each availableSlots}}
+          <div class="slot">
+            <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small"></div>
+          </div>
+        {{/each}}
 
+        {{#if invitedUsers}}
+          <div>Hackers you have invited:</div>
+        {{/if}}
 
-      {{/each}}
-
-      <div class="invitation-text"><p>We trust you to invite awesome hackers for the community.<br/>This personal invitation URL gives acces to <strong>{{unusedTotal}}</strong> persons:</p>
-      <p><strong>{{link}}</strong></p></div>
+        {{#each invitedUsers}}
+          <a href="{{pathFor 'hacker'}}" class="slot" title="{{profile.name}}">
+            <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}"></div>
+          </a>
+        {{/each}}
+        <div class="clear"></div>
 
     </div>
-
   </div>
+
 </template>
