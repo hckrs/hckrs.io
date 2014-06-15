@@ -1,0 +1,41 @@
+
+LOCAL DNS
+===========
+
+DESCRIPTION:
+
+Install 'dnsmasq' and configure to create a local DNS server. 
+The configuration used below will point top-level domains ".dev" to your local system.
+
+So that we can develop locally using:
+http://hckrs.dev:3000 (notice .dev extension)
+
+
+
+INSTALL & CONFIGURE
+===================
+
+Run the following commands in the terminal.
+The 4th command will request to enter your password.
+
+
+brew install dnsmasq
+mkdir -pv $(brew --prefix)/etc/
+echo 'address=/.dev/127.0.0.1' > $(brew --prefix)/etc/dnsmasq.conf
+sudo cp -v $(brew --prefix dnsmasq)/homebrew.mxcl.dnsmasq.plist /Library/LaunchDaemons
+sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+sudo mkdir -v /etc/resolver
+sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/dev'
+
+
+
+HOW TO RUN
+==========
+
+Start meteor with the following command:
+
+ROOT_URL=http://hckrs.dev:3000 mrt --settings settings-local.json
+
+Alternatively, you can start the meteor by running the app via /tools/meteor-run.app
+You can even put that app in your dock :-)
+
