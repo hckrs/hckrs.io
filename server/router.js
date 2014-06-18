@@ -14,9 +14,11 @@ Router.map(function () {
       var isLocalhost = Url.isLocalhost(url);
 
       // check if there is a valid city present in the url
-      if (!city || !CITYMAP[city] && city !== 'city') {
+      if (!city || !CITYMAP[city]) {
+
+        // this subdomain doesn't exist or isn't a valid city
         
-        // if not, then find the closest city
+        // we try to find the closest city
         var userIp = getClientIp(this.request);
         var location = requestLocationForIp(userIp);
         var closestCity = findClosestCity(location);    
@@ -27,10 +29,11 @@ Router.map(function () {
           var cityUrl = Url.replaceCity(closestCity, url);
           return redirect(cityUrl, this.response);
           
-        } else {
+        } else if (city !== 'www') {
   
-          // If closest city can't be found, let user choose
-          var cityUrl = Url.replaceCity('city', url);
+          // If closest city can't be found, we redirect to www.
+          // only if we are not already there.
+          var cityUrl = Url.replaceCity('www', url);
           return redirect(cityUrl, this.response);
         }
       }
