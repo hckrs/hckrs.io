@@ -2,6 +2,11 @@
 LOCAL DNS
 ===========
 
+SOURCE:
+
+http://www.echoditto.com/blog/never-touch-your-local-etchosts-file-os-x-again
+
+
 DESCRIPTION:
 
 Install 'dnsmasq' and configure to create a local DNS server. 
