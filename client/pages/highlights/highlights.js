@@ -6,10 +6,8 @@ HighlightsController = DefaultController.extend({
   onRun: function() { 
     Interface.setHeaderStyle('fixed');
   },
-  onBeforeAction: function() {
-    var authorIds = _.pluck(Highlights.find().fetch(), 'userId');
-    this.subscribe('highlights').wait();
-    this.subscribe('publicUserData', authorIds).wait();
+  waitOn: function() {
+    return [ Meteor.subscribe('highlights') ];
   }
 });
 

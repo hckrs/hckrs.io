@@ -6,11 +6,6 @@ InvitationsController = DefaultController.extend({
     return [ 
       Meteor.subscribe('invitations') 
     ];
-  },
-  onBeforeAction: function() {
-    if (!this.ready()) return;
-    var invitedUserIds = _.pluck(Invitations.find().fetch(), 'receivingUser');
-    this.subscribe('publicUserData', invitedUserIds).wait();
   }
 });
 

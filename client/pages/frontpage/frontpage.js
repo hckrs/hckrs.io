@@ -4,7 +4,7 @@
 FrontpageController = DefaultController.extend({
   template: 'frontpage',
   waitOn: function () {
-    return [ Meteor.subscribe('publicUsers') ];
+    return [];
   }
 
 });

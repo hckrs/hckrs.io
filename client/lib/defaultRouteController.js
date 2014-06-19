@@ -9,10 +9,9 @@ DefaultController = RouteController.extend({
   },
   onBeforeAction: function() {
     
-    // subscribe to the global collections
-    // this are the collections that must be available on every page
-    this.subscribe('publicUserDataCurrentUser', Meteor.userId()).wait();
-  
+    // wait on global subscriptions ready
+    this.wait({ready: Subscriptions.ready}); 
+    
   },
   onAfterAction: function() {
 

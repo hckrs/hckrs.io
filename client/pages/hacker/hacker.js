@@ -4,13 +4,9 @@
 HackerController = DefaultController.extend({
   template: 'hacker',
   waitOn: function () {
-    return [ 
-      Meteor.subscribe('publicUserDataEmail', Url.userIdentifierFromUrl()) 
-    , Meteor.subscribe('publicUserData', Url.userIdentifierFromUrl()) 
-    ];
+    return [];
   },
   onBeforeAction: function() { 
-    if (!this.ready()) return;
     Session.set('hackerId', Url.userIdFromUrl());
     Session.set('hackerEditMode', true);
   }

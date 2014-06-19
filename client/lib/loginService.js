@@ -1,3 +1,4 @@
+Login = {};
 
 
 var serviceOptions = {
@@ -7,26 +8,32 @@ var serviceOptions = {
 }
 
 
-/* OBSERVE when user becomes logged in */
 
-// continue check if login state changed
-observeLoginState = function() {
-  Meteor.setTimeout(function(){
-    Meteor.autorun(function() {
-      if (Meteor.userId()) {
-        Deps.nonreactive(function() {
-          afterLogin();
-        });   
-      }
-    });
-  }, 0);
+Login.init = function() {
+  observe();
 }
 
-// reset subscriptions
-var resetSubscriptions = function() {
-  Meteor.subscribe('publicUserDataCurrentUser');
-}
 
+/* OBSERVE Login State */
+
+var observe = function() {
+  var hasLoggedInBefore = false;
+  
+  Deps.autorun(function() {
+    if (!Subscriptions.ready()) 
+      return; // wait until subscriptions are ready
+    
+    if (Meteor.userId()) { // user logged in
+      hasLoggedInBefore = true;
+      Deps.nonreactive(loggedIn);
+    }
+    
+    if (!Meteor.userId() && hasLoggedInBefore) {  // user logged out
+      hasLoggedInBefore = false;
+      Deps.nonreactive(loggedOut);
+    }
+  });
+}
 
 
 /* LOGIN EVENT handlers */
@@ -37,46 +44,47 @@ var manuallyLoggedIn = function() {
 }
 
 // when user becomes logged in
-var afterLogin = function() {
+var loggedIn = function() {
 
   // log
   GAnalytics.event("LoginService", "login", "automatically");
- 
-  // subscibe to user information
-  Meteor.subscribe('publicUserDataCurrentUser', Meteor.userId(), function() {
 
-    // XXX maybe we can do this on the server side, because
-    // meteor introduces a function called Accounts.validateLoginAttempt()
-    checkDuplicateIdentity();
-    checkInvitation();
-    checkAccess();
+  // XXX maybe we can do this on the server side, because
+  // meteor introduces a function called Accounts.validateLoginAttempt()
+  checkDuplicateIdentity();
+  checkInvitation();
+  checkAccess();
 
-    // if a redirectUrl is present, redirect to that url
-    // otherwise if also no route is setted to the hackers list
-    var redirectUrl = Session.get('redirectUrl');
-    var currentRoute = Router.current().route.name;
-    
-    if (redirectUrl) {
-      Session.set('redirectUrl', null);
-      Router.go(redirectUrl);
-    } else if(currentRoute === 'frontpage') {
-      goToEntryPage();
-    } else { // reload page to trigger route actions again
-      Router.reload();
-    }
+  // if a redirectUrl is present, redirect to that url
+  // otherwise if also no route is setted to the hackers list
+  var redirectUrl = Session.get('redirectUrl');
+  var currentRoute = Router.current().route.name;
+  
+  if (redirectUrl) {
+    Session.set('redirectUrl', null);
+    Router.go(redirectUrl);
+  } else if(currentRoute === 'frontpage') {
+    goToEntryPage();
+  } else { // reload page to trigger route actions again
+    Router.reload();
+  }
 
-  });
 }
 
 // when user becomes logged out
-var afterLogout = function() {
-  /* do nothing */
+var loggedOut = function() {
+  /* empty */
 }
+
 
 // which page should be loaded for logged in users which enter the site
 goToEntryPage = function() {
   Router.go('highlights');
 }
+
+
+
+
 
 
 
@@ -175,7 +183,6 @@ checkInvitation = function() {
       
       } else { //on success
 
-        resetSubscriptions();
         goToEntryPage();
         
         // log to google analytics
@@ -207,7 +214,6 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
           Router.reload();
           log(err);
         } else {
-          resetSubscriptions();
           goToEntryPage();
         }
       });
@@ -228,7 +234,6 @@ checkAccess = function() { /* GLOBAL, called from router.js */
           Router.reload();
           log(err);
         } else {
-          resetSubscriptions();
           goToEntryPage();
         }
       });
@@ -327,7 +332,7 @@ var logout = function() {
   Router.go('frontpage');
   Deps.flush();
   Meteor.setTimeout(function() {
-    Meteor.logout(afterLogout); 
+    Meteor.logout(); 
   }, 200);
 }
 

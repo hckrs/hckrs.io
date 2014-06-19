@@ -1,5 +1,9 @@
+Startup = {};
+
 // this code loads first because of
 // the alphabetic filename load order
+
+
 
 
 Meteor.startup(function() {
@@ -9,15 +13,23 @@ Meteor.startup(function() {
   // in the future we probably use navigator.language || navigator.userLanguage; 
   moment.lang('en-gb'); 
 
-  // check for login
-  observeLoginState();
-
   // setup page transitions
   initPageTransitions();
 
   // extract city from domain
   checkCurrentCity();
+
+  // subscribe to global subscriptions
+  Subscriptions.init();
+
+  // observer login state
+  Login.init();
+  
 });
+
+
+
+
 
 
 // extract city from domain
@@ -37,7 +49,8 @@ var checkCurrentCity = function() {
   // can communicate between different city domains
   // this is required to do OAuth request.
   // In the oauth package this same line must be included too. 
-  document.domain = Url.root(); 
+  if (document.domain && document.domain.indexOf(Url.root()) !== -1)
+    document.domain = Url.root(); 
 }
 
 

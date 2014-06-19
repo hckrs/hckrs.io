@@ -5,7 +5,6 @@ HackersController = DefaultController.extend({
   template: 'hackers',
   waitOn: function () {
     return [ 
-      Meteor.subscribe('publicUserData', 'all'),
       Meteor.subscribe('invitations'),
     ];
   }

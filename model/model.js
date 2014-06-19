@@ -59,6 +59,9 @@ var user = { /* scheme */
     verified: Boolean     // e-mailadress is verified by clicking the link in enrollment mail
   } ], 
 
+  ambassador: {           // (optional) only when user is ambassador
+    city: String,         // refer to the city where this user is ambassor
+  },
 
   /* administration details */
 
