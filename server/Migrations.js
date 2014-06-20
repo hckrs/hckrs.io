@@ -69,6 +69,63 @@ var migrations = [
     }
   },
 
+  { // 21 jun 2014
+    name: "Multicity with Ambassadors",
+    task: function(callback) {
+
+      Meteor.users.update({}, {$set: {city: "lyon"}}, {multi: true});
+      Meteor.users.update({isMayor: true}, {$unset: {isMayor: true}, $set: {ambassador: {city: "lyon"}}}, {multi: true});
+
+      // Set highlights content
+
+      Highlights.insert({
+        "createdAt": new Date(),
+        "city": "lyon",
+        "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
+        "title": "l’Atelier des Objets Connectés #2",
+        "subtitle": "14-15 Juin @ Pôle Pixel",
+        "website": "http://www.atelier-objets-connectes.org/",
+        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/-")
+      });
+
+      Highlights.insert({
+        "createdAt": new Date(),
+        "city": "lyon",
+        "imageUrl": "/img/highlights/blendWebMix.jpg",
+        "title": "Blend Web Mix",
+        "subtitle": "29-30 Octobre Cité internationale",
+        "website": "http://www.blendwebmix.com/",
+        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/----_")
+      });
+
+      Highlights.insert({
+        "createdAt": new Date(),
+        "city": "lyon",
+        "imageUrl": "/img/highlights/app-dernier-metro.jpg",
+        "title": "Dernier métro",
+        "subtitle": "web app Lyonnaise",
+        "website": "http://yannlombard.github.io/derniermetro/",
+        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/--")
+      });
+
+      // Set gifts
+
+      Gifts.insert({
+        "createdAt": new Date(),
+        "city": "lyon",
+        "title": "co-working — 1 day",
+        "websiteUrl": "http://www.la-cordee.net",
+        "websiteName": "@ La cordée",
+        "description": "Valid in the office space of your choice."
+      });
+
+
+      // done
+      callback();
+
+    }
+  },
+
 ];
 
 

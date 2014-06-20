@@ -41,21 +41,22 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
 
 // this e-mail will be sent to the admins 
 // when a new user joined the site
-SendEmailsOnNewUser = function(user) {
+SendEmailsOnNewUser = function(userId) {
   
   if (Settings['environment'] === 'production') { // only in production
-    
+
+    var user = Users.findOne(userId);
     var city = user.city;
     var hash = Url.bitHash(user.localRank);
     var url = Meteor.absoluteUrl(hash);
     var cityUrl = Url.replaceCity(city, url);
     var cityHost = Url.hostname(cityUrl);  
-    var toMayor = _.compact([CITYMAP[city].email]);
+    var toAmbassadors = _.compact(Users.find({"ambassador.city": city}).map(function(u) { return u.profile.email; }));
     var toAdmin = _.compact([Settings["siteOwnerEmail"]]);
     var userEmail = user.profile.email;
 
     var email = {};
-    email.to = toMayor;
+    email.to = toAmbassadors;
     email.bcc = toAdmin;
     email.from = siteFrom;
     email.subject = "New hacker on " + cityHost;
@@ -63,7 +64,7 @@ SendEmailsOnNewUser = function(user) {
     if (userEmail)
       email.replyTo = userEmail;
     
-    // send to admins and mayors of city
+    // send to admins and ambassadors of city
     Email.send(email);
   }
 }

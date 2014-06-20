@@ -86,7 +86,6 @@ if (Meteor.isServer) {
   ];
   var userFieldsCurrentUser = [
     "isAdmin",
-    "isMayor",
     "isAccessDenied",
     "isUninvited",
     "isIncompleteProfile",

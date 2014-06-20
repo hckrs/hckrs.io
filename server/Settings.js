@@ -13,4 +13,3 @@ Settings = {}
 
 // ENVIRONMENT variables
 process.env["MAIL_URL"] = "smtp://machine@hckrs.io:IN2MR8K1RmnOxjGoSIIIQYMNHVSUIevNQqasdaW@mail.gandi.net:587";
-process.env["MAIL_URL_MAYOR"] = "smtp://toon@hckrs.io:WJeCLaTKs5IIQYMNHVSUIevNQ9KCqpzaQdHwkIk@mail.gandi.net:587";

@@ -78,7 +78,6 @@ var user = { /* scheme */
   isUninvited: Boolean,     // flag wheter this user is not invited
   isIncompleteProfile: Boolean, // new users starts with an incomplete profile until user pressed the 'ready' button
   isHidden: Boolean,        // this user isn't visible to others (denied users & admins)
-  isMayor: Boolean,         // this user is the mayor of a city
   isAdmin: Boolean,         // true if this user has admin privilege
   isDeleted: Boolean,       // mark this account as deleted (probably merged with other account)
   deletedAt: Date,          // date of deletion

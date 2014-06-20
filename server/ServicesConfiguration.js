@@ -444,10 +444,9 @@ Accounts.onCreateUser(function (options, user) {
     user.isIncompleteProfile = true;
     user.isHidden = true;
 
-    // make the first user within the system admin and mayor and invited
+    // make the first user within the system admin
     if (Meteor.users.find().count() === 0) {
       user.isAdmin = true;
-      user.isMayor = true;
     }
 
   }
@@ -480,9 +479,17 @@ var attachUserToCity = function(userId, city) {
   if (userCityInfo.localRank <= Settings['firstNumberOfUsersAutoInvited'])
     Users.update(user._id, {$unset: {isUninvited: true}});
 
-  // let mayor/admins know that a new user has registered the site
-  user = Users.findOne(user._id);
-  SendEmailsOnNewUser(user);
+  // make the first user within the system ambassador of this city
+  if (Meteor.users.find().count() === 1) {
+    var ambassador = {
+      city: city,
+      title: "hckrs.io developer",
+    }; 
+    Users.update(user._id, {$set: {ambassador: ambassador}});
+  }
+
+  // let ambassadors/admins know that a new user has registered the site
+  SendEmailsOnNewUser(user._id);
 }
 
 var newUserCityInfo = function(city) {
