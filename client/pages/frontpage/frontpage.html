@@ -34,7 +34,7 @@
     {{/if}}
 
     {{> ambassadors}}
-    
+
     {{#if CurrentCity}}
       <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
       {{#if totalHackers}}
@@ -61,7 +61,7 @@
       <div class="hacker">
         <div style="background-image:url({{profile.picture}});" class="pictureView route-transition"></div>
         <div class="name">{{profile.name}}</div>
-        <div class="ambassador">{{ambassador.title}}</div>
+        <div class="ambassador">{{ambassador.title}} in {{CurrentCity.name}}</div>
         <a href="#" class="action action-email">E-mail</a>
         {{#if profile.socialName.twitter}}
           <a href="https://twitter.com/intent/tweet?text=@{{profile.socialName.twitter}}%20" target="_blank" class="action action-tweet">Tweet</a> 
