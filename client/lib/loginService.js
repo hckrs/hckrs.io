@@ -153,7 +153,7 @@ checkInvitation = function() {
   var phrase = Session.get('invitationPhrase');
   var broadcastUser = Session.get('invitationBroadcastUser');
 
-  if (!checkInvited() && phrase) {
+  if (phrase) {
   
     // make a server call to check the invitation
     Meteor.call('verifyInvitation', phrase, function(err) {

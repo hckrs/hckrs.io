@@ -27,6 +27,9 @@ var user = { /* scheme */
   localRank: Number,      // assigned hacker number based on signup order in city
   globalRank: Number,     // assigned hacker number based on signup order of all world hackers
 
+  localRankHash: String,  // CLIENT-ONLY hashed localRank
+  globalRankHash: String, // CLIENT-ONLY hashed globalRank
+
   profile: {              // user's public profile (visible for other users)
     picture: String,      // url of an avatar for this user
     name: String,         // full name of the user    
@@ -45,6 +48,11 @@ var user = { /* scheme */
       github: String,     // url to user's github profile
       twitter: String     // url to user's twitter profile
     },
+    socialName: { // CLIENT-ONLY
+      facebook: String,   // username of user's facebook profile
+      github: String,     // username of user's github profile
+      twitter: String     // username of user's twitter profile
+    },
     socialPicture: {
       facebook: String,   // url to user's facebook picture
       github: String,     // url to user's github picture
@@ -61,6 +69,7 @@ var user = { /* scheme */
 
   ambassador: {           // (optional) only when user is ambassador
     city: String,         // refer to the city where this user is ambassor
+    title: String,        // custom title of this ambassador
   },
 
   /* administration details */

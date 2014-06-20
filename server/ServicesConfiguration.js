@@ -710,10 +710,13 @@ verifyInvitationOfUser = function(phrase, userId) {
   // receiving user
   var receivingUser = Meteor.users.findOne(userId);
 
+  // search for previous invitations
+  var alreadyInvited = !!Invitations.findOne({receivingUser: userId});
+
   if (!receivingUser)
     throw new Meteor.Error(500, "Unknow user: " + userId);
 
-  if (!receivingUser.isUninvited)
+  if (alreadyInvited)
     throw new Meteor.Error(500, "User is already invited.");
 
   if (!broadcastUser)
@@ -731,11 +734,11 @@ verifyInvitationOfUser = function(phrase, userId) {
     signedupAt: new Date()
   });  
 
-  // mark as invited
-  forceInvitationOfUser(receivingUser._id);
-
   // decrement broadcast user's unused invitations
   Meteor.users.update(broadcastUser._id, {$inc: {invitations: -1}});
+
+  // mark as invited
+  forceInvitationOfUser(receivingUser._id);
 }
 
 // when this function is called, is must already be verified that 
