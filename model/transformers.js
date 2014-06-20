@@ -4,10 +4,22 @@
 /* USERS */
 
 if (Meteor.isClient) {
+
+  var socialNameFromUrl = function(service, url) {
+    return /[^./]*$/.exec(url)[0];
+  }
   
   Users._transform = function(user) {
     user.localRankHash = Url.bitHash(user.localRank);
     user.globalRankHash = Url.bitHash(user.globalRank);
+    
+    if (user.profile && user.profile.social) {
+      user.profile.socialName = {};
+      _.each(user.profile.social, function(url, service) {
+        user.profile.socialName[service] = socialNameFromUrl(service, url);
+      });
+    }
+    
     return user;
   }
 }

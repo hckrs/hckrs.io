@@ -34,13 +34,29 @@ Template.frontpage.helpers({
   }
 });
 
+Template.ambassadors.helpers({
+  "ambassadors": function() {
+    var city = Session.get('currentCity');
+    return Users.find({"ambassador.city": city}).fetch();
+  }
+});
+
+
 // events
+
 Template.frontpage.events({
   "change #city": function(evt) {
     var city = $(evt.currentTarget).val();
     exec(function() {
       Router.goToCity(city);  
     });
+  }
+});
+
+Template.ambassadors.events({
+  "click .action-email": function() {
+    var email = this.profile.email;
+    location.href = "mailto:" + email;
   }
 });
 

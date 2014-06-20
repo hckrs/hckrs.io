@@ -82,6 +82,7 @@ if (Meteor.isServer) {
   var userFieldsAmbassador = [
     "ambassador",
     "profile.email",
+    "profile.social",
   ];
   var userFieldsCurrentUser = [
     "isAdmin",
