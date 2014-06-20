@@ -125,8 +125,13 @@ Router.reload = function() {
 }
 
 Router.goToCity = function(city) {
-  var url = Url.replaceCity(city);
-  window.location.href = url;
+  var url;
+  
+  var phrase = Session.get('invitationPhrase');
+  if (phrase)
+    url = Router.routes['invite'].url({phrase: Url.bitHash(phrase)});
+
+  window.location.href = Url.replaceCity(city, url);
 }
 
 Router.routes['hacker'].path = function(user) {
