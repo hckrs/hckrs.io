@@ -2,7 +2,7 @@
 
 $pagePaddingHeight = 20px;
 $pagePaddingWidth = 40px;
-
+$hover = #ffea87;
 
 html, body{
   /*background-color: #84a3c0;*/
@@ -66,7 +66,7 @@ a {
 
 a:hover{
   text-decoration: none;
-  color: #ffea87;
+  color: $hover;
   /*border-bottom: 2px dotted #1466a8;
   margin-bottom: -5px;*/
 }
@@ -211,7 +211,7 @@ $headerHeight = 93px;
     }
     .floating.float {
       border-bottom: 1px solid rgba(255,255,255,0.3);
-      box-shadow: 0px 0px 10px black;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.15);
     }
   }
   
@@ -245,7 +245,7 @@ $headerHeight = 93px;
 
 a.menu {
   text-decoration: none;
-  color: #eee;
+  color: #fff;
   margin: 0px;
   padding: 0px 8px 0px 8px;
   float: none;
@@ -257,7 +257,7 @@ a.menu {
 
 a.menu:hover{
   text-decoration: none;
-  color: #fff; 
+  color: $hover; 
   /*border-bottom: 2px dotted #1466a8;
   margin-bottom: -5px;*/
 }
@@ -327,7 +327,7 @@ input.text:focus {
 input.text.saved {
   background-color: rgba(255,255,255,0.1);
   border: 1px solid rgba(0,0,0,0);
-  color: #ffea87;
+  color: $hover;
 }
 input.text.invalid {
   border-color: orange;
