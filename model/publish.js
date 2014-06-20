@@ -108,7 +108,10 @@ if (Meteor.isServer) {
     var self = this;
     var currentUser = Users.findOne(this.userId);
 
-    var observeUserDocs = Users.find().observe({
+    // don't publish hidden users except if that user is the current user
+    var query = {$or: [{isHidden: {$ne: true}}, {_id: self.userId}]};
+
+    var observeUserDocs = Users.find(query).observe({
       added: function(doc) {
         self.added('users', doc._id, filterUserFields(currentUser, doc, false));
       },
@@ -130,7 +133,7 @@ if (Meteor.isServer) {
     }
     
     var republish = function() {
-      Users.find().forEach(function(doc) {
+      Users.find(query).forEach(function(doc) {
         self.changed('users', doc._id, filterUserFields(currentUser, doc, true));
       });
     }
@@ -173,32 +176,28 @@ if (Meteor.isServer) {
     }
 
 
-    // the data below will be published of all not hidden users
+    // the data below will be published of all users
 
-    if (!user.isHidden) {
+    useFields.push(userFieldsGlobal);
 
-      useFields.push(userFieldsGlobal);
+    if (user.ambassador)
+      useFields.push(userFieldsAmbassador);
 
-      if (user.ambassador)
-        useFields.push(userFieldsAmbassador);
+    // the data below will only published if
+    // current user has access to the site
+    // and the published user is in the same city
 
-      // the data below will only published if
-      // current user has access to the site
-      // and the published user is in the same city
+    var hasAccess = currentUser && currentUser.isAccessDenied != true;
+    var isSameCity = currentUser && cityMatch(currentUser.city, user.city);
 
-      var hasAccess = currentUser && currentUser.isAccessDenied != true;
-      var isSameCity = currentUser && cityMatch(currentUser.city, user.city);
+    if (hasAccess && isSameCity) {
 
-      if (hasAccess && isSameCity) {
+      useFields.push(userFieldsData);
+      
+      // only publish e-mailadresses of user who accepted that
 
-        useFields.push(userFieldsData);
-        
-        // only publish e-mailadresses of user who accepted that
-
-        if (user.profile && user.profile.available && user.profile.available.length)
-          useFields.push(userFieldsEmail);
-      }
-
+      if (user.profile && user.profile.available && user.profile.available.length)
+        useFields.push(userFieldsEmail);
     }
     
     // returning the user doc with only visible fields included
