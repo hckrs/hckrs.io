@@ -29,7 +29,7 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];   
 
-    return Highlights.find({city: user.city});
+    return Highlights.find({$where: "!this.city || this.city === '"+user.city+"'"});
   });
 
 
@@ -42,7 +42,7 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];   
 
-    return Gifts.find({city: user.city});
+    return Gifts.find({$where: "!this.city || this.city === '"+user.city+"'"});
   });
 
 

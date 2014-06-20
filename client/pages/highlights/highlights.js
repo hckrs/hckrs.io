@@ -8,6 +8,10 @@ HighlightsController = DefaultController.extend({
   },
   waitOn: function() {
     return [ Meteor.subscribe('highlights') ];
+  },
+  onBeforeAction: function() {
+    if (this.ready() && Highlights.find().count() === 0)
+      Router.go('hackers');
   }
 });
 

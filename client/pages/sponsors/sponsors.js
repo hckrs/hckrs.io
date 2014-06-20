@@ -12,5 +12,8 @@ SponsorsController = DefaultController.extend({
 Template.sponsors.helpers({
   'gifts': function() {
     return Gifts.find().fetch();
+  },
+  'isEmpty': function() {
+    return Gifts.find().count() === 0;
   }
 })

@@ -1,23 +1,31 @@
 <template name="sponsors">
   <div id="sponsors" class="page">
     
-    <H2>Gifts from our partners</h2>
+    {{#if isEmpty}}
+    
+      <h2>No gifts right now</h2>
+    
+    {{else}}
+      
+      <H2>Gifts from our partners</h2>
 
-    {{#each gifts}}
-    <div class="area">
-      <p>
-        {{#if title}}
-          <div class="highlighted">{{title}}</div>
-        {{/if}}
-        {{#if websiteUrl}}
-          <H3><a href="{{websiteUrl}}" target="_blank">{{websiteName}}</a></h3>
-        {{/if}}
-        {{#if description}}
-          <div class="discription">{{description}}</div>
-        {{/if}}
-      </p>
-    </div>
-    {{/each}}
+      {{#each gifts}}
+      <div class="area">
+        <p>
+          {{#if title}}
+            <div class="highlighted">{{title}}</div>
+          {{/if}}
+          {{#if websiteUrl}}
+            <H3><a href="{{websiteUrl}}" target="_blank">{{websiteName}}</a></h3>
+          {{/if}}
+          {{#if description}}
+            <div class="discription">{{description}}</div>
+          {{/if}}
+        </p>
+      </div>
+      {{/each}}
+
+    {{/if}}
 
   </div>
 </template>
