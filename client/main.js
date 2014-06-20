@@ -15,12 +15,14 @@ Meteor.setInterval(function() {
 
 
 var getBackground = function() {
-  var city = CITYMAP[Session.get('currentCity')];
+  var city = CITYMAP[Session.get('currentCity')];  
   var date = Session.get('date');
-  if (!city || !date) return;
-  var currentTime = date.getHours();
-  var isNight = currentTime < 7 || currentTime >= 19;
-  return isNight ? city.backgroundImageNight : city.backgroundImage;
+  var isNight = date && (date.getHours() < 7 || date.getHours() >= 19);
+  
+  if (city)
+    return isNight ? city.backgroundImageNight : city.backgroundImage;
+  else
+    return isNight ? "/img/backgrounds/default_night.jpg" : "/img/backgrounds/default.jpg";
 }
 
 UI.body.rendered = function() {

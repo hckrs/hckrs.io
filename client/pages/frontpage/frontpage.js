@@ -37,7 +37,7 @@ Template.frontpage.helpers({
 Template.ambassadors.helpers({
   "ambassadors": function() {
     var city = Session.get('currentCity');
-    return Users.find({"ambassador.city": city}).fetch();
+    return city && Users.find({"ambassador.city": city}).fetch();
   }
 });
 
