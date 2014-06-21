@@ -28,9 +28,8 @@
   }
 
   select#city {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border: 0px solid white;
+    color: #fff;
+    border: 0px;
     display: block;
     margin: 0 auto;
     margin-bottom: 76px;
@@ -40,11 +39,29 @@
     width: 480px;
     font-weight: 100;
     letter-spacing: 2px;
-    padding-left: 30px;
+    padding-left: 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('/img/drop-down-arrow.svg') no-repeat;
+    background-position: 455px 16px; 
+    background-color: rgba(255,255,255,0.15);
+    text-indent: 0.01px; /* Removes default arrow from firefox*/
+    text-overflow: "";  /*Removes default arrow from firefox*/
+  }
+
+  select#city:active, select#city:focus { outline-style: none; -moz-outline-style:none; }
+
+  select#city option {
+    color: #000;
+    padding-left: 12px;
   }
 
   select#city:hover {
     background: rgba(255,255,255,0.20);
+    background: url('/img/drop-down-arrow.svg') no-repeat;
+    background-position: 455px 16px; 
+    background-color: rgba(255,255,255,0.25);
   }
 
   #cursor{
