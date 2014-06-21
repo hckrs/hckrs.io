@@ -59,11 +59,11 @@ var checkDuplicateAccounts = function() {
 var scrollToTop = function() {
   Session.equals('pageScrollDirection', null);
   var hash = this.params.hash;
-  if (!hash) return $("#mainWrapper").scrollTop(0);
+  if (!hash) return $(window).scrollTop(0);
   var scrollTo = function() {
     if (!$("#"+hash).length) return;
     Meteor.clearInterval(timer);
-    $("#mainWrapper").scrollTo($("#"+hash), {duration: 0, offset: 0});  
+    $(window).scrollTo($("#"+hash), {duration: 0, offset: 0});  
   }
   scrollTo();
   var timer = Meteor.setInterval(scrollTo, 200);
