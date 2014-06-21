@@ -10,8 +10,11 @@ HighlightsController = DefaultController.extend({
     return [ Meteor.subscribe('highlights') ];
   },
   onBeforeAction: function() {
+
+    // redirect to hackers page if there are no highlights
     if (this.ready() && Highlights.find().count() === 0)
       Router.go('hackers');
+    
   }
 });
 

@@ -15,10 +15,16 @@ HackersController = DefaultController.extend({
 
 // bind hackers to template
 Template.hackers.helpers({
-  "hackers": function() { return Meteor.users.find().fetch(); },
-  "transitionDelay": function() { return Math.random()*1.5; },
   "totalHackers": function() { 
-    return Meteor.users.find().count() || ''; 
+    var city = Session.get('currentCity');
+    return (city && Meteor.users.find({city: city}).count()) || ''; 
+  },
+  "hackers": function() { 
+    var city = Session.get('currentCity');
+    return city && Meteor.users.find({city: city}).fetch(); 
+  },
+  "transitionDelay": function() { 
+    return Math.random()*1.5; 
   },
 });
 

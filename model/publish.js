@@ -15,7 +15,8 @@ if (Meteor.isServer) {
     if(!this.userId) 
       return [];
     
-    return Invitations.find({});
+    return Invitations.find({$or: [ {broadcastUser: this.userId},
+                                    {receivingUser: this.userId} ]});
   });
 
 
