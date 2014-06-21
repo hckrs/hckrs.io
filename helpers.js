@@ -91,12 +91,12 @@ convertToCurrency = function(value) {
 }
 
 
-// check if user is foreign
+// check if some user is foreign
 // that mean he is registered in an other city
-// in relation to the current logged in user
+// with respect to the current city subdomain
 isForeign = function(user) {
-  var my = Meteor.user();
-  return !my || !my.city || !user.city || my.city !== user.city;
+  var city = Session.get('currentCity');
+  return !city || !user.city || city !== user.city;
 }
 
 

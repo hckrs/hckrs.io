@@ -533,7 +533,7 @@ Accounts.validateLoginAttempt(function(info) {
     return;
   } else if (!userCity) { // this new user isn't attached to a city yet, attach now!
     attachUserToCity(info.user._id, currentCity);
-  } else if (userCity !== currentCity) { // check if existing user is logging in at his own city
+  } else if (userCity !== currentCity && !info.user.isAdmin) { // check if existing user is logging in at his own city (or is admin)
     throw new Meteor.Error(1, "city unmatch", userCity);
   }
     

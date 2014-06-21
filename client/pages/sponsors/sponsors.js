@@ -3,7 +3,8 @@
 SponsorsController = DefaultController.extend({
   template: 'sponsors',
   waitOn: function () {
-    return [ Meteor.subscribe('gifts') ];
+    var city = Session.get('currentCity');
+    return [ Meteor.subscribe('gifts', city) ];
   }
 });
 

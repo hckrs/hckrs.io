@@ -15,9 +15,8 @@ if (Meteor.isClient) {
 
     // check if user is foreign
     // that mean he is registered in an other city
-    // in relation to the current logged in user
-    if (user._id !== Meteor.userId())
-      user.isForeign = isForeign(user);
+    // with respect to the curren city page
+    user.isForeign = isForeign(user);
     
     // extract profile usernames from social urls
     if (user.profile && user.profile.social) {

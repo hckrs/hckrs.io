@@ -156,6 +156,7 @@ a img {
 
 
 /* HEADER */
+/* positioning of the header */
 
 $headerHeight = 93px;
 
@@ -188,14 +189,27 @@ $headerHeight = 93px;
     .content {
       position: relative;
       z-index: 3;
-      padding: 10px $pagePaddingWidth 0px $pagePaddingWidth;
     }
 
-    .logo-small {
-      float: left;
+    .logo-small { /* left */
+      position: absolute;
+      top: 10px;
+      left: $pagePaddingWidth;
       height: 63px;
       width: 190px;
       background-image: url('/img/logo-inversed.svg');  
+    }
+
+    .menu { /* middle */
+      margin-top: 5px;
+      margin-left: 250px;
+      margin-right: 100px;
+    }
+      
+    .account { /* right */
+      position: absolute;
+      top: 15px;
+      right: $pagePaddingWidth * 0.5;
     }
   }
 
@@ -232,50 +246,38 @@ $headerHeight = 93px;
 
 
 
-/* menu */
 
-.menu{
-  float: left;
-  padding-top: 25px;
-  padding-left: 48px;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-a.menu {
-  text-decoration: none;
-  color: #fff;
-  margin: 0px;
-  padding: 0px 8px 0px 8px;
-  float: none;
-  padding-top: 12px;
-  margin-top: -12px;
-  padding-bottom: 12px;
-  margin-bottom: -12px;
-}
-
-a.menu:hover{
-  text-decoration: none;
-  color: $hover; 
-  /*border-bottom: 2px dotted #1466a8;
-  margin-bottom: -5px;*/
-}
-
-
-
-/* karma + user menu */
 
 #header {
 
-  .account {
-    float: right;
+  /* menu */
+
+  .menu{
+    font-size: 18px;
+    font-weight: 700;
   }
 
-  .karma{
-    font-size: 1.8em;
+  .menu-item {
+    display: block;
     float: left;
-    margin-top: 27px;
-    margin-right: 24px;
+    padding: 12px 0px;
+    &:after { 
+      padding: 0px 10px 0px 12px;
+      content: '•' 
+    }
+    &:last-of-type:after { content: '' }
+  }
+  a.menu-item {
+    color: #fff;
+    text-decoration: none;
+  }
+  a.menu-item:hover{
+    text-decoration: none;
+    color: $hover; 
+  }
+  #citySelect select {
+    margin-top: -5px;
+    width: 120px;
   }
 
   .dropdown {
@@ -294,6 +296,16 @@ a.menu:hover{
 
   .icon-user, .icon-remove, .icon-gift{
     margin-top: 3px;
+  }
+
+
+  /* karma + user menu */
+
+  .karma{
+    font-size: 1.8em;
+    float: left;
+    margin-top: 27px;
+    margin-right: 24px;
   }
 
 }

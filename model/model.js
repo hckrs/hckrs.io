@@ -28,7 +28,7 @@ var user = { /* scheme */
   globalRank: Number,     // assigned hacker number based on signup order of all world hackers
   localRankHash: String,  // CLIENT-ONLY hashed localRank
   globalRankHash: String, // CLIENT-ONLY hashed globalRank
-  isForeign: Boolean,     // CLIENT-ONLY indicates of this user is from another city than the current logged in user.
+  isForeign: Boolean,     // CLIENT-ONLY indicates of this user is from another city with respect to current city page.
 
   profile: {              // user's public profile (visible for other users)
     picture: String,      // url of an avatar for this user

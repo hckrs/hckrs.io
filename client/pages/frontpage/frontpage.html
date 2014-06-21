@@ -1,14 +1,9 @@
 <template name="frontpage">
   <div id="frontpage" class="page">
     <div class="logo-large"></div>
-    <form id="newCity">
-      <select id="city" class="input-xlarge city">
-        <option selected disabled>Choose your city</option>
-        {{#each cities}}
-        <option value="{{key}}" {{selected key}}>{{name}}</option>
-        {{/each}}
-      </select>
-    </form>
+    
+    {{> citySelect}} {{!-- defined in main.js --}}
+    
     {{#if currentUser}}
       <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
     {{else}}

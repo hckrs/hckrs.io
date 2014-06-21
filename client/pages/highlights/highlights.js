@@ -7,7 +7,8 @@ HighlightsController = DefaultController.extend({
     Interface.setHeaderStyle('fixed');
   },
   waitOn: function() {
-    return [ Meteor.subscribe('highlights') ];
+    var city = Session.get('currentCity');
+    return [ Meteor.subscribe('highlights', city) ];
   },
   onBeforeAction: function() {
 
