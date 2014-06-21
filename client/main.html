@@ -69,20 +69,35 @@
     <div class="floating">
       <div class="background" style="background-image:url('{{backgroundImage}}');"></div>
       <div class="content">
+       
         <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
+       
         {{#with currentUser}}
-          {{#unless isAccessDenied}}
+          
           <div class="menu">
-            <a href="{{pathFor 'hackers'}}" class="menu">hackers</a> •
-            {{#if CurrentCity.agenda}}
-            <a href="{{pathFor 'agenda'}}" class="menu">agenda</a> •
-            {{/if}}
-            {{#if CurrentCity.mapbox}}
-            <a href="{{pathFor 'places'}}" class="menu">places</a> •
-            {{/if}}
-            <a href="{{pathFor 'books'}}" class="menu">books</a>
+            {{#unless isAccessDenied}}
+              
+              <a href="{{pathFor 'hackers'}}" class="menu-item">hackers</a>
+              
+              {{#if CurrentCity.agenda}}
+              <a href="{{pathFor 'agenda'}}" class="menu-item">agenda</a>
+              {{/if}}
+              
+              {{#if CurrentCity.mapbox}}
+              <a href="{{pathFor 'places'}}" class="menu-item">places</a>
+              {{/if}}
+              
+              <a href="{{pathFor 'books'}}" class="menu-item">books</a>
+
+              {{#if isAdmin}}
+              <div class="menu-item">
+                {{> citySelect}}
+              </div>
+              {{/if}}
+
+            {{/unless}}
           </div>
-          {{/unless}}
+          
           <div class="account">
             <!--<div class="karma">67</div>-->
             <div class="dropdown">
@@ -100,7 +115,9 @@
               </ul>
             </div>
           </div>
+        
         {{/with}}
+
         <div class="clear"></div>
       </div>
     </div>
@@ -109,7 +126,16 @@
 
 
 
-
+<template name="citySelect">
+  <form id="citySelect">
+    <select>
+      <option selected disabled>Choose your city</option>
+      {{#each cities}}
+      <option value="{{key}}" {{selected key}}>{{name}}</option>
+      {{/each}}
+    </select>
+  </form>
+</template>
 
 
 

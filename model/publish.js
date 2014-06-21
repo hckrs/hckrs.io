@@ -10,10 +10,13 @@ if (Meteor.isServer) {
   /* INVITATIONS */
 
   // Only publish invitation codes for the logged in user
-  Meteor.publish("invitations", function (hash) {
+  Meteor.publish("invitations", function (all) {
    
     if(!this.userId) 
       return [];
+
+    // XXX in the future the admin page requires to fetch 
+    // all invitations. Then do somehting with 'all'.
     
     return Invitations.find({$or: [ {broadcastUser: this.userId},
                                     {receivingUser: this.userId} ]});
@@ -24,26 +27,32 @@ if (Meteor.isServer) {
   /* HIGHLIGHTS */
 
   // Only publish highlights for the city of the logged in user
-  Meteor.publish("highlights", function () {
+  Meteor.publish("highlights", function (city) {
     var user = Users.findOne(this.userId);
 
     if(!user || !allowedAccess(user._id))
       return [];   
 
-    return Highlights.find({$where: "!this.city || this.city === '"+user.city+"'"});
+    if(user.city !== city && !user.isAdmin)
+      return [];
+
+    return Highlights.find({$where: "!this.city || this.city === '"+city+"'"});
   });
 
 
   /* GIFTS */
 
   // Only publish gifts for the city of the logged in user
-  Meteor.publish("gifts", function () {
+  Meteor.publish("gifts", function (city) {
     var user = Users.findOne(this.userId);
 
     if(!user || !allowedAccess(user._id))
       return [];   
 
-    return Gifts.find({$where: "!this.city || this.city === '"+user.city+"'"});
+    if(user.city !== city && !user.isAdmin)
+      return [];
+
+    return Gifts.find({$where: "!this.city || this.city === '"+city+"'"});
   });
 
 
@@ -51,8 +60,8 @@ if (Meteor.isServer) {
   
   /* USERS */
 
-  // publishing users are more difficult because of conditions/dependencies
-  // determine which user fields to publish is more complex
+  // all users will be published, but which fields are includes can vary along users.
+  // which fields to include is difficult logic because of conditions/dependencies,
   // it depends on the access level of the logged in user
   // and the privacy settings of the published user docs.
   // this will be handled by the filterUserFields function
@@ -105,6 +114,16 @@ if (Meteor.isServer) {
     userFieldsCurrentUser
   );  
 
+  // properties of the current logged in user that determine the user's permissions.
+  // When one of these properties changes it affects the visible fields of other users.
+  // So when an dependency changes, we have to republish the whole collection to test
+  // each user doc against the new permission rights.
+  var currentUserDependencies = [
+    'isAccessDenied',
+    'isAdmin',
+    'city',
+  ];
+
   Meteor.publish('userData', function() {
     var self = this;
     var currentUser = Users.findOne(this.userId);
@@ -112,6 +131,11 @@ if (Meteor.isServer) {
     // don't publish hidden users except if that user is the current user
     var query = {$or: [{isHidden: {$ne: true}}, {_id: self.userId}]};
 
+    // observe docs changes and push the changes to the client
+    // only include fields that are allowed to publish, this can vary between users
+    // and will be handled by the filetUserFields function.
+    // In the case that one of the dependencies from current user's doc changes, we have
+    // to republish the whole collection because then dependencies are evaluated again.
     var observeUserDocs = Users.find(query).observe({
       added: function(doc) {
         self.added('users', doc._id, filterUserFields(currentUser, doc, false));
@@ -129,7 +153,15 @@ if (Meteor.isServer) {
     });
 
     var myDocChanged = function(newDoc, oldDoc) {
-      if (newDoc.isAccessDenied !== oldDoc.isAccessDenied)
+
+      // check of one of the permission properties has changed
+      var dependencyHasChanged = _.some(currentUserDependencies, function(prop) {
+        return newDoc[prop] !== oldDoc[prop];
+      });
+      
+      // if permission has changed, republish whole collection
+      // to make sure all docs will be tested with this new permission
+      if (dependencyHasChanged)
         republish();
     }
     
@@ -184,14 +216,17 @@ if (Meteor.isServer) {
     if (user.ambassador)
       useFields.push(userFieldsAmbassador);
 
+    // first determine current user's permission before continue.
     // the data below will only published if
     // current user has access to the site
     // and the published user is in the same city
+    // If the current user is admin, we publish anyway.
 
     var hasAccess = currentUser && currentUser.isAccessDenied != true;
     var isSameCity = currentUser && cityMatch(currentUser.city, user.city);
+    var isAdmin = currentUser && currentUser.isAdmin;
 
-    if (hasAccess && isSameCity) {
+    if ((hasAccess && isSameCity) || isAdmin) {
 
       useFields.push(userFieldsData);
       

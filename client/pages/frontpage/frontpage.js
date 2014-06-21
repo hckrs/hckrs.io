@@ -27,12 +27,6 @@ Template.frontpage.helpers({
     var phrase = Session.get('invitationPhrase');
     return Users.findOne({invitationPhrase: phrase});
   },
-  "cities": function() {
-    return CITIES;
-  },
-  "selected": function(city) {
-    return Session.equals('currentCity', city) ? 'selected' : '';
-  }
 });
 
 Template.ambassadors.helpers({
@@ -47,15 +41,6 @@ Template.ambassadors.helpers({
 
 
 // events
-
-Template.frontpage.events({
-  "change #city": function(evt) {
-    var city = $(evt.currentTarget).val();
-    exec(function() {
-      Router.goToCity(city);  
-    });
-  }
-});
 
 Template.ambassadors.events({
   "click .action-email": function() {

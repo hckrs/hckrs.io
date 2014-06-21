@@ -33,6 +33,30 @@ UI.body.rendered = function() {
 
 
 
+
+/* CITY SELECT */
+
+Template.citySelect.helpers({
+  "cities": function() {
+    return CITIES;
+  },
+  "selected": function(city) {
+    return Session.equals('currentCity', city) ? 'selected' : '';
+  }
+});
+
+Template.citySelect.events({
+  "change select": function(evt) {
+    var city = $(evt.currentTarget).val();
+    exec(function() {
+      Router.goToCity(city);  
+    });
+  }
+});
+
+
+
+
 /* HEADER */
 
 Template.header.helpers({
@@ -52,7 +76,8 @@ Template.header.helpers({
   }
 });
 
-// hide/show header based on scrolling
+// header rendering 
+// hide or show header based on scrolling
 Template.main.rendered = function() {
   var prevY = 0, newY = 0;
   $(window).on('scroll', function(evt) {
