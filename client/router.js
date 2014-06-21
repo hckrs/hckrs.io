@@ -34,6 +34,29 @@ var noLoginRequired = [
 
 /* hooks */
 
+// set meta data based on current city
+var setMetaData = function() {
+  var city = CITYMAP[Session.get('currentCity')];
+  var title, description;
+
+  // modify meta data
+  title = "hckrs.io";
+  if (city) description = "Hackers community of " + city.name;
+  else      description = "Hackers community in your city";
+
+  // actually set data
+  setTitle(title);
+  setMeta("title", title);
+  setMeta("description", description);
+  setMetaProperties({
+    "og:title": description,
+    "og:site_name": title,
+    "og:url": city ? Url.replaceCity(city.key, Meteor.absoluteUrl()) : Meteor.absoluteUrl(),
+    "og:image": Meteor.absoluteUrl("img/favicons/apple-touch-icon-precomposed.png"),
+    "og:description": description
+  });
+}
+
 var loginRequired = function() {
   if (!Meteor.userId()) {
     Session.set('redirectUrl', location.pathname + location.search + location.hash);
@@ -70,6 +93,8 @@ var scrollToTop = function() {
 }
 
 
+// set meta data
+Router.onRun(setMetaData);
 
 // scroll to top when user enters a route
 Router.onRun(scrollToTop);
@@ -141,3 +166,29 @@ Router.routes['hacker'].path = function(user) {
 Router.routes['invite'].url = function(params) {
   return Meteor.absoluteUrl('+/' + params.phrase);
 }
+
+
+// set meta data helpers
+
+var setTitle = function(value) {
+  $("title").text(value);
+}
+var setMeta = function(name, content) {
+  $("meta[name='"+name+"']").attr('content', content);
+}
+var setMetaProperties = function(properties) {
+  _.each(properties, function(content, property) {
+    $("meta[property='"+property+"']").remove(); // remove existing one
+    $("<meta>").attr({property: property, content: content}).appendTo('head');
+  });
+}
+var clearProperties = function() {
+  $("meta[property]").remove(); // remove all properties
+}
+var clear = function() {
+  setTitle("");
+  setMeta("description", "");
+  clearProperties();
+}
+
+
