@@ -10,15 +10,8 @@ InviteController = DefaultController.extend({
     return [];
   },
   onBeforeAction: function() { 
-    var phrase = Url.bitHashInv(this.params[0]);
-        
+    var phrase = Url.bitHashInv(this.params[0]);        
     Session.set('invitationPhrase', phrase);
-
-    // get associated broadcast user
-    Meteor.call('getBroadcastUser', phrase, function(err, broadcastUser) {
-      Session.set('invitationBroadcastUser', broadcastUser);
-    });
-
     this.redirect('frontpage');
   }
 });

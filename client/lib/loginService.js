@@ -151,7 +151,7 @@ checkDuplicateIdentity = function() {
 checkInvitation = function() {
 
   var phrase = Session.get('invitationPhrase');
-  var broadcastUser = Session.get('invitationBroadcastUser');
+  var broadcastUser = Users.findOne({invitationPhrase: phrase});
 
   if (phrase) {
   
@@ -192,7 +192,6 @@ checkInvitation = function() {
 
       // clean
       Session.set('invitationPhrase', null);
-      Session.set('invitationBroadcastUser', null);
 
     });
 
@@ -200,7 +199,6 @@ checkInvitation = function() {
 
     // clean
     Session.set('invitationPhrase', null);
-    Session.set('invitationBroadcastUser', null);
   }
 };
 

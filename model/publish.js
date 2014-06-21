@@ -61,6 +61,7 @@ if (Meteor.isServer) {
     "city",
     "localRank",
     "globalRank",
+    "invitationPhrase",
     "profile.name",
     "profile.picture",
   ];
@@ -92,7 +93,6 @@ if (Meteor.isServer) {
     "isIncompleteProfile",
     "isHidden",
     "invitations",
-    "invitationPhrase",
     "profile.socialPicture",
     "emails",
   ];

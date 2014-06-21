@@ -24,7 +24,8 @@ Template.frontpage.helpers({
     return (total >= minimum) ? total : ''; 
   },
   "invitationBroadcastUser": function() {
-    return Session.get('invitationBroadcastUser');
+    var phrase = Session.get('invitationPhrase');
+    return Users.findOne({invitationPhrase: phrase});
   },
   "cities": function() {
     return CITIES;

@@ -24,24 +24,6 @@ Meteor.methods({
     return user;    
   },
 
-  // get the broadcast user associated with the given invitation phrase
-  'getBroadcastUser': function(phrase) {
-    check(phrase, Number);
-
-    // fields of broadcast user to return
-    var fields = {'_id': 1, 'profile.name': 1, 'profile.picture': 1};
-  
-    // search broadcast user
-    var broadcastUser = Meteor.users.findOne({invitationPhrase: phrase}, {fields: fields});
-    if (broadcastUser.mergedWith)
-      broadcastUser = Meteor.users.findOne(broadcastUser.mergedWith, {fields: fields});
-
-    if (!broadcastUser)
-      throw new Meteor.Error(500, "Unknow broadcast user");
-
-    return broadcastUser;
-  },
-
   'requestWebPageImages': function(query, maxResults) {
     
     if (!this.userId)
