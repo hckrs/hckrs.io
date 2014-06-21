@@ -5,14 +5,13 @@
     transition: transform 0.6s ease-out;
     transform: scale(1.15);
     opacity: 0;
-    ba
     &.activated {
     	opacity: 1;
     	transform: scale(1);
-    	transition: 1s;
-   	}&.activated:hover {
+   	}
+    &:hover {
+      transition-delay: 0s !important;
     	transform: scale(1.15);
-    	transition: 1s;
    	}
   }
 
@@ -81,13 +80,16 @@
     font-size: 2.5em;
     line-height: 2.4em;
   }
+  
 
   &.clickable:hover {
     cursor: pointer;
   }
   &.clickable.mini:hover {
   }
+  
 }
+
 
 .hackers-name{
   font-weight: 400;
@@ -95,4 +97,31 @@
   font-size: 130%;
   line-height: 48px;
   white-space: nowrap;
+}
+
+
+/* foreign users will be disabled from clicking */  
+
+a.pictureViewLink[foreign] {
+  cursor: default !important;
+  color: white !important;
+}
+.pictureView[foreign] {
+  transition: none !important;
+  transform: none !important;
+  cursor: default !important;
+  text-align: center;
+  &:before {
+    content: 'FOREIGN'; 
+    color: white; 
+    font-weight: bold;
+    cursor: default;
+    background-color: rgba(0,0,0,0.5);
+    font-size: 1.0em;
+    line-height: 17.4em;
+  }
+  &.small:before {
+    font-size: 1em;
+    line-height: 9.4em; 
+  }
 }

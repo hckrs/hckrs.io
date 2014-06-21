@@ -8,11 +8,18 @@ if (Meteor.isClient) {
   var socialNameFromUrl = function(service, url) {
     return /[^./]*$/.exec(url)[0];
   }
-  
+
   Users._transform = function(user) {
     user.localRankHash = Url.bitHash(user.localRank);
     user.globalRankHash = Url.bitHash(user.globalRank);
+
+    // check if user is foreign
+    // that mean he is registered in an other city
+    // in relation to the current logged in user
+    if (user._id !== Meteor.userId())
+      user.isForeign = isForeign(user);
     
+    // extract profile usernames from social urls
     if (user.profile && user.profile.social) {
       user.profile.socialName = {};
       _.each(user.profile.social, function(url, service) {

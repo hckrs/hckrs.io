@@ -91,8 +91,13 @@ convertToCurrency = function(value) {
 }
 
 
-
-
+// check if user is foreign
+// that mean he is registered in an other city
+// in relation to the current logged in user
+isForeign = function(user) {
+  var my = Meteor.user();
+  return !my || !my.city || !user.city || my.city !== user.city;
+}
 
 
 // GEO
@@ -284,7 +289,9 @@ if (Meteor.isClient) {
     return CITYMAP[city];
   });
 
-
+  UI.registerHelper('foreign', function() {
+    return this.isForeign ? {foreign: "", disabled: ""} : '';
+  });
 }
 
 

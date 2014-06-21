@@ -135,7 +135,7 @@ Router.goToCity = function(city) {
 }
 
 Router.routes['hacker'].path = function(user) {
-  return "/" + user.localRankHash + (Url.isLocalhost() ? "?currentCity=" + user.city : "");
+  return user.isForeign ? "#" : "/"+user.localRankHash;
 }
 
 Router.routes['invite'].url = function(params) {
