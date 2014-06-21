@@ -1,4 +1,4 @@
-CITIES = [
+var cities = [
   {
       key: "aachen",
       name: "Aachen",
@@ -77,10 +77,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "belarus",
-      name: "Belarus",
-      latitude: 53.4250438,
-      longitude: 27.6999547,
+      key:  "minsk", /* orignal : belarus */ 
+      name: "Minsk",
+      latitude: 53.9,
+      longitude: 27.566667,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -143,10 +143,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "bosnia",  // original bosnia and herzegovina
-      name: "Bosnia and Herzegovina",
-      latitude: 44.1264398,
-      longitude: 18.0075263,
+      key:  "sarajevo",  // original bosnia and herzegovina
+      name: "Sarajevo",
+      latitude: 43.856259,
+      longitude: 18.413076,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -209,7 +209,7 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "cluj", // original cluj-napoca
+      key:  "cluj-napoca", // original cluj-napoca
       name: "Cluj-Napoca",
       latitude: 46.7693367,
       longitude: 23.5900604,
@@ -253,10 +253,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "croatia",
-      name: "Croatia",
-      latitude: 45.5643442,
-      longitude: 17.0118954,
+      key:  "zagreb", /* original coatia */
+      name: "Zagreb",
+      latitude: 45.815011,
+      longitude: 15.981919,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -264,10 +264,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "cyprus",
-      name: "Cyprus",
-      latitude: 35.1758113,
-      longitude: 33.1383225700226,
+      key:  "nicosia", /* original Cyprus*/
+      name: "Nicosia",
+      latitude: 35.166667,
+      longitude: 33.366667,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -275,16 +275,16 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "czech",
-      name: "Czech",
-      latitude: 50.4357773,
-      longitude: 16.3465756,
+      key:  "prague",
+      name: "Prague",
+      latitude: 50.075538,
+      longitude: 14.4378,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },/*
   {
       key:  "republic",
       name: "Republic",
@@ -295,7 +295,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*/
   {
       key:  "delft",
       name: "Delft",
@@ -341,10 +341,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "estonia",
-      name: "Estonia",
-      latitude: 58.7523778,
-      longitude: 25.3319078,
+      key:  "tallinn", /* original Estonia */
+      name: "Tallinn",
+      latitude: 59.436961,
+      longitude: 24.753575,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -361,7 +361,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },/*
   {
       key:  "galicia",
       name: "Galicia",
@@ -372,7 +372,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*/
   {
       key:  "galway",
       name: "Galway",
@@ -394,9 +394,9 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },/* small citys near Gdansk
   {
-      key:  "sopot",
+      key:  "Sopot",
       name: "Sopot",
       latitude: 54.4446674,
       longitude: 18.5685868,
@@ -416,7 +416,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*/
   {
       key:  "geneva",
       name: "Geneva",
@@ -506,10 +506,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "hainaut",
-      name: "Hainaut",
-      latitude: 50.36174385,
-      longitude: 4.12523123818528,
+      key:  "mons", /* orijginal : region of Hainaut */
+      name: "Mons",
+      latitude: 50.454241,
+      longitude: 3.956659,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -605,10 +605,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "latvia",
-      name: "Latvia",
-      latitude: 56.8666904,
-      longitude: 24.5999717,
+      key:  "riga", /* original : country of latvia */
+      name: "Rīga",
+      latitude: 56.949649,
+      longitude: 24.105186,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -660,10 +660,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "lithuania",
-      name: "Lithuania",
-      latitude: 55.3500003,
-      longitude: 23.7499998,
+      key:  "vilnius", /* orginal : country of lithuania */
+      name: "Vilnius",
+      latitude: 54.687156,
+      longitude: 25.279651,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -695,8 +695,8 @@ CITIES = [
   {
       key:  "luxembourg",
       name: "Luxembourg",
-      latitude: 49.8158683,
-      longitude: 6.1296751,
+      latitude: 49.815273,
+      longitude: 6.129583,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -726,10 +726,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "macedonia",
-      name: "Macedonia",
-      latitude: 41.6171214,
-      longitude: 21.7168387,
+      key:  "skopje", /* original : country of macedonia */
+      name: "Skopje",
+      latitude: 41.997346,
+      longitude: 21.427996,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -823,7 +823,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },/* university near paris
   {
       key:  "saclay",
       name: "Saclay",
@@ -834,7 +834,8 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*/
+  /* very small city
   {
       key:  "passau",
       name: "Passau",
@@ -845,7 +846,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*//* small city in germany
   {
       key:  "pomerania",
       name: "Pomerania",
@@ -856,12 +857,12 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*/
   {
-      key:  "portugal",
-      name: "Portugal",
-      latitude: 40.033265,
-      longitude: -7.8896263,
+      key:  "lissabon", /* original : country portugal */
+      name: "Lissabon",
+      latitude: 38.722252,
+      longitude: -9.139337,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -870,7 +871,7 @@ CITIES = [
   },
   {
       key:  "poznan",
-      name: "Poznan",
+      name: "Poznań",
       latitude: 52.4082296,
       longitude: 16.9333644,
       backgroundImage: "",
@@ -891,10 +892,10 @@ CITIES = [
       twitter: ""
   },
   {
-      key:  "scotland",
-      name: "Scotland",
-      latitude: 56.7861112,
-      longitude: -4.1140518,
+      key:  "glasgow", /* original : country scotland */
+      name: "Glasgow",
+      latitude: 55.864237,
+      longitude: -4.251806,
       backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
@@ -966,7 +967,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },/* no tech scene
   {
       key:  "tenerife",
       name: "Tenerife",
@@ -977,7 +978,7 @@ CITIES = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  },*/
   {
       key:  "toulouse",
       name: "Toulouse",
@@ -1068,6 +1069,11 @@ CITIES = [
   },
 ]
 
+// list with city objects
+// sorted in ASC order
+CITIES = _.sortBy(cities, function(city) { return city.name; });
+
 // another representation of cities using a map datastructure
 // where you can access a city by lookup the key in this map/object.
 CITYMAP = _.object(_.pluck(CITIES, 'key'), CITIES);
+
