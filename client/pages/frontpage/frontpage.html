@@ -47,8 +47,14 @@
     
     {{#if CurrentCity.twitter}}
     <div class="city-twitter">
-      <a href="https://twitter.com/intent/tweet?text=@{{CurrentCity.twitter}}%20" target="_blank" class="action action-tweet">Tweet</a> 
+      <a href="https://twitter.com/{{CurrentCity.twitter}}" target="_blank" class="action action-tweet">@{{CurrentCity.twitter}}</a>
     </div>
+    {{else}}
+      {{#if ambassadors}}
+        <div class="city-twitter">
+          Ambassadors of {{CurrentCity.name}}
+        </div>
+      {{/if}}
     {{/if}}
     
     <div class="ambassadors">
