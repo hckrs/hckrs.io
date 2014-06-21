@@ -1,20 +1,21 @@
 <template name="frontpage">
   <div id="frontpage" class="page">
     <div class="logo-large"></div>
-    
+  
+    {{#if invitationBroadcastUser}}
+      {{#with invitationBroadcastUser}}
+        <div class="invited-by-container">
+          <div style="background-image:url({{profile.picture}});float:left;" class="pictureView"></div>
+          <div style="" class="speach-bubble"><div class="larger">... welcome</div><br/><div class="name">— {{profile.name}}</div></div>
+        </div>
+      {{/with}}
+    {{/if}}
+
     {{> citySelect}} {{!-- defined in main.js --}}
     
     {{#if currentUser}}
       <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
     {{else}}
-      {{#if invitationBroadcastUser}}
-        {{#with invitationBroadcastUser}}
-          <div class="invited-by-container">
-            <div style="background-image:url({{profile.picture}});float:left;" class="pictureView"></div>
-            <div style="" class="speach-bubble"><div class="larger">... welcome</div><br/><div class="name">— {{profile.name}}</div></div>
-          </div>
-        {{/with}}
-      {{/if}}
       {{#if CurrentCity}}
         {{#if serviceLoginError}}
           <div class="error">{{{serviceLoginError}}}</div>
