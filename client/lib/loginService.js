@@ -278,21 +278,21 @@ var loginCallback = function(err) {
     GAnalytics.event("LoginService", "login failure");
 
     // on error
-    var message = "Something went wrong";
+    var message = "<h3>Something went wrong...</h3>Please try again or <a href=\"&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;\">email</a> us.";
     
     // emailadres is in use by another user 
     if (err.reason === "duplicateEmail")
-      message = "Try one of the other services!";
+      message = "<h3>Oopsy!</h3>Please try one of the other services!";
 
     if (err.reason === "city unmatch") {
       var userCity = err.details;
       var cityUrl = Url.replaceCity(userCity);
       var cityDomain = Url.hostname(cityUrl);
-      message = 'Go to <a href="'+cityUrl+'">'+cityDomain+'</a> and try to login again!';
+      message = '<h3>oopsy!</h3><a href="'+cityUrl+'">'+cityDomain+'</a> looks more like your home ;)';
     }
 
     Session.set('serviceLoginError', message);
-    Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 10000);
+    Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 12000);
     log(err);
   
   } else {
