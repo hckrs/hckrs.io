@@ -1077,3 +1077,7 @@ CITIES = _.sortBy(cities, function(city) { return city.name; });
 // where you can access a city by lookup the key in this map/object.
 CITYMAP = _.object(_.pluck(CITIES, 'key'), CITIES);
 
+// a map countaining countries associated with they cities
+COUNTRYMAP = _.groupBy(CITIES, 'country');
+
+

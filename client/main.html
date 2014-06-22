@@ -130,8 +130,12 @@
   <form id="citySelect">
     <select>
       <option selected disabled>Choose your city</option>
-      {{#each cities}}
-      <option value="{{key}}" {{selected key}}>{{name}}</option>
+      {{#each countries}}
+       <optgroup label="{{countryName}}">
+        {{#each cities}}
+          <option value="{{key}}" {{selected key}}>{{name}}</option>
+        {{/each}}
+      </optgroup>
       {{/each}}
     </select>
   </form>
