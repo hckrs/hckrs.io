@@ -2,7 +2,7 @@ var cities = [
   {
       key: "aachen",
       name: "Aachen",
-      country: "",
+      country: "DE",
       latitude: 50.7762954,
       longitude: 6.0838209,
       backgroundImage: "",
@@ -14,7 +14,7 @@ var cities = [
   {
       key:  "aalborg",
       name: "Aalborg",
-      country: "",
+      country: "DK",
       latitude: 57.0482206,
       longitude: 9.9193939,
       backgroundImage: "",
@@ -26,7 +26,7 @@ var cities = [
   {
       key:  "aarhus",
       name: "Aarhus",
-      country: "",
+      country: "DK",
       latitude: 56.1496278,
       longitude: 10.2134046,
       backgroundImage: "",
@@ -38,19 +38,19 @@ var cities = [
   {
       key:  "marseille",
       name: "Marseille",
-      country: "",
+      country: "FR",
       latitude: 43.2961743,
       longitude: 5.3699525,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_c8nkqt9jl62frv2mbt2nhvpncc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
   {
       key:  "amsterdam",
       name: "Amsterdam",
-      country: "",
+      country: "NL",
       latitude: 52.3710088,
       longitude: 4.9001115,
       backgroundImage: "",
@@ -62,7 +62,7 @@ var cities = [
   {
       key:  "athens",
       name: "Athens",
-      country: "",
+      country: "IT",
       latitude: 33.9595974,
       longitude: -83.376678,
       backgroundImage: "",
@@ -74,7 +74,7 @@ var cities = [
   {
       key:  "barcelona",
       name: "Barcelona",
-      country: "",
+      country: "ES",
       latitude: 41.3870186,
       longitude: 2.1700437,
       backgroundImage: "",
@@ -86,7 +86,7 @@ var cities = [
   {
       key:  "minsk", /* orignal : belarus */ 
       name: "Minsk",
-      country: "",
+      country: "BY",
       latitude: 53.9,
       longitude: 27.566667,
       backgroundImage: "",
@@ -98,7 +98,7 @@ var cities = [
   {
       key:  "belfast",
       name: "Belfast",
-      country: "",
+      country: "GB",
       latitude: 54.5969467,
       longitude: -5.9301554,
       backgroundImage: "",
@@ -110,7 +110,7 @@ var cities = [
   {
       key:  "belgrade",
       name: "Belgrade",
-      country: "",
+      country: "RS",
       latitude: 44.8178787,
       longitude: 20.4568089,
       backgroundImage: "",
@@ -122,7 +122,7 @@ var cities = [
   {
       key:  "bergen",
       name: "Bergen",
-      country: "",
+      country: "NO",
       latitude: 60.3568769,
       longitude: 5.37306653035156,
       backgroundImage: "",
@@ -134,7 +134,7 @@ var cities = [
   {
       key:  "berlin",
       name: "Berlin",
-      country: "",
+      country: "DE",
       latitude: 52.5170365,
       longitude: 13.3888599,
       backgroundImage: "",
@@ -146,7 +146,7 @@ var cities = [
   { /* added becose it's a capital */
       key:  "bern",
       name: "Bern",
-      country: "",
+      country: "CH",
       latitude: 46.947922,
       longitude: 7.444608,
       backgroundImage: "",
@@ -158,7 +158,7 @@ var cities = [
   {
       key:  "birmingham",
       name: "Birmingham",
-      country: "",
+      country: "GB",
       latitude: 52.4813679,
       longitude: -1.8980726,
       backgroundImage: "",
@@ -170,7 +170,7 @@ var cities = [
   {
       key:  "sarajevo",  // original bosnia and herzegovina
       name: "Sarajevo",
-      country: "",
+      country: "BA",
       latitude: 43.856259,
       longitude: 18.413076,
       backgroundImage: "",
@@ -182,7 +182,7 @@ var cities = [
   {
       key:  "bratislava",
       name: "Bratislava",
-      country: "",
+      country: "SK",
       latitude: 48.1535383,
       longitude: 17.1096711,
       backgroundImage: "",
@@ -194,7 +194,7 @@ var cities = [
   {
       key:  "brussels",
       name: "Brussels",
-      country: "",
+      country: "BE",
       latitude: 50.84340935,
       longitude: 4.36748762309029,
       backgroundImage: "",
@@ -206,7 +206,7 @@ var cities = [
   {
       key:  "bucharest",
       name: "Bucharest",
-      country: "",
+      country: "RO",
       latitude: 44.436139,
       longitude: 26.1027436,
       backgroundImage: "",
@@ -218,7 +218,7 @@ var cities = [
   {
       key:  "cambridge",
       name: "Cambridge",
-      country: "",
+      country: "GB",
       latitude: 52.2033051,
       longitude: 0.124862,
       backgroundImage: "",
@@ -230,7 +230,7 @@ var cities = [
   {
       key:  "cardiff",
       name: "Cardiff",
-      country: "",
+      country: "GB",
       latitude: 51.4835299,
       longitude: -3.1836873,
       backgroundImage: "",
@@ -242,7 +242,7 @@ var cities = [
   {
       key:  "chisinau",
       name: "Chisinau", /* added because it is a capital */
-      country: "md",
+      country: "MD",
       country: "",
       latitude: 60.098717,
       longitude: 24.313764,
@@ -255,7 +255,7 @@ var cities = [
   {
       key:  "cluj-napoca", // original cluj-napoca
       name: "Cluj-Napoca",
-      country: "",
+      country: "RO",
       latitude: 46.7693367,
       longitude: 23.5900604,
       backgroundImage: "",
@@ -267,7 +267,7 @@ var cities = [
   {
       key:  "cologne",
       name: "Cologne",
-      country: "",
+      country: "DE",
       latitude: 50.9374863,
       longitude: 6.9580232,
       backgroundImage: "",
@@ -279,7 +279,7 @@ var cities = [
   {
       key:  "copenhagen",
       name: "Copenhagen",
-      country: "",
+      country: "DK",
       latitude: 55.6867243,
       longitude: 12.5700724,
       backgroundImage: "",
@@ -291,7 +291,7 @@ var cities = [
   {
       key:  "cork",
       name: "Cork",
-      country: "",
+      country: "IE",
       latitude: 51.8979282,
       longitude: -8.4705806,
       backgroundImage: "",
@@ -303,7 +303,7 @@ var cities = [
   {
       key:  "zagreb", /* original coatia */
       name: "Zagreb",
-      country: "",
+      country: "HR",
       latitude: 45.815011,
       longitude: 15.981919,
       backgroundImage: "",
@@ -315,7 +315,7 @@ var cities = [
   {
       key:  "nicosia", /* original Cyprus*/
       name: "Nicosia",
-      country: "",
+      country: "CY",
       latitude: 35.166667,
       longitude: 33.366667,
       backgroundImage: "",
@@ -327,7 +327,7 @@ var cities = [
   {
       key:  "prague",
       name: "Prague",
-      country: "",
+      country: "CZ",
       latitude: 50.075538,
       longitude: 14.4378,
       backgroundImage: "",
@@ -351,7 +351,7 @@ var cities = [
   {
       key:  "delft",
       name: "Delft",
-      country: "",
+      country: "NL",
       latitude: 52.0114017,
       longitude: 4.35839,
       backgroundImage: "",
@@ -363,7 +363,7 @@ var cities = [
   {
       key:  "dublin",
       name: "Dublin",
-      country: "",
+      country: "IE",
       latitude: 53.3494299,
       longitude: -6.2600969,
       backgroundImage: "",
@@ -375,7 +375,7 @@ var cities = [
   {
       key:  "dusseldorf",
       name: "Düsseldorf",
-      country: "",
+      country: "DE",
       latitude: 51.2235376,
       longitude: 6.7637565,
       backgroundImage: "",
@@ -387,7 +387,7 @@ var cities = [
   {
       key:  "eindhoven",
       name: "Eindhoven",
-      country: "",
+      country: "NL",
       latitude: 51.4485627,
       longitude: 5.45012171525492,
       backgroundImage: "",
@@ -399,7 +399,7 @@ var cities = [
   {
       key:  "tallinn", /* original Estonia */
       name: "Tallinn",
-      country: "",
+      country: "EE",
       latitude: 59.436961,
       longitude: 24.753575,
       backgroundImage: "",
@@ -411,6 +411,7 @@ var cities = [
   {
       key:  "frankfurt",
       name: "Frankfurt",  // original "Frankfurt Rhein-Main"
+      country: "DE",
       latitude: 49.9482506,
       longitude: 7.2665608,
       backgroundImage: "",
@@ -434,7 +435,7 @@ var cities = [
   {
       key:  "galway",
       name: "Galway",
-      country: "",
+      country: "IE",
       latitude: 53.2839934,
       longitude: -9.03834040962519,
       backgroundImage: "",
@@ -446,7 +447,7 @@ var cities = [
   {
       key:  "gdansk",
       name: "Gdansk",
-      country: "",
+      country: "PL",
       latitude: 54.3482259,
       longitude: 18.6542888,
       backgroundImage: "",
@@ -482,7 +483,7 @@ var cities = [
   {
       key:  "geneva",
       name: "Geneva",
-      country: "",
+      country: "CH",
       latitude: 46.2017559,
       longitude: 6.1466014,
       backgroundImage: "",
@@ -494,7 +495,7 @@ var cities = [
   {
       key:  "gent",
       name: "Gent",
-      country: "",
+      country: "BE",
       latitude: 51.0558119,
       longitude: 3.7239194,
       backgroundImage: "",
@@ -506,7 +507,7 @@ var cities = [
   {
       key:  "antwerpen",
       name: "Antwerpen",
-      country: "",
+      country: "BE",
       latitude: 51.2212016,
       longitude: 4.3996325,
       backgroundImage: "",
@@ -518,7 +519,7 @@ var cities = [
   {
       key:  "leuven",
       name: "Leuven",
-      country: "",
+      country: "BE",
       latitude: 50.8790369,
       longitude: 4.7014992,
       backgroundImage: "",
@@ -527,9 +528,10 @@ var cities = [
       mapbox: "",
       twitter: ""
   },
+  {
       key:  "ljubljana",
       name: "Ljubljana",
-      country: "",
+      country: "SI",
       latitude: 46.056947,
       longitude: 14.505751,
       backgroundImage: "",
@@ -541,7 +543,7 @@ var cities = [
   {
       key:  "gothenburg",
       name: "Gothenburg",
-      country: "",
+      country: "SE",
       latitude: 57.7072326,
       longitude: 11.9670171,
       backgroundImage: "",
@@ -553,7 +555,7 @@ var cities = [
   {
       key:  "granada",
       name: "Granada",
-      country: "",
+      country: "ES",
       latitude: 37.1830197,
       longitude: -3.602192,
       backgroundImage: "",
@@ -565,19 +567,19 @@ var cities = [
   {
       key:  "grenoble",
       name: "Grenoble",
-      country: "",
+      country: "FR",
       latitude: 45.182478,
       longitude: 5.7210773,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_dlg5tkvdf2mqg683mq8etl197s@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
   {
       key:  "groningen",
       name: "Groningen",
-      country: "",
+      country: "NL",
       latitude: 53.2073097,
       longitude: 6.7185795611494,
       backgroundImage: "",
@@ -589,7 +591,7 @@ var cities = [
   {
       key:  "mons", /* orijginal : region of Hainaut */
       name: "Mons",
-      country: "",
+      country: "BE",
       latitude: 50.454241,
       longitude: 3.956659,
       backgroundImage: "",
@@ -601,7 +603,7 @@ var cities = [
   {
       key:  "hamburg",
       name: "Hamburg",
-      country: "",
+      country: "DE",
       latitude: 53.5503414,
       longitude: 10.000654,
       backgroundImage: "",
@@ -613,7 +615,7 @@ var cities = [
   {
       key:  "hannover",
       name: "Hannover",
-      country: "",
+      country: "DE",
       latitude: 52.3744779,
       longitude: 9.7385532,
       backgroundImage: "",
@@ -625,7 +627,7 @@ var cities = [
   {
       key:  "helsinki",
       name: "Helsinki",
-      country: "",
+      country: "FI",
       latitude: 60.1713198,
       longitude: 24.9414566,
       backgroundImage: "",
@@ -637,6 +639,7 @@ var cities = [
   {
       key:  "budapest",
       name: "Budapest", /* original : country hungary */
+      country: "HU",
       latitude: 47.497912,
       longitude: 19.040235,
       backgroundImage: "",
@@ -648,6 +651,7 @@ var cities = [
   {
       key:  "reykjavik",
       name: "Reykjavík", /* orignal : country iceland */
+      country: "IS",
       latitude: 64.133333,
       longitude: -21.933333,
       backgroundImage: "",
@@ -659,6 +663,7 @@ var cities = [
   {
       key:  "rome",
       name: "Rome", /* original : country italy */
+      country: "IT",
       latitude: 41.872389,
       longitude: 12.48018,
       backgroundImage: "",
@@ -670,7 +675,7 @@ var cities = [
   {
       key:  "kiev",
       name: "Kiev", /* added because it is a capital */
-      country: "",
+      country: "UA",
       latitude: 50.4501,
       longitude: 30.5234,
       backgroundImage: "",
@@ -682,7 +687,7 @@ var cities = [
   {
       key:  "krakow", /* good in englsih*/
       name: "Kraków",
-      country: "",
+      country: "PL",
       latitude: 50.061892,
       longitude: 19.9368564,
       backgroundImage: "",
@@ -694,7 +699,7 @@ var cities = [
   {
       key:  "kyiv",
       name: "Kyiv",
-      country: "",
+      country: "UA",
       latitude: 50.4499875,
       longitude: 30.5234937,
       backgroundImage: "",
@@ -706,7 +711,7 @@ var cities = [
   {
       key:  "riga", /* original : country of latvia */
       name: "Rīga",
-      country: "",
+      country: "LV",
       latitude: 56.949649,
       longitude: 24.105186,
       backgroundImage: "",
@@ -718,7 +723,7 @@ var cities = [
   {
       key:  "leipzig",
       name: "Leipzig",
-      country: "",
+      country: "DE",
       latitude: 51.340462,
       longitude: 12.3747049,
       backgroundImage: "",
@@ -730,7 +735,7 @@ var cities = [
   {
       key:  "liege",
       name: "Liège",
-      country: "",
+      country: "BE",
       latitude: 50.645138,
       longitude: 5.5734204,
       backgroundImage: "",
@@ -742,19 +747,19 @@ var cities = [
   {
       key:  "lille",
       name: "Lille",
-      country: "",
+      country: "FR",
       latitude: 50.6305089,
       longitude: 3.0706414,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_nbsk0f97uhck487jcnup069jks@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
   {
       key:  "limerick",
       name: "Limerick",
-      country: "",
+      country: "IE",
       latitude: 52.6612577,
       longitude: -8.6302084,
       backgroundImage: "",
@@ -766,7 +771,7 @@ var cities = [
   {
       key:  "vilnius", /* orginal : country of lithuania */
       name: "Vilnius",
-      country: "",
+      country: "LT",
       latitude: 54.687156,
       longitude: 25.279651,
       backgroundImage: "",
@@ -778,7 +783,7 @@ var cities = [
   {
       key:  "liverpool",
       name: "Liverpool",
-      country: "",
+      country: "GB",
       latitude: 53.4054719,
       longitude: -2.9805393,
       backgroundImage: "",
@@ -790,7 +795,7 @@ var cities = [
   {
       key:  "london",
       name: "London",
-      country: "",
+      country: "GB",
       latitude: 51.5072759,
       longitude: -0.1276597,
       backgroundImage: "",
@@ -802,6 +807,7 @@ var cities = [
   {
       key:  "luxembourg",
       name: "Luxembourg", /* Luxembourg is the capital of Luxembourg ! */
+      country: "LU",
       latitude: 49.815273,
       longitude: 6.129583,
       backgroundImage: "",
@@ -813,19 +819,19 @@ var cities = [
   {
       key:  "lyon",
       name: "Lyon",
-      country: "",
+      country: "FR",
       latitude: 45.7575958,
       longitude: 4.8323239,
       backgroundImage: "/img/backgrounds/lyon.jpg",
       backgroundImageNight: "/img/backgrounds/lyon_night.jpg",
-      agenda: "https://www.google.com/calendar/embed?title=Lyon%20Tech%20Hub&amp;showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=ck2ruq6cqfch3t4gshbd6vdnd4%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_ppb66g6vmhs15imf1grhja6has@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "https://a.tiles.mapbox.com/v3/ramshorst.gcoejeom/attribution.html#13/45.7697/4.8552",
       twitter: "hckrsLyon"
   },
   {
       key:  "maastricht",
       name: "Maastricht",
-      country: "",
+      country: "NL",
       latitude: 50.85790405,
       longitude: 5.69681910047491,
       backgroundImage: "",
@@ -837,7 +843,7 @@ var cities = [
   {
       key:  "skopje", /* original : country of macedonia */
       name: "Skopje",
-      country: "",
+      country: "MK",
       latitude: 41.997346,
       longitude: 21.427996,
       backgroundImage: "",
@@ -849,7 +855,7 @@ var cities = [
   {
       key:  "madrid",
       name: "Madrid",
-      country: "",
+      country: "ES",
       latitude: 40.52516075,
       longitude: -3.77181653956588,
       backgroundImage: "",
@@ -861,7 +867,7 @@ var cities = [
   {
       key:  "manchester",
       name: "Manchester",
-      country: "",
+      country: "GB",
       latitude: 53.4791466,
       longitude: -2.2447445,
       backgroundImage: "",
@@ -873,19 +879,19 @@ var cities = [
   {
       key:  "montpellier",
       name: "Montpellier",
-      country: "",
+      country: "FR",
       latitude: 43.6112422,
       longitude: 3.8767337,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_t7ocnuqk4ulda2gns55ohohqcc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
   {
       key:  "moscow",
       name: "Moscow",
-      country: "",
+      country: "RU",
       latitude: 55.755826,
       longitude: 37.6173,
       backgroundImage: "",
@@ -897,7 +903,7 @@ var cities = [
   {
       key:  "munich",
       name: "Munich",
-      country: "",
+      country: "DE",
       latitude: 48.1372719,
       longitude: 11.5754815,
       backgroundImage: "",
@@ -909,7 +915,7 @@ var cities = [
   {
       key:  "nurnberg",
       name: "Nürnberg",
-      country: "",
+      country: "DE",
       latitude: 49.4538723,
       longitude: 11.0772978,
       backgroundImage: "",
@@ -921,7 +927,7 @@ var cities = [
   {
       key:  "oslo",
       name: "Oslo",
-      country: "",
+      country: "NO",
       latitude: 59.9132694,
       longitude: 10.7391112,
       backgroundImage: "",
@@ -933,7 +939,7 @@ var cities = [
   {
       key:  "oxford",
       name: "Oxford",
-      country: "",
+      country: "GB",
       latitude: 51.7521553,
       longitude: -1.2582135,
       backgroundImage: "",
@@ -945,7 +951,7 @@ var cities = [
   {
       key:  "paris",
       name: "Paris",
-      country: "",
+      country: "FR",
       latitude: 48.8565056,
       longitude: 2.3521334,
       backgroundImage: "",
@@ -957,7 +963,7 @@ var cities = [
   {
       key:  "podgorica",
       name: "Podgorica",
-      country: "",
+      country: "ME",
       latitude: 42.466667,
       longitude: 19.266667,
       backgroundImage: "",
@@ -1006,7 +1012,7 @@ var cities = [
   {
       key:  "lisbon", /* original : country portugal */
       name: "Lisbon",
-      country: "",
+      country: "PT",
       latitude: 38.722252,
       longitude: -9.139337,
       backgroundImage: "",
@@ -1018,6 +1024,7 @@ var cities = [
   {
       key:  "poznan",
       name: "Poznań", /* no english name found */
+      country: "PL",
       latitude: 52.4082296,
       longitude: 16.9333644,
       backgroundImage: "",
@@ -1029,7 +1036,7 @@ var cities = [
   {
       key:  "rotterdam",
       name: "Rotterdam",
-      country: "",
+      country: "NL",
       latitude: 51.9228958,
       longitude: 4.4631727,
       backgroundImage: "",
@@ -1041,7 +1048,7 @@ var cities = [
   {
       key:  "glasgow", /* original : country scotland */
       name: "Glasgow",
-      country: "",
+      country: "GB",
       latitude: 55.864237,
       longitude: -4.251806,
       backgroundImage: "",
@@ -1053,7 +1060,7 @@ var cities = [
   {
       key:  "sheffield",
       name: "Sheffield",
-      country: "",
+      country: "GB",
       latitude: 53.3806626,
       longitude: -1.4702278,
       backgroundImage: "",
@@ -1065,7 +1072,7 @@ var cities = [
   {
       key:  "sofia",
       name: "Sofia",
-      country: "",
+      country: "BG",
       latitude: 42.6977149,
       longitude: 23.3230598,
       backgroundImage: "",
@@ -1077,7 +1084,7 @@ var cities = [
   {
       key:  "stavanger",
       name: "Stavanger",
-      country: "",
+      country: "NO",
       latitude: 58.9680427,
       longitude: 5.7324722,
       backgroundImage: "",
@@ -1089,7 +1096,7 @@ var cities = [
   {
       key:  "stockholm",
       name: "Stockholm",
-      country: "",
+      country: "SE",
       latitude: 59.3251172,
       longitude: 18.0710935,
       backgroundImage: "",
@@ -1101,7 +1108,7 @@ var cities = [
   {
       key:  "stuttgart",
       name: "Stuttgart",
-      country: "",
+      country: "DE",
       latitude: 48.7763511,
       longitude: 9.1829049,
       backgroundImage: "",
@@ -1113,7 +1120,7 @@ var cities = [
   {
       key:  "swansea",
       name: "Swansea",
-      country: "",
+      country: "GB",
       latitude: 51.6546228,
       longitude: -4.00272971491907,
       backgroundImage: "",
@@ -1137,7 +1144,7 @@ var cities = [
   {
       key:  "toulouse",
       name: "Toulouse",
-      country: "",
+      country: "FR",
       latitude: 43.6044622,
       longitude: 1.4442469,
       backgroundImage: "",
@@ -1149,7 +1156,7 @@ var cities = [
   {
       key:  "tirana",
       name: "Tirana",
-      country: "",
+      country: "AL",
       latitude: 41.327546,
       longitude: 19.818698,
       backgroundImage: "",
@@ -1161,7 +1168,7 @@ var cities = [
   {
       key:  "varna",
       name: "Varna",
-      country: "",
+      country: "BG",
       latitude: 43.2166104,
       longitude: 27.9017131,
       backgroundImage: "",
@@ -1173,7 +1180,7 @@ var cities = [
   {
       key:  "vienna",
       name: "Vienna",
-      country: "",
+      country: "AT",
       latitude: 48.2083537,
       longitude: 16.3725042,
       backgroundImage: "",
@@ -1185,7 +1192,7 @@ var cities = [
   {
       key:  "warsaw",
       name: "Warsaw",
-      country: "",
+      country: "PL",
       latitude: 52.2319237,
       longitude: 21.0067265,
       backgroundImage: "",
@@ -1197,7 +1204,7 @@ var cities = [
   {
       key:  "wroclaw", // original wrocław
       name: "Wrocław",
-      country: "",
+      country: "PL",
       latitude: 51.1122376,
       longitude: 17.0344333,
       backgroundImage: "",
@@ -1209,7 +1216,7 @@ var cities = [
   {
       key:  "zurich",
       name: "Zurich",
-      country: "",
+      country: "CH",
       latitude: 47.3685586,
       longitude: 8.5404434,
       backgroundImage: "",
@@ -1221,7 +1228,7 @@ var cities = [
   {
       key:  "enschede",
       name: "Enschede",
-      country: "",
+      country: "NL",
       latitude: 52.2161111,
       longitude: 6.89841690469321,
       backgroundImage: "",
@@ -1233,7 +1240,7 @@ var cities = [
   {
       key:  "utrecht",
       name: "Utrecht",
-      country: "",
+      country: "NL",
       latitude: 52.11849915,
       longitude: 5.15264611584469,
       backgroundImage: "",
@@ -1284,8 +1291,8 @@ COUNTRYCODES = {
   "BJ": "Benin",
   "BM": "Bermuda",
   "BT": "Bhutan",
-  "BO": "Bolivia, Plurinational State of",
-  "BQ": "Bonaire, Sint Eustatius and Saba",
+  "BO": "Bolivia",
+  "BQ": "Bonaire",
   "BA": "Bosnia and Herzegovina",
   "BW": "Botswana",
   "BV": "Bouvet Island",
@@ -1355,14 +1362,14 @@ COUNTRYCODES = {
   "GY": "Guyana",
   "HT": "Haiti",
   "HM": "Heard Island and McDonald Islands",
-  "VA": "Holy See (Vatican City State)",
+  "VA": "Holy See",
   "HN": "Honduras",
   "HK": "Hong Kong",
   "HU": "Hungary",
   "IS": "Iceland",
   "IN": "India",
   "ID": "Indonesia",
-  "IR": "Iran, Islamic Republic of",
+  "IR": "Iran",
   "IQ": "Iraq",
   "IE": "Ireland",
   "IM": "Isle of Man",
@@ -1375,11 +1382,11 @@ COUNTRYCODES = {
   "KZ": "Kazakhstan",
   "KE": "Kenya",
   "KI": "Kiribati",
-  "KP": "Korea, Democratic People's Republic of",
-  "KR": "Korea, Republic of",
+  "KP": "Korea",
+  "KR": "Korea",
   "KW": "Kuwait",
   "KG": "Kyrgyzstan",
-  "LA": "Lao People's Democratic Republic",
+  "LA": "Lao",
   "LV": "Latvia",
   "LB": "Lebanon",
   "LS": "Lesotho",
@@ -1389,7 +1396,7 @@ COUNTRYCODES = {
   "LT": "Lithuania",
   "LU": "Luxembourg",
   "MO": "Macao",
-  "MK": "Macedonia, the former Yugoslav Republic of",
+  "MK": "Macedonia",
   "MG": "Madagascar",
   "MW": "Malawi",
   "MY": "Malaysia",
@@ -1402,8 +1409,8 @@ COUNTRYCODES = {
   "MU": "Mauritius",
   "YT": "Mayotte",
   "MX": "Mexico",
-  "FM": "Micronesia, Federated States of",
-  "MD": "Moldova, Republic of",
+  "FM": "Micronesia",
+  "MD": "Moldova",
   "MC": "Monaco",
   "MN": "Mongolia",
   "ME": "Montenegro",
@@ -1427,7 +1434,7 @@ COUNTRYCODES = {
   "OM": "Oman",
   "PK": "Pakistan",
   "PW": "Palau",
-  "PS": "Palestinian Territory, Occupied",
+  "PS": "Palestinian Territory",
   "PA": "Panama",
   "PG": "Papua New Guinea",
   "PY": "Paraguay",
@@ -1443,7 +1450,7 @@ COUNTRYCODES = {
   "RU": "Russian Federation",
   "RW": "Rwanda",
   "BL": "Saint Barthélemy",
-  "SH": "Saint Helena, Ascension and Tristan da Cunha",
+  "SH": "Saint Helena",
   "KN": "Saint Kitts and Nevis",
   "LC": "Saint Lucia",
   "MF": "Saint Martin (French part)",
@@ -1475,9 +1482,9 @@ COUNTRYCODES = {
   "SE": "Sweden",
   "CH": "Switzerland",
   "SY": "Syrian Arab Republic",
-  "TW": "Taiwan, Province of China",
+  "TW": "Taiwan",
   "TJ": "Tajikistan",
-  "TZ": "Tanzania, United Republic of",
+  "TZ": "Tanzania",
   "TH": "Thailand",
   "TL": "Timor-Leste",
   "TG": "Togo",
@@ -1498,7 +1505,7 @@ COUNTRYCODES = {
   "UY": "Uruguay",
   "UZ": "Uzbekistan",
   "VU": "Vanuatu",
-  "VE": "Venezuela, Bolivarian Republic of",
+  "VE": "Venezuela",
   "VN": "Viet Nam",
   "VG": "Virgin Islands, British",
   "VI": "Virgin Islands, U.S.",
