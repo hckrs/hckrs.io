@@ -1253,13 +1253,13 @@ var cities = [
 
 // list with city objects
 // sorted in ASC order
-CITIES = _.sortBy(cities, function(city) { return city.name; });
+CITIES = _.sortBy(cities, 'name');
 
 // another representation of cities using a map datastructure
 // where you can access a city by lookup the key in this map/object.
-CITYMAP = _.object(_.pluck(CITIES, 'key'), CITIES);
+CITYMAP = _.indexBy(CITIES, 'key');
 
-// a map countaining countries associated with they cities
+// a map containing country codes associated with their cities
 COUNTRYMAP = _.groupBy(CITIES, 'country');
 
 
