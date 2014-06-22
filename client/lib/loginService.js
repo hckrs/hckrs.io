@@ -296,6 +296,12 @@ var loginCallback = function(err) {
     log(err);
   
   } else {
+
+    // when the merged user account is located in an other city
+    // we have to redirect the subdomain
+    if (Meteor.user().city !== Session.get('currentCity'))
+      Router.goToCity(Meteor.user().city);
+
     // on success
     manuallyLoggedIn();
   }
@@ -355,6 +361,7 @@ Template.main.events({
 var global = this;
 var _addService = function(service, options, onSuccessCallback) {
   var Service = window[capitaliseFirstLetter(service)];
+
   
   // request a token from the external service
   Service.requestCredential(options, function(token, more) {
@@ -375,6 +382,11 @@ var _addService = function(service, options, onSuccessCallback) {
         // log
         GAnalytics.event("LoginService", "link failure", service);
       } else { //success
+
+        // when the merged user account is located in an other city
+        // we have to redirect the subdomain
+        if (Meteor.user().city !== Session.get('currentCity'))
+          Router.goToCity(Meteor.user().city);
         
         if(_.isFunction(onSuccessCallback))
           onSuccessCallback();
