@@ -26,9 +26,9 @@ var user = { /* scheme */
   city: String,           // the city where this hacker is registered to (lowercase)
   localRank: Number,      // assigned hacker number based on signup order in city
   globalRank: Number,     // assigned hacker number based on signup order of all world hackers
-  localRankHash: String,  // CLIENT-ONLY hashed localRank
-  globalRankHash: String, // CLIENT-ONLY hashed globalRank
-  isForeign: Boolean,     // CLIENT-ONLY indicates of this user is from another city with respect to current city page.
+  localRankHash: String,  // AUTO GENERATED (CLIENT-ONLY) hashed localRank
+  globalRankHash: String, // AUTO GENERATED (CLIENT-ONLY) hashed globalRank
+  isForeign: Boolean,     // AUTO GENERATED (CLIENT-ONLY) indicates of this user is from another city with respect to current city page.
 
   profile: {              // user's public profile (visible for other users)
     picture: String,      // url of an avatar for this user
@@ -130,6 +130,7 @@ var Highlight = { /* scheme */
   imageUrl: String,
   website: String,
   userId: String,        // published by this user
+  isForeign: Boolean,    // AUTO GENERATED (CLIENT-ONLY) indicates of this doc is created in an other city with respect to current city page.
 }
 
 
@@ -145,6 +146,7 @@ var Gift = { /* scheme */
   websiteUrl: String,
   websiteName: String,
   description: String,
+  isForeign: Boolean,    // AUTO GENERATED (CLIENT-ONLY) indicates of this doc is created in an other city with respect to current city page.
 }
 
 

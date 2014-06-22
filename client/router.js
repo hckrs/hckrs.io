@@ -2,6 +2,9 @@
 
 var routes = [
   
+  // ambassador routes
+  [ 'ambassador'   , '/ambassador'           ],
+
   // normal routes
   [ 'about'        , '/about'                ],
   [ 'agenda'       , '/agenda'               ],

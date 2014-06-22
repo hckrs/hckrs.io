@@ -89,6 +89,10 @@
               
               <a href="{{pathFor 'books'}}" class="menu-item">books</a>
 
+              {{#if ambassador}}
+              <a href="{{pathFor 'ambassador'}}" class="menu-item">ambassador</a>
+              {{/if}}
+
               {{#if isAdmin}}
               <div class="menu-item">
                 {{> citySelect}}

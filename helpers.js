@@ -91,12 +91,12 @@ convertToCurrency = function(value) {
 }
 
 
-// check if some user is foreign
-// that mean he is registered in an other city
+// check if some doc is foreign
+// that means that doc is created in an other city
 // with respect to the current city subdomain
-isForeign = function(user) {
+isForeign = function(doc) {
   var city = Session.get('currentCity');
-  return !city || !user.city || city !== user.city;
+  return !city || !doc.city || city !== doc.city;
 }
 
 
@@ -262,6 +262,8 @@ if (Meteor.isClient) {
   // template helper to transform Date() object to readable tring
   UI.registerHelper('Date', function(date, format) {
     if (!date) return "";
+    if (!_.isString(format)) 
+      format = "YYYY/MM/DD";
     return moment(date).format(format);
   });
 

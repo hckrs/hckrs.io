@@ -28,6 +28,17 @@ if (Meteor.isClient) {
     
     return user;
   }
+
+  Highlights._transform = function(doc) {
+    doc.isForeign = isForeign(doc);
+    return doc;
+  }
+
+  Gifts._transform = function(doc) {
+    doc.isForeign = isForeign(doc);
+    return doc;
+  }
+
 }
 
 if (Meteor.isServer) {

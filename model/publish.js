@@ -193,48 +193,58 @@ if (Meteor.isServer) {
 
   var filterUserFields = function(currentUser, user, useUndefined) {
     
-    // holds which fields to publish
-        
-    var useFields = [];
-
-
-    // publish all data of current logged in user
-
-    if (currentUser && currentUser._id === user._id) {
-      useFields.push(userFieldsGlobal);
-      useFields.push(userFieldsAmbassador);
-      useFields.push(userFieldsCurrentUser);
-      useFields.push(userFieldsData);
-      useFields.push(userFieldsEmail);
-    }
-
-
-    // the data below will be published of all users
-
-    useFields.push(userFieldsGlobal);
-
-    if (user.ambassador)
-      useFields.push(userFieldsAmbassador);
-
     // first determine current user's permission before continue.
-    // the data below will only published if
-    // current user has access to the site
-    // and the published user is in the same city
-    // If the current user is admin, we publish anyway.
-
     var hasAccess = currentUser && currentUser.isAccessDenied != true;
     var isSameCity = currentUser && cityMatch(currentUser.city, user.city);
     var isAdmin = currentUser && currentUser.isAdmin;
+    var isAmbassador = currentUser && currentUser.ambassador;
 
-    if ((hasAccess && isSameCity) || isAdmin) {
 
+    // holds which fields to publish        
+    var useFields = [];
+
+    
+    // publish this data of all users anyway
+    useFields.push(userFieldsGlobal);
+    
+    if (user.ambassador)
+      useFields.push(userFieldsAmbassador);
+
+    
+    // publish this data only if
+    // current user has access to the site
+    // and the published user is in the same city
+    if (hasAccess && isSameCity) {
       useFields.push(userFieldsData);
       
       // only publish e-mailadresses of user who accepted that
-
       if (user.profile && user.profile.available && user.profile.available.length)
         useFields.push(userFieldsEmail);
     }
+
+
+    // publish all data of CurrentUser
+    if (currentUser && currentUser._id === user._id) {
+      useFields.push(userFieldsData);
+      useFields.push(userFieldsEmail);
+      useFields.push(userFieldsCurrentUser);
+    }
+
+
+    // publish available fields with Ambassador permission
+    if (isAmbassador && isSameCity) {
+      useFields.push(userFieldsData); // include userdata
+      useFields.push(userFieldsEmail); // include e-mail
+    }
+
+
+    // publish available fields with Admin permission 
+    if (isAdmin) {
+      useFields.push(userFieldsData); // include userdata
+      useFields.push(userFieldsEmail); // include e-mail
+    }
+
+
     
     // returning the user doc with only visible fields included
     // this doc is send to the client and only may contain the data

@@ -1,0 +1,87 @@
+<template name="ambassador">
+  <div id="ambassador" class="page">
+    {{> ambassadorHighlights}}
+    {{> ambassadorGifts}}
+    {{> ambassadorHackers}}
+  </div>
+</template>
+
+
+
+<template name="ambassadorHighlights">
+  <div id="highlights">
+    <table>
+      <caption>Highlights</caption>
+      <tr>
+        <th>CreatedAt</th>
+        <th>Title</th>
+        <th>Subtitle</th>
+        <th>Website</th>
+        <th>Image</th>
+        <th>User</th>
+      </tr>
+      {{#each highlights}}
+      <tr>
+        <td>{{Date createdAt}}</td>
+        <td>{{title}}</td>
+        <td>{{subtitle}}</td>
+        <td>
+          {{#if website}}
+          <a href="{{website}}" target="_blank">link</a>
+          {{/if}}
+        </td>
+        <td>
+          {{#if website}}
+          <a href="{{website}}" target="_blank" class="image" style="background-image:url('{{imageUrl}}');"></a>
+          {{else}}
+          <div class="image" style="background-image:url('{{imageUrl}}');"></div>
+          {{/if}}
+        </td>
+        <td>{{userId}}</td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>
+
+<template name="ambassadorGifts">
+  <div id="gifts">
+    <table>
+      <caption>Gifts</caption>
+      <tr>
+        <th>CreatedAt</th>
+        <th>Title</th>
+        <th>Website</th>
+        <th>Description</th>
+      </tr>
+      {{#each gifts}}
+      <tr>
+        <td>{{Date createdAt}}</td>
+        <td>{{title}}</td>
+        <td><a href="{{websiteUrl}}" target="_blank">{{websiteName}}</a></td>
+        <td>{{description}}</td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>
+
+<template name="ambassadorHackers">
+  <div id="hackers">
+    <table>
+      <caption>Hackers</caption>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>E-mail</th>
+      </tr>
+      {{#each hackers}}
+      <tr>
+        <td>#{{localRank}}</td>
+        <td>{{profile.name}}</td>
+        <td><a href="mailto:{{profile.email}}">{{profile.email}}</a></td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>
