@@ -1,11 +1,15 @@
-
+ServicesConfiguration = {};
 
 // Register external services
 // that can be used for user account creation and login.
 // This will be done once, at the first time you run meteor.
 
 
-
+var externalServicesUsed = [
+  'facebook',
+  'github',
+  'twitter',
+];
 
 Meteor.startup(function() {
 
@@ -273,8 +277,9 @@ var extendUserProfile = function(user, userData, service) {
     user.profile.social[service] = userData.link;
 
   if (userData.picture) {
+    var isCurrentPicture = user.profile.picture === user.profile.socialPicture[service];
     user.profile.socialPicture[service] = userData.picture;
-    if (!user.profile.picture) 
+    if (!user.profile.picture || isCurrentPicture) 
       user.profile.picture = userData.picture;
   }
 
@@ -314,8 +319,6 @@ var extendUserByFetchingService = function(user, service) {
   
   return user;
 }
-
-
 
 
 // merge two user objects
@@ -688,6 +691,36 @@ var removeServiceFromCurrentUser = function(service) {
   Meteor.users.update(userId, {$unset: unsetModifier}); 
 }
 
+
+
+// update profile picture
+
+var getServiceProfilePicture = function(userId, serviceName) {
+  try {
+    var user = Users.findOne(userId);
+    var extendedUser = extendUserByFetchingService(user, serviceName);
+    return extendedUser.profile.socialPicture[serviceName];
+  } catch(e) {
+    return;
+  }
+}
+
+ServicesConfiguration.updateProfilePictures = function() {
+  Users.find().forEach(function(user) {
+    var services = _.intersection(externalServicesUsed, _.keys(user.services || {}));
+    _.each(services, function(serviceName) {
+      var picture = getServiceProfilePicture(user._id, serviceName);
+      if (picture && picture != user.profile.socialPicture[serviceName]) {
+        var modifier = {};
+        modifier["profile.socialPicture."+serviceName] = picture;
+        if (user.profile.picture === user.profile.socialPicture[serviceName])
+          modifier["profile.picture"] = picture; // also change current picture
+        Users.update(user._id, {$set: modifier});  
+        console.log("Update "+serviceName+" profile picture of user " + user.profile.name);
+      }
+    });
+  });
+}
 
 
 
