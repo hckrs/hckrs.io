@@ -131,11 +131,11 @@
     <select>
       <option selected disabled>Choose your city</option>
       {{#each countries}}
-       <optgroup label="{{countryName}}">
-        {{#each cities}}
-          <option value="{{key}}" {{selected key}}>{{name}}</option>
-        {{/each}}
-      </optgroup>
+        <optgroup label="{{name}}">
+          {{#each cities}}
+            <option value="{{key}}" {{selected key}}>{{name}}</option>
+          {{/each}}
+        </optgroup>
       {{/each}}
     </select>
   </form>
