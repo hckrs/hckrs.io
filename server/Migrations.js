@@ -76,6 +76,9 @@ var migrations = [
       Meteor.users.update({}, {$set: {city: "lyon"}}, {multi: true});
       Meteor.users.update({isMayor: true}, {$unset: {isMayor: true}, $set: {ambassador: {city: "lyon"}}}, {multi: true});
 
+      // move user Jarno to city Utrecht (no ambassador)
+      Meteor.users.update("ZRYjqoG48R895CiDZ", {$unset: {ambassador: true, isHidden: true}, $set: {city: "utrecht", localRank: 1}});
+
       // Set highlights content
 
       Highlights.insert({
