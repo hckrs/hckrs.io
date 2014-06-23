@@ -762,6 +762,9 @@ verifyInvitationOfUser = function(phrase, userId) {
   if (!broadcastUser)
     throw new Meteor.Error(500, "Unknow broadcast user");
 
+  if (broadcastUser._id === receivingUser._id)
+    throw new Meteor.Error(500, "Can't invite yourself");
+
   if (broadcastUser.invitations < 1)
     throw new Meteor.Error(200, "limit", "Invitation limit reached.");
   
