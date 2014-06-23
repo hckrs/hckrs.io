@@ -29,7 +29,7 @@ initializeMap = function(mapElement, latlng, user, editable) {
 
   // map options
   var mapOptions = {
-    scrollWheelZoom: true
+    scrollWheelZoom: false
   };
 
   // set up the map
@@ -113,6 +113,7 @@ var removeMarker = function() {
 var enterMap = function(event) {
   if (event && event.preventDefault) event.preventDefault();
   increaseMapSize($map);
+  map.scrollWheelZoom.enable();
   $map.focus();
   Session.set('mapFullscreenActive', true);
   Meteor.setTimeout(function() {
@@ -126,6 +127,7 @@ var leaveMap = function(event) {
   if (event && event.stopPropagation) event.stopPropagation();
   
   resetMapSize($map);
+  map.scrollWheelZoom.disable();
 
   $("#hacker .close-map").css('display', 'none');
   Session.set('mapFullscreenActive', false);
