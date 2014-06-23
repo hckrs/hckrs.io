@@ -299,7 +299,7 @@ var loginCallback = function(err) {
 
     // when the merged user account is located in an other city
     // we have to redirect the subdomain
-    if (Meteor.user().city !== Session.get('currentCity'))
+    if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
       Router.goToCity(Meteor.user().city);
 
     // on success
@@ -385,7 +385,7 @@ var _addService = function(service, options, onSuccessCallback) {
 
         // when the merged user account is located in an other city
         // we have to redirect the subdomain
-        if (Meteor.user().city !== Session.get('currentCity'))
+        if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
           Router.goToCity(Meteor.user().city);
         
         if(_.isFunction(onSuccessCallback))
