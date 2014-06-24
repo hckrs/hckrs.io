@@ -79,16 +79,19 @@ var migrations = [
       // move user Jarno to city Utrecht (no ambassador)
       Meteor.users.update("ZRYjqoG48R895CiDZ", {$unset: {ambassador: true, isHidden: true}, $set: {city: "utrecht", localRank: 1}});
 
+      // move user Daan to enschede and make him ambassador
+      Meteor.users.update("3mbb7xSWpJoNxsygf", {$set: {city: "enschede", localRank: 1, ambassador: {city: "enschede"}}});
+
       // Set highlights content
 
       Highlights.insert({
         "createdAt": new Date(),
         "city": "lyon",
-        "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
-        "title": "l’Atelier des Objets Connectés #2",
-        "subtitle": "14-15 Juin @ Pôle Pixel",
-        "website": "http://www.atelier-objets-connectes.org/",
-        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/-")
+        "imageUrl": "/img/highlights/app-dernier-metro.jpg",
+        "title": "Dernier métro",
+        "subtitle": "web app Lyonnaise",
+        "website": "http://yannlombard.github.io/derniermetro/",
+        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/--")
       });
 
       Highlights.insert({
@@ -104,12 +107,13 @@ var migrations = [
       Highlights.insert({
         "createdAt": new Date(),
         "city": "lyon",
-        "imageUrl": "/img/highlights/app-dernier-metro.jpg",
-        "title": "Dernier métro",
-        "subtitle": "web app Lyonnaise",
-        "website": "http://yannlombard.github.io/derniermetro/",
-        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/--")
+        "imageUrl": "http://www.vach.fr/wp-content/uploads/2014/02/AOC-1038x576.png",
+        "title": "l’Atelier des Objets Connectés #2",
+        "subtitle": "14-15 Juin @ Pôle Pixel",
+        "website": "http://www.atelier-objets-connectes.org/",
+        "userId": Url.userIdFromUrl("http://lyon.hckrs.io/-")
       });
+
 
       // Set gifts
 
