@@ -4,50 +4,24 @@ ServicesConfiguration = {};
 // that can be used for user account creation and login.
 // This will be done once, at the first time you run meteor.
 
+var externalServices = {
+  'facebook': ["appId", 'secret'],
+  'github': ["clientId", 'secret'],
+  'twitter': ["consumerKey", 'secret'],
+}
+var externalServicesUsed = _.keys(externalServices);
 
-var externalServicesUsed = [
-  'facebook',
-  'github',
-  'twitter',
-];
 
 Meteor.startup(function() {
 
-  // check which services are already configured
-  var facebookConfigured = Accounts.loginServiceConfiguration.findOne({service: 'facebook'});
-  var githubConfigured = Accounts.loginServiceConfiguration.findOne({service: 'github'});
-  var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'twitter'});
-
-  var fb = Settings['facebook'];
-  var gh = Settings['github'];
-  var tw = Settings['twitter'];
-
-  // register facebook
-  if(!facebookConfigured && fb) {
-    Accounts.loginServiceConfiguration.insert({
-      service: "facebook",
-      appId: fb.appId,
-      secret: fb.secret
-    });
-  }
-
-  // register github app
-  if(!githubConfigured && gh) {
-    Accounts.loginServiceConfiguration.insert({
-      service: "github",
-      clientId: gh.clientId,
-      secret: gh.secret
-    });
-  }
-
-  // register twitter app
-  if(!twitterConfigured && tw) {
-    Accounts.loginServiceConfiguration.insert({
-      service: "twitter",
-      consumerKey: tw.consumerKey,
-      secret: tw.secret
-    });
-  }
+  // register external login services
+  _.each(externalServices, function(fields, serviceName) {
+    var modifier = {};
+    modifier.service = serviceName;
+    modifier[fields[0]] = Settings[serviceName][fields[0]];
+    modifier[fields[1]] = Settings[serviceName][fields[1]];
+    Accounts.loginServiceConfiguration.upsert({service: serviceName}, {$set: modifier});
+  });
   
 });
 
