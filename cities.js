@@ -55,7 +55,7 @@ var cities = [
       longitude: 4.9001115,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_c883teav21l3t6nvh3sp083dqo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -356,7 +356,7 @@ var cities = [
       longitude: 4.35839,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_dee3lgnb6lla5dm35il4ku99f8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -392,7 +392,7 @@ var cities = [
       longitude: 5.45012171525492,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_erifj40gbgfk4imstavstqtblo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -584,7 +584,7 @@ var cities = [
       longitude: 6.7185795611494,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_2u5g03cga2mtiidki4qk946878@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -836,7 +836,7 @@ var cities = [
       longitude: 5.69681910047491,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_2vf092o7u7rpcd17de67tkkrog@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -956,7 +956,7 @@ var cities = [
       longitude: 2.3521334,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_t0eq4ek53a3lfp014ekj3308ao@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1041,7 +1041,7 @@ var cities = [
       longitude: 4.4631727,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_un321a3u8cj30r3ku9a6fs2fik@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1149,7 +1149,7 @@ var cities = [
       longitude: 1.4442469,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_eq56vovhn61b9gug9k83u7fkpo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1231,11 +1231,11 @@ var cities = [
       country: "NL",
       latitude: 52.2161111,
       longitude: 6.89841690469321,
-      backgroundImage: "",
+      backgroundImage: "/img/backgrounds/enschede.jpg",
       backgroundImageNight: "",
       agenda: "",
       mapbox: "",
-      twitter: ""
+      twitter: "hckrsEnschede"
   },
   {
       key:  "utrecht",
