@@ -25,7 +25,7 @@ Template.frontpage.helpers({
   },
   "invitationBroadcastUser": function() {
     var phrase = Session.get('invitationPhrase');
-    return Users.findOne({invitationPhrase: phrase});
+    return phrase && Users.findOne({invitationPhrase: phrase});
   },
 });
 
