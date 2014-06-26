@@ -243,7 +243,6 @@ var cities = [
       key:  "chisinau",
       name: "Chisinau", /* added because it is a capital */
       country: "MD",
-      country: "",
       latitude: 60.098717,
       longitude: 24.313764,
       backgroundImage: "",
