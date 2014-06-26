@@ -22,13 +22,17 @@ Meteor.startup(function() {
     modifier[fields[1]] = Settings[serviceName][fields[1]];
     Accounts.loginServiceConfiguration.upsert({service: serviceName}, {$set: modifier});
   });
-  
+ 
 });
 
 
 // Manually creating OAuth requests to the external services.
 // In this manner you can obtain all information about a user
 // Don't forget to set requestPermission that the user must accept.
+//
+// Note: that the accessToken you use have to correspondent with the
+// ServiceConfiguration settings. So you cann't do requests on a development
+// machine while using the accessTokens from production machine.
 
 // @param user String|{Object} (either a userId or an user object)
 // @param service String (facebook, github, twitter, etc.)
@@ -680,20 +684,49 @@ var getServiceProfilePicture = function(userId, serviceName) {
 }
 
 ServicesConfiguration.updateProfilePictures = function() {
-  Users.find().forEach(function(user) {
-    var services = _.intersection(externalServicesUsed, _.keys(user.services || {}));
-    _.each(services, function(serviceName) {
-      var picture = getServiceProfilePicture(user._id, serviceName);
-      if (picture && picture != user.profile.socialPicture[serviceName]) {
+  
+  var users = Users.find({}, {fields: {
+    "profile.socialPicture": 1, 
+    "profile.picture": 1, 
+    "profile.name": 1,
+  }}).fetch();
+
+  // update twitter images if needed
+  async.forEachLimit(users, 4, function(user, cb) {
+
+    var serviceName = "twitter";
+    var image = user.profile.socialPicture[serviceName];
+    var isCurrentPicture = image === user.profile.picture;
+    
+    if (!image) 
+      return cb(); // go to next user
+
+    var update = function() {
+
+        // get new picture
+        var picture = getServiceProfilePicture(user._id, serviceName);
+        
+        // update user's picture
         var modifier = {};
         modifier["profile.socialPicture."+serviceName] = picture;
-        if (user.profile.picture === user.profile.socialPicture[serviceName])
+        if (isCurrentPicture)
           modifier["profile.picture"] = picture; // also change current picture
         Users.update(user._id, {$set: modifier});  
+        
+        // log
         console.log("Update "+serviceName+" profile picture of user " + user.profile.name);
-      }
-    });
+    }
+
+    // check if image exists, if not exists it means 
+    // that image has changed and we have to update!
+    HTTP.get(image, function(err){ 
+      if (err && err.response && err.response.statusCode === 404) 
+        update(); // update required
+      cb(); // go to next user
+    });  
+
   });
+
 }
 
 
