@@ -705,6 +705,9 @@ ServicesConfiguration.updateProfilePictures = function() {
 
         // get new picture
         var picture = getServiceProfilePicture(user._id, serviceName);
+
+        if (!picture) 
+          return;
         
         // update user's picture
         var modifier = {};
