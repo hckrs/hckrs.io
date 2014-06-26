@@ -127,11 +127,12 @@ checkDuplicateIdentity = function() {
   var isRecentlyCreated = new Date().getTime() - Meteor.user().createdAt.getTime() < 2*60*1000; //5min
   var isOtherService = previousSession && currentService && previousSession.service != currentService;
   var isOtherAccount = previousSession && previousSession.userId != Meteor.userId();
-
+  var isAlreadyMerged = previousSession && (!Users.findOne(previousSession.userId) || Users.findOne(previousSession.userId).isDeleted);
+  
   // when this is a new account (created in the last 2 minutes), then we check
   // if there are previously login session with an other account with different service
   // if so we notify the user that he has possible 2 account and we request to merge them
-  var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount;
+  var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount && !isAlreadyMerged;
 
   Session.set('previousLoginSession', previousSession);
   Session.set('requestMergeDuplicateAccount', requestMerge);
