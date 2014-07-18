@@ -1,56 +1,38 @@
-
+ServicesConfiguration = {};
 
 // Register external services
 // that can be used for user account creation and login.
 // This will be done once, at the first time you run meteor.
 
-
+var externalServices = {
+  'facebook': ["appId", 'secret'],
+  'github': ["clientId", 'secret'],
+  'twitter': ["consumerKey", 'secret'],
+}
+var externalServicesUsed = _.keys(externalServices);
 
 
 Meteor.startup(function() {
 
-  // check which services are already configured
-  var facebookConfigured = Accounts.loginServiceConfiguration.findOne({service: 'facebook'});
-  var githubConfigured = Accounts.loginServiceConfiguration.findOne({service: 'github'});
-  var twitterConfigured = Accounts.loginServiceConfiguration.findOne({service: 'twitter'});
-
-  var fb = Settings['facebook'];
-  var gh = Settings['github'];
-  var tw = Settings['twitter'];
-
-  // register facebook
-  if(!facebookConfigured && fb) {
-    Accounts.loginServiceConfiguration.insert({
-      service: "facebook",
-      appId: fb.appId,
-      secret: fb.secret
-    });
-  }
-
-  // register github app
-  if(!githubConfigured && gh) {
-    Accounts.loginServiceConfiguration.insert({
-      service: "github",
-      clientId: gh.clientId,
-      secret: gh.secret
-    });
-  }
-
-  // register twitter app
-  if(!twitterConfigured && tw) {
-    Accounts.loginServiceConfiguration.insert({
-      service: "twitter",
-      consumerKey: tw.consumerKey,
-      secret: tw.secret
-    });
-  }
-  
+  // register external login services
+  _.each(externalServices, function(fields, serviceName) {
+    var modifier = {};
+    modifier.service = serviceName;
+    modifier[fields[0]] = Settings[serviceName][fields[0]];
+    modifier[fields[1]] = Settings[serviceName][fields[1]];
+    Accounts.loginServiceConfiguration.upsert({service: serviceName}, {$set: modifier});
+  });
+ 
 });
 
 
 // Manually creating OAuth requests to the external services.
 // In this manner you can obtain all information about a user
 // Don't forget to set requestPermission that the user must accept.
+//
+// Note: that the accessToken you use have to correspondent with the
+// ServiceConfiguration settings. So you cann't do requests on a development
+// machine while using the accessTokens from production machine.
 
 // @param user String|{Object} (either a userId or an user object)
 // @param service String (facebook, github, twitter, etc.)
@@ -273,8 +255,9 @@ var extendUserProfile = function(user, userData, service) {
     user.profile.social[service] = userData.link;
 
   if (userData.picture) {
+    var isCurrentPicture = user.profile.picture === user.profile.socialPicture[service];
     user.profile.socialPicture[service] = userData.picture;
-    if (!user.profile.picture) 
+    if (!user.profile.picture || isCurrentPicture) 
       user.profile.picture = userData.picture;
   }
 
@@ -314,8 +297,6 @@ var extendUserByFetchingService = function(user, service) {
   
   return user;
 }
-
-
 
 
 // merge two user objects
@@ -690,6 +671,68 @@ var removeServiceFromCurrentUser = function(service) {
 
 
 
+// update profile picture
+
+var getServiceProfilePicture = function(userId, serviceName) {
+  try {
+    var user = Users.findOne(userId);
+    var extendedUser = extendUserByFetchingService(user, serviceName);
+    return extendedUser.profile.socialPicture[serviceName];
+  } catch(e) {
+    return;
+  }
+}
+
+ServicesConfiguration.updateProfilePictures = function() {
+  
+  var users = Users.find({}, {fields: {
+    "profile.socialPicture": 1, 
+    "profile.picture": 1, 
+    "profile.name": 1,
+  }}).fetch();
+
+  // update twitter images if needed
+  async.forEachLimit(users, 4, function(user, cb) {
+
+    var serviceName = "twitter";
+    var image = user.profile.socialPicture[serviceName];
+    var isCurrentPicture = image === user.profile.picture;
+    
+    if (!image) 
+      return cb(); // go to next user
+
+    var update = function() {
+
+        // get new picture
+        var picture = getServiceProfilePicture(user._id, serviceName);
+
+        if (!picture) 
+          return;
+        
+        // update user's picture
+        var modifier = {};
+        modifier["profile.socialPicture."+serviceName] = picture;
+        if (isCurrentPicture)
+          modifier["profile.picture"] = picture; // also change current picture
+        Users.update(user._id, {$set: modifier});  
+        
+        // log
+        console.log("Update "+serviceName+" profile picture of user " + user.profile.name);
+    }
+
+    // check if image exists, if not exists it means 
+    // that image has changed and we have to update!
+    HTTP.get(image, function(err){ 
+      if (err && err.response && err.response.statusCode === 404) 
+        update(); // update required
+      cb(); // go to next user
+    });  
+
+  });
+
+}
+
+
 
 
 // when user created an account he hasn't directly full access
@@ -728,6 +771,9 @@ verifyInvitationOfUser = function(phrase, userId) {
 
   if (!broadcastUser)
     throw new Meteor.Error(500, "Unknow broadcast user");
+
+  if (broadcastUser._id === receivingUser._id)
+    throw new Meteor.Error(500, "Can't invite yourself");
 
   if (broadcastUser.invitations < 1)
     throw new Meteor.Error(200, "limit", "Invitation limit reached.");

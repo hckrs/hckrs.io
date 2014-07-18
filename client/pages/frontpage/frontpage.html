@@ -32,10 +32,7 @@
     {{> ambassadors}}
 
     {{#if CurrentCity}}
-      <H1 class="frontpage-headline">join other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
-      {{#if totalHackers}}
-        discover <strong>{{totalHackers}}</strong> other geeks around you and see what meetups are planned
-      {{/if}}
+      <H1 class="frontpage-headline">join {{totalHackers}} other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
     {{/if}}
     <div class="page-space"></div>
     <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> • <a href="{{pathFor 'about'}}">about hckrs</a></div>

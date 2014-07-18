@@ -127,11 +127,12 @@ checkDuplicateIdentity = function() {
   var isRecentlyCreated = new Date().getTime() - Meteor.user().createdAt.getTime() < 2*60*1000; //5min
   var isOtherService = previousSession && currentService && previousSession.service != currentService;
   var isOtherAccount = previousSession && previousSession.userId != Meteor.userId();
-
+  var isAlreadyMerged = previousSession && (!Users.findOne(previousSession.userId) || Users.findOne(previousSession.userId).isDeleted);
+  
   // when this is a new account (created in the last 2 minutes), then we check
   // if there are previously login session with an other account with different service
   // if so we notify the user that he has possible 2 account and we request to merge them
-  var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount;
+  var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount && !isAlreadyMerged;
 
   Session.set('previousLoginSession', previousSession);
   Session.set('requestMergeDuplicateAccount', requestMerge);
@@ -296,6 +297,12 @@ var loginCallback = function(err) {
     log(err);
   
   } else {
+
+    // when the merged user account is located in an other city
+    // we have to redirect the subdomain
+    if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
+      Router.goToCity(Meteor.user().city);
+
     // on success
     manuallyLoggedIn();
   }
@@ -355,6 +362,7 @@ Template.main.events({
 var global = this;
 var _addService = function(service, options, onSuccessCallback) {
   var Service = window[capitaliseFirstLetter(service)];
+
   
   // request a token from the external service
   Service.requestCredential(options, function(token, more) {
@@ -375,6 +383,11 @@ var _addService = function(service, options, onSuccessCallback) {
         // log
         GAnalytics.event("LoginService", "link failure", service);
       } else { //success
+
+        // when the merged user account is located in an other city
+        // we have to redirect the subdomain
+        if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
+          Router.goToCity(Meteor.user().city);
         
         if(_.isFunction(onSuccessCallback))
           onSuccessCallback();

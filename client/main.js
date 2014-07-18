@@ -37,8 +37,11 @@ UI.body.rendered = function() {
 /* CITY SELECT */
 
 Template.citySelect.helpers({
-  "cities": function() {
-    return CITIES;
+  "countries": function() {
+    var countries = _.map(COUNTRYMAP, function(cities, code) {
+      return { name: COUNTRYCODES[code] || "Other", cities: cities };
+    });
+    return _.sortBy(countries, 'name');
   },
   "selected": function(city) {
     return Session.equals('currentCity', city) ? 'selected' : '';

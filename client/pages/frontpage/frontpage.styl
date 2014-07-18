@@ -10,7 +10,6 @@
 
   h1, h2 {
     width: 100%;
-    float: left;
   }
   h1 {
     color: #FFF;
@@ -27,10 +26,8 @@
     margin-bottom: 10px;
   }
 
+  /* #citySelect partially defined in main.styl */
   #citySelect select {
-    color: #fff;
-    border: 0px;
-    display: block;
     margin: 0 auto;
     margin-bottom: 76px;
     font-size: 24px;
@@ -40,30 +37,6 @@
     font-weight: 100;
     letter-spacing: 2px;
     padding-left: 12px;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background: url('/img/drop-down-arrow.svg') no-repeat;
-    background-position: 455px 16px; 
-    background-color: rgba(255,255,255,0.15);
-    text-indent: 0.01px; /* Removes default arrow from firefox*/
-    text-overflow: "";  /*Removes default arrow from firefox*/
-  }
-
-  #citySelect select:active, #citySelect select:focus {
-    outline-style: none; -moz-outline-style:none;
-  }
-
-  #citySelect select option {
-    color: #000;
-    padding-left: 12px;
-  }
-
-  #citySelect select:hover {
-    background: rgba(255,255,255,0.20);
-    background: url('/img/drop-down-arrow.svg') no-repeat;
-    background-position: 455px 16px; 
-    background-color: rgba(255,255,255,0.25);
   }
 
   #cursor{

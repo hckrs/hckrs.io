@@ -11,9 +11,25 @@ Meteor.startup(function() {
   
   // print uptime to console
   uptimeLogging();
+
+  // run after 15 minutes after startup
+  // taken into account that the Heroku server
+  // is restarted once every day
+  Meteor.setTimeout(runAfterStartupDelayed, 1000 * 60 * 15);
   
 });
 
+
+// run after 15 minutes after startup
+// taken into account that the Heroku server
+// is restarted once every day.
+// And preventing development machines
+// from running too often.
+var runAfterStartupDelayed = function() {
+
+  // update user profile picture on startup
+  ServicesConfiguration.updateProfilePictures();
+}
 
 
 // show server uptime in console

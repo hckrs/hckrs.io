@@ -13,6 +13,29 @@
       margin-bottom: 12px;
       margin-top: 8px;
       text-align: center;
+    
+
+      /* open slots */  
+      .open {
+        transition: none !important;
+        transform: none !important;
+        cursor: default !important;
+        text-align: center;
+        &:before {
+          content: 'OPEN'; 
+          color: white; 
+          font-weight: bold;
+          cursor: default;
+          background-color: rgba(0,0,0,0.5);
+          font-size: 1.0em;
+          line-height: 17.4em;
+        }
+        &.small:before {
+          font-size: 1em;
+          line-height: 9.4em; 
+        }
+      }
+      
     }
 
     /* classes .pictureView, .small, .empty, .unknow

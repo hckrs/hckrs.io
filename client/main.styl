@@ -122,7 +122,10 @@ a img {
 /* page transition effects on outer most div containing the current page */
 
 #mainWrapper > .route-transition {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transition-property: transform, opacity;
+  transition-duration: 0.7s;
+  transition-timing-function: ease-out;
+  transition-delay: 0.3s;
   transform: scale(1.3);
   opacity: 0.01;
   &.activated {
@@ -260,25 +263,38 @@ $headerHeight = 93px;
   .menu-item {
     display: block;
     float: left;
-    padding: 12px 0px;
-    &:after { 
-      padding: 0px 10px 0px 12px;
-      content: '•' 
+    
+    a {
+      display: inline-block;
+      padding: 12px 0px;
+      color: #fff;
+      text-decoration: none;
     }
-    &:last-of-type:after { content: '' }
+    a:hover{
+      text-decoration: none;
+      color: $hover; 
+    }
+
+    &:after { 
+      padding: 0px 10px 0px 9px;
+      content: '•'; 
+    }
+    &:last-of-type:after { 
+      content: '';
+    }
+
+    #citySelect {
+      padding: 6px 0px;
+      select {
+        background-color: rgba(0,0,0,0.1);
+        width: 120px;
+      }
+      select:hover {
+        background-color: rgba(0,0,0,0.2);
+      }
+    }
   }
-  a.menu-item {
-    color: #fff;
-    text-decoration: none;
-  }
-  a.menu-item:hover{
-    text-decoration: none;
-    color: $hover; 
-  }
-  #citySelect select {
-    margin-top: -5px;
-    width: 120px;
-  }
+  
 
   .dropdown {
     float: right;
@@ -363,6 +379,48 @@ label.checkbox{
 
 .imputPictureRadio{
   visibility: hidden;
+}
+
+
+
+
+/* city select */
+
+#citySelect {
+  select {
+    color: #fff;
+    border: 0px;
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('/img/drop-down-arrow.svg') no-repeat;
+    background-position: right 14px top 50%;
+    background-color: rgba(255,255,255,0.15);
+    text-indent: 0.01px; /* Removes default arrow from firefox*/
+    text-overflow: "";  /*Removes default arrow from firefox*/
+
+    padding-left: 12px;
+    font-size: 18px;
+    line-height: 18px;
+    height: 33px;
+  }
+
+  select:active, select:focus {
+    outline-style: none; -moz-outline-style:none;
+  }
+
+  select:hover {
+    background: rgba(255,255,255,0.20);
+    background: url('/img/drop-down-arrow.svg') no-repeat;
+    background-position: right 14px top 50%;
+    background-color: rgba(255,255,255,0.25);
+  }
+
+  option {
+    color: #000;
+    padding-left: 12px;
+  }
 }
 
 

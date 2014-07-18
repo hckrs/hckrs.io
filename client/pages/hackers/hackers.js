@@ -21,7 +21,7 @@ Template.hackers.helpers({
   },
   "hackers": function() { 
     var city = Session.get('currentCity');
-    return city && Meteor.users.find({city: city}).fetch(); 
+    return city && Meteor.users.find({city: city}, {sort: {ambassador: -1, createdAt: -1}}).fetch(); 
   },
   "transitionDelay": function() { 
     return Math.random()*1.5; 

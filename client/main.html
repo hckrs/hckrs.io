@@ -77,17 +77,25 @@
           <div class="menu">
             {{#unless isAccessDenied}}
               
-              <a href="{{pathFor 'hackers'}}" class="menu-item">hackers</a>
+              <div class="menu-item">
+                <a href="{{pathFor 'hackers'}}">hackers</a>
+              </div>
               
               {{#if CurrentCity.agenda}}
-              <a href="{{pathFor 'agenda'}}" class="menu-item">agenda</a>
+              <div class="menu-item">
+                <a href="{{pathFor 'agenda'}}">agenda</a>
+              </div>
               {{/if}}
               
               {{#if CurrentCity.mapbox}}
-              <a href="{{pathFor 'places'}}" class="menu-item">places</a>
+              <div class="menu-item">
+                <a href="{{pathFor 'places'}}">places</a>
+              </div>
               {{/if}}
               
-              <a href="{{pathFor 'books'}}" class="menu-item">books</a>
+              <div class="menu-item">
+                <a href="{{pathFor 'books'}}">books</a>
+              </div>
 
               {{#if ambassador}}
               <a href="{{pathFor 'ambassador'}}" class="menu-item">ambassador</a>
@@ -134,8 +142,12 @@
   <form id="citySelect">
     <select>
       <option selected disabled>Choose your city</option>
-      {{#each cities}}
-      <option value="{{key}}" {{selected key}}>{{name}}</option>
+      {{#each countries}}
+        <optgroup label="{{name}}">
+          {{#each cities}}
+            <option value="{{key}}" {{selected key}}>{{name}}</option>
+          {{/each}}
+        </optgroup>
       {{/each}}
     </select>
   </form>
