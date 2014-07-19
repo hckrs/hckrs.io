@@ -94,8 +94,9 @@ convertToCurrency = function(value) {
 // check if some doc is foreign
 // that means that doc is created in an other city
 // with respect to the current city subdomain
-isForeign = function(doc) {
-  var city = Session.get('currentCity');
+isForeign = function(doc, user) {
+  user = user || Meteor.user();
+  var city = user ? user.currentCity : Session.get('currentCity');
   return !city || !doc.city || city !== doc.city;
 }
 

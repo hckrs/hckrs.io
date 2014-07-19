@@ -1,7 +1,8 @@
 {
   "public": {
     "environment": "local",
-    "ga": { "account": null }
+    "ga": { "account": null },
+    "simpleSchemeDebug": true
   },
 
   "newrelic": {

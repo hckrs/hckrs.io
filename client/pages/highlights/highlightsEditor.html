@@ -1,0 +1,23 @@
+
+
+<template name="highlightsEditor">
+  <div id="highlightsEditor">
+    <div class="form {{show}}">
+      {{> quickForm id="highlightsEditorForm" collection="Highlights" type=mode doc=selectedDoc fields="title,subtitle,imageUrl,website,global"}}
+    </div>
+    <div class="toolbar btn-toolbar">
+      <div class="btn-group">
+        <button class="btn" action="add"><span class="icon-plus"></span></button>
+      </div>
+      {{#if selectedHighlight}}
+      <div class="btn-group dropup">
+        <button class="btn" action="update"><span class="icon-pencil"></span> {{selectedHighlight.title}}</button>
+        <button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#" action="remove"><span class="icon-trash"></span> remove</a></li>
+        </ul>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</template>

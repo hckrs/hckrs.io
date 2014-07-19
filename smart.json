@@ -4,6 +4,7 @@
     "GAnalytics": {},
     "collection-hooks": {},
     "imagemagick": {},
-    "iron-router-progress": {}
+    "iron-router-progress": {},
+    "autoform": {}
   }
 }

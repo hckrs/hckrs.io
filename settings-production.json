@@ -1,7 +1,8 @@
 {
   "public": {
     "environment": "production",
-    "ga": { "account": "UA-46665682-1" }
+    "ga": { "account": "UA-46665682-1" },
+    "simpleSchemeDebug": false
   },
 
   "newrelic": {

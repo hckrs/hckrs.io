@@ -1,7 +1,8 @@
 {
   "public": {
     "environment": "staging",
-    "ga": { "account": null }
+    "ga": { "account": null },
+    "simpleSchemeDebug": false
   },
 
   "newrelic": {

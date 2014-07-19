@@ -9,7 +9,6 @@ accounts-facebook
 accounts-github
 accounts-twitter
 underscore
-bootstrap
 facebook
 github
 twitter
@@ -33,3 +32,6 @@ node-dependencies
 blaze-layout
 iron-router-progress
 oauth
+autoform
+collection2
+bootstrap

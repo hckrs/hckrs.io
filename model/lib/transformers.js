@@ -16,7 +16,7 @@ if (Meteor.isClient) {
     // check if user is foreign
     // that mean he is registered in an other city
     // with respect to the curren city page
-    user.isForeign = isForeign(user);
+    user.isForeign = isForeign(user, user);
     
     // extract profile usernames from social urls
     if (user.profile && user.profile.social) {
@@ -27,11 +27,6 @@ if (Meteor.isClient) {
     }
     
     return user;
-  }
-
-  Highlights._transform = function(doc) {
-    doc.isForeign = isForeign(doc);
-    return doc;
   }
 
   Gifts._transform = function(doc) {

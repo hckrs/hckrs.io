@@ -49,6 +49,11 @@ var loggedIn = function() {
   // log
   GAnalytics.event("LoginService", "login", "automatically");
 
+  // set currentCity (which user is visiting) based on city in the url
+  if (Meteor.user().isAdmin)
+    Users.update(Meteor.userId(), {$set: {currentCity: Session.get('currentCity')}})
+
+
   // XXX maybe we can do this on the server side, because
   // meteor introduces a function called Accounts.validateLoginAttempt()
   checkDuplicateIdentity();

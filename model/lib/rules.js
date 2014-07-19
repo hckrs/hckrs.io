@@ -2,12 +2,11 @@
 // ALLOW and DENY rules specifies which database queries are allowed
 // and which not. This will be validated on the server
 
-
 // shorthands (used below)
-var TRUE = function() { return true; }
-var FALSE = function() { return false; }
-var ALL = { insert: TRUE, update: TRUE, remove: TRUE };
-var NONE = { insert: FALSE, update: FALSE, remove: FALSE };
+TRUE = function() { return true; }
+FALSE = function() { return false; }
+ALL = { insert: TRUE, update: TRUE, remove: TRUE };
+NONE = { insert: FALSE, update: FALSE, remove: FALSE };
 
 
 
@@ -15,7 +14,7 @@ var NONE = { insert: FALSE, update: FALSE, remove: FALSE };
 
 // meteor allow users to update their public profiles
 // other information can't be modified by default
-
+Users.allow(ALL);
 Users.deny({
   insert: TRUE, /* deny */
   remove: TRUE, /* deny */
@@ -30,6 +29,11 @@ Users.deny({
     var allowedSocialPictures = _.values(doc.profile.socialPicture);
 
     var $setPattern = {
+      'currentCity': Match.Optional(Match.Where(function(currentCity) {
+        // currentCity must be identical to user's home city
+        // only admins can change their visiting city
+        return doc.isAdmin && _.contains(CITYKEYS, currentCity);
+      })),
       'profile.email': Match.Optional(Match.Email),
       'profile.picture': Match.Optional(Match.In(allowedSocialPictures)),
       'profile.name': Match.Optional(Match.MinMax(1, 100, String)),
@@ -71,7 +75,7 @@ Users.deny({
 
   },
 
-  fetch: ['profile.socialPicture']
+  fetch: ['profile.socialPicture', 'isAdmin']
 });
 
 
@@ -83,9 +87,7 @@ Users.deny({
 Invitations.deny(ALL);
 
 
-/* HIGHLIGHTS */
 
-Highlights.deny(ALL);
 
 
 /* GIFTS */
@@ -100,7 +102,7 @@ Gifts.deny(ALL);
 
 // check if user is allowed to access the site
 // otherwise all database modifier functions will be blocked
-var allowedAccess = function(userId) {
+allowedAccess = function(userId) {
   var user = Users.findOne(userId);
   return user && user.isAccessDenied != true;
 }

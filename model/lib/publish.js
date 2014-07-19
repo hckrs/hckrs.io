@@ -24,20 +24,7 @@ if (Meteor.isServer) {
 
 
 
-  /* HIGHLIGHTS */
-
-  // Only publish highlights for the city of the logged in user
-  Meteor.publish("highlights", function (city) {
-    var user = Users.findOne(this.userId);
-
-    if(!user || !allowedAccess(user._id))
-      return [];   
-
-    if(user.city !== city && !user.isAdmin)
-      return [];
-
-    return Highlights.find({$where: "!this.city || this.city === '"+city+"'"});
-  });
+  
 
 
   /* GIFTS */
@@ -68,6 +55,7 @@ if (Meteor.isServer) {
 
   var userFieldsGlobal = [
     "city",
+    "currentCity",
     "localRank",
     "globalRank",
     "invitationPhrase",
@@ -121,7 +109,7 @@ if (Meteor.isServer) {
   var currentUserDependencies = [
     'isAccessDenied',
     'isAdmin',
-    'city',
+    'city'
   ];
 
   Meteor.publish('userData', function() {
