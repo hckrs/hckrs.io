@@ -295,6 +295,10 @@ if (Meteor.isClient) {
   UI.registerHelper('foreign', function() {
     return this.isForeign ? {foreign: "", disabled: ""} : '';
   });
+
+  UI.registerHelper('hasAmbassadorPermission', function() {
+    return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
+  })
 }
 
 

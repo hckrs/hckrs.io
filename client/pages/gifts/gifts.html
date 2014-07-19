@@ -1,0 +1,67 @@
+<template name="gifts">
+  <div id="gifts" class="page">
+    
+    {{#if isEmpty}}
+      <h2>No gifts right now</h2>
+    {{else}}
+      <H2>Gifts from our partners</h2>
+      {{#each gifts}}
+        {{#if editMode}}
+          {{> giftEdit}}
+        {{else}}
+          {{> gift}}
+        {{/if}}
+      {{/each}}
+    {{/if}}
+
+    {{#if hasAmbassadorPermission}}
+      {{> giftAdd}}
+    {{/if}}
+
+  </div>
+</template>
+
+<template name="gift">
+  <div class="gift area">
+    {{#if hasAmbassadorPermission}}
+      <div class="toolbar">
+        <button class="btn" action="edit" data-gift="{{_id}}"><span class="icon-pencil"></span></button>
+        <button class="btn" action="remove" data-gift="{{_id}}"><span class="icon-trash"></span></button>
+      </div>
+    {{/if}}
+    <p>
+      
+      <div class="highlighted">{{title}}</div>
+      {{#if websiteUrl}}
+        <H3><a href="{{websiteUrl}}" target="_blank">{{websiteName}}</a></h3>
+      {{/if}}
+      {{#if description}}
+        <div class="description">{{description}}</div>
+      {{/if}}
+      {{#if code}}
+        {{#if equals codeType "url"}}
+          <a href="{{code}}" target="_blank">{{code}}</a>
+        {{else}}
+          <div class="code">{{code}}</div>
+        {{/if}}
+      {{/if}}
+    </p>
+  </div>
+</template>
+
+<template name="giftEdit">
+  <div class="gift-edit area">
+    {{> quickForm id="giftEditForm" collection="Gifts" type="update" doc=this fields="title,description,websiteUrl,websiteName,code,global"}}
+    <button class="btn" action="cancel">Cancel</button>
+  </div>
+</template>
+
+<template name="giftAdd">
+  <div id="giftAdd" class="{{show}}">
+    {{> quickForm id="giftAddForm" collection="Gifts" type="insert" fields="title,description,websiteUrl,websiteName,code,global"}}
+  </div>
+  {{#if hidden}}
+    <button class="btn" action="add"><span class="icon-plus"></span> Add</button>
+  {{/if}}
+</template>
+

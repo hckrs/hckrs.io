@@ -24,24 +24,6 @@ if (Meteor.isServer) {
 
 
 
-  
-
-
-  /* GIFTS */
-
-  // Only publish gifts for the city of the logged in user
-  Meteor.publish("gifts", function (city) {
-    var user = Users.findOne(this.userId);
-
-    if(!user || !allowedAccess(user._id))
-      return [];   
-
-    if(user.city !== city && !user.isAdmin)
-      return [];
-
-    return Gifts.find({$where: "!this.city || this.city === '"+city+"'"});
-  });
-
 
 
   

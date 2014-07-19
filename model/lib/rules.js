@@ -90,13 +90,6 @@ Invitations.deny(ALL);
 
 
 
-/* GIFTS */
-
-Gifts.deny(ALL);
-
-
-
-
 
 // helper functions
 

@@ -15,7 +15,7 @@ var routes = [
   [ 'invitations'  , '/invitations'          ],
   [ 'mergeAccount' , '/mergeAccount'         ],
   [ 'places'       , '/places'               ],
-  [ 'sponsors'     , '/sponsors'             ],
+  [ 'gifts'        , '/gifts'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
   
   // special routes

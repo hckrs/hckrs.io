@@ -29,11 +29,6 @@ if (Meteor.isClient) {
     return user;
   }
 
-  Gifts._transform = function(doc) {
-    doc.isForeign = isForeign(doc);
-    return doc;
-  }
-
 }
 
 if (Meteor.isServer) {
