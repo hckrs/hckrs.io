@@ -1,7 +1,7 @@
 Schemas = {}
 
 Schemas.default = new SimpleSchema({
-  createdAt: {
+  "createdAt": {
     type: Date,
     autoValue: function() {
       if (this.isInsert) return new Date;
@@ -9,7 +9,7 @@ Schemas.default = new SimpleSchema({
       this.unset();
     }
   },
-  updatedAt: {
+  "updatedAt": {
     type: Date,
     autoValue: function() {
       if (this.isUpdate) return new Date();
@@ -20,7 +20,7 @@ Schemas.default = new SimpleSchema({
 });
 
 Schemas.userId = new SimpleSchema({
-  userId: {
+  "userId": {
     type: String,
     optional: true,
     autoValue: function() {
@@ -33,7 +33,7 @@ Schemas.userId = new SimpleSchema({
 });
 
 Schemas.city = new SimpleSchema({
-  city: {
+  "city": {
     type: String,
     allowedValues: CITYKEYS,
     optional: true,

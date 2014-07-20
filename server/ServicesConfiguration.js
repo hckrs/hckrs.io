@@ -784,8 +784,7 @@ verifyInvitationOfUser = function(phrase, userId) {
   // insert invitation couple in database
   Invitations.insert({
     broadcastUser: broadcastUser._id,
-    receivingUser: userId, 
-    signedupAt: new Date()
+    receivingUser: userId
   });  
 
   // decrement broadcast user's unused invitations

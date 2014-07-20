@@ -6,20 +6,20 @@ Schemas.Highlight = new SimpleSchema([
   Schemas.userId,
   Schemas.city,
   {
-    global: {
+    "global": {
       type: Boolean
     },
-    imageUrl: {
+    "imageUrl": {
       type: String
     },
-    title: {
+    "title": {
       type: String
     },
-    subtitle: {
+    "subtitle": {
       type: String,
       optional: true
     },
-    website: {
+    "website": {
       type: String,
       optional: true,
       autoValue: AutoValue.prefixUrlWithHTTP

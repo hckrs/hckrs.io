@@ -5,26 +5,26 @@ Schemas.Gifts = new SimpleSchema([
   Schemas.default,
   Schemas.city,
   {
-    global: {
+    "global": {
       type: Boolean
     },
-    title: {
+    "title": {
       type: String
     },
-    description: {
+    "description": {
       type: String,
       optional: true
     },
-    websiteUrl: {
+    "websiteUrl": {
       type: String,
       optional: true,
       autoValue: AutoValue.prefixUrlWithHTTP
     },
-    websiteName: {
+    "websiteName": {
       type: String,
       optional: true
     },
-    code: {
+    "code": {
       type: String,
       optional: true
     }

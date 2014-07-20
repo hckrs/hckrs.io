@@ -12,7 +12,7 @@ InvitationsController = DefaultController.extend({
 Template.invitations_partial.helpers({
   'unusedTotal': function() { return Meteor.user().invitations; },
   'invitedTotal': function() { return Invitations.find({broadcastUser: Meteor.userId()}).count(); },
-  'invitedUsers': function() { return _.invoke(Invitations.find({broadcastUser: Meteor.userId()}, {sort: {signedupAt: 1}}).fetch(), 'receiver'); },
+  'invitedUsers': function() { return _.invoke(Invitations.find({broadcastUser: Meteor.userId()}, {sort: {createdAt: 1}}).fetch(), 'receiver'); },
   'availableSlots': function() { return _.range(Meteor.user().invitations); },
   'link': function() { 
     var phrase = Url.bitHash(Meteor.user().invitationPhrase);
