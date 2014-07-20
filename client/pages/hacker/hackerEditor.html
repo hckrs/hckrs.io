@@ -4,10 +4,14 @@
     <div class="alert alert-info">
       <h3>Ambassador Tools</h3>
       <div>
-        - switch user city<br/>
-        <input type="number" id="invitationsNumber" value="{{invitations}}" data-user-id="{{_id}}" />
-        - add invites <br/>
         - give accesss <br/>
+        <fieldset>
+          Add invites: <input type="number" id="invitationsNumber" value="{{invitations}}" data-user-id="{{_id}}" /><br/>
+          {{#if hasAdminPermission}}
+            Switch city: {{> citySelect}}
+          {{/if}}
+        </fieldset>
+        
       </div>
     </div>
   </div>

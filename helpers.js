@@ -298,6 +298,10 @@ if (Meteor.isClient) {
   UI.registerHelper('hasAmbassadorPermission', function() {
     return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
   })
+
+  UI.registerHelper('hasAdminPermission', function() {
+    return Meteor.user().isAdmin;
+  })
 }
 
 

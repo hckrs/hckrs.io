@@ -34,28 +34,7 @@ UI.body.rendered = function() {
 
 
 
-/* CITY SELECT */
 
-Template.citySelect.helpers({
-  "countries": function() {
-    var countries = _.map(COUNTRYMAP, function(cities, code) {
-      return { name: COUNTRYCODES[code] || "Other", cities: cities };
-    });
-    return _.sortBy(countries, 'name');
-  },
-  "selected": function(city) {
-    return Session.equals('currentCity', city) ? 'selected' : '';
-  }
-});
-
-Template.citySelect.events({
-  "change select": function(evt) {
-    var city = $(evt.currentTarget).val();
-    exec(function() {
-      Router.goToCity(city);  
-    });
-  }
-});
 
 
 
@@ -79,6 +58,15 @@ Template.header.helpers({
   }
 });
 
+Template.header.events({
+  "change #citySelect select": function(evt) {
+    var city = $(evt.currentTarget).val();
+    exec(function() {
+      Router.goToCity(city);  
+    });
+  }
+});
+
 // header rendering 
 // hide or show header based on scrolling
 Template.main.rendered = function() {
@@ -95,6 +83,20 @@ Template.main.rendered = function() {
 }
 
 
+
+/* CITY SELECT */
+
+Template.citySelect.helpers({
+  "countries": function() {
+    var countries = _.map(COUNTRYMAP, function(cities, code) {
+      return { name: COUNTRYCODES[code] || "Other", cities: cities };
+    });
+    return _.sortBy(countries, 'name');
+  },
+  "selected": function(city) {
+    return Session.equals('currentCity', city) ? 'selected' : '';
+  }
+});
 
 
 

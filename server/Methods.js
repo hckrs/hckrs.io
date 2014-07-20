@@ -8,6 +8,15 @@ var Url = Npm.require('url');
 
 Meteor.methods({
 
+  'moveUserToCity': function(hackerId, city) {
+    
+    if (!Meteor.user().isAdmin)
+      throw new Meteor.Error(500, "not authorized");
+
+    // move
+    return moveUserToCity(hackerId, city);
+  },
+
   // search the user that is associated with the given e-mail verification token
   'getEmailVerificationTokenUser': function(token) {
     check(token, String);

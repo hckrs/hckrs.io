@@ -902,6 +902,25 @@ var requestVisibilityOfUser = function(userId) {
 }
 
 
+// move user to new city
+// NOTE: permission check must already be performed
+moveUserToCity = function(hackerId, city) { // called from Methods.js
+  var hacker = Users.findOne(hackerId);
+
+  var local = Meteor.users.findOne({city: city}, {sort: {localRank: -1}});
+  var localRank = (local && local.localRank || 0) + 1;
+
+  // update user's city
+  Users.update(hackerId, {$set: {
+    city: city,
+    currentCity: city,
+    localRank: localRank
+  }});
+
+  return localRank;
+}
+
+
 // test some functionality
 // XXX, check secutiry for client-calls
 var test = function() {

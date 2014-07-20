@@ -42,6 +42,15 @@ Template.ambassadors.helpers({
 
 // events
 
+Template.frontpage.events({
+  "change #citySelect select": function(evt) {
+    var city = $(evt.currentTarget).val();
+    exec(function() {
+      Router.goToCity(city);  
+    });
+  }
+});
+
 Template.ambassadors.events({
   "click .action-email": function() {
     var email = this.profile.email;
