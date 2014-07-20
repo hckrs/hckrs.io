@@ -75,6 +75,10 @@
       <div class="page-space"></div>
     </div>
 
+    {{#if hasAmbassadorPermission}}
+      {{> hackerEditor}}
+    {{/if}}
+
   {{/with}}
 </template>
 

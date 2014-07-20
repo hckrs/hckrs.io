@@ -478,6 +478,7 @@ var newUserCityInfo = function(city) {
 
   // set the city where this user becomes registered
   user.city = city;
+  user.currentCity = city;
 
   // determine and set the hacker ranking
   var local = Meteor.users.findOne({city: city}, {sort: {localRank: -1}});

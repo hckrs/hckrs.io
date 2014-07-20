@@ -22,7 +22,9 @@ Schemas.default = new SimpleSchema({
 Schemas.userId = new SimpleSchema({
   userId: {
     type: String,
+    optional: true,
     autoValue: function() {
+      if (this.isFromTrustedCode) return; // not possible
       if (this.isInsert) return Meteor.userId();
       if (this.isUpsert) return {$setOnInsert: Meteor.userId()};
       this.unset();
@@ -33,10 +35,26 @@ Schemas.userId = new SimpleSchema({
 Schemas.city = new SimpleSchema({
   city: {
     type: String,
+    allowedValues: CITYKEYS,
+    optional: true,
     autoValue: function() {
+      if (this.isFromTrustedCode) return; // not possible
       if (this.isInsert) return Meteor.user().currentCity;
       if (this.isUpsert) return {$setOnInsert: Meteor.user().currentCity};
       this.unset();
     }
   }
 });
+
+
+/* (auto)value modifiers */
+
+AutoValue = {}
+
+// make sure that urls start with http:// or https://
+AutoValue.prefixUrlWithHTTP = function() {
+  if (this.isSet) 
+    return Url.externUrl(this.value)
+}
+
+

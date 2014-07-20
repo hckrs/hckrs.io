@@ -17,7 +17,8 @@ Schemas.Gifts = new SimpleSchema([
     },
     websiteUrl: {
       type: String,
-      optional: true
+      optional: true,
+      autoValue: AutoValue.prefixUrlWithHTTP
     },
     websiteName: {
       type: String,

@@ -21,7 +21,8 @@ Schemas.Highlight = new SimpleSchema([
     },
     website: {
       type: String,
-      optional: true
+      optional: true,
+      autoValue: AutoValue.prefixUrlWithHTTP
     }
   }
 ]);
