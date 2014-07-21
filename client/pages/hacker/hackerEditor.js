@@ -46,5 +46,15 @@ Template.hackerEditor.events({
       $(evt.currentTarget).val(Session.get('currentCity'));
     }
 
+  },
+  "click [action='email']": function(evt) {
+    window.location.href = "mailto:" + hacker().profile.email;
+  }
+})
+
+
+Template.hackerEditor.helpers({
+  'emailAttr': function() {
+    return this.profile.email ? {} : {disabled: ""};
   }
 })

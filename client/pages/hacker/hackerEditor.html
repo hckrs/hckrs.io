@@ -5,17 +5,35 @@
       
       <h3>Ambassador Tools</h3>
       <fieldset>
+
+        Invite user: 
         {{#if isUninvited}}
-          Invite user by: <button action="invite" by="ambassador" class="btn">myself</button> or <button action="invite" by="anonymous" class="btn">anonymous</button><br/>
+          <button action="invite" by="ambassador" class="btn">myself</button> or <button action="invite" by="anonymous" class="btn">anonymous</button>
+        {{else}}
+          <span class="label label-success">already invited</span>
         {{/if}}
-        Add invites: <input type="number" id="invitationsNumber" value="{{invitations}}" /><br/>
+        <br/>
+        
+        E-mail: 
+        {{#if profile.email}}
+          <button action="email" class="btn" {{emailAttr}}>Send E-mail</button>
+        {{else}}
+          <span class="label label-important">no e-mailadress</span>
+        {{/if}}
+        <br/>
+
+        Add invites: 
+        <input type="number" id="invitationsNumber" value="{{invitations}}" />
+        <br/>
+
       </fieldset>
 
+      {{! additional admin tools }}
       {{#if hasAdminPermission}}
-      <h3>Admin Tools</h3>
-      <fieldset>
-        Switch city: {{> citySelect}}
-      </fieldset>
+        <h3>Admin Tools</h3>
+        <fieldset>
+          Switch city: {{> citySelect}}
+        </fieldset>
       {{/if}}
 
     </div>
