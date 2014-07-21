@@ -57,19 +57,31 @@
       --}}
 
       {{#if isCurrentUser}}
-        <a href="#" class="btn btn-small btn-edit-mode toggle-edit-mode btn-opacity">
-          {{#if editMode}}
-            <span class="icon icon-eye-open"></span> view
-          {{else}}
-            <span class="icon icon-pencil"></span> edit
-          {{/if}}      
-        </a>
+        <div class="btn-group mode">
+          <button action="switch-mode" mode="edit" class="btn btn-small {{activeMode 'edit'}}"><span class="icon icon-pencil"></span> edit</button>
+          <button action="switch-mode" mode="preview" class="btn btn-small {{activeMode 'preview'}}"><span class="icon icon-eye-open"></span> preview</button>
+        </div>
       {{/if}}
 
-      {{#if editMode}}
+      {{#if isEditMode}}
         {{> hackerEdit}}
       {{else}}
         {{> hackerView}}
+      {{/if}}
+
+      {{#if tellUsMore}}
+        <form class="form-horizontal">
+          <div class="control-group">
+            <div class="controls profile-ready">
+              {{#if isInvited}}
+                Are you ready to enter the website? 
+              {{else}}
+                Are you ready filling in your profile?
+              {{/if}}
+              <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
+            </div>
+          </div>
+        </form>
       {{/if}}
 
       <div class="page-space"></div>
@@ -141,6 +153,9 @@
       <label class="control-label" for="inputEmail">email</label>
       <div class="controls">
         <input type="email" name="profile.email" class="text save email" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
+        {{#unless profile.email}}
+          required <span class="available-description">— not visible by other users</span><br/>
+        {{/unless}}
         {{#if isDuplicateEmail}}
           <span class="help-inline">Already used in another account!</span>
         {{/if}}
@@ -200,26 +215,20 @@
 
 
     <div class="control-group">
-      <label class="control-label" for="inputCompany">company</label>
+      <label class="control-label" for="inputCompany">company / school</label>
       <div class="controls">
         <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-        <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" id="inputCompanyUrl" />
+        <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" id="inputCompanyUrl" /><br/>
+        <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
+          <div class="event-catch-overlay"></div>
+          <div id="editMap" class="map"></div>
+          <button class="close-map btn btn-large">Close</button>
+        </div>
       </div>
     </div>
 
     <div class="control-group">
-      <label class="control-label" style="margin-top: -10px;">workplace / school</label>
-      <div class="controls">
-          <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
-            <div class="event-catch-overlay"></div>
-            <div id="editMap" class="map"></div>
-            <button class="close-map btn btn-large">Close</button>
-          </div>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label">available to</label>
+      <label class="control-label">available for</label>
       <div class="controls">
         <label for="inputAvailableDrink" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
@@ -296,19 +305,6 @@
         {{/if}}
       </div>
     </div>
-
-    {{#if tellUsMore}}
-      <div class="control-group">
-        <div class="controls profile-ready">
-          {{#if isInvited}}
-            Are you ready to enter the website? 
-          {{else}}
-            Are you ready filling in your profile?
-          {{/if}}
-          <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
-        </div>
-      </div>
-    {{/if}}
 
   </form>
 
@@ -394,33 +390,25 @@
     </div>
     {{/if}}
 
-    {{#if profile.company}}
+    {{#if isCompanyOrLocation}}
+
     <div class="line">
       <div class="handle">
-        company
+        company / school
       </div>
       <div class="output">
-        {{#if profile.companyUrl}}
-          <a href="{{profile.companyUrl}}" target="_blank">{{profile.company}}</a>
-        {{else}}
-          {{profile.company}}
+        {{#if profile.company}}
+          {{#if profile.companyUrl}}
+            <a href="{{profile.companyUrl}}" target="_blank">{{profile.company}}</a>
+          {{else}}
+            {{profile.company}}
+          {{/if}}
         {{/if}}
-      </div>
-      <div class="clear"></div>
-    </div>
-    {{/if}}
-
-    <div class="spacer"></div>
-
-    {{#if profile.location}}
-    <div class="line">
-      <div class="handle">
-        workplace / school
-      </div>
-      <div class="output">
-        <div id="mapWrapper" class="view">
-          <div id="viewMap" class="map"></div>
-        </div>
+        {{#if profile.location}}    
+          <div id="mapWrapper" class="view">
+            <div id="viewMap" class="map"></div>
+          </div>
+        {{/if}}
       </div>
       <div class="clear"></div>
     </div>

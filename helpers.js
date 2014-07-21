@@ -295,8 +295,8 @@ if (Meteor.isClient) {
 
   UI.registerHelper('PictureViewLabel', function() {
     var user = this;
-    var label = "";
-    if (user.isHidden) label = "Hidden";
+    var label = "#" + user.localRank;
+    if (user.isHidden) label = "No Access";
     else if (user.city && user.isForeign) label = CITYMAP[user.city].name;
     else if (user.ambassador) label = "Ambassador";
     return label;
