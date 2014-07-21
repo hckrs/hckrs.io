@@ -215,9 +215,6 @@ Template.hackerEdit.helpers({
   "isNotValidEmail": function() {
     return Session.equals('isNotValidEmail', true);
   },
-  "displayCity": function() {
-    return capitaliseFirstLetter('lyon'); // TODO : set right city variable
-  },
   "serviceError": function(service) {
     var isServiceError = Session.equals('isAddServiceError_'+service, true);
     return isServiceError ? 'error' : "";

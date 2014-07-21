@@ -223,21 +223,21 @@
       <div class="controls">
         <label for="inputAvailableDrink" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
-          have a drink <span class="available-description">— hackers in {{displayCity}} can see your email address to meet for a drink</span>
+          have a drink <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
         </label>
         
         <div class="clear"></div>
 
         <label for="inputAvailableLunch" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
-          have lunch <span class="available-description">— hackers in {{displayCity}} can see your email address to have lunch</span>
+          have lunch <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to have lunch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableEmail" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
-          e-mail <span class="available-description">— hackers in {{displayCity}} can see your email address to get in touch</span>
+          e-mail <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to get in touch</span>
         </label>
       </div>
     </div>
@@ -326,7 +326,7 @@
           {{#each profile.hacking}}
             <div class="hacking-tag">{{this}}</div>
           {{/each}}
-        <div class="hacker-number">hacker #{{localRank}} in Lyon</div>
+        <div class="hacker-number">hacker #{{localRank}} in {{CurrentCity.name}}</div>
         </div>
     </div>
     
