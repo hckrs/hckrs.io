@@ -19,7 +19,7 @@ FrontpageController = DefaultController.extend({
 Template.frontpage.helpers({
   "totalHackers": function() { 
     var city = Session.get('currentCity');
-    var total = Meteor.users.find({city: city}).count();
+    var total = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
     var minimum = Settings['minimumUserCountToShow'];
     return (total >= minimum) ? total : ''; 
   },

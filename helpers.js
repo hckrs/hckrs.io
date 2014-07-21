@@ -73,6 +73,11 @@ exec = function(func) {
   Meteor.setTimeout(func, 50);
 }
 
+// create a mongo field specifier object from array with field names
+fieldsObj = function(fields) {
+  return _.object(fields, _.map(fields, function() { return 1; }));
+}
+
 // get new Date() object by using format YYYY-MM-DD hh::mm:ss
 newDate = function(dateString) {
   if (!dateString)

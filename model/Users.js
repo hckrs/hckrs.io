@@ -392,6 +392,7 @@ if (Meteor.isServer) {
     "invitationPhrase",
     "profile.name",
     "profile.picture",
+    "isHidden",
   ];
   var userFieldsData = [
     "createdAt",
@@ -419,7 +420,6 @@ if (Meteor.isServer) {
     "isAccessDenied",
     "isUninvited",
     "isIncompleteProfile",
-    "isHidden",
     "invitations",
     "profile.socialPicture",
     "emails",
@@ -433,84 +433,77 @@ if (Meteor.isServer) {
     userFieldsCurrentUser
   );  
 
-  // properties of the current logged in user that determine the user's permissions.
+  // properties of the current logged in user that determine the user's permissions (in filterUserFields()).
   // When one of these properties changes it affects the visible fields of other users.
   // So when an dependency changes, we have to republish the whole collection to test
   // each user doc against the new permission rights.
-  var currentUserDependencies = [
+  // Only first-level properties are allowed, such as 'profile', but NOT 'profile.name'
+  var permissionDeps = [
+    '_id',
     'isAccessDenied',
     'isAdmin',
-    'city'
+    'city',
+    'currentCity',
+    'ambassador'
   ];
+
 
   Meteor.publish('userData', function() {
     var self = this;
-    var currentUser = Users.findOne(this.userId);
-
-    // don't publish hidden users except if that user is the current user
-    var query = {$or: [{isHidden: {$ne: true}}, {_id: self.userId}]};
-
+    var queryOptions = {fields: fieldsObj(allUserFields)};
+    
+    // initial permissions (can be changed below)
+    var permissions = Users.findOne(this.userId, {fields: fieldsObj(permissionDeps)}) || {};
+    
     // observe docs changes and push the changes to the client
     // only include fields that are allowed to publish, this can vary between users
-    // and will be handled by the filterUserFields function.
-    // In the case that one of the dependencies from current user's doc changes, we have
-    // to republish the whole collection because then dependencies are evaluated again.
-    var observeUserDocs = Users.find(query).observe({
+    // and will be handled by the filterUserFields() function.
+    var observer = Users.find({}, queryOptions).observe({
       added: function(doc) {
-        self.added('users', doc._id, filterUserFields(currentUser, doc, false));
+        self.added('users', doc._id, excludeUserFields(permissions, doc, false));
       },
-      changed: function(doc, oldDoc) {
-        if (doc._id === self.userId) {
-          currentUser = doc; // !!! changes STATE
-          myDocChanged(doc, oldDoc);
-        }
-        self.changed('users', doc._id, filterUserFields(currentUser, doc, true));
+      changed: function(doc) {
+        self.changed('users', doc._id, excludeUserFields(permissions, doc, true));
       },
       removed: function(doc) {
         self.removed('users', doc._id);
-      },
+      }
     });
 
-    var myDocChanged = function(newDoc, oldDoc) {
+    // republish user collection
+    // because permission of current user have changed
+    var republish = function(newPermissions) {
+      permissions = newPermissions; // ! set new permissions
+      Users.find({}, queryOptions).forEach(function(doc) {
+        self.changed('users', doc._id, excludeUserFields(permissions, doc, false));
+      });
+    }
 
-      // check of one of the permission properties has changed
-      var dependencyHasChanged = _.some(currentUserDependencies, function(prop) {
-        return newDoc[prop] !== oldDoc[prop];
-      });
-      
-      // if permission has changed, republish whole collection
-      // to make sure all docs will be tested with this new permission
-      if (dependencyHasChanged)
-        republish();
-    }
-    
-    var republish = function() {
-      Users.find(query).forEach(function(doc) {
-        self.changed('users', doc._id, filterUserFields(currentUser, doc, true));
-      });
-    }
-    
-    self.ready();
-    
+    // Check if depended permissions fields from current user changes
+    // if so, we have to republish the whole user collection
+    if (self.userId)
+      var myObserver = Users.find({_id: self.userId}, {fields: fieldsObj(permissionDeps)}).observe({'changed': republish});
+
+
+    // handlers
     self.onStop(function () {
-      observeUserDocs.stop();
+      if (observer) observer.stop();
+      if (myObserver) myObserver.stop();
     });
+    self.ready();
   });
 
 
-  // some complex publish helpers are defined here
-
-  // determine which user fields to publish is more complex
-  // it depends on the access level of the logged in user
+  // determine which user fields to publish.
+  // it depends on the permissions of the logged in user
   // and the privacy settings of the published user docs.
-
-  var filterUserFields = function(currentUser, user, useUndefined) {
+  var excludeUserFields = function(permissions, doc, isUpdate) {
     
     // first determine current user's permission before continue.
-    var hasAccess = currentUser && currentUser.isAccessDenied != true;
-    var isSameCity = currentUser && cityMatch(currentUser.city, user.city);
-    var isAdmin = currentUser && currentUser.isAdmin;
-    var isAmbassador = currentUser && currentUser.ambassador;
+    var hasAccess = permissions.isAccessDenied != true;
+    var isSameCity = cityMatch(permissions.city, doc.city);
+    var isAdmin = permissions.isAdmin;
+    var isAmbassador = permissions.ambassador;
 
 
     // holds which fields to publish        
@@ -520,7 +513,7 @@ if (Meteor.isServer) {
     // publish this data of all users anyway
     useFields.push(userFieldsGlobal);
     
-    if (user.ambassador)
+    if (doc.ambassador)
       useFields.push(userFieldsAmbassador);
 
     
@@ -531,7 +524,7 @@ if (Meteor.isServer) {
       useFields.push(userFieldsData);
       
       // only publish e-mailadresses of user who accepted that
-      if (user.profile && user.profile.available && user.profile.available.length)
+      if (doc.profile && doc.profile.available && doc.profile.available.length)
         useFields.push(userFieldsEmail);
     }
 
@@ -539,7 +532,7 @@ if (Meteor.isServer) {
     // and also for the logged in user itself.
     if (isAdmin || 
         (isAmbassador && isSameCity) || 
-        (currentUser && currentUser._id === user._id)) {
+        (permissions && permissions._id === doc._id)) {
       useFields.push(userFieldsData); // include user data
       useFields.push(userFieldsEmail); // include e-mail
       useFields.push(userFieldsCurrentUser); // include private info
@@ -557,15 +550,17 @@ if (Meteor.isServer) {
       _.deep(undefinedUser, field, undefined); 
     });
     
-    var publishUser = _.deepPick(user, _.union.apply(this, useFields));
+    var publishUser = _.deepPick(doc, _.union.apply(this, useFields));
     
-    return useUndefined ? _.extend(undefinedUser, publishUser) : publishUser;
+    return isUpdate ? _.extend(undefinedUser, publishUser) : publishUser;
   }
 
   // helper
   var cityMatch = function(city1, city2) {
     return city1 && city2 && city1 === city2;
   }
+
+
 
 
 
