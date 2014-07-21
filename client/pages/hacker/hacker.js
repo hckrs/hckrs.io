@@ -8,7 +8,7 @@ HackerController = DefaultController.extend({
   },
   onBeforeAction: function() { 
     Session.set('hackerId', Url.userIdFromUrl());
-    Session.set('hackerEditMode', true);
+    Session.set('hackerEditMode', Meteor.user() && Meteor.user().isIncompleteProfile);
   }
 });
 
@@ -198,6 +198,10 @@ Template.hacker.helpers({
 });
 
 Template.hackerEdit.helpers({
+  'required': function(field) {
+    // indicate required field after user try to proceed without filling in this field
+    return !pathValue(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
+  },
   "selected": function(socialPicture) { 
     var isSelected = Meteor.user().profile.picture == socialPicture;
     return  isSelected ? 'checked' : "";

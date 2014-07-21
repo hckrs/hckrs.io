@@ -36,7 +36,7 @@
             {{else}}
               {{#unless isInvited}}
                 {{! XXX profile is completely filled in but user needs to be invited by someone }}
-                <div class="access-denied alert alert-info">
+                <div class="access-denied alert alert-success">
                   <h1>Thank you</h1>
                   <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
                   <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
@@ -73,11 +73,7 @@
         <form class="form-horizontal">
           <div class="control-group">
             <div class="controls profile-ready">
-              {{#if isInvited}}
-                Are you ready to enter the website? 
-              {{else}}
-                Are you ready filling in your profile?
-              {{/if}}
+              Are you ready to enter the website? 
               <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
             </div>
           </div>
@@ -145,17 +141,17 @@
 
       </div>
       <div class="controls" style="padding-top:76px;">
-        <input type="text" name="profile.name" class="text save" value="{{profile.name}}" placeholder="full name" id="inputName" style="height:36px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:16px;" required />
+        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" value="{{profile.name}}" placeholder="full name" id="inputName" style="height:36px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:16px;" required />
       </div>
     </div>
 
     <div class="control-group {{classIf 'error' isDuplicateEmail}} {{classIf 'error' isNotValidEmail}}">
       <label class="control-label" for="inputEmail">email</label>
       <div class="controls">
-        <input type="email" name="profile.email" class="text save email" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
-        {{#unless profile.email}}
-          required <span class="available-description">— not visible by other users</span><br/>
-        {{/unless}}
+        <input type="email" name="profile.email" class="text save email {{required 'profile.email'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
+        {{#if required 'profile.email'}}
+          <span class="available-description">— not visible by other users</span><br/>
+        {{/if}}
         {{#if isDuplicateEmail}}
           <span class="help-inline">Already used in another account!</span>
         {{/if}}
