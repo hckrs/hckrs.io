@@ -6,8 +6,9 @@
       "GAnalytics": {},
       "collection-hooks": {},
       "imagemagick": {},
+      "autoform": {},
       "iron-router-progress": {},
-      "autoform": {}
+      "kadira": {}
     },
     "packages": {
       "iron-router": {
@@ -30,15 +31,20 @@
         "tag": "v0.1.2",
         "commit": "d67bb926356d35cdff1a6d6c3c69750f3f54c059"
       },
+      "autoform": {
+        "git": "https://github.com/aldeed/meteor-autoform.git",
+        "tag": "v0.15.1",
+        "commit": "723aed684ef9d16e94424cde6389b8e4a03d546e"
+      },
       "iron-router-progress": {
         "git": "https://github.com/Multiply/iron-router-progress.git",
         "tag": "v0.4.1",
         "commit": "496fcda9a6ec352b4733725f60c6f280250c3541"
       },
-      "autoform": {
-        "git": "https://github.com/aldeed/meteor-autoform.git",
-        "tag": "v0.14.1",
-        "commit": "3d00239fc61944058295ded01889c071d6c1ced9"
+      "kadira": {
+        "git": "https://github.com/meteorhacks/kadira.git",
+        "tag": "v2.4.9",
+        "commit": "8bb902989917522822a0897117672ae858c23427"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

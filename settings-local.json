@@ -10,6 +10,11 @@
     "NEW_RELIC_APP_NAME": "hckrs-local"
   },
 
+  "kadira": {
+    "appId": "hRSvTK6XuivZx36g2",
+    "appSecret": "dcc32611-203a-482a-b6d2-dfea2f01ec63"  
+  },
+
   "facebook": {
     "appId": "1382749838614282",
     "secret": "af228b24f10c59be1b40a7c91fe6db6e"

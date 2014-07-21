@@ -10,6 +10,9 @@ Settings = {}
 
 
 
+// METEOR SETTINGS (extended)
+Settings = _.extend(Settings, _.omit(Meteor.settings, 'public'));
+
 
 // ENVIRONMENT variables
 

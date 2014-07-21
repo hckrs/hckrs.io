@@ -291,9 +291,22 @@ if (Meteor.isClient) {
     return Url.hostname(url);
   });
 
+  UI.registerHelper('CityName', function(city) {
+    return CITYMAP[city].name;
+  });
+
   UI.registerHelper('CurrentCity', function() {
     var city = Session.get('currentCity');
     return CITYMAP[city];
+  });
+
+  UI.registerHelper('PictureViewLabel', function() {
+    var user = this;
+    var label = "#"+user.localRank;
+    if (user.isHidden) label = "No Access";
+    else if (user.city && user.isForeign) label = CITYMAP[user.city].name;
+    else if (user.ambassador) label = "Ambassador";
+    return label;
   });
 
   UI.registerHelper('foreign', function() {
