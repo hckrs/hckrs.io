@@ -4,7 +4,9 @@
     {{#each hackers}}
     <div class="hacker">
       <a class="hackers-name pictureViewLink" href="{{pathFor 'hacker'}}" {{foreign}}>
-        <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}}></div>
+        <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}}>
+          <span class="picture-label">{{PictureViewLabel}}</span>
+        </div>
         {{profile.name}}
       </a>
       <br/>

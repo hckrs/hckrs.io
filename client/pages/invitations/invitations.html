@@ -20,7 +20,9 @@
         <div style='clear:both;'></div>
         {{#each availableSlots}}
           <div class="slot">
-            <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small open"></div>
+            <div style="background-image:url(img/profile-unknown.svg);" class="pictureView small">
+              <span class="picture-label">OPEN</span>
+            </div>
           </div>
         {{/each}}
 
@@ -30,7 +32,9 @@
 
         {{#each invitedUsers}}
           <a href="{{pathFor 'hacker'}}" {{foreign}} class="slot pictureViewLink" title="{{profile.name}}">
-            <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}" {{foreign}} ></div>
+            <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}" {{foreign}}>
+              <span class="picture-label">{{PictureViewLabel}}</span>
+            </div>
           </a>
         {{/each}}
         <div class="clear"></div>

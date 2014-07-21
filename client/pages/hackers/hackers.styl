@@ -51,6 +51,7 @@
   color: white;
   margin: auto;
   background-color: rgba(255,255,255,0.1);
+  text-align: center;
 
   &.small { /* element has also class 'small' */
     width: 64px;
@@ -62,25 +63,20 @@
     width: 32px;
     height: 32px;
     border-radius: 16px;
-  }
+  }  
 
-  &.unknow:before { content: '?'; }
-  &.empty:before { content: '\1F60E'; }
-
-  &.unknow:before,
-  &.empty:before {
-    margin: auto;
-    font-size: 3.5em;
-    line-height: 3.5em;
-    color: rgba(255,255,255,0.4);
+  .picture-label {
+    color: white; 
+    font-weight: bold;
+    cursor: default;
+    background-color: rgba(0,0,0,0.5);
+    font-size: 1.0em;
+    line-height: 17.4em; 
   }
-
-  &.unknow.small:before,
-  &.empty.small:before {
-    font-size: 2.5em;
-    line-height: 2.4em;
+  &.small .picture-label {
+    font-size: 1em;
+    line-height: 9.4em; 
   }
-  
 
   &.clickable:hover {
     cursor: pointer;
@@ -110,18 +106,5 @@ a.pictureViewLink[foreign] {
   transition: none !important;
   transform: none !important;
   cursor: default !important;
-  text-align: center;
-  &:before {
-    content: 'FOREIGN'; 
-    color: white; 
-    font-weight: bold;
-    cursor: default;
-    background-color: rgba(0,0,0,0.5);
-    font-size: 1.0em;
-    line-height: 17.4em;
-  }
-  &.small:before {
-    font-size: 1em;
-    line-height: 9.4em; 
-  }
 }
+
