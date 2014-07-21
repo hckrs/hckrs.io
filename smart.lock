@@ -22,8 +22,8 @@
       },
       "collection-hooks": {
         "git": "https://github.com/matb33/meteor-collection-hooks.git",
-        "tag": "v0.6.7",
-        "commit": "f1d2ac629864edda09df6c955fa5ff3df26f739c"
+        "tag": "v0.7.2",
+        "commit": "261f61f07b371ae913463fba8964a9b93cab531b"
       },
       "imagemagick": {
         "git": "https://github.com/sylvaingi/meteor-imagemagick.git",
@@ -32,8 +32,8 @@
       },
       "iron-router-progress": {
         "git": "https://github.com/Multiply/iron-router-progress.git",
-        "tag": "v0.4.0",
-        "commit": "02f78bdaca4c13d59f548d5a0ce83408c34b56d1"
+        "tag": "v0.4.1",
+        "commit": "496fcda9a6ec352b4733725f60c6f280250c3541"
       },
       "kadira": {
         "git": "https://github.com/meteorhacks/kadira.git",
