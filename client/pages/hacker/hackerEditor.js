@@ -6,10 +6,20 @@ var hacker = function () { return Users.findOne(hackerId()); }
 
 
 Template.hackerEditor.events({
+  "click [action='invite']": function(evt) {
+    var by = $(evt.currentTarget).attr('by');
+    var userId = hackerId();
+
+    // invite user
+    if (by === 'anonymous')
+      Meteor.call('inviteUserAnonymous', userId, function(err,res) { console.log(err, res)});
+    else
+      Meteor.call('inviteUserAmbassador', userId, function(err,res) { console.log(err, res)});
+  },
   'keyup, mouseup, change #invitationsNumber': function(evt) {
     var $target = $(evt.currentTarget);
     var invitations = $target.val();
-    var userId = $target.data('userId');
+    var userId = hackerId();
 
     // update invitations count
     Users.update(userId, {$set: {invitations: invitations}});

@@ -129,7 +129,8 @@ var schema = {
     type: Number
   },   
   "invitations": {      // number of unused invites that this user can use to invite people
-    type: Number
+    type: Number,
+    min: 0
   },    
   
   "emails": {           // user can have multiple e-mailaddressen (internal use only)

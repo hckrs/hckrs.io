@@ -2,11 +2,40 @@ var Future = Npm.require("fibers/future");
 var Path = Npm.require('path');
 var Url = Npm.require('url');
 
+
+// implementations
+
+
+
+
+
 /* server methods */
 // these are methods that can be called from the client
 // but executed on the server because of the use of private data
 
 Meteor.methods({
+  
+  'inviteUserAnonymous': function(userId) {
+    var user = Users.findOne(userId);
+    
+    verifyAmbassadorLevel(user);
+
+    forceInvitationOfUser(userId);
+  },
+
+
+  'inviteUserAmbassador': function(userId) {
+    var user = Users.findOne(userId);
+    
+    verifyAmbassadorLevel(user);
+
+    var phrase = Meteor.user().invitationPhrase;
+    
+    if (!phrase || !Match.test(phrase, Number))
+      throw new Meteor.Error(500, "invalid phrase");
+    
+    verifyInvitationOfUser(phrase, userId);
+  },
 
   'moveUserToCity': function(hackerId, city) {
     
@@ -72,7 +101,26 @@ Meteor.methods({
 
 
 
-// METHODS implementations
 
 
+// helper functions
 
+// check if the logged in user is an admin
+var verifyAdmin = function() {
+  if (!Meteor.user() || !Meteor.user().isAdmin)
+    throw new Meteor.Error(500, 'No admin privilege');
+}
+
+// check admin or ambassador (with same city)
+var verifyAmbassadorLevel = function(user) {
+  var currentUser = Meteor.user();
+
+  if (!currentUser)
+    throw new Meteor.Error(500, 'Not logged in');
+
+  if (!user)
+    throw new Meteor.Error(500, 'No user specified');
+
+  if (!(currentUser.isAdmin || (currentUser.ambassador && currentUser.currentCity === user.city)))
+    throw new Meteor.Error(500, 'No privilege');
+}

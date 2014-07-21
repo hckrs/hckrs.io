@@ -2,17 +2,22 @@
 <template name="hackerEditor">
   <div id="hackerEditor" class="alert-wrapper">
     <div class="alert alert-info">
+      
       <h3>Ambassador Tools</h3>
-      <div>
-        - give accesss <br/>
-        <fieldset>
-          Add invites: <input type="number" id="invitationsNumber" value="{{invitations}}" data-user-id="{{_id}}" /><br/>
-          {{#if hasAdminPermission}}
-            Switch city: {{> citySelect}}
-          {{/if}}
-        </fieldset>
-        
-      </div>
+      <fieldset>
+        {{#if isUninvited}}
+          Invite user by: <button action="invite" by="ambassador" class="btn">myself</button> or <button action="invite" by="anonymous" class="btn">anonymous</button><br/>
+        {{/if}}
+        Add invites: <input type="number" id="invitationsNumber" value="{{invitations}}" /><br/>
+      </fieldset>
+
+      {{#if hasAdminPermission}}
+      <h3>Admin Tools</h3>
+      <fieldset>
+        Switch city: {{> citySelect}}
+      </fieldset>
+      {{/if}}
+
     </div>
   </div>
 </template>
