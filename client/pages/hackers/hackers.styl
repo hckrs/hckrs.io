@@ -35,11 +35,6 @@
 
 /* HACKERS LIST */
 
-.pictureView-wrapper {
-  line-height: 0px;
-  margin: 0px;
-  padding: 0px;
-}
 
 .pictureView {
   position: relative;
@@ -65,17 +60,18 @@
     border-radius: 16px;
   }  
 
-  .picture-label {
+  &:before {
+    content: attr(label);
     color: white; 
     font-weight: bold;
     cursor: default;
     background-color: rgba(0,0,0,0.5);
-    font-size: 1.0em;
-    line-height: 17.4em; 
+    font-size: 19px;
+    line-height: 280px; 
   }
-  &.small .picture-label {
-    font-size: 1em;
-    line-height: 9.4em; 
+  &.small:before {
+    font-size: 11px;
+    line-height: 100px; 
   }
 
   &.clickable:hover {
