@@ -8,7 +8,7 @@ HackerController = DefaultController.extend({
   },
   onBeforeAction: function() { 
     Session.set('hackerId', Url.userIdFromUrl());
-    Session.set('hackerEditMode', Meteor.user() && Meteor.user().isIncompleteProfile);
+    Session.set('hackerEditMode', true);
   }
 });
 
