@@ -28,7 +28,7 @@
     {{#with relatedUser userId}}
       <div class="user">
         <a href="{{pathFor 'hacker'}}" class="hackers-name pictureViewLink" {{foreign}}>
-          <div style="background-image:url({{profile.picture}});" class="pictureView small clickable" {{foreign}}></div>
+          <div style="background-image:url({{profile.picture}});" class="pictureView small clickable" {{foreign}} label="{{PictureViewLabel}}"></div>
         </a>
       </div>
     {{/with}}

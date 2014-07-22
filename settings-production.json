@@ -1,7 +1,10 @@
 {
   "public": {
     "environment": "production",
-    "ga": { "account": "UA-46665682-1" }
+    "ga": { "account": "UA-46665682-1" },
+    "mapbox": {
+      "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
+    }
   },
 
   "newrelic": {
