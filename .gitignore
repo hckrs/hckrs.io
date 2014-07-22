@@ -4,3 +4,13 @@
 node_modules
 backup
 docs/Screenshots
+
+packages/autoform
+
+packages/collection2
+
+packages/kadira
+
+packages/simple-schema
+
+packages/moment

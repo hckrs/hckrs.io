@@ -32,7 +32,7 @@
     margin-bottom: 76px;
     font-size: 24px;
     line-height: 24px;
-    height: 40px;
+    height: 50px;
     width: 480px;
     font-weight: 100;
     letter-spacing: 2px;
@@ -215,5 +215,61 @@
       }
     }
   }
+
+}
+
+
+
+
+
+/* Responsive design */
+
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+
+  #frontpage {
+    margin-top: 12px;
+
+    .frontpage-login {
+      height: 40px;
+      width: 100%;
+      border: 1px solid red;
+      margin-bottom: 24px;
+      margin-top: 0px;
+      clear: both;
+
+      .social-logo{
+        height: 78px;
+        width: 30%;
+        float: left;
+        cursor: pointer;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        background-size: contain;
+      }
+    }
+  }
+
+  #frontpage .logo-large {
+    height: 124px;
+    width: 100%;
+    margin: auto;
+    background: url("/img/logo.svg") no-repeat;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    background-size: contain;
+  }
+
+  #frontpage #citySelect select {
+    margin: 0 auto;
+    margin-bottom: 12px;
+    height: 50px;
+    width: 100%;
+    font-weight: 100;
+    letter-spacing: 2px;
+    padding-left: 12px;
+  }
+
 
 }
