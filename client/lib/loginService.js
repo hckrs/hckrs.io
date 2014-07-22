@@ -215,13 +215,18 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
     exec(function() {
       Meteor.call('requestProfileCompleted', function(err) {
         if (err) {
+          Session.set('isIncompleteProfileError', true);
           Router.reload();
           log(err);
         } else {
+          Session.set('isIncompleteProfileError', false);
           goToEntryPage();
         }
       });
     });
+  } else {
+    checkAccess();
+    Router.reload();
   }
 }
 

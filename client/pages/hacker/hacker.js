@@ -8,7 +8,7 @@ HackerController = DefaultController.extend({
   },
   onBeforeAction: function() { 
     Session.set('hackerId', Url.userIdFromUrl());
-    Session.set('hackerEditMode', true);
+    Session.set('hackerEditMode', Meteor.user() && Meteor.user().isIncompleteProfile);
   }
 });
 
@@ -135,11 +135,6 @@ var pictureChanged = function(event) {
 }
 
 
-// toggle between edit/view mode
-var toggleEditMode = function(event) {
-  event.preventDefault();
-  Session.set('hackerEditMode', !Session.get('hackerEditMode'));
-}
 
 // count the number of social services the user is connected to
 var countSocialServices = function() {
@@ -155,7 +150,14 @@ var isCurrentUser = function() {
 // EVENTS
 
 Template.hacker.events({
-  'click .toggle-edit-mode': toggleEditMode
+  "click [action='switch-mode']": function(evt) {
+    var mode = $(evt.currentTarget).attr('mode');
+    Session.set('hackerEditMode', mode === 'edit');
+  },
+  "click .button-ready": function(evt) {
+    evt.preventDefault();
+    checkCompletedProfile();
+  },
 });
 
 Template.hackerEdit.events({
@@ -179,11 +181,6 @@ Template.hackerEdit.events({
   "click input[name='picture']": pictureChanged,
 
   "click .toggleService": toggleService,
-
-  "click .button-ready": function(evt) {
-    evt.preventDefault();
-    checkCompletedProfile();
-  },
 });
 
 
@@ -193,10 +190,18 @@ Template.hackerEdit.events({
 Template.hacker.helpers({
   "hacker": function() { return hacker(); },
   'isCurrentUser': function() { return isCurrentUser(); },
-  'editMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },
+  'isEditMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },
+  'activeMode': function(mode) { 
+    var currentMode = isCurrentUser() && Session.get('hackerEditMode') ? 'edit' : 'preview';
+    return currentMode === mode ? 'active' : '';
+  }
 });
 
 Template.hackerEdit.helpers({
+  'required': function(field) {
+    // indicate required field after user try to proceed without filling in this field
+    return !pathValue(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
+  },
   "selected": function(socialPicture) { 
     var isSelected = Meteor.user().profile.picture == socialPicture;
     return  isSelected ? 'checked' : "";
@@ -229,6 +234,9 @@ Template.hackerView.helpers({
   "urlCurrentUser": function() { 
     var currentUser = Meteor.user();
     return Router.routes['hacker'].url(currentUser); 
+  },
+  "isCompanyOrLocation": function() {
+    return !!(this.profile.company || this.profile.location);
   }
 });
 

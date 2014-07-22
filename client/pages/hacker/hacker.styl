@@ -3,14 +3,21 @@
 
 /* HACKER */
 
+.main-alerts .alert-success {
+  background-color: rgba(0,255,0,0.1) !important;
+}
 
 #hacker {
   position: relative;
 
-  .btn-edit-mode {
+  .required {
+    border: 1px solid orange;
+  }
+
+  .mode {
     position: absolute;
     top: 105px;
-    left: 990px;
+    left: 910px;
     .icon {
       margin-right: 3px;
       margin-bottom: 2px;
@@ -19,7 +26,7 @@
   }
 
   @media screen and (max-width: 1114px) {
-    .btn-edit-mode {
+    .mode {
       position: relative;
       top: 85px;
       left: auto;

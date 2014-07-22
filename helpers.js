@@ -108,14 +108,33 @@ isForeign = function(doc) {
 // GEO
 
 // geocoder for openstreet
+// geocode = function(address, cb) {
+//   var url = "http://nominatim.openstreetmap.org/search";
+//   var options = {params: { format: 'json', q: address }};
+//   var response = function(res) {
+//     var loc = res && res.data && res.data[0];
+//     if (loc && loc.lat && loc.lon)
+//       return { lat: loc.lat, lng: loc.lon };
+//   }
+//   if (Meteor.isServer)
+//     return response(HTTP.get(url, options));
+//   else
+//     HTTP.get(url, options, function(err, res) { cb(response(res)); });
+// }
+
+// geocode mapbox
 geocode = function(address, cb) {
-  var url = "http://nominatim.openstreetmap.org/search";
-  var options = {params: { format: 'json', q: address }};
+  var url = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places-v1/"+address+".json";
+  var options = {params: { format: "json", access_token: Settings['mapbox'].token }};
+  
   var response = function(res) {
-    var loc = res && res.data && res.data[0];
-    if (loc && loc.lat && loc.lon)
-      return { lat: loc.lat, lng: loc.lon };
+    var data = res && res.content && JSON.parse(res.content);
+    var feature = data && data.features && data.features[0];
+    var center = feature && feature.center;
+    if (center)
+      return { lat: center[1], lng: center[0] };
   }
+  
   if (Meteor.isServer)
     return response(HTTP.get(url, options));
   else
