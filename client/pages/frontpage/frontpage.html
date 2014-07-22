@@ -20,11 +20,11 @@
         {{#if serviceLoginError}}
           <div class="error">{{{serviceLoginError}}}</div>
         {{/if}}
+        <div class="frontpage-join-us"></div>
         <div class="frontpage-login"> 
           <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
           <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
           <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
-          <div class="frontpage-join-us"></div>
         </div>
       {{/if}}
     {{/if}}
@@ -32,7 +32,11 @@
     {{> ambassadors}}
 
     {{#if CurrentCity}}
-      <H1 class="frontpage-headline">join {{totalHackers}} other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
+      <H1 class="frontpage-headline">
+        <span class="part">join {{totalHackers}} other</span>
+        <span class="part"><span id="target"></span><span class="blink">_</span>hackers</span>
+        <span class="part">in {{CurrentCity.name}}</span>
+      </H1>
     {{/if}}
     <div class="page-space"></div>
     <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> • <a href="{{pathFor 'about'}}">about hckrs</a></div>
