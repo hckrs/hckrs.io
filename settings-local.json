@@ -12,14 +12,9 @@
     "NEW_RELIC_APP_NAME": "hckrs-local"
   },
 
-  "kadira": {
-    "appId": "hRSvTK6XuivZx36g2",
-    "appSecret": "dcc32611-203a-482a-b6d2-dfea2f01ec63"  
-  },
-
   "facebook": {
-    "appId": "1382749838614282",
-    "secret": "af228b24f10c59be1b40a7c91fe6db6e"
+    "appId": "1480186128886809",
+    "secret": "10418e8a72c563646caac23fb2ced3e6"
   },
 
   "github": {
@@ -30,5 +25,10 @@
   "twitter": {
     "consumerKey": "zZzPfXGKfu523POv6xrFPA",
     "secret": "CJMdzdwCCKxhmeEpsum8Mqf1P5R7L0ksq4h0Qp16hOo"
+  },
+
+  "kadira": {
+    "appId": "hRSvTK6XuivZx36g2",
+    "appSecret": "dcc32611-203a-482a-b6d2-dfea2f01ec63"  
   }
 }
