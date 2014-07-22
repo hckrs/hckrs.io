@@ -3,7 +3,7 @@
 // SETTINGS file for both CLIENT & SERVER
 // along with this file their is /Server/Settings.js which only runs on server
 
-Settings = _.extend(this.Settings || {}, Meteor.settings.public);
+Settings = _.deepExtend(this.Settings || {}, Meteor.settings.public);
 
 
 

@@ -1,7 +1,10 @@
 {
   "public": {
     "environment": "staging",
-    "ga": { "account": null }
+    "ga": { "account": null },
+    "mapbox": {
+      "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
+    }
   },
 
   "newrelic": {
