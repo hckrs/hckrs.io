@@ -3,15 +3,34 @@
 #places {
   width: 100%;
   height: 100%;
-  
-  iframe {
+
+  #map {
     position: absolute;
-    bottom: 0px;
+    top: 0px;
+    left: 0px;
     width: 100%;
     height: 100%;
+    margin: 0px;
     border: 0px;
-    margin-bottom: 0px;
-    
+  }
+
+  .leaflet-control-zoom {
+    margin: 100px 10px;
+  }
+
+  .filter-ui {
+    background: rgba(30,30,30,0.4);
+    position: absolute;
+    z-index: 100;
+    bottom: 10px;
+    left: 10px;
+    width: 150px;
+    padding: 10px;
   }
   
+  .marker-hacker {
+    border-radius: 90px;
+    background-color: rgba(255,255,255,0.1);
+  }
+
 }

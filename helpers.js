@@ -136,6 +136,7 @@ geocode = function(address, cb) {
     HTTP.get(url, options, function(err, res) { cb(response(res)); });
 }
 
+
 getDistanceFromLatLonObj = function(latlong1, latlong2) {
   var lat1 = latlong1.latitude || latlong1.lat;
   var lon1 = latlong1.longitude || latlong1.lon;
@@ -180,6 +181,11 @@ findClosestCity = function(latlon) {
   return _.min(CITIES, _.partial(getDistanceFromLatLonObj, latlon)).key;
 }
 
+getCityLocation = function(city) {
+  var city = CITYMAP[city] || {};
+  if (!city.latitude || !city.longitude) return null;
+  else return {lat: city.latitude, lng: city.longitude};
+}
 
 
 // CLIENT ONLY
