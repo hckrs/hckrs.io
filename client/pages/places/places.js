@@ -6,7 +6,9 @@ PlacesController = DefaultController.extend({
     Interface.setHeaderStyle('fixed');
   },
   waitOn: function () {
-    return [];
+    return [
+      Meteor.subscribe('places')
+    ];
   }
 });
 
@@ -25,7 +27,7 @@ Template.places.rendered = function() {
   map.zoomControl.setPosition('topleft');
 
   // layers 
-  var featureLayer = L.mapbox.featureLayer();  
+  var featureLayer = L.mapbox.featureLayer().addTo(map);  
 
   // Set a custom icon on each marker based on feature properties.
   featureLayer.on('layeradd', function(e) {
@@ -37,9 +39,22 @@ Template.places.rendered = function() {
         className:    "marker-hacker",
         iconSize:     [40, 40], // size of the icon
         iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
-        popupAnchor:  [0, 20] // point from which the popup should open relative to the iconAnchor
+        popupAnchor:  [0, -20] // point from which the popup should open relative to the iconAnchor
       }));
     }
+  });
+  featureLayer.on('mouseover', function(e) {
+    e.layer.openPopup();
+  });
+  featureLayer.on('mouseout', function(e) {
+    e.layer.closePopup();
+  });
+  featureLayer.on('click', function(e) {
+    var url = e.layer.feature.properties.url;
+    if (url && _.contains(['/','#'], url[0])) // relative url
+      Router.go(url);
+    else if (url && /^http/.test(url)) // absolute url
+      window.open(url)
   });
 
   var getActiveFilters = function() {
@@ -56,20 +71,33 @@ Template.places.rendered = function() {
     });
   }
 
-  // filters click handlers
-  self.$("[filter]").on('change', updateFilters);
-  updateFilters(); // first call
-
-
   // load data / add markers
-  var geoHackers = featuresOfHackers();
-  var geoPlaces = featuresOfPlaces();
-  var geojson = geoHackers.concat(geoPlaces);
+  var reloadData = function() {
+    var geoHackers = featuresOfHackers();
+    var geoPlaces = featuresOfPlaces();
+    var geojson = geoHackers.concat(geoPlaces);
+    featureLayer.setGeoJSON(geojson)
+  }
 
-  featureLayer.setGeoJSON(geojson)
-  featureLayer.addTo(map)
+  // observer
+  this.observer = Places.find({}).observeChanges({
+    'added': reloadData,
+    'changed': reloadData,
+    'removed': reloadData
+  });
 
+  // handlers
+  self.$("[filter]").on('change', updateFilters);
+
+  // initial call
+  updateFilters();
+  reloadData();
 }
+
+Template.places.destroyed = function() {
+  this.observer.stop();
+}
+
 
 
 // create a geojson feature for each hacker 
@@ -85,15 +113,17 @@ var featuresOfHackers = function() {
         "coordinates": [user.profile.location.lng, user.profile.location.lat]
       },
       "properties": {
-        "name": user.profile.name,
         "filter": "hackers",
-        "image": user.profile.picture
+        "title": user.profile.name,
+        "image": user.profile.picture,
+        "url": Router.routes['hacker'].path(user)
       },
     }
   }
 
   // select only users with specified location
   var selector = {
+    "city": Session.get('currentCity'),
     "profile.location.lat": {$type: 1}, 
     "profile.location.lng": {$type: 1}
   };
@@ -104,25 +134,22 @@ var featuresOfHackers = function() {
 var featuresOfPlaces = function() {
 
   // create geojson feature object
-  var feature = function(user) {
+  var feature = function(place) {
+    
     return {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [user.profile.location.lng + 0.1, user.profile.location.lat]
+        "coordinates": [place.location.lng, place.location.lat]
       },
       "properties": {
-        "name": user.profile.name,
-        "filter": "places"
+        "filter": "places",
+        "title": place.title,
+        "description": place.description,
+        "url": place.url
       },
     }
   }
 
-  // select only users with specified location
-  var selector = {
-    "profile.location.lat": {$type: 1}, 
-    "profile.location.lng": {$type: 1}
-  };
-  
-  return Users.find(selector).map(feature);
+  return Places.find({}).map(feature);
 }
