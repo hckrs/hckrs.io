@@ -3,9 +3,6 @@
 
 HighlightsController = DefaultController.extend({
   template: 'highlights',
-  onRun: function() { 
-    Interface.setHeaderStyle('fixed');
-  },
   waitOn: function() {
     var city = Session.get('currentCity');
     return [ Meteor.subscribe('highlights', city) ];
@@ -18,6 +15,9 @@ HighlightsController = DefaultController.extend({
     if (this.ready() && Highlights.find().count() === 0 && !(user.isAdmin || user.ambassador))
       Router.go('hackers');
     
+  },
+  onAfterAction: function() {
+    Interface.setHeaderStyle('fixed');
   }
 });
 

@@ -56,13 +56,27 @@ var checkCurrentCity = function() {
 
 // automatically activate page transitions after templates are loaded
 var initPageTransitions = function() {
+  
+  // disable animation when back-button from browser is pressed
+  var disableTransition = false;
+  window.addEventListener('popstate', function() {
+    disableTransition = true;
+    Meteor.setTimeout(function() { 
+      disableTransition = false; 
+    }, 500);
+  });
+
+  // animate route-transition after template is rendered
   _.each(Template, function(template, templateName) {
     var prevRenderFunc = template.rendered;
     template.rendered = function() {
-      if (prevRenderFunc) prevRenderFunc.call(this);
+      var self = this;
+      if (prevRenderFunc) prevRenderFunc.call(this);  
       Meteor.setTimeout(function() {
-        $(".route-transition").addClass('activated');
-      }, 200);
+        self.$(".route-transition").addClass('activated');
+        if (!disableTransition) 
+          self.$(".route-transition").addClass('animated');
+      }, 0);
     }
   });
 }

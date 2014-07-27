@@ -2,13 +2,13 @@
 
 PlacesController = DefaultController.extend({
   template: 'places',
-  onRun: function() {
-    Interface.setHeaderStyle('fixed');
-  },
   waitOn: function () {
     return [
       Meteor.subscribe('places')
     ];
+  },
+  onAfterAction: function() {
+    Interface.setHeaderStyle('fixed');
   }
 });
 
