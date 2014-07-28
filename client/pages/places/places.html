@@ -1,21 +1,57 @@
 <template name="places">
   <div id="places">
-  
-  	<div id="filters" class="filter-ui">
-  		<div>
-  			<label for="filter-hackers" class="checkbox">
-  				<input type="checkbox" id="filter-hackers" filter="hackers" checked>
-  				hackers
-  			</label>
-  		</div>
-  		<div>
-  			<label for="filter-places" class="checkbox">
-  				<input type="checkbox" id="filter-places" filter="places" checked> places
-  			</label>
-  		</div>
-  	</div>
-    
-    <div id="map" class="dark"></div>
+    <div id="placesMode" class="{{editMode}}">
 
+      {{#if hasAmbassadorPermission}}
+        {{#if state.equals 'edit' 'places'}}
+          {{> placesEditor}}
+        {{/if}}
+      {{/if}}
+    
+    	<div id="filters" class="filter-ui">
+        <div class="labels">
+      		<div>
+      			<label for="filter-hackers" class="checkbox">
+      				<input type="checkbox" id="filter-hackers" filter="hackers" checked>
+      				hackers
+      			</label>
+      		</div>
+      		<div>
+      			<label for="filter-places" class="checkbox">
+      				<input type="checkbox" id="filter-places" filter="places" checked> places
+              {{#if hasAmbassadorPermission}}
+                {{#unless editMode}}
+                  (<a href="#" action="edit" type="places">edit</a>)
+                {{/unless}}
+              {{/if}}
+      			</label>
+      		</div>
+          <div class="clear"></div>
+        </div>
+        <div class="caution-bar">
+          <button action="done" class="btn btn-mini btn-inverse">DONE</button>
+        </div>  
+    	</div>
+      
+      <div id="map" class="dark"></div>
+
+    </div>
+  </div>
+</template>
+
+<template name="placesEditor">
+  <div id="placesEditor">
+    <div class="form {{show}}">
+      {{#autoForm id="placesEditorForm" collection="Places" type="update" doc=selectedDoc}}
+        {{> afQuickField name='title'}}
+        {{> afQuickField name='description' rows="4"}}
+        {{> afQuickField name='url'}}
+        {{> afFieldInput name='location.lng' type="hidden"}}
+        {{> afFieldInput name='location.lat' type="hidden"}}
+        <a href="#" action="cancel" class="btn">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="#" action="remove" class="btn btn-danger pull-right">Delete</a>
+      {{/autoForm}}
+    </div>
   </div>
 </template>

@@ -6,7 +6,8 @@ Schemas.Place = new SimpleSchema([
   Schemas.city,
   {
     "title": {
-      type: String
+      type: String,
+      optional: true
     },
     "description": {
       type: String,

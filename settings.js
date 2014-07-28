@@ -29,4 +29,4 @@ Settings['firstNumberOfUsersAutoInvited'] = 10;
 SimpleSchema.debug = Settings['simpleSchemeDebug']
 
 if (Meteor.isClient)
-	AutoForm.setDefaultTemplate('bootstrap3-horizontal');
+	AutoForm.setDefaultTemplate('plain');
