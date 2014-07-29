@@ -162,6 +162,11 @@ Router.goToCity = function(city) {
 Router.routes['hacker'].path = function(user) {
   return user.isForeign ? "#" : "/"+user.localRankHash;
 }
+Router.routes['hacker'].url = function(user) {
+  var path = Router.routes['hacker'].path(user);
+  var url = Url.replaceCity(user.city, Meteor.absoluteUrl(Url.stripTrailingSlash(path)));
+  return url;
+}
 
 Router.routes['invite'].url = function(params) {
   return Meteor.absoluteUrl('+/' + params.phrase);
