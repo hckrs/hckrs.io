@@ -261,6 +261,10 @@ Template.hackerView.rendered = function() {
     var latlng = {lat: city.latitude, lng: city.longitude};
     initializeMap(this.find('#viewMap'), latlng, hacker(), false); // initialize map
   }
+
+  // render social follow buttons
+  FB.XFBML.parse();
+  twttr.widgets.load();
 }
 
 

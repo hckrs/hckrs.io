@@ -356,7 +356,8 @@
         Facebook
       </div>
       <div class="output">
-        <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>  
+        <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
+        <div class="fb-follow" data-href="{{profile.social.facebook}}" data-colorscheme="light" data-layout="button" data-show-faces="true"></div>
       </div>
       <div class="clear"></div>
     </div>
@@ -369,6 +370,7 @@
       </div>
       <div class="output">
         <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
+        <iframe src="http://ghbtns.com/github-btn.html?user={{profile.socialName.github}}&type=follow" allowtransparency="true" frameborder="0" scrolling="0" width="132" height="20" class="github-follow"></iframe>
       </div>
       <div class="clear"></div>
     </div>
@@ -381,6 +383,7 @@
       </div>
       <div class="output">
         <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
+        <a href="{{profile.social.twitter}}" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @jarnoleconte</a>
       </div>
       <div class="clear"></div>
     </div>
