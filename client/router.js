@@ -159,11 +159,11 @@ Router.goToCity = function(city) {
   window.location.href = Url.replaceCity(city, url);
 }
 
-Router.routes['hacker'].path = function(user) {
-  return user.isForeign ? "#" : "/"+user.localRankHash;
+Router.routes['hacker'].path = function(user, absolute) {
+  return user.isForeign && !absolute ? "#" : "/"+user.localRankHash;
 }
 Router.routes['hacker'].url = function(user) {
-  var path = Router.routes['hacker'].path(user);
+  var path = Router.routes['hacker'].path(user, true);
   var url = Url.replaceCity(user.city, Meteor.absoluteUrl(Url.stripTrailingSlash(path)));
   return url;
 }
