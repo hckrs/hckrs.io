@@ -1,5 +1,5 @@
 
-/* HIGHLIGHTS */
+/* PLACES */
 
 Schemas.Place = new SimpleSchema([
   Schemas.default,

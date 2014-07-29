@@ -406,6 +406,10 @@ Accounts.onCreateUser(function (options, user) {
   // extend user object with additional fetched user information
   user = extendUserByFetchingService(user, serviceName);
 
+  // additional fields
+  if (!user.emails)
+    user.emails = [];
+
   // find an existing user that probaly match this identity
   var existingUser = findExistingUser(user);  
 
