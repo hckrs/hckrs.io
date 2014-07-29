@@ -394,6 +394,9 @@ if (Meteor.isServer) {
     "profile.name",
     "profile.picture",
     "isHidden",
+    "isAccessDenied",
+    "isDeleted",
+    "mergedWith",
   ];
   var userFieldsData = [
     "createdAt",

@@ -327,11 +327,13 @@ if (Meteor.isClient) {
 
   UI.registerHelper('PictureViewLabel', function() {
     var user = this;
-    var label = "#"+user.localRank;
-    if (user.isHidden) label = "No Access";
-    else if (user.city && user.isForeign) label = CITYMAP[user.city].name;
-    else if (user.ambassador) label = "Ambassador";
-    return label;
+    if (user.mergedWith)             return "Merged with #"+Users.findOne(user.mergedWith).localRank;
+    if (user.isDeleted)              return "Deleted";
+    if (user.isAccessDenied)         return "No Access";
+    if (user.isHidden)               return "Hidden";
+    if (user.city && user.isForeign) return CITYMAP[user.city].name;
+    if (user.ambassador)             return "Ambassador";
+    else                             return "#"+user.localRank;
   });
 
   UI.registerHelper('foreign', function() {
