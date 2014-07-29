@@ -76,9 +76,14 @@ var allowedAccess = function() {
 
 // check if there are duplicate accounts, if so request for merge
 var checkDuplicateAccounts = function() {
-  if (Session.get('requestMergeDuplicateAccount')) {
+  var request = Session.get('requestMergeDuplicateAccount');
+  var currentRoute = Router.current().route.name;
+  
+  if (request && currentRoute !== 'mergeAccount')
     this.redirect('mergeAccount');
-  }
+  
+  if (!request && currentRoute === 'mergeAccount')
+    this.redirect(Router.routes['hacker'].path(Meteor.user()))
 }
 
 // scroll to hash element (when present in url)
@@ -106,11 +111,11 @@ Router.onRun(scrollToTop);
 Router.onRun(loginRequired, {except: noLoginRequired});
 Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 
+// check for duplicate accounts, if so request for merge
+Router.onBeforeAction(checkDuplicateAccounts, {except: noLoginRequired });
+
 // make sure that user is allowed to enter the site
 Router.onBeforeAction(allowedAccess, {except: ['hacker','mergeAccount'].concat(noLoginRequired) });
-
-// check for duplicate accounts, if so request for merge
-Router.onBeforeAction(checkDuplicateAccounts, {except: ['mergeAccount'].concat(noLoginRequired) });
 
 // log pageview to Google Analytics
 Router.onRun(GAnalytics.pageview);
