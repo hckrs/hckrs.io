@@ -63,12 +63,12 @@ var saveChangedField = function(event, cb) {
   var $elm = $(event.currentTarget); //input element
   var field = $elm.attr('name');
   var value = $elm.val();
-
+  
   // show feedback on input element
   addTemporaryClass($elm, 'saved');
 
   exec(function() {
-    var modifier = _.object([ '$set' ], [ _.object([field], [value]) ]);
+    var modifier = _.object([ value ? '$set' : '$unset' ], [ _.object([field], [value]) ]);
     Meteor.users.update(Meteor.userId(), modifier, cb);
   });
 }

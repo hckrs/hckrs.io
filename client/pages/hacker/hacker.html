@@ -218,7 +218,7 @@
       <label class="control-label" for="inputCompany">company / school</label>
       <div class="controls">
         <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-        <input type="text" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" id="inputCompanyUrl" /><br/>
+        <input type="url" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" id="inputCompanyUrl" /><br/>
         <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
           <div class="event-catch-overlay"></div>
           <div id="editMap" class="map"></div>
@@ -254,7 +254,7 @@
     <div class="control-group">
       <label class="control-label" for="inputHomepage">homepage</label>
       <div class="controls">
-        <input type="text" name="profile.homepage" class="text save" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
+        <input type="url" name="profile.homepage" class="text save" value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
       </div>
     </div>
 
