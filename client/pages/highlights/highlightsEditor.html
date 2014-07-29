@@ -3,19 +3,24 @@
 <template name="highlightsEditor">
   <div id="highlightsEditor">
     <div class="form {{show}}">
-      {{> quickForm id="highlightsEditorForm" collection="Highlights" type=mode doc=selectedDoc fields="title,subtitle,imageUrl,website,global"}}
+      {{#autoForm id="highlightsEditorForm" collection="Highlights" type=mode doc=selectedDoc}}
+      {{> afQuickField name="title"}}
+      {{> afQuickField name="subtitle"}}
+      {{> afQuickField name="imageUrl"}}
+      {{> afQuickField name="website"}}
+      {{> afQuickField name="global"}}
+      <a href="#" action="cancel" class="btn">Cancel</a>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="#" action="remove" class="btn btn-danger pull-right">Delete</a>
+      {{/autoForm}}
     </div>
     <div class="toolbar btn-toolbar">
       <div class="btn-group">
         <button class="btn" action="add"><span class="icon-plus"></span></button>
       </div>
       {{#if selectedHighlight}}
-      <div class="btn-group dropup">
-        <button class="btn" action="update"><span class="icon-pencil"></span> {{selectedHighlight.title}}</button>
-        <button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="#" action="remove"><span class="icon-trash"></span> remove</a></li>
-        </ul>
+      <div class="btn-group">
+        <button class="btn" action="update"><span class="icon-pencil"></span></button>
       </div>
       {{/if}}
     </div>

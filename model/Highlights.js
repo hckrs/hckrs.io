@@ -9,6 +9,9 @@ Schemas.Highlight = new SimpleSchema([
     "global": {
       type: Boolean
     },
+    "order": {
+      type: Number,
+    },
     "imageUrl": {
       type: String
     },
@@ -22,6 +25,7 @@ Schemas.Highlight = new SimpleSchema([
     "website": {
       type: String,
       optional: true,
+      regEx: SimpleSchema.RegEx.Url,
       autoValue: AutoValue.prefixUrlWithHTTP
     }
   }

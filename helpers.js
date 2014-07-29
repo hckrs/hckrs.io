@@ -243,6 +243,15 @@ if (Meteor.isClient) {
   }
 
 
+  /* permission */
+  
+  hasAmbassadorPermission = function() {
+    return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
+  };
+
+  hasAdminPermission = function() {
+    return Meteor.user().isAdmin;
+  }
   
 
   // return the class name(s) if predicate holds
@@ -341,11 +350,11 @@ if (Meteor.isClient) {
   });
 
   UI.registerHelper('hasAmbassadorPermission', function() {
-    return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
+    return hasAmbassadorPermission();
   })
 
   UI.registerHelper('hasAdminPermission', function() {
-    return Meteor.user().isAdmin;
+    return hasAdminPermission();
   })
 }
 

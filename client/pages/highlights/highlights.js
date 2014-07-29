@@ -28,7 +28,7 @@ HighlightsController = DefaultController.extend({
 // feed templates with data
 
 var highlights = function() {
-  return Highlights.find({}, {sort: {createdAt: -1}}).fetch()
+  return Highlights.find({}, {sort: {order: 1}}).fetch()
 }
 
 Template.highlights.helpers({
@@ -72,7 +72,7 @@ var setupOnePageScroll = function() {
 
   var setSelectedHighlight = function(index) {
     var data = highlights();
-    Session.set('selectedHighlight', data && data[index]);
+    Session.set('selectedHighlightId', data && data[index]._id);
   }
 
   var $onePageScroll = $("#onePageScroll").onepage_scroll({
@@ -89,6 +89,9 @@ var setupOnePageScroll = function() {
       setSelectedHighlight(index);
     }
   });
+
+  if (hasAmbassadorPermission())
+    HighlightEditor.initSortable();
 
   setSelectedHighlight(0);
   buttonVisibility(0);
