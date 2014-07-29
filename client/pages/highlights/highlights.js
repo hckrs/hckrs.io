@@ -1,18 +1,33 @@
 
+// get sorted highlights
+HighlightsSorted = function() {
+  var city = Session.get('currentCity');
+  var moderator = Meteor.user().isAdmin || Meteor.user().ambassador;
+  var sort = (HighlightsSort.findOne({city: city}) || {}).sort || [];
+  var selector = moderator ? {} : {hiddenIn: {$ne: city}};
+  return _.sortBy(Highlights.find(selector).fetch(), function(highlight) {
+    return _.indexOf(sort, highlight._id);
+  });
+}
+
+
 // Route Controller
 
 HighlightsController = DefaultController.extend({
   template: 'highlights',
   waitOn: function() {
     var city = Session.get('currentCity');
-    return [ Meteor.subscribe('highlights', city) ];
+    return [ 
+      Meteor.subscribe('highlights', city),
+      Meteor.subscribe('highlightsSort', city),
+    ];
   },
   onBeforeAction: function() {
     var user = Meteor.user();
 
     // redirect to hackers page if there are no highlights
     // except for ambassadors and admins
-    if (this.ready() && Highlights.find().count() === 0 && !(user.isAdmin || user.ambassador))
+    if (this.ready() && HighlightsSorted().length === 0 && !(user.isAdmin || user.ambassador))
       Router.go('hackers');
     
   },
@@ -24,16 +39,13 @@ HighlightsController = DefaultController.extend({
 
 
 
+
 // TEMPLATE DATA
 // feed templates with data
 
-var highlights = function() {
-  return Highlights.find({}, {sort: {order: 1}}).fetch()
-}
-
 Template.highlights.helpers({
   'highlights': function() {
-    return highlights();
+    return HighlightsSorted();
   }
 });
 
@@ -71,8 +83,8 @@ var setupOnePageScroll = function() {
   }
 
   var setSelectedHighlight = function(index) {
-    var data = highlights();
-    Session.set('selectedHighlightId', data && data[index]._id);
+    var data = HighlightsSorted();
+    Session.set('selectedHighlightId', data && data[index] && data[index]._id);
   }
 
   var $onePageScroll = $("#onePageScroll").onepage_scroll({
@@ -90,6 +102,7 @@ var setupOnePageScroll = function() {
     }
   });
 
+  // make sortable for ambassadors
   if (hasAmbassadorPermission())
     HighlightEditor.initSortable();
 
@@ -103,10 +116,18 @@ var setupOnePageScroll = function() {
 
 Template.highlights.rendered = function() {
   this.onePageScroll = setupOnePageScroll();  
+  
+  var initialized = false;
+  this.observer = Highlights.find().observe({
+    'added': function() { if (initialized) Router.reload(); },
+    'removed': function() { Router.reload(); }
+  });
+  initialized = true;
 }
 
 Template.highlights.destroyed = function() {
   this.onePageScroll.disable();
+  this.observer.stop();
 }
 
 

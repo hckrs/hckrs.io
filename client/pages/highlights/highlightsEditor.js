@@ -5,7 +5,10 @@ Session.set('showHighlightsEditorForm', false)
 
 Template.highlightsEditor.helpers({
 	show: function() {
-		return Session.get('showHighlightsEditorForm') ? '' : 'hide';
+		var show = Session.get('showHighlightsEditorForm');
+		var selected = Highlights.findOne(Session.get('selectedHighlightId')) || {};
+		var mode = Session.get('highlightsEditorFormMode');
+		return show && !(selected.isForeign && mode === 'update') ? '' : 'hide';
 	},
 	mode: function() {
 		return Session.get('highlightsEditorFormMode');
@@ -17,6 +20,10 @@ Template.highlightsEditor.helpers({
 	},
   'selectedHighlight': function() { 
     return Highlights.findOne(Session.get('selectedHighlightId'))
+  },
+  hiddenHighlight: function() {
+  	var city = Session.get('currentCity');
+  	return !!Highlights.findOne({_id: Session.get('selectedHighlightId'), hiddenIn: city});
   }
 });
 
@@ -38,14 +45,18 @@ Template.highlightsEditor.events({
 	"click [action='remove']": function() {
 		Highlights.remove(Session.get('selectedHighlightId'))
 		Session.set('showHighlightsEditorForm', false)
-		Router.reload();
-	}
+	},
+	"click [action='visibility']": function(evt) {
+		var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
+		var city = Session.get('currentCity');
+		var selectedId = Session.get('selectedHighlightId');
+		Highlights.update(selectedId, _.object([action], [{hiddenIn: city}]));
+	},
 })
 
 AutoForm.addHooks('highlightsEditorForm', {
-	onSuccess: function() {
+	onSuccess: function(operation) {
 		Session.set('showHighlightsEditorForm', false)
-		Router.reload();
 	}
 });
 
@@ -56,12 +67,10 @@ var resetForm = function() {
 	Session.set('selectedHighlightId', selected)
 }
 
-var saveOrder = function(order) {
-	Highlights.find({}, {sort: {order: 1}}).forEach(function(highlight, i) {
-		var newIndex = _.indexOf(order, i+1) + 1;
-		Highlights.update(highlight._id, {$set: {order: newIndex}});
+var updateSort = function(sort) {
+	Meteor.call('updateHighlightsSort', sort, function(err) {
+		if (!err) Router.reload();
 	});
-	Router.reload();
 }
 
 
@@ -71,12 +80,24 @@ HighlightEditor = {}
 
 // init jquery sortable
 HighlightEditor.initSortable = function() {
-	$(".onepage-pagination").addClass('draggable').sortable({ 
+	var $pagenation = $(".onepage-pagination");
+
+	// add cursor class
+	$pagenation.addClass('draggable');
+
+	// set highlight id attributes on pagenation circles
+  var ids = _.pluck(HighlightsSorted(), '_id');
+  $pagenation.find("li").each(function(i) { 
+    $(this).attr('data-id', ids[i]); 
+  });
+
+  // init sortable
+	$pagenation.sortable({ 
     axis: "y",
     cursor: 'move', 
     stop: function(event, ui) {
-      var indices = $(".onepage-pagination a").map(function() { return $(this).data('index'); });
-      saveOrder(_.toArray(indices));
+    	var sort = $pagenation.sortable('toArray', {attribute: 'data-id'});
+      updateSort(sort);
     }
   });
 }

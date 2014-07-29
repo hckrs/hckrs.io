@@ -19,9 +19,19 @@
         <button class="btn" action="add"><span class="icon-plus"></span></button>
       </div>
       {{#if selectedHighlight}}
-      <div class="btn-group">
-        <button class="btn" action="update"><span class="icon-pencil"></span></button>
-      </div>
+        {{#if selectedHighlight.isForeign}}
+          <div class="btn-group">
+            {{#if hiddenHighlight}}
+              <button class="btn disabled" action="visibility" toggle="on"><span class="icon icon-eye-close"></span> Hidden</button>
+            {{else}}
+              <button class="btn" action="visibility" toggle="off"><span class="icon icon-ban-circle"></span> Hide</button>
+            {{/if}}
+          </div>
+        {{else}}
+          <div class="btn-group">
+            <button class="btn" action="update"><span class="icon-pencil"></span> Edit</button>
+          </div>
+        {{/if}}
       {{/if}}
     </div>
   </div>
