@@ -13,8 +13,8 @@ Schemas.default = new SimpleSchema({
     type: Date,
     autoValue: function() {
       if (this.isUpdate) return new Date();
+      this.unset();
     },
-    denyInsert: true,
     optional: true
   }
 });

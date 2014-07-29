@@ -353,7 +353,7 @@ var mergeUsers = function(user, existingUser) {
   var mergedUserData = mergeUserData(surviveUser, zombieUser);
   removeUser(zombieUser._id);
   Meteor.users.update(zombieUser._id, {$set: {mergedWith: surviveUser._id}});
-  Meteor.users.update(surviveUser._id, mergedUserData);
+  Meteor.users.update(surviveUser._id, mergedUserData, {validate: false});
 
   // replace all userID references in other collections
   Invitations.update({broadcastUser: zombieUser._id}, {$set: {broadcastUser: surviveUser._id}}, {multi: true});
@@ -641,7 +641,7 @@ var addServiceToCurrentUser = function(token, secret, service) {
   } else {
 
     // only add the new service data to this user
-    Meteor.users.update(userId, extendedUser);
+    Meteor.users.update(userId, extendedUser, {validate: false});
 
   }
 }
