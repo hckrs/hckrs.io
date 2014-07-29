@@ -57,14 +57,23 @@ SendEmailsOnNewUser = function(userId) {
   var toAdmin = _.difference(_.compact(Users.find({"isAdmin": true}).map(function(u) { return u.profile.email; })), toAmbassadors);
   var userEmail = user.profile.email;
 
+  var status = [];
+  if (!userEmail)
+    status.push("No e-mailaddress given (yet).")
+  if (!user.profile.name)
+    status.push("No name given (yet).")
+  if (user.isUninvited)
+    status.push("Not invited (yet).")
+
   var email = {};
   email.to = toAmbassadors;
-  email.bcc = toAdmin;
+  email.cc = toAdmin;
   email.from = siteFrom;
+  email.replyTo = userEmail;
   email.subject = "New hacker on " + cityHost;
   email.text = "Hacker '" + user.profile.name + "' joined " + cityHost + ".\n\n" + cityUrl;
-  if (userEmail)
-    email.replyTo = userEmail;
+  if (status.length)
+    email.text += "\n\nStatus:\n" + status.join("\n");  
   
   // send to admins and ambassadors of city
   Email.send(email);
