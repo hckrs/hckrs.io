@@ -148,7 +148,12 @@
       {{#each countries}}
         <optgroup label="{{name}}">
           {{#each cities}}
-            <option value="{{key}}" {{selected key}}>{{name}}</option>
+            <option value="{{key}}" {{selected key}}>
+              {{name}}
+              {{#if hackersCount key}}
+                 &nbsp;({{hackersCount key}})
+              {{/if}}
+            </option>
           {{/each}}
         </optgroup>
       {{/each}}

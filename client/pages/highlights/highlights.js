@@ -103,7 +103,8 @@ var setupOnePageScroll = function() {
   });
 
   // make sortable for ambassadors
-  if (hasAmbassadorPermission())
+  var city = Session.get('currentCity');
+  if (hasAmbassadorPermission(city))
     HighlightEditor.initSortable();
 
   setSelectedHighlight(0);

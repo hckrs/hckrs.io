@@ -195,11 +195,14 @@ getCityLocation = function(city) {
 
 /* permission */
   
-hasAmbassadorPermission = function() {
-  return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
+hasAmbassadorPermission = function(city) {
+  if (!Meteor.user()) return false;
+  var isAmbassador = Meteor.user().ambassador && (!city || Meteor.user().city === city);
+  return hasAdminPermission() || isAmbassador;
 };
 
 hasAdminPermission = function() {
+  if (!Meteor.user()) return false;
   return Meteor.user().isAdmin;
 }
 

@@ -95,6 +95,10 @@ Template.citySelect.helpers({
   },
   "selected": function(city) {
     return Session.equals('currentCity', city) ? 'selected' : '';
+  },
+  "hackersCount": function(city) {
+    var count = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
+    return hasAdminPermission() && count ? count : ""; 
   }
 });
 
