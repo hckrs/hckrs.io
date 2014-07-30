@@ -88,18 +88,33 @@ Template.main.rendered = function() {
 
 Template.citySelect.helpers({
   "countries": function() {
-    var countries = _.map(COUNTRYMAP, function(cities, code) {
-      return { name: COUNTRYCODES[code] || "Other", cities: cities };
-    });
-    return _.sortBy(countries, 'name');
+    
+    var createCityEntry = _.identity;
+
+    // if (hasAdminPermission()) {
+    //   var users = Users.find({}, {fields: {city: true}, reactive: false}).fetch();
+    //   var visibleUsers = Users.find({isHidden: {$ne: true}}, {fields: {city: true}, reactive: false}).fetch();
+    //   var cityCount = _.countBy(users, 'city');
+    //   var cityVisibleCount = _.countBy(visibleUsers, 'city');
+    
+    //   createCityEntry = function(city) {
+    //     city.usersCount = cityCount[city.key];
+    //     city.visibleUsersCount = cityVisibleCount[city.key];
+    //     return city;
+    //   }
+    // }
+    
+    var createCountryEntry = function(cities, countryCode) {
+      return { 
+        "name": COUNTRYCODES[countryCode] || "Other", 
+        "cities": _.map(cities, createCityEntry)
+      };
+    }
+
+    return _.sortBy(_.map(COUNTRYMAP, createCountryEntry), 'name');
   },
   "selected": function(city) {
     return Session.equals('currentCity', city) ? 'selected' : '';
-  },
-  "hackersCount": function(city) {
-    var count = Meteor.users.find({city: city}).count();
-    var visible = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
-    return hasAdminPermission() && count ? {count: count, visible: visible} : ""; 
   }
 });
 

@@ -72,10 +72,9 @@
        
         <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
        
-        {{#with currentUser}}
-          
+         
           <div class="menu">
-            {{#unless isAccessDenied}}
+            {{#unless UserProp 'isAccessDenied'}}
               
               <div class="menu-item">
                 <a href="{{pathFor 'hackers'}}">hackers</a>
@@ -99,13 +98,13 @@
                 <a href="{{pathFor 'books'}}">books</a>
               </div>
 
-              {{#if ambassador}}
+              {{#if hasAmbassadorPermission}}
               <div class="menu-item">
                 <a href="{{pathFor 'ambassador'}}" class="menu-item">ambassador</a>
               </div>
               {{/if}}
 
-              {{#if isAdmin}}
+              {{#if hasAdminPermission}}
               <div class="menu-item">
                 {{> citySelect}}
               </div>
@@ -115,23 +114,20 @@
           </div>
           
           <div class="account">
-            <!--<div class="karma">67</div>-->
             <div class="dropdown">
-              <a href="{{pathFor 'hacker'}}" class="dropdown-toggle" data-toggle="dropdown">
-                <div style="background-image:url({{profile.picture}});" class="pictureView small clickable"></div>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <div style="background-image:url({{UserProp 'profile.picture'}});" class="pictureView small clickable"></div>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="{{pathFor 'hacker'}}"><i class="icon-user"></i> {{profile.name}}</a></li>
-                {{#unless isAccessDenied}}
-                  <li><a href="{{pathFor 'invitations'}}"><i class="icon-plus"></i> invite hackers ({{currentUser.invitations}})</a></li>
+                <li><a href="{{pathFor 'hacker' _id=CurrentUserId}}"><i class="icon-user"></i> {{UserProp 'profile.name'}}</a></li>
+                {{#unless UserProp 'isAccessDenied'}}
+                  <li><a href="{{pathFor 'invitations'}}"><i class="icon-plus"></i> invite hackers ({{UserProp 'invitations'}})</a></li>
                 {{/unless}}
                 <li class="divider"></li>
                 <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
               </ul>
             </div>
           </div>
-        
-        {{/with}}
 
         <div class="clear"></div>
       </div>
@@ -150,10 +146,8 @@
           {{#each cities}}
             <option value="{{key}}" {{selected key}}>
               {{name}}
-              {{#if hackersCount key}}
-              {{#with hackersCount key}}
-                 &nbsp;({{visible}} / {{count}}) 
-              {{/with}}
+              {{#if usersCount}}
+                 ({{visibleUsersCount}} / {{usersCount}}) 
               {{/if}}
             </option>
           {{/each}}
