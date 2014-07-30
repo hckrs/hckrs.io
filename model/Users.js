@@ -300,6 +300,7 @@ if (Meteor.isClient) {
 
 
 
+
 /* Permissions */
 
 // meteor allow users to update their public profiles
@@ -606,4 +607,67 @@ if (Meteor.isServer) {
 
 
 
+
+/* QUERY - helpers */
+
+// get some property for a user without other reactive dependencies
+// get single value using e.g. OtherUserProp('isAdmin') => Boolean
+OtherUserProp = function(userId, field, options) {
+  var mainField = field.split('.')[0];
+  var opt = {fields: _.object([mainField], [true])};
+  var user = Meteor.users.findOne(userId, _.extend(options || {}, opt));
+  return pathValue(user, field); 
+}
+
+// pick some data from a user without all reactive dependencies
+// get obj including fields using e.g. OtherUserProps(['isAdmin','city']) => {_id:..., city:... ,isAdmin:...}
+OtherUserProps = function(userId, fields, options) {
+  var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};
+  return Meteor.users.findOne(userId, _.extend(options || {}, opt));
+}
+
+// get some property from Meteor.user() without other reactive dependencies
+// get single value using e.g. UserProp('isAdmin') => Boolean
+UserProp = function(field, options) {
+  return OtherUserProp(Meteor.userId(), field, options);
+}
+
+// pick some data from Meteor.user() without all reactive dependencies
+// get obj including fields using e.g. UserProps(['isAdmin','city']) => {_id:..., city:... ,isAdmin:...}
+UserProps = function(fields, options) {
+  return OtherUserProps(Meteor.userId(), fields, options)
+}
+
+UI.registerHelper('UserProp', function(prop) {
+  return UserProp(prop);
+});
+UI.registerHelper('UserProps', function(props) {
+  return UserProps(props);
+});
+
+
+/* data helpers */
+
+isAdmin = function(userId) {
+  userId = userId || Meteor.userId();
+  return OtherUserProp(userId, 'isAdmin');
+}
+isAmbassador = function(userId, city) {
+  userId = userId || Meteor.userId();
+  city = city || (Session && Session.get('currentCity')) || UserProp('currentCity');
+  return !!OtherUserProp(userId, 'ambassador') && OtherUserProp(userId, 'city') === city;
+}
+hasAdminPermission = function(userId) {
+  return isAdmin(userId);
+}
+hasAmbassadorPermission = function(userId, city) {
+  return hasAdminPermission(userId) || isAmbassador(userId, city);
+}
+
+UI.registerHelper('hasAmbassadorPermission', function() {
+  return hasAmbassadorPermission();
+})
+UI.registerHelper('hasAdminPermission', function() {
+  return hasAdminPermission();
+})
 

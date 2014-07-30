@@ -100,7 +100,7 @@ convertToCurrency = function(value) {
 // that means that doc is created in an other city
 // with respect to the current city subdomain
 isForeign = function(doc) {
-  var city = Meteor.isClient ? Session.get('currentCity') : Meteor.user() && Meteor.user().currentCity;
+  var city = Meteor.isClient ? Session.get('currentCity') : UserProp('currentCity');
   return !city || !doc.city || city !== doc.city;
 }
 
@@ -193,18 +193,12 @@ getCityLocation = function(city) {
 }
 
 
-/* permission */
-  
-hasAmbassadorPermission = function(city) {
-  if (!Meteor.user()) return false;
-  var isAmbassador = Meteor.user().ambassador && (!city || Meteor.user().city === city);
-  return hasAdminPermission() || isAmbassador;
-};
 
-hasAdminPermission = function() {
-  if (!Meteor.user()) return false;
-  return Meteor.user().isAdmin;
-}
+
+
+
+
+
 
 
 // CLIENT ONLY
@@ -280,6 +274,10 @@ if (Meteor.isClient) {
     return Settings['environment'];
   });  
 
+  UI.registerHelper('CurrentUserId', function() {
+    return Meteor.userId();
+  });
+
   // template helper to use the value of a Session variable directly in the template
   UI.registerHelper('Session', function(key) {
     return Session.get(key);
@@ -352,13 +350,6 @@ if (Meteor.isClient) {
     return this.isForeign ? {foreign: "", disabled: ""} : '';
   });
 
-  UI.registerHelper('hasAmbassadorPermission', function() {
-    return hasAmbassadorPermission();
-  })
-
-  UI.registerHelper('hasAdminPermission', function() {
-    return hasAdminPermission();
-  })
 }
 
 

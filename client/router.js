@@ -69,8 +69,8 @@ var loginRequired = function() {
 
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
-  if(Meteor.user() && Meteor.user().isAccessDenied) {
-    this.redirect('hacker', Meteor.user()); 
+  if(UserProp('isAccessDenied')) {
+    this.redirect('hacker', Meteor.userId()); 
   }
 }
 
@@ -83,7 +83,7 @@ var checkDuplicateAccounts = function() {
     this.redirect('mergeAccount');
   
   if (!request && currentRoute === 'mergeAccount')
-    this.redirect(Router.routes['hacker'].path(Meteor.user()))
+    this.redirect('hacker', Meteor.userId());
 }
 
 // scroll to hash element (when present in url)
@@ -167,7 +167,9 @@ Router.goToCity = function(city) {
   window.location.href = Url.replaceCity(city, url);
 }
 
-Router.routes['hacker'].path = function(user) {
+Router.routes['hacker'].path = function(userId) {
+  if (_.isObject(userId)) userId = userId._id;
+  var user = OtherUserProps(userId, ['isForeign','localRankHash','localRank','city']) || {};
   return user.isForeign ? "#" : "/"+user.localRankHash;
 }
 
