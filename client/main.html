@@ -151,7 +151,9 @@
             <option value="{{key}}" {{selected key}}>
               {{name}}
               {{#if hackersCount key}}
-                 &nbsp;({{hackersCount key}})
+              {{#with hackersCount key}}
+                 &nbsp;({{visible}} / {{count}}) 
+              {{/with}}
               {{/if}}
             </option>
           {{/each}}

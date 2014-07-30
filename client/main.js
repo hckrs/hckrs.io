@@ -98,7 +98,8 @@ Template.citySelect.helpers({
   },
   "hackersCount": function(city) {
     var count = Meteor.users.find({city: city}).count();
-    return hasAdminPermission() && count ? count : ""; 
+    var visible = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
+    return hasAdminPermission() && count ? {count: count, visible: visible} : ""; 
   }
 });
 
