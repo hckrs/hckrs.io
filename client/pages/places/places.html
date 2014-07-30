@@ -21,7 +21,7 @@
       				<input type="checkbox" id="filter-places" filter="places" checked> places
               {{#if hasAmbassadorPermission}}
                 {{#unless editMode}}
-                  (<a href="#" action="edit" type="places">edit</a>)
+                  &nbsp;&bull;&nbsp;&nbsp;<a href="#" action="edit" type="places">edit</a>
                 {{/unless}}
               {{/if}}
       			</label>
@@ -29,7 +29,7 @@
           <div class="clear"></div>
         </div>
         <div class="caution-bar">
-          <button action="done" class="btn btn-mini btn-inverse">DONE</button>
+          <button action="done" class="btn btn-mini btn-inverse">Done</button>
         </div>  
     	</div>
       
@@ -49,9 +49,11 @@
         {{> afQuickField name='type'}}
         {{> afFieldInput name='location.lng' type="hidden"}}
         {{> afFieldInput name='location.lat' type="hidden"}}
-        <a href="#" action="cancel" class="btn">Cancel</a>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="#" action="remove" class="btn btn-danger pull-right">Delete</a>
+        <div class="buttons">
+          <button type="submit" class="btn btn-small btn-primary">Save</button>
+          <a href="#" action="remove" class="btn btn-small btn-inverse light pull-right">Delete</a>
+          <a href="#" action="cancel" class="btn btn-small btn-inverse light pull-right">Cancel</a>
+        </div>
       {{/autoForm}}
     </div>
   </div>

@@ -19,10 +19,12 @@
     margin: 105px 10px;
     opacity: 0.8;
     background-color: #111;
+    padding: 0px;
+    border: 0px;
+    border-radius: 0px;
   }
 
   .leaflet-control-zoo:hover {
-    opacity: 0.1;
   }
 
   .leaflet-container.dark .leaflet-bar a{
@@ -30,22 +32,24 @@
   }
 
   .leaflet-container.dark .leaflet-bar a:active, .leaflet-container.dark .leaflet-bar a:hover {
-    background-color: rgba(255,255,255,0.1);
+    background-color: #282828;
   }
 
   .leaflet-bar a{
     border-radius: 0px;
+    padding: 0px;
+    margin: 0px;
   }
 
   .filter-ui {
-    background: rgba(30,30,30,0.4);
+    background: rgba(0,0,0,0.3);
     position: absolute;
-    z-index: 100;
-    top: 100px;
-    right: 10px;
-    width: 170px;
+    z-index: 10;
+    top: 93px;
+    right: 0px;
+    width: 210px;
     .labels {
-      margin: 10px;  
+      margin: 32px;  
     }
   }
   
@@ -61,6 +65,7 @@
     margin-top: 0px;
     background: url(/img/caution-bar.png);
     background-size: cover;
+
     button {
       float: right;
       border-radius: 0px;
@@ -84,15 +89,20 @@
 #placesEditor {
   position: absolute;
   z-index: 2;
-  bottom: 20px;
-  left: 20px;
+  bottom: 0px;
+  right: 0px;
 
   .form {
-    color: black;
-    background-color: rgba(255,255,255,0.4);
-    width: 400px;
+    color: #fff;
+    background-color: rgba(0,0,0,0.3);
+    width: 220px;
+    padding: 28px 27px 64px 28px;
     .help-block {
       color: #ee0000; /* error */
+    }
+    .buttons{
+      margin-top: 24px;
+      margin-right: 3px;
     }
   }
 }
