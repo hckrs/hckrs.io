@@ -7,6 +7,7 @@ PLACE_TYPE_OPTIONS = [
   {value: "coworking", label: "Coworking Space"},
   {value: "hackerspace", label: "Hacker Space"},
   {value: "incubator", label: "Incubator"},
+  {value: "other", label: "Other"},
 ]
 
 

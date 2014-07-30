@@ -4,11 +4,12 @@ var map, featureLayer;
 var state = new State("places", {
   city: undefined,          // String
   location: undefined,      // Object {lat: Number, lng, Number}
-  zoom: 11,                 // Number
+  zoom: 13,                 // Number
   edit: null,               // String?
   selected: null,           // Object? {filter: String, id: String}
 });
 
+var zoomLevelPictures = 14;
 
 
 // Route Controller
@@ -92,11 +93,13 @@ Template.places.rendered = function() {
 
   // Observers
 
+  var initialized = false;
   this.dataObserver = Places.find({}).observeChanges({
-    'added': reload,
-    'changed': reload,
-    'removed': reload
+    'added': function() { if (initialized) reload(); },
+    'changed': function() { if (initialized) reload(); },
+    'removed': function() { if (initialized) reload(); }
   });
+  initialized = true;
 
   this.editObserver = state.observe('edit', function(mode) {
     reload();
@@ -104,7 +107,8 @@ Template.places.rendered = function() {
     clear();
   });
 
-  this.selectedObserver = state.observe('selected', function() {
+  this.selectedObserver = state.observe('selected', function(selected) {
+    openFeaturePopup(featureLayer, selected);
     clear();
   });
 
@@ -143,7 +147,17 @@ var setupMap = function() {
     state.set('location', map.getCenter())
   });
   map.on('zoomend', function(e) { // save zoom state
-    state.set('zoom', map.getZoom())
+    var prevZoom = state.get('zoom');
+    var newZoom = map.getZoom();
+    
+    // save zoom level
+    state.set('zoom', newZoom)
+
+    // reload data when certain zoom level is passed
+    if (newZoom < zoomLevelPictures && zoomLevelPictures <= prevZoom
+      || newZoom >= zoomLevelPictures && zoomLevelPictures > prevZoom) {
+      reload(); 
+    }
   });
 
   return map;
@@ -156,13 +170,15 @@ var setupFeatureLayer = function(map) {
 
   // icon based on feature properties
   featureLayer.on('layeradd', function(e) {
+    var marker = e.layer;
+    var props = marker.feature.properties;
+    var type = props.type;
     
-    if (e.layer.feature.properties.filter === 'places') {
+    if (props.filter === 'places') {
 
       // places marker
-      var type = e.layer.feature.properties.type;
       if (type) {
-        e.layer.setIcon(L.icon({
+        marker.setIcon(L.icon({
           iconUrl:      "/img/markers/"+type+".png",
           className:    "marker-place marker-"+type,
           iconSize:     [27, 40], // size of the icon
@@ -171,17 +187,21 @@ var setupFeatureLayer = function(map) {
         }));
       }
     
-    } else if (e.layer.feature.properties.filter === 'hackers') {
+    } else if (props.filter === 'hackers') {
+      
+      if (state.get('zoom') >= zoomLevelPictures && props.image) { // show picture
 
-      // hacker image
-      if (e.layer.feature.properties.image) {
-        e.layer.setIcon(L.icon({
-          iconUrl:      e.layer.feature.properties.image,
+        // hacker image
+        marker.setIcon(L.icon({
+          iconUrl:      props.image,
           className:    "marker-hacker",
           iconSize:     [40, 40], // size of the icon
           iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
           popupAnchor:  [0, -20] // point from which the popup should open relative to the iconAnchor
         }));
+
+      } else {
+        marker.setOpacity(0.5);
       }
     }
   });
@@ -211,6 +231,16 @@ var setupFilters = function(featureLayer, $) {
 
   // initial call
   updateFilters();
+}
+
+var openFeaturePopup = function(featureLayer, selected) {
+  featureLayer.eachLayer(function(marker) {
+    var props = marker.feature.properties;
+    if (selected && selected.id === props.id)
+      marker.openPopup();
+    else
+      marker.closePopup();
+  });
 }
 
 
@@ -290,9 +320,11 @@ var setEditEvents = function(map, featureLayer) {
     
   });
   featureLayer.on('mouseover', function(e) {
+    if (state.get('selected')) return;
     e.layer.openPopup();
   });
   featureLayer.on('mouseout', function(e) {
+    if (state.get('selected')) return;
     e.layer.closePopup();
   });
   featureLayer.on('click', function(e) {
@@ -341,7 +373,10 @@ var hackersFeatures = function() {
         "title": user.profile.name,
         "image": user.profile.picture,
         "url": Router.routes['hacker'].path(user),
-        "id": user._id
+        "id": user._id,
+        // "marker-symbol": "marker-stroked",
+        "marker-size": "small",
+        "marker-color": "#fff",
       },
     };
   });
