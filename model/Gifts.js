@@ -6,27 +6,33 @@ Schemas.Gifts = new SimpleSchema([
   Schemas.city,
   {
     "global": {
-      type: Boolean
+      type: Boolean,
+      label: 'Show in all citys'
     },
     "title": {
-      type: String
+      type: String,
+      label: 'Discount description'
     },
     "description": {
       type: String,
-      optional: true
+      optional: true,
+      label: 'Extra information'
     },
     "websiteUrl": {
       type: String,
       optional: true,
-      autoValue: AutoValue.prefixUrlWithHTTP
+      autoValue: AutoValue.prefixUrlWithHTTP,
+      label: 'Website / redeem URL'
     },
     "websiteName": {
       type: String,
-      optional: true
+      optional: true,
+      label: 'Company'
     },
     "code": {
       type: String,
-      optional: true
+      optional: true,
+      label: 'Discount code'
     },
     "hiddenIn": {
       type: [String],

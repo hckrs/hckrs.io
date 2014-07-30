@@ -4,7 +4,7 @@
     {{#if isEmpty}}
       <h2>No gifts right now</h2>
     {{else}}
-      <H2>Gifts from our partners</h2>
+      <H2>Discounts</h2>
       <div id="giftsContainer">
         {{#each gifts}}
           {{#if editMode}}
@@ -32,13 +32,13 @@
         <div class="btn-group">
           {{#if isForeign}}
             {{#if hiddenGift}}
-              <button class="btn disabled" action="visibility" toggle="on" data-id="{{_id}}"><span class="icon icon-eye-close"></span> Hidden</button>
+              <button class="btn disabled btn-mini btn-inverse light" action="visibility" toggle="on" data-id="{{_id}}"><span class="icon icon-white icon-eye-close"></span> Hidden</button>
             {{else}}
-              <button class="btn" action="visibility" toggle="off" data-id="{{_id}}"><span class="icon icon-ban-circle"></span> Hide</button>
+              <button class="btn btn-mini btn-inverse light" action="visibility" toggle="off" data-id="{{_id}}"><span class="icon icon-white icon-ban-circle"></span> Hide</button>
             {{/if}}
           {{else}}
-            <button class="btn" action="edit" data-gift="{{_id}}"><span class="icon-pencil"></span></button>
-            <button class="btn" action="remove" data-gift="{{_id}}"><span class="icon-trash"></span></button>
+            <button class="btn btn-mini btn-inverse light" action="edit" data-gift="{{_id}}"><span class="icon icon-white icon-pencil"></span></button>
+            <button class="btn btn-mini btn-inverse light" action="remove" data-gift="{{_id}}"><span class="icon icon-white icon-trash "></span></button>
           {{/if}}
         </div>
       </div>
@@ -56,7 +56,7 @@
         {{#if equals codeType "url"}}
           <a href="{{code}}" target="_blank">{{code}}</a>
         {{else}}
-          <div class="code">{{code}}</div>
+          <span class="code highlighted">{{code}}</span>
         {{/if}}
       {{/if}}
     </p>
@@ -65,17 +65,17 @@
 
 <template name="giftEdit">
   <div class="gift-edit area">
-    {{> quickForm id="giftEditForm" collection="Gifts" type="update" doc=this fields="title,description,websiteUrl,websiteName,code,global"}}
-    <button class="btn" action="cancel">Cancel</button>
+    {{> quickForm id="giftEditForm" collection="Gifts" type="update" buttonClasses="btn btn-primary" doc=this fields="title,description,websiteUrl,websiteName,code,global"}}
+    <button class="btn btn-inverse" action="cancel">Cancel</button>
   </div>
 </template>
 
 <template name="giftAdd">
   <div id="giftAdd" class="{{show}}">
-    {{> quickForm id="giftAddForm" collection="Gifts" type="insert" fields="title,description,websiteUrl,websiteName,code,global"}}
+    {{> quickForm id="giftAddForm" collection="Gifts" type="insert" buttonClasses="btn btn-primary" fields="title,description,websiteUrl,websiteName,code,global"}}
   </div>
   {{#if hidden}}
-    <button class="btn" action="add"><span class="icon-plus"></span> Add</button>
+    <button class="btn btn-inverse light" action="add"><span class="icon icon-white icon-plus"></span> New discount</button>
   {{/if}}
 </template>
 

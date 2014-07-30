@@ -7,23 +7,28 @@ Schemas.Highlight = new SimpleSchema([
   Schemas.city,
   {
     "global": {
-      type: Boolean
+      type: Boolean,
+      label: 'Show in all citys'
     },
     "imageUrl": {
-      type: String
+      type: String,
+      label: 'Image URL'
     },
     "title": {
-      type: String
+      type: String,
+      label: 'Name'
     },
     "subtitle": {
       type: String,
-      optional: true
+      optional: true,
+      label: 'Information'
     },
     "website": {
       type: String,
       optional: true,
       regEx: SimpleSchema.RegEx.Url,
-      autoValue: AutoValue.prefixUrlWithHTTP
+      autoValue: AutoValue.prefixUrlWithHTTP,
+      label: 'Website URL'
     },
     "hiddenIn": {
       type: [String],
