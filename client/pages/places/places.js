@@ -157,7 +157,21 @@ var setupFeatureLayer = function(map) {
   // icon based on feature properties
   featureLayer.on('layeradd', function(e) {
     
-    if (e.layer.feature.properties.filter === 'hackers') {
+    if (e.layer.feature.properties.filter === 'places') {
+
+      // places marker
+      var type = e.layer.feature.properties.type;
+      if (type) {
+        e.layer.setIcon(L.icon({
+          iconUrl:      "/img/markers/"+type+".png",
+          className:    "marker-place marker-"+type,
+          iconSize:     [27, 40], // size of the icon
+          iconAnchor:   [13, 40], // point of the icon which will correspond to marker's location
+          popupAnchor:  [0, -40] // point from which the popup should open relative to the iconAnchor
+        }));
+      }
+    
+    } else if (e.layer.feature.properties.filter === 'hackers') {
 
       // hacker image
       if (e.layer.feature.properties.image) {
@@ -347,6 +361,7 @@ var placesFeatures = function() {
         "filter": "places",
         "title": place.title,
         "description": _.compact([place.description, place.url]).join('<br/>'),
+        "type": place.type,
         "url": place.url,
         "id": place._id
       },

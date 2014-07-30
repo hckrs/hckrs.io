@@ -1,3 +1,14 @@
+/* Constants */
+
+PLACE_TYPE_OPTIONS = [
+  {value: "fablab", label: "FabLab"},
+  {value: "wifi-cafe", label: "Wi-Fi Cafe"},
+  {value: "meetup", label: "Meetup"},
+  {value: "corworking", label: "Coworking Space"},
+  {value: "hackerspace", label: "Hacker Space"},
+  {value: "incubator", label: "Incubator"},
+]
+
 
 /* PLACES */
 
@@ -17,6 +28,12 @@ Schemas.Place = new SimpleSchema([
       type: String,
       optional: true,
       autoValue: AutoValue.prefixUrlWithHTTP
+    },
+    "type": {
+      type: "String",
+      optional: true,
+      allowedValues: _.pluck(PLACE_TYPE_OPTIONS, 'value'),
+      autoform: { options: PLACE_TYPE_OPTIONS }
     },
     "location": {
       type: Object
