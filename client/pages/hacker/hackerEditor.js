@@ -16,13 +16,15 @@ Template.hackerEditor.events({
     else
       Meteor.call('inviteUserAmbassador', userId, function(err,res) { console.log(err, res)});
   },
-  'keyup, mouseup, change #invitationsNumber': function(evt) {
+  'keyup #invitationsNumber, change #invitationsNumber': function(evt) {
     var $target = $(evt.currentTarget);
     var invitations = $target.val();
     var userId = hackerId();
 
     // update invitations count
-    Users.update(userId, {$set: {invitations: invitations}});
+    exec(function() {
+      Users.update(userId, {$set: {invitations: invitations}});
+    });
   },
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
@@ -56,5 +58,20 @@ Template.hackerEditor.events({
 Template.hackerEditor.helpers({
   'emailAttr': function() {
     return this.profile.email ? {} : {disabled: ""};
+  },
+  'statusLabels': function() {
+    var user = hacker();
+    var labels = [];
+    var unverifiedEmail = !_.findWhere(user.emails, {address: user.profile.email, verified: true});
+    if (user.isUninvited)         labels.push({style: 'important', text: 'Not invited'});
+    if (!user.profile.name)       labels.push({style: 'important', text: 'No name'});
+    if (!user.profile.email)      labels.push({style: 'important', text: 'No email'});
+    if (unverifiedEmail)          labels.push({style: 'important', text: 'Email unverified'});
+    if (user.isIncompleteProfile) labels.push({style: 'warning', text: 'Incomplete profile'});
+    if (user.isAccessDenied)      labels.push({style: 'warning', text: 'No access'});
+    if (user.isHidden)            labels.push({style: 'warning', text: 'Hidden'});
+    if (user.isAdmin)             labels.push({style: 'success', text: 'Admin'});
+    if (user.ambassador)          labels.push({style: 'success', text: 'Ambassador'});
+    return labels;
   }
 })

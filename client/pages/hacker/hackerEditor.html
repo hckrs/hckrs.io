@@ -3,22 +3,27 @@
   <div id="hackerEditor" class="alert-wrapper">
     <div class="alert alert-info">
       
+      {{#if statusLabels}}
+        <h3>Status</h3>
+        <div>
+        {{#each statusLabels}}
+          <span class="label label-{{style}}">{{text}}</span>
+        {{/each}}
+        </div>
+      {{/if}}
+
       <h3>Ambassador Tools</h3>
       <fieldset>
 
-        Invite user: 
         {{#if isUninvited}}
+          Invite user: 
           <button action="invite" by="ambassador" class="btn">myself</button> or <button action="invite" by="anonymous" class="btn">anonymous</button>
-        {{else}}
-          <span class="label label-success">already invited</span>
         {{/if}}
         <br/>
         
-        E-mail: 
         {{#if profile.email}}
+          E-mail: 
           <button action="email" class="btn" {{emailAttr}}>Send E-mail</button>
-        {{else}}
-          <span class="label label-important">no e-mailadress</span>
         {{/if}}
         <br/>
 
@@ -28,7 +33,9 @@
 
       </fieldset>
 
-      {{! additional admin tools }}
+
+      {{!-- Admin tools --}}
+
       {{#if hasAdminPermission}}
         <h3>Admin Tools</h3>
         <fieldset>
