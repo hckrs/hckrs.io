@@ -27,7 +27,12 @@ Schemas.Gifts = new SimpleSchema([
     "code": {
       type: String,
       optional: true
-    }
+    },
+    "hiddenIn": {
+      type: [String],
+      allowedValues: CITYKEYS,
+      optional: true
+    },
   }
 ]);
 
@@ -40,6 +45,24 @@ Gifts = new Meteor.Collection('gifts', {
 });
 
 
+/* sort */
+
+Schemas.GiftsSort = new SimpleSchema([
+  Schemas.city,
+  {
+    "sort": {
+      type: [SimpleSchema.RegEx.Id]
+    }
+  }
+])
+
+GiftsSort = new Meteor.Collection('giftsSort', {
+  schema: Schemas.GiftsSort
+});
+
+
+
+
 
 /* Permissions */
 
@@ -49,15 +72,15 @@ Gifts = new Meteor.Collection('gifts', {
 Gifts.allow({
   insert: function(userId, doc) {
     var user = Users.findOne(userId);
-    return (user.isAdmin || user.ambassador) && (doc.global || doc.city === user.currentCity);
+    return user.isAdmin || (user.ambassador && doc.city === user.currentCity);
   },
   update: function(userId, doc, fieldNames, modifier) {
     var user = Users.findOne(userId);
-    return (user.isAdmin || user.ambassador) && (doc.global || doc.city === user.currentCity);
+    return user.isAdmin || (user.ambassador && doc.city === user.currentCity);
   },
   remove: function(userId, doc) {
     var user = Users.findOne(userId);
-    return (user.isAdmin || user.ambassador) && (doc.global || doc.city === user.currentCity);
+    return user.isAdmin || (user.ambassador && doc.city === user.currentCity);
   }
 });
 
@@ -81,8 +104,32 @@ if (Meteor.isServer) {
 
     return Gifts.find({$or: [{global: true}, {city: city}]});
   });
+
+  // Only publish sortings for the city the user is visiting
+  Meteor.publish("giftsSort", function (city) {
+    var user = Users.findOne(this.userId);
+    
+    if(!user || !allowedAccess(user._id))
+      return [];  
+
+    if (user.currentCity !== city)
+      return []; 
+
+    return GiftsSort.find({city: city});
+  });
 }
 
+
+
+/* Methods */
+
+Meteor.methods({
+  'updateGiftsSort': function(sort) {
+    if (!Meteor.user()) return;
+    if (!Meteor.user().isAdmin && !Meteor.user().ambassador) return;
+    GiftsSort.upsert({city: Meteor.user().currentCity}, {$set: {sort: sort}});
+  }
+})
 
 
 

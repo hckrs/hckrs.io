@@ -5,13 +5,15 @@
       <h2>No gifts right now</h2>
     {{else}}
       <H2>Gifts from our partners</h2>
-      {{#each gifts}}
-        {{#if editMode}}
-          {{> giftEdit}}
-        {{else}}
-          {{> gift}}
-        {{/if}}
-      {{/each}}
+      <div id="giftsContainer">
+        {{#each gifts}}
+          {{#if editMode}}
+            {{> giftEdit}}
+          {{else}}
+            {{> gift}}
+          {{/if}}
+        {{/each}}
+      </div>
     {{/if}}
 
     {{#if hasAmbassadorPermission}}
@@ -22,11 +24,23 @@
 </template>
 
 <template name="gift">
-  <div class="gift area">
+  <div class="gift area" data-id="{{_id}}">
+    
     {{#if hasAmbassadorPermission}}
+      <div class="drag-handle"></div>
       <div class="toolbar">
-        <button class="btn" action="edit" data-gift="{{_id}}"><span class="icon-pencil"></span></button>
-        <button class="btn" action="remove" data-gift="{{_id}}"><span class="icon-trash"></span></button>
+        <div class="btn-group">
+          {{#if isForeign}}
+            {{#if hiddenGift}}
+              <button class="btn disabled" action="visibility" toggle="on" data-id="{{_id}}"><span class="icon icon-eye-close"></span> Hidden</button>
+            {{else}}
+              <button class="btn" action="visibility" toggle="off" data-id="{{_id}}"><span class="icon icon-ban-circle"></span> Hide</button>
+            {{/if}}
+          {{else}}
+            <button class="btn" action="edit" data-gift="{{_id}}"><span class="icon-pencil"></span></button>
+            <button class="btn" action="remove" data-gift="{{_id}}"><span class="icon-trash"></span></button>
+          {{/if}}
+        </div>
       </div>
     {{/if}}
     <p>

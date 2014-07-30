@@ -1,6 +1,16 @@
 Session.set('giftIdInEditMode', null)
 Session.set('showGiftAdd', false)
 
+GiftsSorted = function() {
+  var city = Session.get('currentCity');
+  var moderator = Meteor.user().isAdmin || Meteor.user().ambassador;
+  var sort = (GiftsSort.findOne({city: city}) || {}).sort || [];
+  var selector = moderator ? {} : {hiddenIn: {$ne: city}};
+  return _.sortBy(Gifts.find(selector).fetch(), function(gift) {
+    return _.indexOf(sort, gift._id);
+  });
+}
+
 
 // Route Controller
 
@@ -8,7 +18,10 @@ GiftsController = DefaultController.extend({
   template: 'gifts',
   waitOn: function () {
     var city = Session.get('currentCity');
-    return [ Meteor.subscribe('gifts', city) ];
+    return [ 
+      Meteor.subscribe('gifts', city),
+      Meteor.subscribe('giftsSort', city) 
+    ];
   }
 });
 
@@ -16,10 +29,10 @@ GiftsController = DefaultController.extend({
 
 Template.gifts.helpers({
   'isEmpty': function() {
-    return Gifts.find().count() === 0;
+    return GiftsSorted().length === 0;
   },
   'gifts': function() {
-    return Gifts.find().fetch();
+    return GiftsSorted();
   },
   'editMode': function() {
     return Session.equals('giftIdInEditMode', this._id);
@@ -29,6 +42,10 @@ Template.gifts.helpers({
 Template.gift.helpers({
   'codeType': function() {
     return /^http/.test(this.code) ? 'url' : 'code';
+  },
+  hiddenGift: function() {
+    var city = Session.get('currentCity');
+    return !!Gifts.findOne({_id: this._id, hiddenIn: city});
   }
 })
 
@@ -53,7 +70,13 @@ Template.gift.events({
   "click [action='remove']": function(evt) {
     var giftId = $(evt.currentTarget).data('gift')
     Gifts.remove(giftId);
-  }
+  },
+  "click [action='visibility']": function(evt) {
+    var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
+    var selectedId = $(evt.currentTarget).data('id');
+    var city = Session.get('currentCity');
+    Gifts.update(selectedId, _.object([action], [{hiddenIn: city}]));
+  },
 });
 
 Template.giftEdit.events({
@@ -78,3 +101,35 @@ AutoForm.addHooks('giftEditForm', {
     }
   }
 });
+
+
+
+// DB
+
+var updateSort = function(sort) {
+  Meteor.call('updateGiftsSort', sort, function(err) {
+    if (err) console.log(err);
+  });
+}
+
+
+
+// Template instance
+
+Template.gifts.rendered = function() {
+  
+  // make gifts sortable for ambassadors
+  if (hasAmbassadorPermission()) {
+    var $gifts = this.$('#giftsContainer');
+    $gifts.addClass('draggable');
+    $gifts.sortable({ 
+      axis: "y",
+      cursor: 'move', 
+      handle: '.drag-handle',
+      stop: function(event, ui) {
+        var sort = $gifts.sortable('toArray', {attribute: 'data-id'});
+        updateSort(sort);
+      }
+    });
+  }
+}
