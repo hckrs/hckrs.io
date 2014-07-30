@@ -2,13 +2,7 @@
   <div id="hackers" class="page">
     
     {{#each hackers}}
-    <div class="hacker">
-      <a class="hackers-name pictureViewLink" href="{{pathFor 'hacker'}}" {{foreign}}>
-        <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}} label="{{PictureViewLabel}}"></div>
-        {{profile.name}}
-      </a>
-      <br/>
-    </div>
+      {{> hackersEntry}}    
     {{/each}}
    
     <div style="clear:both;"></div>
@@ -18,5 +12,15 @@
     {{> invitations_partial}}
 
     <div class="page-space"></div>
+  </div>
+</template>
+
+<template name="hackersEntry">
+  <div class="hacker">
+    <a class="hackers-name pictureViewLink" href="{{pathFor 'hacker'}}" {{foreign}}>
+      <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}} label="{{PictureViewLabel}}"></div>
+      {{profile.name}}
+    </a>
+    <br/>
   </div>
 </template>
