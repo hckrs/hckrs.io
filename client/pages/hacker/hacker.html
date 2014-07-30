@@ -69,15 +69,17 @@
         {{> hackerView}}
       {{/if}}
 
-      {{#if tellUsMore}}
-        <form class="form-horizontal">
-          <div class="control-group">
-            <div class="controls profile-ready">
-              Are you ready to enter the website? 
-              <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
+      {{#if isCurrentUser}}
+        {{#if tellUsMore}}
+          <form class="form-horizontal">
+            <div class="control-group">
+              <div class="controls profile-ready">
+                Are you ready to enter the website? 
+                <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        {{/if}}
       {{/if}}
 
       <div class="page-space"></div>
