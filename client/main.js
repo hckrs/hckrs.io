@@ -97,7 +97,7 @@ Template.citySelect.helpers({
     return Session.equals('currentCity', city) ? 'selected' : '';
   },
   "hackersCount": function(city) {
-    var count = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
+    var count = Meteor.users.find({city: city}).count();
     return hasAdminPermission() && count ? count : ""; 
   }
 });
