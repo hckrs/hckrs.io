@@ -68,7 +68,7 @@ Template.hackerEditor.events({
 Template.hackerEditor.helpers({
   'unverifiedEmail': function() {
     var user = hacker();
-    return !_.findWhere(user.emails, {address: user.profile.email, verified: true});
+    return _.findWhere(user.emails, {address: user.profile.email, verified: false});
   },
   'statusLabels': function() {
     var user = hacker();
