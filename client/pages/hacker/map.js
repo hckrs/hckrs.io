@@ -20,12 +20,12 @@ Meteor.startup(function() {
 
 
 // initialize the map so the user can pick a location
-initializeMap = function(mapElement, latlng, user, editable) {
+initializeMap = function(mapElement, latlng, userLocation, editable) {
   $map = $(mapElement);
   defaultLocation = latlng; // location of city
 
   var mapStyle = Settings['mapboxDefault'];
-  var location = user.profile.location || defaultLocation;
+  var location = userLocation || defaultLocation;
 
   // map options
   var mapOptions = {

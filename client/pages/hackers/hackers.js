@@ -21,9 +21,8 @@ Template.hackers.helpers({
   },
   "hackers": function() { 
     var city = Session.get('currentCity');
-    var user = Meteor.user();
     var transitionDelay = 0;
-    var selector = user.isAdmin || user.ambassador ? {city: city} : {city: city, isHidden: {$ne: true}};
+    var selector = hasAmbassadorPermission() ? {city: city} : {city: city, isHidden: {$ne: true}};
     return city && Meteor.users.find(selector, {sort: {ambassador: -1, createdAt: -1}}).map(function(u) {
       u.transitionDelay = Math.min(transitionDelay, 3);
       transitionDelay += 0.2

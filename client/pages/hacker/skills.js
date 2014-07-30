@@ -4,18 +4,19 @@
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hacker = function () { return Users.findOne(hackerId()); }
+var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
+var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
 
 
 
 // helper function to check if user has the given skill
 var hackerHasSkill = function(skill) {
-  return _.contains(hacker().profile.skills, skill.name);
+  return _.contains(hackerProp('profile.skills'), skill.name);
 }
 
 // helper function to check if user has marked the given skill als favorite
 var isFavoriteSkill = function(skill) {
-  return _.contains(hacker().profile.favoriteSkills, skill.name);
+  return _.contains(hackerProp('profile.favoriteSkills'), skill.name);
 }
 
 // replace all user's skills by the values entered in the chosen-select input field
@@ -34,7 +35,7 @@ var removeFavorite = function(skill) {
 
 // skills that arn't in user's skills list can not be marked as favorite, remove them!
 var cleanFavorites = function() {
-  var favorites = _.intersection(hacker().profile.skills, hacker().profile.favoriteSkills);
+  var favorites = _.intersection(hackerProp('profile.skills'), hackerProp('profile.favoriteSkills'));
   Meteor.users.update(hackerId(), {$set: {"profile.favoriteSkills": favorites }});
 }
 
