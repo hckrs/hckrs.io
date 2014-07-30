@@ -193,6 +193,17 @@ getCityLocation = function(city) {
 }
 
 
+/* permission */
+  
+hasAmbassadorPermission = function() {
+  return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
+};
+
+hasAdminPermission = function() {
+  return Meteor.user().isAdmin;
+}
+
+
 // CLIENT ONLY
 
 if (Meteor.isClient) {
@@ -240,17 +251,6 @@ if (Meteor.isClient) {
     Meteor.setTimeout(function() {
       $elm.removeClass(className);
     }, duration || 1000);
-  }
-
-
-  /* permission */
-  
-  hasAmbassadorPermission = function() {
-    return Meteor.user() && (Meteor.user().isAdmin || Meteor.user().ambassador);
-  };
-
-  hasAdminPermission = function() {
-    return Meteor.user().isAdmin;
   }
   
 

@@ -17,17 +17,25 @@
 
         {{#if isUninvited}}
           Invite user: 
-          <button action="invite" by="ambassador" class="btn">myself</button> or <button action="invite" by="anonymous" class="btn">anonymous</button>
+          <button action="invite" by="anonymous" class="btn">anonymous</button> or
+          <button action="invite" by="ambassador" class="btn">by myself</button>
+          <br/>
         {{/if}}
-        <br/>
+
+        {{#if unverifiedEmail}}
+          Verify email address:
+          <button action="verifyEmail" class="btn">Skip verification</button>
+          <button action="sendVerificationEmail" class="btn">Resend verification e-mail</button>
+          <br/>
+        {{/if}}
         
         {{#if profile.email}}
-          E-mail: 
-          <button action="email" class="btn" {{emailAttr}}>Send E-mail</button>
+          Message: 
+          <button action="email" class="btn">Send e-mail</button>
+          <br/>
         {{/if}}
-        <br/>
 
-        Add invites: 
+        Free invite slots: 
         <input type="number" id="invitationsNumber" value="{{invitations}}" />
         <br/>
 

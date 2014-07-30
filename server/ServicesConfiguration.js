@@ -906,6 +906,40 @@ var requestVisibilityOfUser = function(userId) {
 }
 
 
+// When user have manually entered e-mail address he must verify it.
+// Admins can force to skip this process
+var forceEmailVerification = function(userId) {
+  var user = Users.findOne(userId);
+  var emails = _.pluck(user.emails, 'address');
+
+  if (!hasAmbassadorPermission())
+    throw new Meteor.Error(500, "No permissions");
+  if (!user)
+    throw new Meteor.Error(500, "User doesn't exists");
+  if (!_.contains(emails, user.profile.email))
+    throw new Meteor.Error(500, "E-mail not registered", "E-mail address not present in user's list of addresses.")
+  if (_.findWhere(user.emails, {address: user.profile.email, verified: true}))
+    throw new Meteor.Error(500, "E-mail already verified")    
+
+  // force verification
+  Users.update({_id: userId, "emails.address": user.profile.email}, {$set: {"emails.$.verified": true}});
+
+  // request access of user
+  requestAccessOfUser(userId);
+}
+
+// Resend verification email
+var sendVerificationEmail = function(userId) {
+  var user = Users.findOne(userId);
+
+  if (!hasAmbassadorPermission())
+    throw new Meteor.Error(500, "No permissions");
+  if (!user)
+    throw new Meteor.Error(500, "User doesn't exists");
+
+  Accounts.sendVerificationEmail(userId, user.profile.email);
+}
+
 // move user to new city
 // NOTE: permission check must already be performed
 moveUserToCity = function(hackerId, city) { // called from Methods.js
@@ -939,6 +973,8 @@ Meteor.methods({
   "verifyInvitation": verifyInvitation,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
+  "forceEmailVerification": forceEmailVerification,
+  "sendVerificationEmail": sendVerificationEmail,
   "test": test 
 });
 

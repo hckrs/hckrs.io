@@ -16,6 +16,16 @@ Template.hackerEditor.events({
     else
       Meteor.call('inviteUserAmbassador', userId, function(err,res) { console.log(err, res)});
   },
+  "click [action='verifyEmail']": function(evt) {
+    Meteor.call('forceEmailVerification', hackerId(), function(err) {
+      if (err) console.log(err);
+    });
+  },
+  "click [action='sendVerificationEmail']": function() {
+    Meteor.call('sendVerificationEmail', hackerId(), function(err) {
+      if (err) console.log(err);
+    });
+  },
   'keyup #invitationsNumber, change #invitationsNumber': function(evt) {
     var $target = $(evt.currentTarget);
     var invitations = $target.val();
@@ -56,8 +66,9 @@ Template.hackerEditor.events({
 
 
 Template.hackerEditor.helpers({
-  'emailAttr': function() {
-    return this.profile.email ? {} : {disabled: ""};
+  'unverifiedEmail': function() {
+    var user = hacker();
+    return !_.findWhere(user.emails, {address: user.profile.email, verified: true});
   },
   'statusLabels': function() {
     var user = hacker();
