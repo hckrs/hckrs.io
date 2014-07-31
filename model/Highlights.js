@@ -62,16 +62,13 @@ HighlightsSort = new Meteor.Collection('highlightsSort', {
 
 Highlights.allow({
   insert: function(userId, doc) {
-    var user = Users.findOne(userId);
-    return user.isAdmin || (user.ambassador && doc.city === user.currentCity);
+    return hasAmbassadorPermission(userId, doc.city);
   },
   update: function(userId, doc, fieldNames, modifier) {
-    var user = Users.findOne(userId);
-    return user.isAdmin || (user.ambassador && doc.city === user.currentCity);
+    return hasAmbassadorPermission(userId, doc.city);
   },
   remove: function(userId, doc) {
-    var user = Users.findOne(userId);
-    return user.isAdmin || (user.ambassador && doc.city === user.currentCity);
+    return hasAmbassadorPermission(userId, doc.city);
   }
 });
 
@@ -118,9 +115,8 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   'updateHighlightsSort': function(sort) {
-    if (!Meteor.user()) return;
-    if (!Meteor.user().isAdmin && !Meteor.user().ambassador) return;
-    HighlightsSort.upsert({city: Meteor.user().currentCity}, {$set: {sort: sort}});
+    if (!hasAmbassadorPermission()) return;
+    HighlightsSort.upsert({city: UserProp('currentCity')}, {$set: {sort: sort}});
   }
 })
 

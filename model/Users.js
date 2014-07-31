@@ -294,11 +294,10 @@ Users.deny({
     ];
 
     // determine the permissions of user who edit this doc
-    var user = Users.findOne(userId);
     var fields = [];
-    if (user.isAdmin)  // admin
+    if (hasAdminPermission())  // admin
       fields = _.union(userPermission, ambassadorPermission, adminPermission);
-    else if (user.ambassador && doc.city === user.currentCity) // ambassador
+    else if (hasAmbassadorPermission(userId, doc.city)) // ambassador
       fields = _.union(userPermission, ambassadorPermission);
     else if (_.isEqual(userId, doc._id)) // user owned this doc
       fields = _.union(userPermission);
@@ -619,6 +618,14 @@ hasAdminPermission = function(userId) {
 }
 hasAmbassadorPermission = function(userId, city) {
   return hasAdminPermission(userId) || isAmbassador(userId, city);
+}
+checkAdminPermission = function(userId) {
+  if (!hasAmbassadorPermission(userId))
+    throw new Meteor.Error(500, 'No privilege');
+}
+checkAmbassadorPermission = function(userId) {
+  if (!hasAmbassadorPermission(userId))
+    throw new Meteor.Error(500, 'No privilege');
 }
 
 UI.registerHelper('hasAmbassadorPermission', function() {
