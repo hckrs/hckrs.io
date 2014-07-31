@@ -37,11 +37,7 @@ Schemas.Gifts = new SimpleSchema([
 ]);
 
 Gifts = new Meteor.Collection('gifts', {
-  schema: Schemas.Gifts,
-  transform: function(doc) {
-    doc.isForeign = isForeign(doc);
-    return doc;
-  }
+  schema: Schemas.Gifts
 });
 
 

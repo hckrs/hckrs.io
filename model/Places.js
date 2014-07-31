@@ -51,11 +51,7 @@ Schemas.Place = new SimpleSchema([
 ]);
 
 Places = new Meteor.Collection('places', {
-  schema: Schemas.Place,
-  transform: function(doc) {
-    doc.isForeign = isForeign(doc);
-    return doc;
-  }
+  schema: Schemas.Place
 });
 
 

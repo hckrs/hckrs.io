@@ -18,7 +18,7 @@
           </div>
         {{else}}
           {{#if tellUsMore}}
-            {{#if HackerProp 'isInvited'}} 
+            {{#if isInvited}} 
               {{! XXX user must only complete his profile to enter website (already invited) }}
               <div class="access-denied alert alert-info">
                 <h1>Tell us more</h1>
@@ -33,7 +33,7 @@
               </div>
             {{/if}}
           {{else}}
-            {{#unless HackerProp 'isInvited'}}
+            {{#unless isInvited}}
               {{! XXX profile is completely filled in but user needs to be invited by someone }}
               <div class="access-denied alert alert-success">
                 <h1>Thank you</h1>
@@ -106,7 +106,7 @@
             <div style="background-image:url({{profile.picture}});" class="picture"></div>    
           </div>
           <div class="picture-choser" id="pictureChoser">
-            {{#with HackerProp 'profile.socialPicture'}}
+            {{#with profile.socialPicture}}
               {{#if facebook}}
                 <div class="choice-wrapper">
                   <label for="inputPictureFacebook" class="radio">
@@ -316,8 +316,9 @@
 
 <template name="hackerView">
 
-
-    <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{PictureViewLabel}}"></div>
+    {{#with UserView _id}}
+    <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{label}}"></div>
+    {{/with}}
     <div class="headline">
       <div class="name">{{profile.name}}</div>
         <div class="hacking-container">

@@ -169,8 +169,8 @@ Router.goToCity = function(city) {
 
 Router.routes['hacker'].path = function(userId) {
   if (_.isObject(userId)) userId = userId._id;
-  var user = OtherUserProps(userId, ['isForeign','localRankHash','localRank','city']) || {};
-  return user.isForeign ? "#" : "/"+user.localRankHash;
+  var hash = Url.bitHash(OtherUserProp(userId, 'localRank'));
+  return userIsForeign(userId) ? "#" : "/"+hash;
 }
 
 Router.routes['invite'].url = function(params) {

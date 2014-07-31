@@ -1,12 +1,15 @@
 Session.set('giftIdInEditMode', null)
 Session.set('showGiftAdd', false)
 
+var selector = function() {
+  var city = Session.get('currentCity');
+  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+}
+
 GiftsSorted = function() {
   var city = Session.get('currentCity');
-  var moderator = Meteor.user().isAdmin || Meteor.user().ambassador;
   var sort = (GiftsSort.findOne({city: city}) || {}).sort || [];
-  var selector = moderator ? {} : {hiddenIn: {$ne: city}};
-  return _.sortBy(Gifts.find(selector).fetch(), function(gift) {
+  return _.sortBy(Gifts.find(selector()).fetch(), function(gift) {
     return _.indexOf(sort, gift._id);
   });
 }
@@ -29,7 +32,7 @@ GiftsController = DefaultController.extend({
 
 Template.gifts.helpers({
   'isEmpty': function() {
-    return GiftsSorted().length === 0;
+    return Gifts.find(selector()).count() === 0;
   },
   'gifts': function() {
     return GiftsSorted();

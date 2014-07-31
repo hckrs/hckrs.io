@@ -34,11 +34,7 @@ Schemas.Highlight = new SimpleSchema([
 ]);
 
 Highlights = new Meteor.Collection('highlights', {
-  schema: Schemas.Highlight,
-  transform: function(doc) {
-    doc.isForeign = isForeign(doc);
-    return doc;
-  }
+  schema: Schemas.Highlight
 });
 
 

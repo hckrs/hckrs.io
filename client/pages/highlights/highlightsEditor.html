@@ -19,7 +19,7 @@
         <button class="btn" action="add"><span class="icon-plus"></span></button>
       </div>
       {{#if selectedHighlight}}
-        {{#if selectedHighlight.isForeign}}
+        {{#if IsForeignCity selectedHighlight.city}}
           <div class="btn-group">
             {{#if hiddenHighlight}}
               <button class="btn disabled" action="visibility" toggle="on"><span class="icon icon-eye-close"></span> Hidden</button>

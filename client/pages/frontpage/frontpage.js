@@ -32,7 +32,15 @@ Template.frontpage.helpers({
 Template.ambassadors.helpers({
   "ambassadors": function() {
     var city = Session.get('currentCity');
-    return city && Users.find({"ambassador.city": city}).fetch();
+    var fields = fieldsObj({
+      profile: ['name','picture','email'],
+      ambassador: ['title']
+    });
+    var transform = function(user) {
+      user.twitter = userSocialName(user._id, 'twitter');
+      return user;
+    }
+    return city && Users.find({"ambassador.city": city}, {fields: fields}).map(transform);
   },
   "title": function() {
     return this.ambassador.title || "Ambassador";

@@ -8,7 +8,7 @@ Template.highlightsEditor.helpers({
 		var show = Session.get('showHighlightsEditorForm');
 		var selected = Highlights.findOne(Session.get('selectedHighlightId')) || {};
 		var mode = Session.get('highlightsEditorFormMode');
-		return show && !(selected.isForeign && mode === 'update') ? '' : 'hide';
+		return show && !(isForeignCity(selected.city) && mode === 'update') ? '' : 'hide';
 	},
 	mode: function() {
 		return Session.get('highlightsEditorFormMode');

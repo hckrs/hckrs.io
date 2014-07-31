@@ -73,9 +73,22 @@ exec = function(func) {
   Meteor.setTimeout(func, 50);
 }
 
+// create a mongo field specifier object from an nested object with field names
+// but at this time meteor is reactive on top-level properties, so defining
+// nested objects is not leading to better performance
+fieldsObj = function(obj) {
+  var objToArray = function(obj) {
+    var field = function(val, prefix) {
+      var arr = _.isArray(val) ? val : objToArray(val);
+      return _.map(arr, function(postfix) { return prefix+'.'+postfix; });
+    }
+    return _.flatten(_.map(obj, field));
+  }
+  return fieldsArray(objToArray(obj));
+}
 // create a mongo field specifier object from array with field names
-fieldsObj = function(fields) {
-  return _.object(fields, _.map(fields, function() { return 1; }));
+fieldsArray = function(fields) {
+ return _.object(fields, _.map(fields, function() { return 1; })); 
 }
 
 // get new Date() object by using format YYYY-MM-DD hh::mm:ss
@@ -99,9 +112,13 @@ convertToCurrency = function(value) {
 // check if some doc is foreign
 // that means that doc is created in an other city
 // with respect to the current city subdomain
-isForeign = function(doc) {
-  var city = Meteor.isClient ? Session.get('currentCity') : UserProp('currentCity');
-  return !city || !doc.city || city !== doc.city;
+isForeignCity = function(otherCity) {
+  var currentCity = Meteor.isClient ? Session.get('currentCity') : UserProp('currentCity');
+  return !currentCity || currentCity !== otherCity;
+}
+
+socialNameFromUrl = function(service, url) {
+  return (url && /[^./]*$/.exec(url)[0]) || "";
 }
 
 
@@ -335,19 +352,8 @@ if (Meteor.isClient) {
     return CITYMAP[city];
   });
 
-  UI.registerHelper('PictureViewLabel', function() {
-    var user = this;
-    if (user.mergedWith)             return "Merged with #"+Users.findOne(user.mergedWith).localRank;
-    if (user.isDeleted)              return "Deleted";
-    if (user.isAccessDenied)         return "No Access";
-    if (user.isHidden)               return "Hidden";
-    if (user.city && user.isForeign) return CITYMAP[user.city].name;
-    if (user.ambassador)             return "Ambassador";
-    else                             return "#"+user.localRank;
-  });
-
-  UI.registerHelper('foreign', function() {
-    return this.isForeign ? {foreign: "", disabled: ""} : '';
+  UI.registerHelper('IsForeignCity', function(city) {
+    return isForeignCity(city);
   });
 
 }

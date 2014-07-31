@@ -234,10 +234,6 @@ Template.hackerEdit.helpers({
 });
 
 Template.hackerView.helpers({
-  "checked": function(field, value) {
-    var isChecked = _.contains(UserProp(field), value);
-    return isChecked ? 'checked="checked"' : "";
-  },
   "urlCurrentUser": function() { 
     return Router.routes['hacker'].url(UserProp("_id")); 
   },

@@ -1,11 +1,14 @@
 
-// get sorted highlights
-HighlightsSorted = function() {
+var selector = function() {
   var city = Session.get('currentCity');
-  var moderator = Meteor.user().isAdmin || Meteor.user().ambassador;
+  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+}
+
+// get sorted highlights
+HighlightsSorted = function(options) {
+  var city = Session.get('currentCity');
   var sort = (HighlightsSort.findOne({city: city}) || {}).sort || [];
-  var selector = moderator ? {} : {hiddenIn: {$ne: city}};
-  return _.sortBy(Highlights.find(selector).fetch(), function(highlight) {
+  return _.sortBy(Highlights.find(selector(), options).fetch(), function(highlight) {
     return _.indexOf(sort, highlight._id);
   });
 }
@@ -23,11 +26,10 @@ HighlightsController = DefaultController.extend({
     ];
   },
   onBeforeAction: function() {
-    var user = Meteor.user();
 
     // redirect to hackers page if there are no highlights
     // except for ambassadors and admins
-    if (this.ready() && HighlightsSorted().length === 0 && !(user.isAdmin || user.ambassador))
+    if (this.ready() && Highlights.find(selector()).count() === 0 && !hasAmbassadorPermission())
       Router.go('hackers');
     
   },
@@ -46,12 +48,6 @@ HighlightsController = DefaultController.extend({
 Template.highlights.helpers({
   'highlights': function() {
     return HighlightsSorted();
-  }
-});
-
-Template.highlightSectionDetails.helpers({
-  'relatedUser': function(userId) {
-    return Meteor.users.findOne(userId);
   }
 });
 
@@ -83,7 +79,7 @@ var setupOnePageScroll = function() {
   }
 
   var setSelectedHighlight = function(index) {
-    var data = HighlightsSorted();
+    var data = HighlightsSorted({fields: {_id: 1}});
     Session.set('selectedHighlightId', data && data[index] && data[index]._id);
   }
 
@@ -103,8 +99,7 @@ var setupOnePageScroll = function() {
   });
 
   // make sortable for ambassadors
-  var city = Session.get('currentCity');
-  if (hasAmbassadorPermission(city))
+  if (hasAmbassadorPermission())
     HighlightEditor.initSortable();
 
   setSelectedHighlight(0);
