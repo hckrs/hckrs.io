@@ -87,7 +87,6 @@ Template.main.rendered = function() {
 var _cityCount, _cityVisibleCount; 
 
 var _calculateCount = function() {
-  console.log('recalc')
   var users = Users.find({}, {fields: {city: true}, reactive: false}).fetch();
   var visibleUsers = Users.find({isHidden: {$ne: true}}, {fields: {city: true}, reactive: false}).fetch();
   _cityCount = _.countBy(users, 'city');

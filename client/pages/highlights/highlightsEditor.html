@@ -2,20 +2,11 @@
 
 <template name="highlightsEditor">
   <div id="highlightsEditor">
-    <div class="form {{show}}">
-      {{#autoForm id="highlightsEditorForm" collection="Highlights" type=mode doc=selectedDoc}}
-      {{> afQuickField name="title"}}
-      {{> afQuickField name="subtitle"}}
-      {{> afQuickField name="imageUrl"}}
-      {{> afQuickField name="website"}}
-      {{> afQuickField name="global"}}
-      <div class="buttons">
-        <button type="submit" class="btn btn-small btn-primary">Save</button>
-        <a href="#" action="remove" class="btn btn-small btn-inverse light pull-right">Delete</a>
-        <a href="#" action="cancel" class="btn btn-small btn-inverse light pull-right">Cancel</a>
-      </div>
-      {{/autoForm}}
-    </div>
+    
+    {{#if show}}
+      {{> highlightsEditorForm}}
+    {{/if}}
+    
     <div class="toolbar btn-toolbar">
       <div class="btn-group">
         <button class="btn btn-small btn-inverse light" action="add"><span class="icon-plus icon-white"></span></button>
@@ -36,5 +27,22 @@
         {{/if}}
       {{/if}}
     </div>
+  </div>
+</template>
+
+<template name="highlightsEditorForm">
+  <div class="form">
+    {{#autoForm id="highlightsEditorForm" collection="Highlights" type=mode doc=selectedDoc}}
+    {{> afQuickField name="title" id="title"}}
+    {{> afQuickField name="subtitle" id="substitle"}}
+    {{> afQuickField name="imageUrl" id="imageUrl"}}
+    {{> afQuickField name="website" id="website"}}
+    {{> afQuickField name="global" id="global"}}
+    <div class="buttons">
+      <button type="submit" class="btn btn-small btn-primary">Save</button>
+      <a href="#" action="remove" class="btn btn-small btn-inverse light pull-right">Delete</a>
+      <a href="#" action="cancel" class="btn btn-small btn-inverse light pull-right">Cancel</a>
+    </div>
+    {{/autoForm}}
   </div>
 </template>

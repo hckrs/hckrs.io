@@ -8,22 +8,25 @@ Template.highlightsEditor.helpers({
 		var show = Session.get('showHighlightsEditorForm');
 		var selected = Highlights.findOne(Session.get('selectedHighlightId')) || {};
 		var mode = Session.get('highlightsEditorFormMode');
-		return show && !(isForeignCity(selected.city) && mode === 'update') ? '' : 'hide';
+		return show && !(isForeignCity(selected.city) && mode === 'update');
 	},
-	mode: function() {
-		return Session.get('highlightsEditorFormMode');
-	},
-	'selectedDoc': function() {
-		var mode = Session.get('highlightsEditorFormMode');
-		var doc = Highlights.findOne(Session.get('selectedHighlightId'));
-		return mode === 'update' ? doc : null;
-	},
-  'selectedHighlight': function() { 
+  selectedHighlight: function() { 
     return Highlights.findOne(Session.get('selectedHighlightId'))
   },
   hiddenHighlight: function() {
   	var city = Session.get('currentCity');
   	return !!Highlights.findOne({_id: Session.get('selectedHighlightId'), hiddenIn: city});
+  }
+});
+
+Template.highlightsEditorForm.helpers({
+  mode: function() {
+    return Session.get('highlightsEditorFormMode');
+  },
+  selectedDoc: function() {
+    var mode = Session.get('highlightsEditorFormMode');
+    var doc = Highlights.findOne(Session.get('selectedHighlightId'));
+    return mode === 'update' ? doc : null;
   }
 });
 
@@ -38,21 +41,35 @@ Template.highlightsEditor.events({
 		Session.set('showHighlightsEditorForm', visible)
 		Session.set('highlightsEditorFormMode', 'update')
 	},
-	"click [action='cancel']": function() {
-		Session.set('showHighlightsEditorForm', false);
-		resetForm();
-	},
-	"click [action='remove']": function() {
-		Highlights.remove(Session.get('selectedHighlightId'))
-		Session.set('showHighlightsEditorForm', false)
-	},
 	"click [action='visibility']": function(evt) {
 		var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
 		var city = Session.get('currentCity');
 		var selectedId = Session.get('selectedHighlightId');
 		Highlights.update(selectedId, _.object([action], [{hiddenIn: city}]));
 	},
+});
+
+Template.highlightsEditorForm.events({
+  "click [action='cancel']": function() {
+    Session.set('showHighlightsEditorForm', false);
+    resetForm();
+  },
+  "click [action='remove']": function() {
+    Highlights.remove(Session.get('selectedHighlightId'))
+    Session.set('showHighlightsEditorForm', false)
+  },
 })
+
+Template.highlightsEditorForm.rendered = function() {
+  var $input = this.$('input:first');
+  Deps.autorun(function(c) {
+    Session.get('highlightsEditorFormMode');
+    $input.blur();
+    setTimeout(function() {
+      $input.focus();
+    }, 200);
+  });
+}
 
 AutoForm.addHooks('highlightsEditorForm', {
 	onSuccess: function(operation) {
