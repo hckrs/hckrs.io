@@ -17,15 +17,7 @@ Schemas.Invitation = new SimpleSchema([
 ]);
 
 Invitations = new Meteor.Collection('invitations', {
-  schema: Schemas.Invitation,
-  transform: function(doc) {
-   
-    doc.receiver = function() { // request info of receiving user
-      return Meteor.users.findOne(doc.receivingUser);
-    }
-
-    return doc;  
-  }
+  schema: Schemas.Invitation
 });
 
 

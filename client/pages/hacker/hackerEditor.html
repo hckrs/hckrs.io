@@ -15,7 +15,7 @@
       <h3>Ambassador Tools</h3>
       <fieldset>
 
-        {{#if isUninvited}}
+        {{#if HackerProp 'isUninvited'}}
           Invite user: 
           <button action="invite" by="anonymous" class="btn">anonymous</button> or
           <button action="invite" by="ambassador" class="btn">by myself</button>
@@ -29,14 +29,14 @@
           <br/>
         {{/if}}
         
-        {{#if profile.email}}
+        {{#if HackerProp 'profile.email'}}
           Message: 
           <button action="email" class="btn">Send e-mail</button>
           <br/>
         {{/if}}
 
         Free invite slots: 
-        <input type="number" id="invitationsNumber" value="{{invitations}}" />
+        <input type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" />
         <br/>
 
       </fieldset>

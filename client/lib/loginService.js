@@ -107,7 +107,7 @@ UI.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
 UI.registerHelper('tellUsMore', function() {
-  return Meteor.user().isIncompleteProfile;
+  return UserProp('isIncompleteProfile');
 });
 UI.registerHelper('isInvited', function() {
   return checkInvited();
@@ -153,7 +153,6 @@ checkDuplicateIdentity = function() {
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
 checkInvitation = function() {
-
   var phrase = Session.get('invitationPhrase');
   var broadcastUser = Users.findOne({invitationPhrase: phrase});
 
@@ -250,18 +249,17 @@ checkAccess = function() { /* GLOBAL, called from router.js */
 
 // check if user is invited
 var checkInvited = function() { //GLOBAL, used in hacker.js
-  return !Meteor.user().isUninvited;
+  return !UserProp('isUninvited');
 }
 
 // check if user's profile e-mail address is verified
 var verifiedEmail = function() { //GLOBAL, used in hacker.js
-  var user = Meteor.user();
-  return !!_.findWhere(user.emails, {address: user.profile.email, verified: true});
+  return !!_.findWhere(UserProp('emails'), {address: UserProp('profile.email'), verified: true});
 }
 
 // check if user's profile e-mail address is not verified
 var isUnverifiedEmail = function() {
-  return Meteor.user().profile.email && !verifiedEmail();
+  return UserProp('profile.email') && !verifiedEmail();
 }
 
 

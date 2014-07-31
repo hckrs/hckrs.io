@@ -1,95 +1,95 @@
 
 <template name="hacker">
-  {{#with hacker}}
 
-    <div class="main-alerts">
-      {{#if isCurrentUser}}
-        {{#if isAccessDenied}}
+  <div class="main-alerts">
+    {{#if isCurrentUser}}
+      {{#if HackerProp 'isAccessDenied'}}
 
-          {{#if invitationLimitReached}}
-            <div class="alert alert-error">
-              <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
-            </div>
-          {{/if}}
-          
-          {{#if isUnverifiedEmail}}
-            <div class="access-denied alert alert-info">
-              <h1>Check your e-mail :)</h1>
-              <p>We have sent you an email with a validation link</p>
-            </div>
-          {{else}}
-            {{#if tellUsMore}}
-              {{#if isInvited}} 
-                {{! XXX user must only complete his profile to enter website (already invited) }}
-                <div class="access-denied alert alert-info">
-                  <h1>Tell us more</h1>
-                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
-                </div>
-              {{else}}
-                {{! XXX user must complete his profile AND needs to be invited by someone }}
-                <div class="access-denied alert alert-info">
-                  <h1>Tell us more</h1>
-                  <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
-                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
-                </div>
-              {{/if}}
-            {{else}}
-              {{#unless isInvited}}
-                {{! XXX profile is completely filled in but user needs to be invited by someone }}
-                <div class="access-denied alert alert-success">
-                  <h1>Thank you</h1>
-                  <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
-                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
-                </div>
-              {{/unless}}
-            {{/if}}
-          {{/if}}
-
+        {{#if invitationLimitReached}}
+          <div class="alert alert-error">
+            <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
+          </div>
         {{/if}}
+        
+        {{#if isUnverifiedEmail}}
+          <div class="access-denied alert alert-info">
+            <h1>Check your e-mail :)</h1>
+            <p>We have sent you an email with a validation link</p>
+          </div>
+        {{else}}
+          {{#if tellUsMore}}
+            {{#if isInvited}} 
+              {{! XXX user must only complete his profile to enter website (already invited) }}
+              <div class="access-denied alert alert-info">
+                <h1>Tell us more</h1>
+                <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+              </div>
+            {{else}}
+              {{! XXX user must complete his profile AND needs to be invited by someone }}
+              <div class="access-denied alert alert-info">
+                <h1>Tell us more</h1>
+                <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
+                <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
+              </div>
+            {{/if}}
+          {{else}}
+            {{#unless isInvited}}
+              {{! XXX profile is completely filled in but user needs to be invited by someone }}
+              <div class="access-denied alert alert-success">
+                <h1>Thank you</h1>
+                <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
+                <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
+              </div>
+            {{/unless}}
+          {{/if}}
+        {{/if}}
+
       {{/if}}
-    </div>
+    {{/if}}
+  </div>
 
-    <div id="hacker" class="page">
-      {{!-- 
-        This template is rendering a hacker's profile.
-        When the logged in user ownes the profile he has the 
-        possibility to edit his data.
-      --}}
+  <div id="hacker" class="page">
+    {{!-- 
+      This template is rendering a hacker's profile.
+      When the logged in user ownes the profile he has the 
+      possibility to edit his data.
+    --}}
 
-      {{#if isCurrentUser}}
-        <div class="btn-group mode">
-          <button action="switch-mode" mode="edit" class="btn btn-small {{activeMode 'edit'}}"><span class="icon icon-pencil"></span> edit</button>
-          <button action="switch-mode" mode="preview" class="btn btn-small {{activeMode 'preview'}}"><span class="icon icon-eye-open"></span> preview</button>
-        </div>
-      {{/if}}
+    {{#if isCurrentUser}}
+      <div class="btn-group mode">
+        <button action="switch-mode" mode="edit" class="btn btn-small {{activeMode 'edit'}}"><span class="icon icon-pencil"></span> edit</button>
+        <button action="switch-mode" mode="preview" class="btn btn-small {{activeMode 'preview'}}"><span class="icon icon-eye-open"></span> preview</button>
+      </div>
+    {{/if}}
 
+    {{#with hacker}}
       {{#if isEditMode}}
         {{> hackerEdit}}
       {{else}}
         {{> hackerView}}
       {{/if}}
+    {{/with}}
 
-      {{#if isCurrentUser}}
-        {{#if tellUsMore}}
-          <form class="form-horizontal">
-            <div class="control-group">
-              <div class="controls profile-ready">
-                Are you ready to enter the website? 
-                <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
-              </div>
+    {{#if isCurrentUser}}
+      {{#if tellUsMore}}
+        <form class="form-horizontal">
+          <div class="control-group">
+            <div class="controls profile-ready">
+              Are you ready to enter the website? 
+              <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
             </div>
-          </form>
-        {{/if}}
+          </div>
+        </form>
       {{/if}}
-
-      <div class="page-space"></div>
-    </div>
-
-    {{#if hasAmbassadorPermission}}
-      {{> hackerEditor}}
     {{/if}}
 
-  {{/with}}
+    <div class="page-space"></div>
+  </div>
+
+  {{#if hasAmbassadorPermission}}
+    {{> hackerEditor}}
+  {{/if}}
+
 </template>
 
 
@@ -316,8 +316,9 @@
 
 <template name="hackerView">
 
-
-    <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{PictureViewLabel}}"></div>
+    {{#with UserView _id}}
+    <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{label}}"></div>
+    {{/with}}
     <div class="headline">
       <div class="name">{{profile.name}}</div>
         <div class="hacking-container">

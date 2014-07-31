@@ -51,11 +51,7 @@ Schemas.Place = new SimpleSchema([
 ]);
 
 Places = new Meteor.Collection('places', {
-  schema: Schemas.Place,
-  transform: function(doc) {
-    doc.isForeign = isForeign(doc);
-    return doc;
-  }
+  schema: Schemas.Place
 });
 
 
@@ -67,16 +63,13 @@ Places = new Meteor.Collection('places', {
 
 Places.allow({
   insert: function(userId, doc) {
-    var user = Users.findOne(userId);
-    return (user.isAdmin || user.ambassador) && (doc.city === user.currentCity);
+    return hasAmbassadorPermission(userId, doc.city);
   },
   update: function(userId, doc, fieldNames, modifier) {
-    var user = Users.findOne(userId);
-    return (user.isAdmin || user.ambassador) && (doc.city === user.currentCity);
+    return hasAmbassadorPermission(userId, doc.city);
   },
   remove: function(userId, doc) {
-    var user = Users.findOne(userId);
-    return (user.isAdmin || user.ambassador) && (doc.city === user.currentCity);
+    return hasAmbassadorPermission(userId, doc.city);
   }
 });
 

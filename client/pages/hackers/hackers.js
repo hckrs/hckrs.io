@@ -19,16 +19,17 @@ Template.hackers.helpers({
     var city = Session.get('currentCity');
     return (city && Meteor.users.find({city: city, isHidden: {$ne: true}}).count()) || ''; 
   },
-  "hackers": function() { 
-    var city = Session.get('currentCity');
-    var user = Meteor.user();
+  "hackerViews": function() { 
     var transitionDelay = 0;
-    var selector = user.isAdmin || user.ambassador ? {city: city} : {city: city, isHidden: {$ne: true}};
-    return city && Meteor.users.find(selector, {sort: {ambassador: -1, createdAt: -1}}).map(function(u) {
-      u.transitionDelay = Math.min(transitionDelay, 3);
+    var getUserView = function(u) {
+      var user = userView(u._id);
+      user.transitionDelay = Math.min(transitionDelay, 3);
       transitionDelay += 0.2
-      return u;
-    }); 
+      return user;
+    }
+    var city = Session.get('currentCity');
+    var selector = hasAmbassadorPermission() ? {city: city} : {city: city, isHidden: {$ne: true}};
+    return city && Users.find(selector, {fields: {_id: 1}, sort: {ambassador: -1, createdAt: -1}}).map(getUserView); 
   }
 });
 

@@ -19,9 +19,9 @@
         </div>
         <div style='clear:both;'></div>
 
-        {{#each invitedUsers}}
+        {{#each invitedUserViews}}
           <a href="{{pathFor 'hacker'}}" {{foreign}} class="slot pictureViewLink" title="{{profile.name}}">
-            <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}" {{foreign}} label="{{PictureViewLabel}}"></div>
+            <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}" {{foreign}} label="{{label}}"></div>
           </a>
         {{/each}}
 

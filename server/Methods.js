@@ -16,20 +16,16 @@ var Url = Npm.require('url');
 Meteor.methods({
   
   'inviteUserAnonymous': function(userId) {
-    var user = Users.findOne(userId);
-    
-    verifyAmbassadorLevel(user);
+    checkAmbassadorPermission();
 
     forceInvitationOfUser(userId);
   },
 
 
   'inviteUserAmbassador': function(userId) {
-    var user = Users.findOne(userId);
-    
-    verifyAmbassadorLevel(user);
+    checkAmbassadorPermission();
 
-    var phrase = Meteor.user().invitationPhrase;
+    var phrase = UserProp('invitationPhrase');
     
     if (!phrase || !Match.test(phrase, Number))
       throw new Meteor.Error(500, "invalid phrase");
@@ -38,9 +34,7 @@ Meteor.methods({
   },
 
   'moveUserToCity': function(hackerId, city) {
-    
-    if (!Meteor.user().isAdmin)
-      throw new Meteor.Error(500, "not authorized");
+    checkAdminPermission();
 
     // move
     return moveUserToCity(hackerId, city);
@@ -63,9 +57,7 @@ Meteor.methods({
   },
 
   'requestWebPageImages': function(query, maxResults) {
-    
-    if (!this.userId)
-      throw new Meteor.Error(500, 'not authorized');
+    checkAdminPermission();
 
     var url = 'https://www.google.com/search';
     var options = {
@@ -100,27 +92,3 @@ Meteor.methods({
 
 
 
-
-
-
-// helper functions
-
-// check if the logged in user is an admin
-var verifyAdmin = function() {
-  if (!Meteor.user() || !Meteor.user().isAdmin)
-    throw new Meteor.Error(500, 'No admin privilege');
-}
-
-// check admin or ambassador (with same city)
-var verifyAmbassadorLevel = function(user) {
-  var currentUser = Meteor.user();
-
-  if (!currentUser)
-    throw new Meteor.Error(500, 'Not logged in');
-
-  if (!user)
-    throw new Meteor.Error(500, 'No user specified');
-
-  if (!(currentUser.isAdmin || (currentUser.ambassador && currentUser.currentCity === user.city)))
-    throw new Meteor.Error(500, 'No privilege');
-}

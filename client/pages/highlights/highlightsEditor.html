@@ -21,7 +21,7 @@
         <button class="btn btn-small btn-inverse light" action="add"><span class="icon-plus icon-white"></span></button>
       </div>
       {{#if selectedHighlight}}
-        {{#if selectedHighlight.isForeign}}
+        {{#if IsForeignCity selectedHighlight.city}}
           <div class="btn-group">
             {{#if hiddenHighlight}}
               <button class="btn disabled" action="visibility" toggle="on"><span class="icon icon-white icon-eye-close"></span> Hidden</button>

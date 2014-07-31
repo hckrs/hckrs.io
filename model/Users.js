@@ -229,21 +229,6 @@ Schemas.WeakUser = new SimpleSchema([
 ]);
 
 
-
-
-
-// NOTE: transformer schema (CLIENT-ONLY)
-var transformerSchema = {
-  "localRankHash": String,    // hashed localRank
-  "globalRankHash": String,   // hashed globalRank
-  "isForeign": Boolean,       // indicates of this user is from another city with respect to current city page.
-  "profile.socialName": { 
-    facebook: String,   // username of user's facebook profile
-    github: String,     // username of user's github profile
-    twitter: String     // username of user's twitter profile
-  },
-}
-
 // NOTE: services schema (blackbox)
 var servicesSchema = {
   resume: {  
@@ -270,33 +255,6 @@ Users = Meteor.users;
 Users.attachSchema(Schemas.WeakUser)
 
 
-// Attach transformer
-if (Meteor.isClient) {
-  
-  var socialNameFromUrl = function(service, url) {
-    return /[^./]*$/.exec(url)[0];
-  }
-
-  Users._transform = function(user) {
-    user.localRankHash = Url.bitHash(user.localRank);
-    user.globalRankHash = Url.bitHash(user.globalRank);
-
-    // check if user is foreign
-    // that mean he is registered in an other city
-    // with respect to the curren city page
-    user.isForeign = isForeign(user);
-    
-    // extract profile usernames from social urls
-    if (user.profile && user.profile.social) {
-      user.profile.socialName = {};
-      _.each(user.profile.social, function(url, service) {
-        user.profile.socialName[service] = socialNameFromUrl(service, url);
-      });
-    }
-    
-    return user;
-  }
-}
 
 
 
@@ -336,11 +294,10 @@ Users.deny({
     ];
 
     // determine the permissions of user who edit this doc
-    var user = Users.findOne(userId);
     var fields = [];
-    if (user.isAdmin)  // admin
+    if (hasAdminPermission())  // admin
       fields = _.union(userPermission, ambassadorPermission, adminPermission);
-    else if (user.ambassador && doc.city === user.currentCity) // ambassador
+    else if (hasAmbassadorPermission(userId, doc.city)) // ambassador
       fields = _.union(userPermission, ambassadorPermission);
     else if (_.isEqual(userId, doc._id)) // user owned this doc
       fields = _.union(userPermission);
@@ -454,10 +411,10 @@ if (Meteor.isServer) {
 
   Meteor.publish('userData', function() {
     var self = this;
-    var queryOptions = {fields: fieldsObj(allUserFields)};
+    var queryOptions = {fields: fieldsArray(allUserFields)};
     
     // initial permissions (can be changed below)
-    var permissions = Users.findOne(this.userId, {fields: fieldsObj(permissionDeps)}) || {};
+    var permissions = Users.findOne(this.userId, {fields: fieldsArray(permissionDeps)}) || {};
     
     // observe docs changes and push the changes to the client
     // only include fields that are allowed to publish, this can vary between users
@@ -486,7 +443,7 @@ if (Meteor.isServer) {
     // Check if depended permissions fields from current user changes
     // if so, we have to republish the whole user collection
     if (self.userId)
-      var myObserver = Users.find({_id: self.userId}, {fields: fieldsObj(permissionDeps)}).observe({'changed': republish});
+      var myObserver = Users.find({_id: self.userId}, {fields: fieldsArray(permissionDeps)}).observe({'changed': republish});
 
 
     // handlers
@@ -606,4 +563,113 @@ if (Meteor.isServer) {
 
 
 
+
+/* QUERY - helpers */
+
+
+// get some property for a user without other reactive dependencies
+// get single value using e.g. OtherUserProp('isAdmin') => Boolean
+OtherUserProp = function(userId, field, options) {
+  var opt = {fields: _.object([field], [true])};
+  var user = Meteor.users.findOne(userId, _.extend(options || {}, opt));
+  return pathValue(user, field); 
+}
+
+// pick some data from a user without all reactive dependencies
+// get obj including fields using e.g. OtherUserProps(['isAdmin','city']) => {_id:..., city:... ,isAdmin:...}
+OtherUserProps = function(userId, fields, options) {
+  var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};
+  return Meteor.users.findOne(userId, _.extend(options || {}, opt));
+}
+
+// get some property from Meteor.user() without other reactive dependencies
+// get single value using e.g. UserProp('isAdmin') => Boolean
+UserProp = function(field, options) {
+  return OtherUserProp(Meteor.userId(), field, options);
+}
+
+// pick some data from Meteor.user() without all reactive dependencies
+// get obj including fields using e.g. UserProps(['isAdmin','city']) => {_id:..., city:... ,isAdmin:...}
+UserProps = function(fields, options) {
+  return OtherUserProps(Meteor.userId(), fields, options)
+}
+
+UI.registerHelper('OtherUserProp', function(userId, prop) {
+  return OtherUserProp(userId, prop);
+});
+UI.registerHelper('UserProp', function(prop) {
+  return UserProp(prop);
+});
+
+
+/* permission helpers */
+
+isAdmin = function(userId) {
+  userId = userId || Meteor.userId();
+  return OtherUserProp(userId, 'isAdmin');
+}
+isAmbassador = function(userId, city) {
+  userId = userId || Meteor.userId();
+  city = city || (Session && Session.get('currentCity')) || UserProp('currentCity');
+  return !!OtherUserProp(userId, 'ambassador') && OtherUserProp(userId, 'city') === city;
+}
+hasAdminPermission = function(userId) {
+  return isAdmin(userId);
+}
+hasAmbassadorPermission = function(userId, city) {
+  return hasAdminPermission(userId) || isAmbassador(userId, city);
+}
+checkAdminPermission = function(userId) {
+  if (!hasAmbassadorPermission(userId))
+    throw new Meteor.Error(500, 'No privilege');
+}
+checkAmbassadorPermission = function(userId) {
+  if (!hasAmbassadorPermission(userId))
+    throw new Meteor.Error(500, 'No privilege');
+}
+
+UI.registerHelper('hasAmbassadorPermission', function() {
+  return hasAmbassadorPermission();
+})
+UI.registerHelper('hasAdminPermission', function() {
+  return hasAdminPermission();
+})
+
+
+/* data helpers */
+
+userView = function(userId, additionalFields) {
+  var user = OtherUserProps(userId, _.union(['profile.name','profile.picture'], additionalFields || []));
+  if (user) {
+    user.foreign = userIsForeign(userId) ? {foreign: "", disabled: ""} : '';
+    user.label = userPictureLabel(userId);
+  }
+  return user;
+}
+
+userIsForeign = function(userId) {
+  var city = OtherUserProp(userId, 'city');
+  return isForeignCity(city);
+}
+
+userPictureLabel = function(userId) {
+  userId = userId || Meteor.userId();
+  var user = OtherUserProps(userId, ['city','localRank','mergedWith','isDeleted','isAccessDenied','isHidden','ambassador'])
+  if (user.mergedWith)             return "Merged with #"+OtherUserProp(user.mergedWith, 'localRank');
+  if (user.isDeleted)              return "Deleted";
+  if (user.isAccessDenied)         return "No Access";
+  if (user.isHidden)               return "Hidden";
+  if (userIsForeign(userId))       return CITYMAP[user.city].name;
+  if (user.ambassador)             return "Ambassador";
+  else                             return "#"+user.localRank;
+}
+
+userSocialName = function(userId, service) {
+  var socialUrl = OtherUserProp(userId, 'profile.social.'+service)
+  return socialNameFromUrl(service, socialUrl);
+}
+
+UI.registerHelper('UserView', function(userId) {
+  return userView(userId);
+});
 

@@ -2,7 +2,8 @@
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hacker = function () { return Users.findOne(hackerId()); }
+var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
+var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
 
 
 Template.hackerEditor.events({
@@ -60,18 +61,17 @@ Template.hackerEditor.events({
 
   },
   "click [action='email']": function(evt) {
-    window.location.href = "mailto:" + hacker().profile.email;
+    window.location.href = "mailto:" + hackerProp('profile.email');
   }
 })
 
 
 Template.hackerEditor.helpers({
   'unverifiedEmail': function() {
-    var user = hacker();
-    return _.findWhere(user.emails, {address: user.profile.email, verified: false});
+    return _.findWhere(hackerProp('emails'), {address: hackerProp('profile.email'), verified: false});
   },
   'statusLabels': function() {
-    var user = hacker();
+    var user = hackerProps();
     var labels = [];
     var unverifiedEmail = !_.findWhere(user.emails, {address: user.profile.email, verified: true});
     if (user.isUninvited)         labels.push({style: 'important', text: 'Not invited'});
