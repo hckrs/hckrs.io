@@ -27,6 +27,7 @@
         {{/if}}
       {{/if}}
     </div>
+
   </div>
 </template>
 
@@ -40,7 +41,9 @@
     {{> afQuickField name="global" id="global"}}
     <div class="buttons">
       <button type="submit" class="btn btn-small btn-primary">Save</button>
-      <a href="#" action="remove" class="btn btn-small btn-inverse light pull-right">Delete</a>
+      {{#if equals mode 'update'}}
+        <a href="#" action="remove" class="btn btn-small btn-inverse light pull-right"><span class="icon icon-white icon-trash "></span></a>
+      {{/if}}
       <a href="#" action="cancel" class="btn btn-small btn-inverse light pull-right">Cancel</a>
     </div>
     {{/autoForm}}
