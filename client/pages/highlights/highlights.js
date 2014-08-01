@@ -39,6 +39,10 @@ HighlightsController = DefaultController.extend({
 });
 
 
+// editor 
+
+var editor = new Editor('Highlights');
+
 
 
 
@@ -48,6 +52,9 @@ HighlightsController = DefaultController.extend({
 Template.highlights.helpers({
   'highlights': function() {
     return HighlightsSorted();
+  },
+  'editor': function() {
+    return editor;
   }
 });
 
@@ -80,7 +87,8 @@ var setupOnePageScroll = function() {
 
   var setSelectedHighlight = function(index) {
     var data = HighlightsSorted({fields: {_id: 1}});
-    Session.set('selectedHighlightId', data && data[index] && data[index]._id);
+    var highlightId = data && data[index] && data[index]._id;
+    editor.select(highlightId);
   }
 
   var $onePageScroll = $("#onePageScroll").onepage_scroll({
@@ -127,4 +135,41 @@ Template.highlights.destroyed = function() {
 }
 
 
+
+// sorting
+
+var updateSort = function(sort) {
+  Meteor.call('updateHighlightsSort', sort, function(err) {
+    if (!err) Router.reload();
+  });
+}
+
+
+// public
+
+HighlightEditor = {}
+
+// init jquery sortable
+HighlightEditor.initSortable = function() {
+  var $pagenation = $(".onepage-pagination");
+
+  // add cursor class
+  $pagenation.addClass('draggable');
+
+  // set highlight id attributes on pagenation circles
+  var ids = _.pluck(HighlightsSorted(), '_id');
+  $pagenation.find("li").each(function(i) { 
+    $(this).attr('data-id', ids[i]); 
+  });
+
+  // init sortable
+  $pagenation.sortable({ 
+    axis: "y",
+    cursor: 'move', 
+    stop: function(event, ui) {
+      var sort = $pagenation.sortable('toArray', {attribute: 'data-id'});
+      updateSort(sort);
+    }
+  });
+}
 

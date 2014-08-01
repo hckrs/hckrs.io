@@ -1,12 +1,10 @@
 <template name="highlights">
   <div id="highlights">
-    {{#if hasAmbassadorPermission}}
-      {{> highlightsEditor}}
-    {{/if}}
+    
     <a href="#" class="up"><img src="img/icon-arrow-up.svg" title="previous" class="up" /></a>
     <a href="#" class="down"><img src="img/icon-arrow-down.svg" class="down" title="next" /></a>
-    <div id="onePageScroll">
     
+    <div id="onePageScroll">
       {{#each highlights}}
         <section>
           <div class="photo" style="background-image:url({{imageUrl}});"></div>
@@ -19,8 +17,18 @@
           {{/if}}
         </section>
       {{/each}}
-
     </div>
+
+    {{#if hasAmbassadorPermission}}
+      {{#editorForm editor}}
+        {{> afQuickField name="title" id="title"}}
+        {{> afQuickField name="subtitle" id="substitle"}}
+        {{> afQuickField name="imageUrl" id="imageUrl"}}
+        {{> afQuickField name="website" id="website"}}
+        {{> afQuickField name="global" id="global"}}
+      {{/editorForm}}
+    {{/if}}
+    
   </div>
 </template>
 

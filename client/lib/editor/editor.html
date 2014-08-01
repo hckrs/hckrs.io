@@ -29,13 +29,13 @@
         
           {{#if IsForeignCity selected.city}}
             <button type="button" action="cancel" class="btn btn-small btn-primary">Done</button>
-            {{#with visibility}}{{> visibilityButton}}{{/with}}
+            {{> visibilityButton}}
           {{/if}}
 
           {{#unless IsForeignCity selected.city}}
             <button type="submit" class="btn btn-small btn-primary">Save</button>
             <button type="button" action="cancel" class="btn btn-small light btn-inverse">Cancel</button>
-            {{#with visibility}}{{> visibilityButton}}{{/with}}
+            {{> visibilityButton}}
             <div class="pull-right">
               <button type="button" action="remove" class="btn btn-small light btn-inverse"><span class="icon icon-white icon-trash"></span></button>
             </div>
@@ -53,7 +53,7 @@
 
 <template name="visibilityButton">
   <div class="btn-group dropup">
-    <button type="button" class="btn btn-small btn-inverse light {{clss}}" {{attr}}><span class="icon icon-white {{icon}}"></span> {{text}}</button>
+    <button type="button" class="btn btn-small btn-inverse light {{visibility.clss}}" {{visibility.attr}}><span class="icon icon-white {{visibility.icon}}"></span> {{visibility.text}}</button>
     <button type="button" class="btn btn-small btn-inverse light dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
     <ul class="dropdown-menu">
       <li><a href="#" action="visibility" toggle="on">Show in {{CurrentCity.name}}</a></li>

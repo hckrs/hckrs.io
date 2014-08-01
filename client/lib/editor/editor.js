@@ -1,15 +1,18 @@
 
 
-Editor = function(namespace) {
+Editor = function(collection) {
   var editor = this;
-  
-  var Collection, 
-      formId = namespace+'Editor';
 
+  this.collection = collection;
   
-  this.setCollection = function(collection) {
-    Collection = collection;
-  }
+  var formId = collection+"Editor";
+  this.formId = formId;
+  
+  var Collection;
+  Meteor.startup(function() {
+    Collection = window[collection];
+    this.Collection = Collection;
+  });
 
 
 
@@ -17,18 +20,18 @@ Editor = function(namespace) {
 
   var _setSelect = function(id) {
     if (mode() === 'add') return;
-    Session.set(namespace+'_selectedId', id);
+    Session.set(formId+'_selectedId', id);
     _setActive();
   }
   var _setMode = function(mode) {
     if (mode === 'add') _setSelect(null);
-    Session.set(namespace+'_editorMode', mode);
+    Session.set(formId+'_editorMode', mode);
     _setActive();
   }
   var _setActive = function(active) {
     if (_.isUndefined(active))
       active = mode() === 'add' || (mode() === 'edit' && selected());
-    Session.set(namespace+'_editorActive', active);
+    Session.set(formId+'_editorActive', active);
   }
 
   // global setters
@@ -54,13 +57,13 @@ Editor = function(namespace) {
   // getters
 
   var mode = function() {
-    return Session.get(namespace+'_editorMode');
+    return Session.get(formId+'_editorMode');
   }
   var show = function() {
     return active() && (mode() !== 'edit' || !isForeignCity(selected().city));
   }
   var active = function() {
-    return Session.get(namespace+'_editorActive');
+    return Session.get(formId+'_editorActive');
   }
   var action = function() {
     switch (mode()) {
@@ -69,7 +72,7 @@ Editor = function(namespace) {
     }
   }
   var selectedId = function() {
-    return Session.get(namespace+'_selectedId');
+    return Session.get(formId+'_selectedId');
   }
   var selected = function() {
     return Collection && Collection.findOne(selectedId()) || null;
@@ -91,63 +94,6 @@ Editor = function(namespace) {
   this.selected = selected;   
 
 
-  Template.editorForm.helpers({
-    'id': function() { return formId; },
-    'collection': function() { return Collection; },
-    'active': function() { return editor.active(); },
-    'show': function() { return editor.show(); }, 
-    'mode': function() { return editor.mode(); }, 
-    'action': function() { return editor.action(); }, 
-    'selected': function() { return editor.selected(); }, 
-    'visibility': function() {
-      var city = Session.get('currentCity');
-      var isHidden = !!Collection.findOne({_id: editor.selectedId(), hiddenIn: city});
-      return {
-        text: isHidden ? 'Hidden' : '',
-        icon: isHidden ? 'icon-eye-close' : 'icon-eye-open',
-        clss: isHidden ? 'flat' : '',
-        attr: {
-          action: 'visibility',
-          toggle: isHidden ? 'on' : 'off',  
-          title: isHidden ? 'Click to make VISIBLE for your users.' : 'Click to HIDE for your users.',
-        }
-      }
-    }
-  });
-
-
-
-  Template.editorForm.events({
-    "click [action='add']": function() {
-      editor.toggle('add');
-    },
-    "click [action='edit']": function() {
-      editor.toggle('edit');
-    },
-    "click [action='visibility']": function(evt) {
-      var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
-      var city = Session.get('currentCity');
-      Collection.update(selectedId(), _.object([action], [{hiddenIn: city}]));
-    },
-     "click [action='cancel']": function() {
-      editor.close();
-    },
-    "click [action='remove']": function(evt) {
-      Collection.remove(selectedId());
-      editor.close();
-    },
-  }); 
-
-  Template.editorForm.rendered = function() {
-    var self = this;
-    Deps.autorun(function(c) {
-      editor.show(); /* reactive depend */
-      self.$("input:first").blur();
-      setTimeout(function() {
-        self.$("input:first").focus();
-      }, 200);
-    });
-  }
 
   AutoForm.addHooks(formId, {
     onSuccess: function(operation, result) {
@@ -158,7 +104,64 @@ Editor = function(namespace) {
 }
 
 
+Template.editorForm.helpers({
+  'id': function() { return this.formId; },
+  'collection': function() { return this.collection; },
+  'active': function() { return this.active(); },
+  'show': function() { return this.show(); }, 
+  'mode': function() { return this.mode(); }, 
+  'action': function() { return this.action(); }, 
+  'selected': function() { return this.selected(); }, 
+});
 
+Template.visibilityButton.visibility = function() {
+  var city = Session.get('currentCity');
+  var isHidden = !!window[this.collection].findOne({_id: this.selectedId(), hiddenIn: city});
+  return {
+    text: isHidden ? 'Hidden' : '',
+    icon: isHidden ? 'icon-eye-close' : 'icon-eye-open',
+    clss: isHidden ? 'flat' : '',
+    attr: {
+      action: 'visibility',
+      toggle: isHidden ? 'on' : 'off',  
+      title: isHidden ? 'Click to make VISIBLE for your users.' : 'Click to HIDE for your users.',
+    }
+  }
+}
+
+
+Template.editorForm.events({
+  "click [action='add']": function() {
+    this.toggle('add');
+  },
+  "click [action='edit']": function() {
+    this.toggle('edit');
+  },
+  "click [action='visibility']": function(evt) {
+    var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
+    var city = Session.get('currentCity');
+    window[this.collection].update(this.selectedId(), _.object([action], [{hiddenIn: city}]));
+  },
+   "click [action='cancel']": function() {
+    this.close();
+  },
+  "click [action='remove']": function(evt) {
+    window[this.collection].remove(this.selectedId());
+    this.close();
+  },
+}); 
+
+Template.editorForm.rendered = function() {
+  var self = this;
+  var editor = self.data;
+  Deps.autorun(function(c) {
+    editor.show(); /* reactive depend */
+    self.$("input:first").blur();
+    setTimeout(function() {
+      self.$("input:first").focus();
+    }, 200);
+  });
+}
 
 
 

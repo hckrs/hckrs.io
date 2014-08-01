@@ -31,10 +31,7 @@ GiftsSorted = function() {
 
 // editor 
 
-var editor = new Editor('gifts');
-Meteor.startup(function() {
-  editor.setCollection(Gifts);
-});
+var editor = new Editor('Gifts');
 
 
 
