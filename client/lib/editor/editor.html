@@ -1,0 +1,63 @@
+
+<template name="editorForm">
+  {{#autoForm id=id collection=collection type=action doc=selected class="toolbar-editor"}}
+    
+    {{#if show}}
+      <div class="panel">
+        {{> UI.contentBlock this}}
+      </div>
+    {{/if}}
+    
+   {{!-- toolbar styling defined in main.styl --}}
+    <div class="toolbar">
+
+      {{!-- default toolbar --}}
+      {{#unless active}}  
+        <button type="button" class="btn btn-small btn-inverse light" action="add"><span class="icon icon-white icon-plus"></span></button>
+        <button type="button" class="btn btn-small btn-inverse light" action="edit"><span class="icon icon-white icon-pencil"></span> Edit</button>
+      {{/unless}}
+
+      {{!-- toolbar for active item --}}
+      {{#if active}}
+        
+        {{#if equals mode "add"}}
+          <button type="submit" class="btn btn-small btn-primary">Save</button>
+          <button type="button" action="cancel" class="btn btn-small light btn-inverse">Cancel</button>
+        {{/if}}
+
+        {{#if equals mode "edit"}}
+        
+          {{#if IsForeignCity selected.city}}
+            <button type="button" action="cancel" class="btn btn-small btn-primary">Done</button>
+            {{#with visibility}}{{> visibilityButton}}{{/with}}
+          {{/if}}
+
+          {{#unless IsForeignCity selected.city}}
+            <button type="submit" class="btn btn-small btn-primary">Save</button>
+            <button type="button" action="cancel" class="btn btn-small light btn-inverse">Cancel</button>
+            {{#with visibility}}{{> visibilityButton}}{{/with}}
+            <div class="pull-right">
+              <button type="button" action="remove" class="btn btn-small light btn-inverse"><span class="icon icon-white icon-trash"></span></button>
+            </div>
+          {{/unless}}
+
+        {{/if}}
+    
+      {{/if}}
+
+    </div>
+  {{/autoForm}}
+</template>
+
+
+
+<template name="visibilityButton">
+  <div class="btn-group dropup">
+    <button type="button" class="btn btn-small btn-inverse light {{clss}}" {{attr}}><span class="icon icon-white {{icon}}"></span> {{text}}</button>
+    <button type="button" class="btn btn-small btn-inverse light dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="#" action="visibility" toggle="on">Show in {{CurrentCity.name}}</a></li>
+      <li><a href="#" action="visibility" toggle="off">Hide in {{CurrentCity.name}}</a></li>
+    </ul>
+  </div>
+</template>

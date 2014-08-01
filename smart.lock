@@ -7,8 +7,7 @@
       "collection-hooks": {},
       "imagemagick": {},
       "autoform": {},
-      "iron-router-progress": {},
-      "kadira": {}
+      "iron-router-progress": {}
     },
     "packages": {
       "iron-router": {
@@ -35,11 +34,6 @@
         "git": "https://github.com/Multiply/iron-router-progress.git",
         "tag": "v0.4.1",
         "commit": "496fcda9a6ec352b4733725f60c6f280250c3541"
-      },
-      "kadira": {
-        "git": "https://github.com/meteorhacks/kadira.git",
-        "tag": "v2.4.9",
-        "commit": "8bb902989917522822a0897117672ae858c23427"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

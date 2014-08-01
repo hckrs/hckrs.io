@@ -5,7 +5,6 @@
     "collection-hooks": {},
     "imagemagick": {},
     "autoform": {},
-    "iron-router-progress": {},
-    "kadira": {}
+    "iron-router-progress": {}
   }
 }
