@@ -1,3 +1,4 @@
+Session.set('giftEditorActive', false);
 Session.set('giftEditorMode', null);
 Session.set('selectedGiftId', null);  
 
@@ -39,7 +40,10 @@ var mode = function() {
   return Session.get('giftEditorMode');
 }
 var show = function() {
-  return mode() === 'add' || (mode() === 'edit' && selected());
+  return active() && (mode() !== 'edit' || !isForeignCity(selected().city));
+}
+var active = function() {
+  return Session.get('giftEditorActive');
 }
 var action = function() {
   switch (mode()) {
@@ -55,26 +59,37 @@ var selected = function() {
 }
 
 var _setSelect = function(id) {
+  if (mode() === 'add') return;
   Session.set('selectedGiftId', id);
+  _setActive();
 }
 var _setMode = function(mode) {
+  if (mode === 'add') _setSelect(null);
   Session.set('giftEditorMode', mode);
+  _setActive();
 }
+var _setActive = function(active) {
+  if (_.isUndefined(active))
+    active = mode() === 'add' || (mode() === 'edit' && selected());
+  Session.set('giftEditorActive', active);
+}
+
 var select = function(id, toggle) {
-  id = (toggle && Session.equals('selectedGiftId', id)) ? null : id; 
-  if (id && mode() === 'add') _setMode('edit');
+  if (toggle && Session.equals('selectedGiftId', id)) 
+    id = null;
   _setSelect(id);
 }
 var open = function(mode, id) {
   _setMode(mode);
   if (id) _setSelect(id);
-  if (mode === 'add') _setSelect(null);
 }
-var close = function() {
-  _setMode(null);     
+var close = function(mode, id) {
+  _setMode(mode || null);
+  if (id) _setSelect(id);
+  _setActive(false);     
 }
 var toggle = function(mode2, id) {
-  mode2 === mode() && (!id || id === selectedId()) ? close() : open(mode2, id);
+  mode2 === mode() && active() && (!id || id === selectedId()) ? close() : open(mode2, id);
 }
 
 
@@ -98,22 +113,31 @@ Template.gift.helpers({
   'isSelected': function() {
     return this._id === selectedId() ? 'selected' : '';
   },
+  'mode': mode,
 });
 
 Template.giftEditor.helpers({
+  'active': active,
   'show': show,
-  'hiddenGift': function() {
-    var city = Session.get('currentCity');
-    return !!Gifts.findOne({_id: selectedId(), hiddenIn: city});
-  },
-  'selected': selected,
-});
-
-Template.giftEditorForm.helpers({
   'mode': mode,
   'action': action,
   'selected': selected,
+  'visibility': function() {
+    var city = Session.get('currentCity');
+    var isHidden = !!Gifts.findOne({_id: selectedId(), hiddenIn: city});
+    return {
+      text: isHidden ? 'Hidden' : '',
+      icon: isHidden ? 'icon-eye-close' : 'icon-eye-open',
+      clss: isHidden ? 'flat' : '',
+      attr: {
+        action: 'visibility',
+        toggle: isHidden ? 'on' : 'off',  
+        title: isHidden ? 'Click to make VISIBLE for your users.' : 'Click to HIDE for your users.',
+      }
+    }
+  }
 });
+
 
 
 /* events */
@@ -142,11 +166,8 @@ Template.giftEditor.events({
     var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
     var city = Session.get('currentCity');
     Gifts.update(selectedId(), _.object([action], [{hiddenIn: city}]));
-  }
-});
-
-Template.giftEditorForm.events({
-  "click [action='cancel']": function() {
+  },
+   "click [action='cancel']": function() {
     close();
   },
   "click [action='remove']": function(evt) {
@@ -155,10 +176,11 @@ Template.giftEditorForm.events({
   },
 });
 
+
 Template.giftEditorForm.rendered = function() {
   var $input = this.$('input:first');
   Deps.autorun(function(c) {
-    mode(); /* reactive depend */
+    show(); /* reactive depend */
     $input.blur();
     setTimeout(function() {
       $input.focus();
@@ -167,9 +189,9 @@ Template.giftEditorForm.rendered = function() {
 }
 
 
-AutoForm.addHooks('giftEditorForm', {
-  onSuccess: function(operation) {
-    close();
+AutoForm.addHooks('giftEditor', {
+  onSuccess: function(operation, result) {
+    close('edit', operation === 'insert' && result);
   }
 });
 

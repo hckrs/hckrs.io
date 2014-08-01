@@ -38,7 +38,7 @@ html, body{
 }
 
 glow() {
-  border: 1px solid rgba(255, 255, 255, .2);
+  border: 2px solid #fff;
   box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, .5);
 }
 
@@ -389,6 +389,10 @@ label.checkbox{
   visibility: hidden;
 }
 
+.btn.flat,
+.btn.flat:hover, {
+  background-image: none;
+}
 
 .edit-mode, #highlightsEditor, #gifts{
     textarea, input[type="text"], select, input[type="password"],
@@ -416,8 +420,52 @@ label.checkbox{
     .light:hover{
       opacity: 1;
     }
+    .light.flat:hover{
+      opacity: 0.65;
+    }
 }
 
+
+$panelWidth = 220px;
+$panelPadding = 28px;
+$toolbarPadding = 5px;
+
+.toolbar-editor {
+  position: fixed;
+  z-index: 2;
+  left: 20px;
+  bottom: 20px;
+  padding: 20px;
+  margin: 0px;
+
+  .toolbar,
+  .panel {
+    border-radius: 5px;
+    background-color: rgba(20,20,20,0.9);
+  }
+
+  .toolbar {
+    margin: 0px;
+    padding: $toolbarPadding;
+  }
+  
+  .panel {
+    width: $panelWidth;
+    padding: $panelPadding;
+    color: #fff;
+    margin-bottom: 5px;
+    label {
+      display: inline-block;
+      margin-left: 6px;
+    }
+    .has-error span {
+      display: inline-block;
+      margin-left: 6px;
+      color: #ee0000; /* error */
+      margin-bottom: 5px;
+    }
+  }
+}
 
 
 /* city select */

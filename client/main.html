@@ -157,7 +157,16 @@
 
 
 
-
+<template name="visibilityButton">
+  <div class="btn-group dropup">
+    <button type="button" class="btn btn-small btn-inverse light {{clss}}" {{attr}}><span class="icon icon-white {{icon}}"></span> {{text}}</button>
+    <button type="button" class="btn btn-small btn-inverse light dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="#" action="visibility" toggle="on">Show in {{CurrentCity.name}}</a></li>
+      <li><a href="#" action="visibility" toggle="off">Hide in {{CurrentCity.name}}</a></li>
+    </ul>
+  </div>
+</template>
 
 
 
