@@ -1,5 +1,5 @@
 @import 'nib'
-
+@import '../../main'
 
 
 /* Gifts */
@@ -9,6 +9,9 @@
   .gift {
     &:hover{
       background-color: rgba(0,0,0,0.2);
+    }
+    &[selected]{
+      glow();
     }
     h3{
       float: left;
@@ -24,9 +27,6 @@
       width: 60px;
       float: right;
     }
-  }
-
-  #giftsContainer.draggable {
     .drag-handle {
       position: relative;
       top: -20px;

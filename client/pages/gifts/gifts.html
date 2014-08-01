@@ -20,24 +20,10 @@
 </template>
 
 <template name="gift">
-  <div class="gift area" data-id="{{_id}}">
+  <div class="gift area" data-id="{{_id}}" {{isSelected}}>
     
     {{#if hasAmbassadorPermission}}
       <div class="drag-handle"></div>
-      <div class="toolbar">
-        <div class="btn-group">
-          {{#if IsForeignCity city}}
-            {{#if hiddenGift}}
-              <button class="btn disabled btn-mini btn-inverse light" action="visibility" toggle="on" data-id="{{_id}}"><span class="icon icon-white icon-eye-close"></span> Hidden</button>
-            {{else}}
-              <button class="btn btn-mini btn-inverse light" action="visibility" toggle="off" data-id="{{_id}}"><span class="icon icon-white icon-ban-circle"></span> Hide</button>
-            {{/if}}
-          {{else}}
-            <button class="btn btn-mini btn-inverse light" action="edit" data-gift="{{_id}}"><span class="icon icon-white icon-pencil"></span></button>
-            
-          {{/if}}
-        </div>
-      </div>
     {{/if}}
 
     <p>  
@@ -63,19 +49,29 @@
 
 <template name="giftEditor">
   <div id="giftEditor">
-    {{#if mode}}
+    
+    {{#if show}}
       {{> giftEditorForm}}
     {{/if}}
+    
     <div class="toolbar btn-toolbar">
-      {{#unless mode}}
-        <button class="btn btn-inverse light add-button" action="add"><span class="icon icon-white icon-plus"></span> New discount</button>
-      {{/unless}}
+      <button class="btn btn-small btn-inverse light" action="add"><span class="icon icon-white icon-plus"></span></button>
+      {{#if IsForeignCity selected.city}}
+        {{#if hiddenGift}}
+          <button class="btn disabled btn-mini btn-inverse light" action="visibility" toggle="on"><span class="icon icon-white icon-eye-close"></span> Hidden</button>
+        {{else}}
+          <button class="btn btn-mini btn-inverse light" action="visibility" toggle="off"><span class="icon icon-white icon-ban-circle"></span> Hide</button>
+        {{/if}}
+      {{else}}
+        <button class="btn btn-small btn-inverse light" action="edit"><span class="icon icon-white icon-pencil"></span> Edit</button>
+      {{/if}}
     </div>
+
   </div>
 </template>
 
 <template name="giftEditorForm">
-  {{#autoForm id="giftEditorForm" collection="Gifts" type=mode doc=selectedDoc}}
+  {{#autoForm id="giftEditorForm" collection="Gifts" type=action doc=selected}}
   {{> afQuickField name="title" id="title"}}
   {{> afQuickField name="description" id="description"}}
   {{> afQuickField name="websiteUrl" id="websiteUrl"}}
@@ -84,8 +80,8 @@
   {{> afQuickField name="global" id="global"}}
   <div class="buttons">
     <button type="submit" class="btn btn-primary">Save</button>
-    {{#if equals mode 'update'}}
-      <a href="#" action="remove" class="btn btn-inverse pull-right" data-gift="{{selectedDoc._id}}"><span class="icon icon-white icon-trash "></span></a>
+    {{#if equals mode 'edit'}}
+      <a href="#" action="remove" class="btn btn-inverse pull-right" data-gift="{{selected._id}}"><span class="icon icon-white icon-trash "></span></a>
     {{/if}}
     <a href="#" action="cancel" class="btn btn-inverse pull-right">Cancel</a>
   </div>

@@ -114,7 +114,7 @@ convertToCurrency = function(value) {
 // with respect to the current city subdomain
 isForeignCity = function(otherCity) {
   var currentCity = Meteor.isClient ? Session.get('currentCity') : UserProp('currentCity');
-  return !currentCity || currentCity !== otherCity;
+  return currentCity && otherCity && currentCity !== otherCity;
 }
 
 socialNameFromUrl = function(service, url) {

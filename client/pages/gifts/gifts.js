@@ -1,18 +1,6 @@
-Session.set('giftIdInEditMode', null)
-Session.set('showGiftAdd', false)
+Session.set('giftEditorMode', null);
+Session.set('selectedGiftId', null);  
 
-var selector = function() {
-  var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
-}
-
-GiftsSorted = function() {
-  var city = Session.get('currentCity');
-  var sort = (GiftsSort.findOne({city: city}) || {}).sort || [];
-  return _.sortBy(Gifts.find(selector()).fetch(), function(gift) {
-    return _.indexOf(sort, gift._id);
-  });
-}
 
 
 // Route Controller
@@ -29,21 +17,70 @@ GiftsController = DefaultController.extend({
 });
 
 
+// query
 
-// helper functions
+var selector = function() {
+  var city = Session.get('currentCity');
+  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+}
+
+GiftsSorted = function() {
+  var city = Session.get('currentCity');
+  var sort = (GiftsSort.findOne({city: city}) || {}).sort || [];
+  return _.sortBy(Gifts.find(selector()).fetch(), function(gift) {
+    return _.indexOf(sort, gift._id);
+  });
+}
+
+
+// session helpers
 
 var mode = function() {
-  if (Session.get('showGiftAdd')) return 'insert';
-  if (Session.get('giftIdInEditMode')) return 'update';
-  return false;
+  return Session.get('giftEditorMode');
+}
+var show = function() {
+  return mode() === 'add' || (mode() === 'edit' && selected());
+}
+var action = function() {
+  switch (mode()) {
+    case 'edit': return 'update';
+    case 'add': return 'insert';
+  }
+}
+var selectedId = function() {
+  return Session.get('selectedGiftId');
+}
+var selected = function() {
+  return Gifts.findOne(selectedId()) || null;
 }
 
+var _setSelect = function(id) {
+  Session.set('selectedGiftId', id);
+}
+var _setMode = function(mode) {
+  Session.set('giftEditorMode', mode);
+}
+var select = function(id, toggle) {
+  id = (toggle && Session.equals('selectedGiftId', id)) ? null : id; 
+  if (id && mode() === 'add') _setMode('edit');
+  _setSelect(id);
+}
+var open = function(mode, id) {
+  _setMode(mode);
+  if (id) _setSelect(id);
+  if (mode === 'add') _setSelect(null);
+}
 var close = function() {
-  Session.set('giftIdInEditMode', null);     
-  Session.set('showGiftAdd', false);
+  _setMode(null);     
+}
+var toggle = function(mode2, id) {
+  mode2 === mode() && (!id || id === selectedId()) ? close() : open(mode2, id);
 }
 
 
+
+
+// Template helpers
 
 Template.gifts.helpers({
   'isEmpty': function() {
@@ -58,48 +95,53 @@ Template.gift.helpers({
   'codeType': function() {
     return /^http/.test(this.code) ? 'url' : 'code';
   },
-  'hiddenGift': function() {
-    var city = Session.get('currentCity');
-    return !!Gifts.findOne({_id: this._id, hiddenIn: city});
-  }
+  'isSelected': function() {
+    return this._id === selectedId() ? 'selected' : '';
+  },
 });
 
 Template.giftEditor.helpers({
-  'mode': function() {
-    return mode();
-  }
+  'show': show,
+  'hiddenGift': function() {
+    var city = Session.get('currentCity');
+    return !!Gifts.findOne({_id: selectedId(), hiddenIn: city});
+  },
+  'selected': selected,
 });
 
 Template.giftEditorForm.helpers({
-  'mode': function() {
-    return mode();
-  },
-  'selectedDoc': function() {
-    return Gifts.findOne(Session.get('giftIdInEditMode')) || null;
-  }
+  'mode': mode,
+  'action': action,
+  'selected': selected,
 });
 
 
 /* events */
 
 Template.gift.events({
-  "click [action='edit']": function(evt) {
-    var giftId = $(evt.currentTarget).data('gift')
-    close();
-    Session.set('giftIdInEditMode', giftId);
+  "click .gift": function(evt) {
+    var giftId = $(evt.currentTarget).data('id');
+    select(giftId, true);
   },
-  "click [action='visibility']": function(evt) {
-    var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
-    var selectedId = $(evt.currentTarget).data('id');
-    var city = Session.get('currentCity');
-    Gifts.update(selectedId, _.object([action], [{hiddenIn: city}]));
-  }
 });
 
 Template.giftEditor.events({
   "click [action='add']": function() {
-    close();
-    Session.set('showGiftAdd', true);
+    toggle('add');
+  },
+  "click [action='edit']": function() {
+    toggle('edit');
+
+    // select first gift
+    if (!selectedId()) {
+      var firstGiftId = $("#giftsContainer .gift").onScreen().data('id');
+      select(firstGiftId);
+    }
+  },
+  "click [action='visibility']": function(evt) {
+    var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
+    var city = Session.get('currentCity');
+    Gifts.update(selectedId(), _.object([action], [{hiddenIn: city}]));
   }
 });
 
@@ -108,8 +150,7 @@ Template.giftEditorForm.events({
     close();
   },
   "click [action='remove']": function(evt) {
-    var giftId = $(evt.currentTarget).data('gift')
-    Gifts.remove(giftId);
+    Gifts.remove(selectedId());
     close();
   },
 });
