@@ -8,6 +8,7 @@ Template.editorForm.helpers({
   'mode': function() { return this.mode(); }, 
   'action': function() { return this.action(); }, 
   'selected': function() { return this.selected(); }, 
+  'editActive': function() { return this.mode() === 'edit' && !this.selected() ? 'active' : ''; },
 });
 
 Template.visibilityButton.visibility = function() {
@@ -28,10 +29,10 @@ Template.visibilityButton.visibility = function() {
 
 Template.editorForm.events({
   "click [action='add']": function() {
-    this.toggle('add');
+    this.open('add');
   },
   "click [action='edit']": function() {
-    this.toggle('edit');
+    this.open('edit');
   },
   "click [action='visibility']": function(evt) {
     var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';

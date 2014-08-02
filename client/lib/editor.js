@@ -1,16 +1,21 @@
 
 Editor = function(collection) {
   var editor = this;
-
-  this.collection = collection;
-  
   var formId = collection+"Editor";
+  var Collection;
+  
+  this.collection = collection;
   this.formId = formId;
   
-  var Collection;
   Meteor.startup(function() {
     Collection = window[collection];
     this.Collection = Collection;
+  });
+
+  var state = new State("formId", {
+    selectedId: null,
+    mode: null,
+    active: false
   });
 
 
@@ -19,18 +24,22 @@ Editor = function(collection) {
 
   var _setSelect = function(id) {
     if (mode() === 'add') return;
-    Session.set(formId+'_selectedId', id);
+    state.set('selectedId', id);
     _setActive();
   }
   var _setMode = function(mode) {
     if (mode === 'add') _setSelect(null);
-    Session.set(formId+'_editorMode', mode);
+    state.set('mode', mode);
     _setActive();
   }
   var _setActive = function(active) {
     if (_.isUndefined(active))
       active = mode() === 'add' || (mode() === 'edit' && selected());
-    Session.set(formId+'_editorActive', active);
+    state.set('active', active);
+  }
+
+  var observe = function(field, cb) {
+    return state.observe(field, cb);
   }
 
   // global setters
@@ -56,13 +65,13 @@ Editor = function(collection) {
   // getters
 
   var mode = function() {
-    return Session.get(formId+'_editorMode');
+    return state.get('mode');
   }
   var show = function() {
-    return active() && (mode() !== 'edit' || !isForeignCity(selected().city));
+    return active() && (mode() !== 'edit' || !isForeignCity(selected() && selected().city));
   }
   var active = function() {
-    return Session.get(formId+'_editorActive');
+    return state.get('active');
   }
   var action = function() {
     switch (mode()) {
@@ -71,12 +80,14 @@ Editor = function(collection) {
     }
   }
   var selectedId = function() {
-    return Session.get(formId+'_selectedId');
+    return state.get('selectedId');
   }
   var selected = function() {
     return Collection && Collection.findOne(selectedId()) || null;
   }
 
+  // observer
+  this.observe = observe;
 
   // global setters
   this.select = select;

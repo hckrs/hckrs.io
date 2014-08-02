@@ -57,52 +57,7 @@
     border-radius: 90px;
     background-color: rgba(255,255,255,0.1);
   }
-
-  .caution-bar {
-    display: none;
-    width: 100%;
-    height: 22px;
-    margin-top: 0px;
-    background: url(/img/caution-bar.png);
-    background-size: cover;
-
-    button {
-      float: right;
-      border-radius: 0px;
-      opacity: 0.9;
-    }
-  }
-
-  &.edit-mode {
-    #map {
-      cursor: crosshair;
-    }
-    .caution-bar {
-      display: block;
-    }
-  }
   
 }
 
 
-
-#placesEditor {
-  position: absolute;
-  z-index: 2;
-  bottom: 0px;
-  right: 0px;
-
-  .form {
-    color: #fff;
-    background-color: rgba(0,0,0,0.3);
-    width: 220px;
-    padding: 28px 27px 64px 28px;
-    .help-block {
-      color: #ee0000; /* error */
-    }
-    .buttons{
-      margin-top: 24px;
-      margin-right: 3px;
-    }
-  }
-}

@@ -5,7 +5,6 @@ var state = new State("places", {
   city: undefined,          // String
   location: undefined,      // Object {lat: Number, lng, Number}
   zoom: 13,                 // Number
-  edit: null,               // String?
   selected: null,           // Object? {filter: String, id: String}
 });
 
@@ -27,49 +26,49 @@ PlacesController = DefaultController.extend({
 });
 
 
+// editor
+
+var editor = new Editor('Places');
+
+
 // Template data
 
 Template.places.helpers({
   'state': function() { return state; },
-  'editMode': function() {
-    return state.get('edit') ? 'edit-mode' : '';
+  'editor': function() {
+    return editor;
   }
 });
 
-Template.placesEditor.helpers({
-  show: function() {
-    var edit = state.get('edit');
-    var selected = state.get('selected');
-    return edit && selected && selected.filter === 'places' ? '' : 'hide';
-  },
-  'selectedDoc': function() {
-    if (state.get('selected'))
-      return Places.findOne(state.get('selected').id);  
-  },
-});
 
-
-// Template events
 
 Template.places.events({
-  "click [action='edit'][type='places']": function (evt) {
-    state.set('edit', 'places');
+  "click  #PlacesEditor [action='add']": function() {
+    var location = _.pick(map.getCenter(), 'lat', 'lng');
+    insertPlace(location, function(id) {
+      editor.open('edit', id);
+    });
   },
-  "click [action='done']": function (evt) {
-    evt.preventDefault();
-    state.set('edit', null);
-  }
+  "click #PlacesEditor [action='edit']": function() {
+
+    // select some
+    if (!editor.selectedId()) {
+      var min = null;
+      var minDist = null;
+      featureLayer.eachLayer(function(marker) {
+        var dist = map.getCenter().distanceTo(marker.getLatLng());
+        var isPlace = marker.feature.properties.filter === 'places';
+        if (isPlace && (!min || dist < minDist)) {
+          min = marker;
+          minDist = dist;
+        }
+      });
+      if (min)
+        editor.select(min.feature.properties.id);
+    }
+  },
 });
 
-Template.placesEditor.events({
-  "click [action='cancel']": function (evt) {
-    state.set('selected', null);
-  },
-  "click [action='remove']": function (evt) {
-    var id = state.get('selected').id;
-    removePlace(id);
-  }
-})
 
 
 // Template instance
@@ -101,15 +100,21 @@ Template.places.rendered = function() {
   });
   initialized = true;
 
-  this.editObserver = state.observe('edit', function(mode) {
+  this.modeObserver = editor.observe('mode', function(mode) {
     reload();
-    state.set('selected', null);
-    clear();
+    if (!mode) 
+      clear();
+  });
+
+  this.editorObserver = editor.observe('selectedId', function(id) {
+    state.set('selected', id && {id: id, filter: 'places'} || null);
   });
 
   this.selectedObserver = state.observe('selected', function(selected) {
     openFeaturePopup(featureLayer, selected);
-    clear();
+    editor.select(selected && selected.id);
+    if (selected) 
+      clear(selected.id);
   });
 
   reload();
@@ -117,16 +122,20 @@ Template.places.rendered = function() {
 
 Template.places.destroyed = function() {
   this.dataObserver.stop();
-  this.editObserver.stop();
+  this.modeObserver.stop();
+  this.editorObserver.stop();
   this.selectedObserver.stop();
 }
+
+
 
 
 /* Reload */
 
 var reload = function() {
   setData(featureLayer);
-  switchMode(map, featureLayer, state.get('edit'));
+  openFeaturePopup(featureLayer, state.get('selected'))
+  switchMode(map, featureLayer);
 }
 
 
@@ -236,38 +245,26 @@ var setupFilters = function(featureLayer, $) {
 var openFeaturePopup = function(featureLayer, selected) {
   featureLayer.eachLayer(function(marker) {
     var props = marker.feature.properties;
-    if (selected && selected.id === props.id)
+    if (selected && selected.id === props.id) {
       marker.openPopup();
-    else
+
+      // ambassador can move markers
+      if (hasAmbassadorPermission() && editor.mode() === 'edit' && props.filter === 'places')
+        marker.dragging.enable();
+    }
+    else {
       marker.closePopup();
+      marker.dragging.disable();
+    }
   });
 }
 
 
 /* Mode */
 
-var switchMode = function(map, featureLayer, editMode) {
-
+var switchMode = function(map, featureLayer) {
   resetEvents(map, featureLayer);
-
-  if (editMode) {
-
-    // edit mode
-    setEditEvents(map, featureLayer);
-    featureLayer.eachLayer(function(marker) {
-      if (marker.feature.properties.filter === 'places')
-        marker.dragging.enable()
-    });
-
-  } else {
-
-    // view mode
-    setDefaultEvents(map, featureLayer);
-    featureLayer.eachLayer(function(marker) {
-      marker.dragging.disable()
-    });
-  }
-  
+  setDefaultEvents(map, featureLayer);
 }
 
 
@@ -284,40 +281,13 @@ var resetEvents = function(map, featureLayer) {
 }
 
 var setDefaultEvents = function(map, featureLayer) {
-  featureLayer.on('mouseover', function(e) {
-    e.layer.openPopup();
-  });
-  featureLayer.on('mouseout', function(e) {
-    e.layer.closePopup();
-  });
   featureLayer.on('click', function(e) {
-    e.layer.openPopup();
-    var url = e.layer.feature.properties.url;
-    if (url && _.contains(['/','#'], url[0])) // relative url
-      Router.go(url);
-    else if (url && /^http/.test(url)) // absolute url
-      window.open(url)
-  });
-}
-
-var setEditEvents = function(map, featureLayer) {
-  
-  var timer;
-  map.on('click', function(e) {
-
-    var createMarker = function() {
-      var location = _.pick(e.latlng, 'lat', 'lng');
-      insertPlace(location);
-      timer = null;
-    }
-    
-    if (timer) { // skip double click  
-      clearTimeout(timer);
-      timer = null;
+    var selected = state.get('selected');
+    if (selected && selected.id === e.layer.feature.properties.id) {
+      state.set('selected', null);
     } else {
-      timer = setTimeout(createMarker, 350);
+      state.set('selected', _.pick(e.layer.feature.properties, 'id', 'filter'));
     }
-    
   });
   featureLayer.on('mouseover', function(e) {
     if (state.get('selected')) return;
@@ -327,17 +297,19 @@ var setEditEvents = function(map, featureLayer) {
     if (state.get('selected')) return;
     e.layer.closePopup();
   });
-  featureLayer.on('click', function(e) {
-    e.layer.openPopup();
-    state.set('selected', _.pick(e.layer.feature.properties, 'id', 'filter'));
-  });
+
+  // dragging
   featureLayer.eachLayer(function(marker) {
+    var markerId = marker.feature.properties.id;
+    
+    // update location
     marker.on('dragend', function(e) {
-      var location = _.pick(marker.getLatLng(), 'lat', 'lng');
-      updateLocation(marker.feature.properties.id, location);
+      updateLocation(markerId, _.pick(marker.getLatLng(), 'lat', 'lng'));
     });
   });
 }
+
+
 
 
 /* Data */
@@ -385,7 +357,7 @@ var hackersFeatures = function() {
 // create a geojson feature for each place from the Places collection.
 var placesFeatures = function() {
 
-  return Places.find({}).map(function(place) {
+  return Places.find(selector()).map(function(place) {
     return { // geojson feature object
       "type": "Feature",
       "geometry": {
@@ -398,7 +370,8 @@ var placesFeatures = function() {
         "description": _.compact([place.description, place.url]).join('<br/>'),
         "type": place.type,
         "url": place.url,
-        "id": place._id
+        "id": place._id,
+        "marker-color": "#f00",
       },
     };
   });
@@ -408,10 +381,15 @@ var placesFeatures = function() {
 
 /* DB */
 
+var selector = function() {
+  var city = Session.get('currentCity');
+  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+}
+
 // create marker on clicked location
-var insertPlace = function(location) {
+var insertPlace = function(location, cb) {
   Places.insert({location: location}, function(err, id) {
-    state.set('selected', {filter: "places", id: id});
+    cb && !err && cb(id);
   });
 }
 
@@ -427,21 +405,17 @@ var updateLocation = function(id, location) {
 }
 
 // deselect after submit form
-AutoForm.addHooks('placesEditorForm', {
+AutoForm.addHooks(editor.formId, {
   beginSubmit: function(formId) {
     var title = $("#"+formId).find("input[name='title']").val();
     if (!title)
       throw "title field is empty";
-  },
-  onSuccess: function() {
-    state.set('selected', null);
   }
 });
 
 // clear untitled markers
-var clear = function() {
-  var selectedId = state.get('selected') && state.get('selected').id;
-  Places.find({_id: {$ne: selectedId}, title: {$exists: false}}).forEach(function(place) {
+var clear = function(withoutId) {
+  Places.find({_id: {$ne: withoutId}, title: {$exists: false}}).forEach(function(place) {
     Places.remove(place._id);
   });
 }

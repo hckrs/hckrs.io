@@ -72,12 +72,13 @@ Template.gift.events({
   },
 });
 
-Template.editorForm.events({
-  "click [action='edit']": function() {
+Template.gifts.events({
+  "click #GiftsEditor [action='edit']": function() {
     // select first gift
     if (!editor.selectedId()) {
       var firstGiftId = $("#giftsContainer .gift").onScreen().data('id');
-      editor.select(firstGiftId);
+      if (firstGiftId) 
+        editor.select(firstGiftId);
     }
   },
 });

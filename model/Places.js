@@ -46,7 +46,12 @@ Schemas.Place = new SimpleSchema([
     "location.lng": {
       type: Number,
       decimal: true
-    }
+    },
+    "hiddenIn": {
+      type: [String],
+      allowedValues: CITYKEYS,
+      optional: true
+    },
   }
 ]);
 

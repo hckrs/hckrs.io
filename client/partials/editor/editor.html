@@ -14,7 +14,7 @@
       {{!-- default toolbar --}}
       {{#unless active}}  
         <button type="button" class="btn btn-small btn-inverse light" action="add"><span class="icon icon-white icon-plus"></span></button>
-        <button type="button" class="btn btn-small btn-inverse light" action="edit"><span class="icon icon-white icon-pencil"></span> Edit</button>
+        <button type="button" class="btn btn-small btn-inverse light {{editActive}}" action="edit"><span class="icon icon-white icon-pencil"></span> Edit</button>
       {{/unless}}
 
       {{!-- toolbar for active item --}}
