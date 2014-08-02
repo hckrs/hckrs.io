@@ -1,7 +1,7 @@
 // State
 var map, featureLayer;
 
-var state = new State("places", {
+var state = new State("map", {
   city: undefined,          // String
   location: undefined,      // Object {lat: Number, lng, Number}
   zoom: 13,                 // Number
@@ -13,8 +13,8 @@ var zoomLevelPictures = 14;
 
 // Route Controller
 
-PlacesController = DefaultController.extend({
-  template: 'places',
+MapController = DefaultController.extend({
+  template: 'map',
   waitOn: function () {
     return [
       Meteor.subscribe('places')
@@ -33,7 +33,7 @@ var editor = new Editor('Places');
 
 // Template data
 
-Template.places.helpers({
+Template.map.helpers({
   'state': function() { return state; },
   'editor': function() {
     return editor;
@@ -42,7 +42,7 @@ Template.places.helpers({
 
 
 
-Template.places.events({
+Template.map.events({
   "click  #PlacesEditor [action='add']": function() {
     var location = _.pick(map.getCenter(), 'lat', 'lng');
     insertPlace(location, function(id) {
@@ -73,7 +73,7 @@ Template.places.events({
 
 // Template instance
 
-Template.places.created = function() {
+Template.map.created = function() {
   var city = Session.get('currentCity');
   if (!state.equals('city', city)) {
     state.set('city', city);
@@ -83,7 +83,7 @@ Template.places.created = function() {
 }
 
 
-Template.places.rendered = function() {
+Template.map.rendered = function() {
   
   // Setup map
   map           =  setupMap();
@@ -120,7 +120,7 @@ Template.places.rendered = function() {
   reload();
 }
 
-Template.places.destroyed = function() {
+Template.map.destroyed = function() {
   this.dataObserver.stop();
   this.modeObserver.stop();
   this.editorObserver.stop();
@@ -144,7 +144,7 @@ var reload = function() {
 
 var setupMap = function() {
 
-  var map = L.mapbox.map('map', 'ramshorst.gd0ekbb3');
+  var map = L.mapbox.map('mapbox', 'ramshorst.gd0ekbb3');
 
   // properties
   map.setView(state.get('location'));

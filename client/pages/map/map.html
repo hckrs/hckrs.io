@@ -1,6 +1,6 @@
-<template name="places">
-  <div id="places">
-    <div id="placesMode" class="{{editMode}}">
+<template name="map">
+  <div id="map">
+    <div id="mapMode">
 
       {{#if hasAmbassadorPermission}}
         {{#editorForm editor}}
@@ -32,7 +32,7 @@
     	</div>
       
       
-      <div id="map" class="dark"></div>
+      <div id="mapbox" class="dark"></div>
 
     </div>
   </div>
