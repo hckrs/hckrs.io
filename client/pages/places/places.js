@@ -189,7 +189,7 @@ var setupFeatureLayer = function(map) {
       if (type) {
         marker.setIcon(L.icon({
           iconUrl:      "/img/markers/"+type+".png",
-          className:    "marker-place marker-"+type,
+          className:    "marker-place "+type,
           iconSize:     [27, 40], // size of the icon
           iconAnchor:   [13, 40], // point of the icon which will correspond to marker's location
           popupAnchor:  [0, -40] // point from which the popup should open relative to the iconAnchor
@@ -203,14 +203,22 @@ var setupFeatureLayer = function(map) {
         // hacker image
         marker.setIcon(L.icon({
           iconUrl:      props.image,
-          className:    "marker-hacker",
+          className:    "marker-hacker picture",
           iconSize:     [40, 40], // size of the icon
           iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
           popupAnchor:  [0, -20] // point from which the popup should open relative to the iconAnchor
         }));
 
       } else {
-        marker.setOpacity(0.5);
+
+        // hacker point
+        marker.setIcon(L.icon({
+          iconUrl:      "/img/markers/point.png",
+          className:    "marker-hacker point",
+          iconSize:     [12, 12], // size of the icon
+          iconAnchor:   [6, 6], // point of the icon which will correspond to marker's location
+          popupAnchor:  [0, -6] // point from which the popup should open relative to the iconAnchor
+        }));
       }
     }
   });
