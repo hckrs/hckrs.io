@@ -673,3 +673,6 @@ UI.registerHelper('UserView', function(userId) {
   return userView(userId);
 });
 
+UI.registerHelper('UserSocialName', function(userId, service) {
+  return userSocialName(userId, service);
+});

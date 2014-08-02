@@ -5,26 +5,31 @@
     "simpleSchemeDebug": false,
     "mapbox": {
       "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
+    },
+
+    "facebook": {
+      "appId": "1402626163309473"
+    },
+    "github": {
+      "clientId": "74c41a9f83da9e1569ae"
+    },
+    "twitter": {
+      "consumerKey": "dFDe4rs6hfpeM4vAPeeKw"
     }
+  },
+
+  "facebook": {
+    "secret": "4d314c3268371d8afb1d7e4527433832"
+  },
+  "github": {
+    "secret": "22235b8a49a6cbf3ba15b5b1bc75cedf03b77b62"
+  },
+  "twitter": {
+    "secret": "e8KypeNYmHK6vELl1Nyvutj7FZnoSR6r2AXXOfu1oU"
   },
 
   "newrelic": {
     "NEW_RELIC_LICENSE_KEY": "74c38a63cd258d4834daea40cb5509eed29bc3db",
     "NEW_RELIC_APP_NAME": "hckrs"
-  },
-
-  "facebook": {
-    "appId": "1402626163309473",
-    "secret": "4d314c3268371d8afb1d7e4527433832"
-  },
-
-  "github": {
-    "clientId": "74c41a9f83da9e1569ae",
-    "secret": "22235b8a49a6cbf3ba15b5b1bc75cedf03b77b62"
-  },
-
-  "twitter": {
-    "consumerKey": "dFDe4rs6hfpeM4vAPeeKw",
-    "secret": "e8KypeNYmHK6vELl1Nyvutj7FZnoSR6r2AXXOfu1oU"
   }
 }

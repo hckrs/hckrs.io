@@ -167,10 +167,16 @@ Router.goToCity = function(city) {
   window.location.href = Url.replaceCity(city, url);
 }
 
-Router.routes['hacker'].path = function(userId) {
+Router.routes['hacker'].path = function(userId, absolute) {
   if (_.isObject(userId)) userId = userId._id;
   var hash = Url.bitHash(OtherUserProp(userId, 'localRank'));
-  return userIsForeign(userId) ? "#" : "/"+hash;
+  return userIsForeign(userId) && !absolute ? "#" : "/"+hash;
+}
+Router.routes['hacker'].url = function(userId) {
+  var path = Router.routes['hacker'].path(userId, true);
+  var city = OtherUserProp(userId, 'city');
+  var url = Url.replaceCity(city, Meteor.absoluteUrl(Url.stripTrailingSlash(path)));
+  return url;
 }
 
 Router.routes['invite'].url = function(params) {

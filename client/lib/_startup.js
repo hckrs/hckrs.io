@@ -24,10 +24,13 @@ Meteor.startup(function() {
 
   // observer login state
   Login.init();
-  
+
+  // Facebook SDK
+  initFacebook();  
+
+  // Twitter SDK
+  initTwitter();  
 });
-
-
 
 
 
@@ -79,4 +82,36 @@ var initPageTransitions = function() {
       }, 0);
     }
   });
+}
+
+// initialize Facebook SDK
+var initFacebook = function() {
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : Settings['facebook'].appId,
+      xfbml      : false,
+      version    : 'v2.0'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) return;
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+}
+
+// initialize Twitter SDK
+var initTwitter = function () {
+  (function(d,s,id){
+    var js, fjs = d.getElementsByTagName(s)[0], p=/^http:/.test(d.location)?'http':'https';
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = p + '://platform.twitter.com/widgets.js';
+    fjs.parentNode.insertBefore(js,fjs);
+  }(document, 'script', 'twitter-wjs'));
 }
