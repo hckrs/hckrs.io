@@ -12,7 +12,7 @@ Editor = function(collection) {
     this.Collection = Collection;
   });
 
-  var state = new State("formId", {
+  var state = new State(formId, {
     selectedId: null,
     mode: null,
     active: false
