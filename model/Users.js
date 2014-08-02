@@ -660,7 +660,7 @@ userPictureLabel = function(userId) {
   if (user.isAccessDenied)         return "No Access";
   if (user.isHidden)               return "Hidden";
   if (userIsForeign(userId))       return CITYMAP[user.city].name;
-  if (user.ambassador)             return "Ambassador";
+  if (user.ambassador)             return user.ambassador.title || "Ambassador";
   else                             return "#"+user.localRank;
 }
 
