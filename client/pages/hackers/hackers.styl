@@ -58,8 +58,10 @@
     border-radius: 16px;
   }  
 
-  &:before {
+  &[label]:not([label=""]):before {
     content: attr(label);
+  }
+  &:before {
     color: #fff; 
     font-weight: bold;
     cursor: default;
