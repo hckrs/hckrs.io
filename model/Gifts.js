@@ -18,21 +18,16 @@ Schemas.Gifts = new SimpleSchema([
       optional: true,
       label: 'Extra information'
     },
-    "websiteUrl": {
+    "url": {
       type: String,
       optional: true,
       autoValue: AutoValue.prefixUrlWithHTTP,
-      label: 'Website / redeem URL'
-    },
-    "websiteName": {
-      type: String,
-      optional: true,
-      label: 'Company'
+      label: 'Company URL'
     },
     "code": {
       type: String,
       optional: true,
-      label: 'Discount code'
+      label: 'Discount code / URL'
     },
     "hiddenIn": {
       type: [String],

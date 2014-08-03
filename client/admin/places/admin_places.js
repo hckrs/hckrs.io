@@ -24,7 +24,7 @@ Template.admin_places.helpers({
         'type', 
         'title', 
         'description', 
-        Field.url('url'),
+        Field.url,
       ],
     }
   }

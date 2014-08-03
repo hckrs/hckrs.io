@@ -24,7 +24,7 @@ Template.admin_gifts.helpers({
         Field.global, 
         'title', 
         'description', 
-        Field.url('websiteUrl', 'websiteName'), 
+        Field.url, 
         'code'
       ],
     }

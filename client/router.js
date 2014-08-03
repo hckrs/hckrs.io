@@ -191,6 +191,7 @@ Router.goToCity = function(city) {
 
 
 Router.routes['hacker'].path = function(userId, absolute) {
+  absolute = _.isBoolean(absolute) ? absolute : false;
   if (_.isObject(userId)) userId = userId._id;
   var hash = Url.bitHash(OtherUserProp(userId, 'localRank'));
   return userIsForeign(userId) && !absolute ? "#" : "/"+hash;

@@ -24,7 +24,7 @@ Template.admin_highlights.helpers({
         Field.global, 
         'title', 
         'subtitle', 
-        Field.url('website'), 
+        Field.url, 
       ],
     }
   }

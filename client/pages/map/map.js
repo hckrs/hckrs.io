@@ -194,6 +194,13 @@ var setupFeatureLayer = function(map) {
           iconAnchor:   [13, 40], // point of the icon which will correspond to marker's location
           popupAnchor:  [0, -40] // point from which the popup should open relative to the iconAnchor
         }));
+
+        // make popup
+        var popup = [];
+        if (props.title)       popup.push("<strong>"+props.title+"</strong>");
+        if (props.description) popup.push(props.description);
+        if (props.url)         popup.push(Safe.url(props.url));
+        marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
       }
     
     } else if (props.filter === 'hackers') {
@@ -220,6 +227,12 @@ var setupFeatureLayer = function(map) {
           popupAnchor:  [0, -6] // point from which the popup should open relative to the iconAnchor
         }));
       }
+
+      // make popup
+      var popup = [];
+      popup.push("<strong>"+props.title+"</strong>");
+      popup.push(Safe.hackerPath(props.id, {text: 'hacker #'+props.localRank, target: 'self'}));
+      marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
     }
   });
 
@@ -338,7 +351,7 @@ var hackersFeatures = function() {
   var selector = {
     "city": Session.get('currentCity'),
     "profile.location.lat": {$type: 1}, 
-    "profile.location.lng": {$type: 1}
+    "profile.location.lng": {$type: 1},
   };
    
   return Users.find(selector).map(function(user) {
@@ -353,6 +366,7 @@ var hackersFeatures = function() {
         "title": user.profile.name,
         "image": user.profile.picture,
         "url": Router.routes['hacker'].path(user),
+        "localRank": user.localRank,
         "id": user._id,
         // "marker-symbol": "marker-stroked",
         "marker-size": "small",
@@ -375,7 +389,7 @@ var placesFeatures = function() {
       "properties": {
         "filter": "places",
         "title": place.title,
-        "description": _.compact([place.description, place.url]).join('<br/>'),
+        "description": place.description,
         "type": place.type,
         "url": place.url,
         "id": place._id,

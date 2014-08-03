@@ -16,8 +16,7 @@
       {{#editorForm editor}}
         {{> afQuickField name="title" id="title"}}
         {{> afQuickField name="description" id="description"}}
-        {{> afQuickField name="websiteUrl" id="websiteUrl"}}
-        {{> afQuickField name="websiteName" id="websiteName"}}
+        {{> afQuickField name="url" id="url"}}
         {{> afQuickField name="code" id="code"}}
         {{> afQuickField name="global" id="global"}}
       {{/editorForm}}
@@ -37,8 +36,8 @@
 
     <p>  
       <div class="highlighted">{{title}}</div>
-      {{#if websiteUrl}}
-        <H3><a href="{{websiteUrl}}" target="_blank">{{websiteName}}</a></h3>
+      {{#if url}}
+        <H3><a href="{{url}}" target="_blank">{{Domain url}}</a></h3>
       {{/if}}
       {{#if description}}
         <div class="description">{{description}}</div>

@@ -8,8 +8,8 @@
       {{#each highlights}}
         <section>
           <div class="photo" style="background-image:url({{imageUrl}});"></div>
-          {{#if website}}
-            <a href="{{website}}" target="_blank">
+          {{#if url}}
+            <a href="{{url}}" target="_blank">
               {{> highlightSectionDetails}}
             </a>
           {{else}}
@@ -24,7 +24,7 @@
         {{> afQuickField name="title" id="title"}}
         {{> afQuickField name="subtitle" id="substitle"}}
         {{> afQuickField name="imageUrl" id="imageUrl"}}
-        {{> afQuickField name="website" id="website"}}
+        {{> afQuickField name="url" id="url"}}
         {{> afQuickField name="global" id="global"}}
       {{/editorForm}}
     {{/if}}
@@ -65,8 +65,8 @@
       <div class="description">{{description}}</div>
     {{/if}}
 
-    {{#if website}}
-      <div class="url">{{Domain website}}</div>
+    {{#if url}}
+      <div class="url">{{Domain url}}</div>
     {{/if}}
 
   </div>        

@@ -11,28 +11,6 @@ Template.admin_header.helpers({
 })
 
 
-/* SafeString */
-
-Safe = {}
-
-Safe.string = function(str) {
-  return new Spacebars.SafeString(str);
-}
-
-Safe.url = function(url, name) {
-  name = name || url;
-  return url ? Safe.string('<a href="'+url+'" target="_blank">'+name+'</a>') : '';
-}
-
-Safe.email = function(email, name) {
-  name = name || email;
-  return email ? Safe.string('<a href="mailto:'+email+'">'+name+'</a>') : '';
-}
-
-Safe.hackerUrl = function(id, name) {
-  var url = Router.routes['hacker'].url(id);
-  return Safe.url(url, name);
-}
 
 
 /* DATA FIELD */
@@ -53,7 +31,7 @@ Field.city = {
   label: 'city',
   fn: function(val, obj) {
     var url = Url.replaceCity(val, Meteor.absoluteUrl());
-    return Safe.url(url, val);
+    return Safe.url(url, {text: val});
   }
 }
 
@@ -65,14 +43,12 @@ Field.global = {
   }
 }
 
-Field.url = function(key, name, label) {
-  return {
-    key: key,
-    label: label || 'url',
-    fn: function(val, obj) {
-      name = (name && obj[name]) || 'link';
-      return Safe.url(val, name);
-    }
+Field.url = {
+  key: 'url',
+  label: 'url',
+  fn: function(val, obj) {
+    text = obj['urlText'] || 'link';
+    return Safe.url(val, {text: text});
   }
 }
 
@@ -82,7 +58,7 @@ Field.url = function(key, name, label) {
 Field.fn = {}
 
 Field.fn.email = function(val, obj) {
-  return val ? Safe.email(val, 'e-mail') : '';
+  return val ? Safe.email(val, {text: 'e-mail'}) : '';
 }
 
 

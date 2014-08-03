@@ -23,7 +23,7 @@ Schemas.Highlight = new SimpleSchema([
       optional: true,
       label: 'Information'
     },
-    "website": {
+    "url": {
       type: String,
       optional: true,
       regEx: SimpleSchema.RegEx.Url,
