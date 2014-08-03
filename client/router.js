@@ -3,7 +3,12 @@
 var routes = [
   
   // ambassador routes
-  [ 'ambassador'   , '/ambassador'           ],
+  [ 'admin'              , '/admin'             ],
+  [ 'admin_dashboard'    , '/admin/dashboard'   ],
+  [ 'admin_highlights'   , '/admin/highlights'  ],
+  [ 'admin_hackers'      , '/admin/hackers'     ],
+  [ 'admin_gifts'        , '/admin/gifts'       ],
+  [ 'admin_places'       , '/admin/places'      ],
 
   // normal routes
   [ 'about'        , '/about'                ],
@@ -129,8 +134,7 @@ Router.onRun(GAnalytics.pageview);
 /* global router configuration */
 
 Router.configure({
-  autoRender: true,
-  layoutTemplate: "main"
+  autoRender: true
 });
 
 IronRouterProgress.configure({

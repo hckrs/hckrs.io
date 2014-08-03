@@ -5,6 +5,7 @@
     "collection-hooks": {},
     "iron-router": {},
     "iron-router-progress": {},
-    "GAnalytics": {}
+    "GAnalytics": {},
+    "reactive-table": {}
   }
 }

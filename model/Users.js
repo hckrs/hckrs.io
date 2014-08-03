@@ -664,6 +664,23 @@ userPictureLabel = function(userId) {
   else                             return "#"+user.localRank;
 }
 
+userStatusLabel = function(userId) {
+  userId = userId || Meteor.userId();
+  var user = OtherUserProps(userId, undefined); // XXX TODO, SPECIFY fields
+  var labels = [];
+  var unverifiedEmail = !_.findWhere(user.emails, {address: user.profile.email, verified: true});
+  if (user.isUninvited)         labels.push({style: 'important', text: 'Not invited'});
+  if (!user.profile.name)       labels.push({style: 'important', text: 'No name'});
+  if (!user.profile.email)      labels.push({style: 'important', text: 'No email'});
+  if (unverifiedEmail)          labels.push({style: 'important', text: 'Email unverified'});
+  if (user.isIncompleteProfile) labels.push({style: 'warning', text: 'Incomplete profile'});
+  if (user.isAccessDenied)      labels.push({style: 'warning', text: 'No access'});
+  if (user.isHidden)            labels.push({style: 'warning', text: 'Hidden'});
+  if (user.isAdmin)             labels.push({style: 'success', text: 'Admin'});
+  if (user.ambassador)          labels.push({style: 'success', text: 'Ambassador'});
+  return labels;
+}
+
 userSocialName = function(userId, service) {
   var socialUrl = OtherUserProp(userId, 'profile.social.'+service)
   return socialNameFromUrl(service, socialUrl);

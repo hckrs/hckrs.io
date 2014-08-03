@@ -7,7 +7,8 @@
       "collection-hooks": {},
       "iron-router": {},
       "iron-router-progress": {},
-      "GAnalytics": {}
+      "GAnalytics": {},
+      "reactive-table": {}
     },
     "packages": {
       "autoform": {
@@ -40,6 +41,11 @@
         "tag": "v0.2.0",
         "commit": "2d5e48d5cc4c2f88edd40c0b2341d378bd4a702b"
       },
+      "reactive-table": {
+        "git": "https://github.com/ecohealthalliance/reactive-table.git",
+        "tag": "v0.3.17",
+        "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
+      },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",
         "tag": "v0.6.0",
@@ -54,6 +60,11 @@
         "git": "https://github.com/EventedMind/iron-layout.git",
         "tag": "v0.2.0",
         "commit": "4a2d53e35ba036b0c189c7ceca34be494d4c6c97"
+      },
+      "just-i18n": {
+        "git": "https://github.com/subhog/meteor-just-i18n.git",
+        "tag": "v0.3.0",
+        "commit": "a60e7f4350fb9648d6f6b4a01acbbc114c4f4343"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

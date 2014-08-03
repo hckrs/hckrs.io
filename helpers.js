@@ -98,6 +98,30 @@ newDate = function(dateString) {
   return moment(dateString, "YYYY-MM-DD hh:mm:ss").toDate();
 }
 
+dateTimeFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "YYYY/MM/DD hh:mm";
+  return moment(date).format(format);
+}
+
+dateFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "YYYY/MM/DD";
+  return moment(date).format(format);
+}
+
+timeFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "hh:mm";
+  return moment(date).format(format);
+}
+
+
+
+
 fixedDecimals = function(value, decimals) {
   return parseFloat(value).toFixed(decimals);
 }
@@ -318,10 +342,7 @@ if (Meteor.isClient) {
 
   // template helper to transform Date() object to readable tring
   UI.registerHelper('Date', function(date, format) {
-    if (!date) return "";
-    if (!_.isString(format)) 
-      format = "YYYY/MM/DD";
-    return moment(date).format(format);
+    return dateFormat(date, format);
   });
 
   // template helper to convert number to valuta string 

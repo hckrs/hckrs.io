@@ -1,0 +1,20 @@
+<template name="admin_layout">
+  <div id="admin_layout" class="admin-layout">
+    {{> admin_header}}
+    {{> yield}}
+  </div>
+</template>
+
+
+<template name="admin_header">
+  <div id="admin_header" class="header">
+    <a href="{{pathFor 'highlights'}}" {{active 'highlights'}}><strong>hckrs.io</strong></a> |
+    <a href="{{pathFor 'admin_highlights'}}" {{active 'admin_highlights'}}>highlights</a>
+    <a href="{{pathFor 'admin_hackers'}}" {{active 'admin_hackers'}}>hackers</a>
+    <a href="{{pathFor 'admin_places'}}" {{active 'admin_places'}}>places</a>
+    <a href="{{pathFor 'admin_gifts'}}" {{active 'admin_gifts'}}>gifts</a>
+  </div>
+</template>
+
+
+

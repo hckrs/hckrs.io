@@ -1,6 +1,6 @@
 
 DefaultController = RouteController.extend({
-  
+  layoutTemplate: "main",
   onRun: function() {
 
   },
@@ -22,3 +22,6 @@ DefaultController = RouteController.extend({
   }
 });
 
+DefaultAdminController = DefaultController.extend({
+  layoutTemplate: "admin_layout"
+});

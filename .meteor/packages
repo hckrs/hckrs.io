@@ -31,3 +31,4 @@ collection-hooks
 iron-router
 iron-router-progress
 GAnalytics
+reactive-table

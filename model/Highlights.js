@@ -94,10 +94,13 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];  
 
-    if (user.currentCity !== city)
-      return []; 
+    if (city === 'all' && user.isAdmin)
+      return Highlights.find({});      
 
-    return Highlights.find({$or: [{global: true}, {city: city}]});
+    if (user.currentCity === city)
+      return Highlights.find({$or: [{global: true}, {city: city}]});      
+
+    return [];
   });
 
   // Only publish sortings for the city the user is visiting
