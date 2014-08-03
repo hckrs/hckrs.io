@@ -64,7 +64,7 @@ var initPageTransitions = function() {
   var disableTransition = false;
   window.addEventListener('popstate', function() {
     disableTransition = true;
-    Meteor.setTimeout(function() { 
+    setTimeout(function() { 
       disableTransition = false; 
     }, 500);
   });
@@ -73,12 +73,12 @@ var initPageTransitions = function() {
   _.each(Template, function(template, templateName) {
     var prevRenderFunc = template.rendered;
     template.rendered = function() {
-      var self = this;
       if (prevRenderFunc) prevRenderFunc.call(this);  
-      Meteor.setTimeout(function() {
-        self.$(".route-transition").addClass('activated');
+      var $transitions = this.$(".route-transition");
+      setTimeout(function() {
+        $transitions.addClass('activated');
         if (!disableTransition) 
-          self.$(".route-transition").addClass('animated');
+          $transitions.addClass('animated');
       }, 0);
     }
   });

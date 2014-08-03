@@ -3,12 +3,12 @@
 Template.editorForm.helpers({
   'id': function() { return this.formId; },
   'collection': function() { return this.collection; },
-  'active': function() { return this.active(); },
-  'show': function() { return this.show(); }, 
+  'editActive': function() { return this.active() ? 'active' : ''; },
+  'toolbarActive': function() { return this.active() && (this.mode() !== 'edit' || this.selected()); },
+  'formActive': function() { return this.show(); }, 
   'mode': function() { return this.mode(); }, 
   'action': function() { return this.action(); }, 
   'selected': function() { return this.selected(); }, 
-  'editActive': function() { return this.mode() === 'edit' && !this.selected() ? 'active' : ''; },
 });
 
 Template.visibilityButton.visibility = function() {
@@ -32,7 +32,7 @@ Template.editorForm.events({
     this.open('add');
   },
   "click [action='edit']": function() {
-    this.open('edit');
+    this.toggle('edit');
   },
   "click [action='visibility']": function(evt) {
     var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
@@ -44,7 +44,7 @@ Template.editorForm.events({
   },
   "click [action='remove']": function(evt) {
     window[this.collection].remove(this.selectedId());
-    this.close();
+    this.select(null)
   },
 }); 
 

@@ -42,13 +42,24 @@
     {
       "package": "oauth-encryption",
       "weak": true
+    },
+    {
+      "package": "localstorage"
     }
   ],
   "resources": [
     {
+      "type": "asset",
+      "file": "os/packages/oauth/end_of_login_response.html",
+      "length": 909,
+      "offset": 0,
+      "servePath": "/packages/oauth/end_of_login_response.html",
+      "path": "end_of_login_response.html"
+    },
+    {
       "type": "prelink",
       "file": "os/packages/oauth.js",
-      "length": 42955,
+      "length": 49681,
       "offset": 0,
       "servePath": "/packages/oauth.js",
       "sourceMap": "os/packages/oauth.js.map"

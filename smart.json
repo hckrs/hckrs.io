@@ -1,10 +1,10 @@
 {
   "packages": {
-    "iron-router": {},
-    "GAnalytics": {},
-    "collection-hooks": {},
-    "imagemagick": {},
     "autoform": {},
-    "iron-router-progress": {}
+    "collection2": {},
+    "collection-hooks": {},
+    "iron-router": {},
+    "iron-router-progress": {},
+    "GAnalytics": {}
   }
 }

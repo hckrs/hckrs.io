@@ -4,34 +4,30 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-jquery
+accounts-password
 accounts-facebook
 accounts-github
 accounts-twitter
-underscore
 facebook
 github
 twitter
 oauth1
-stylus
+oauth
 http
-newrelic
-amplify
-
-iron-router
 email
-accounts-password
 
-GAnalytics
-collection-hooks
+amplify
+bootstrap
+jquery
+underscore
+stylus
 
-imagemagick
+newrelic
 node-dependencies
 
-
-blaze-layout
-iron-router-progress
-oauth
 autoform
 collection2
-bootstrap
+collection-hooks
+iron-router
+iron-router-progress
+GAnalytics

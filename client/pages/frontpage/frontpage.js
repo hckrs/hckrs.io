@@ -69,8 +69,9 @@ Template.ambassadors.events({
 
 // typer text on frontpage
 Template.frontpage.rendered = function() {
-  $('.blink').each(function() {
-    var elem = $(this);
+  var tmpl = this;
+  tmpl.$('.blink').each(function() {
+    var elem = tmpl.$(this);
     setInterval(function() {
         if (elem.css('visibility') == 'hidden') {
             elem.css('visibility', 'visible');
@@ -80,6 +81,6 @@ Template.frontpage.rendered = function() {
     }, 500);
   });
   var texts = ['web','app','software','game','design','life','hardware','life','open source','growth'];
-  $('#target').teletype({ text: texts }); 
-  $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
+  tmpl.$('#target').teletype({ text: texts }); 
+  tmpl.$('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
 }

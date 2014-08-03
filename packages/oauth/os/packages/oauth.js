@@ -19,254 +19,309 @@ var registeredServices = {};                                                    
 // Internal: Maps from service version to handler function. The                                   // 11
 // 'oauth1' and 'oauth2' packages manipulate this directly to register                            // 12
 // for callbacks.                                                                                 // 13
-//                                                                                                // 14
-OAuth._requestHandlers = {};                                                                      // 15
+OAuth._requestHandlers = {};                                                                      // 14
+                                                                                                  // 15
                                                                                                   // 16
-                                                                                                  // 17
-// Register a handler for an OAuth service. The handler will be called                            // 18
-// when we get an incoming http request on /_oauth/{serviceName}. This                            // 19
-// handler should use that information to fetch data about the user                               // 20
-// logging in.                                                                                    // 21
-//                                                                                                // 22
-// @param name {String} e.g. "google", "facebook"                                                 // 23
-// @param version {Number} OAuth version (1 or 2)                                                 // 24
-// @param urls   For OAuth1 only, specify the service's urls                                      // 25
-// @param handleOauthRequest {Function(oauthBinding|query)}                                       // 26
-//   - (For OAuth1 only) oauthBinding {OAuth1Binding} bound to the appropriate provider           // 27
-//   - (For OAuth2 only) query {Object} parameters passed in query string                         // 28
-//   - return value is:                                                                           // 29
-//     - {serviceData:, (optional options:)} where serviceData should end                         // 30
-//       up in the user's services[name] field                                                    // 31
-//     - `null` if the user declined to give permissions                                          // 32
-//                                                                                                // 33
-OAuth.registerService = function (name, version, urls, handleOauthRequest) {                      // 34
-  if (registeredServices[name])                                                                   // 35
-    throw new Error("Already registered the " + name + " OAuth service");                         // 36
-                                                                                                  // 37
-  registeredServices[name] = {                                                                    // 38
-    serviceName: name,                                                                            // 39
-    version: version,                                                                             // 40
-    urls: urls,                                                                                   // 41
-    handleOauthRequest: handleOauthRequest                                                        // 42
-  };                                                                                              // 43
-};                                                                                                // 44
-                                                                                                  // 45
-// For test cleanup.                                                                              // 46
-OAuthTest.unregisterService = function (name) {                                                   // 47
-  delete registeredServices[name];                                                                // 48
-};                                                                                                // 49
+// Register a handler for an OAuth service. The handler will be called                            // 17
+// when we get an incoming http request on /_oauth/{serviceName}. This                            // 18
+// handler should use that information to fetch data about the user                               // 19
+// logging in.                                                                                    // 20
+//                                                                                                // 21
+// @param name {String} e.g. "google", "facebook"                                                 // 22
+// @param version {Number} OAuth version (1 or 2)                                                 // 23
+// @param urls   For OAuth1 only, specify the service's urls                                      // 24
+// @param handleOauthRequest {Function(oauthBinding|query)}                                       // 25
+//   - (For OAuth1 only) oauthBinding {OAuth1Binding} bound to the appropriate provider           // 26
+//   - (For OAuth2 only) query {Object} parameters passed in query string                         // 27
+//   - return value is:                                                                           // 28
+//     - {serviceData:, (optional options:)} where serviceData should end                         // 29
+//       up in the user's services[name] field                                                    // 30
+//     - `null` if the user declined to give permissions                                          // 31
+//                                                                                                // 32
+OAuth.registerService = function (name, version, urls, handleOauthRequest) {                      // 33
+  if (registeredServices[name])                                                                   // 34
+    throw new Error("Already registered the " + name + " OAuth service");                         // 35
+                                                                                                  // 36
+  registeredServices[name] = {                                                                    // 37
+    serviceName: name,                                                                            // 38
+    version: version,                                                                             // 39
+    urls: urls,                                                                                   // 40
+    handleOauthRequest: handleOauthRequest                                                        // 41
+  };                                                                                              // 42
+};                                                                                                // 43
+                                                                                                  // 44
+// For test cleanup.                                                                              // 45
+OAuthTest.unregisterService = function (name) {                                                   // 46
+  delete registeredServices[name];                                                                // 47
+};                                                                                                // 48
+                                                                                                  // 49
                                                                                                   // 50
-                                                                                                  // 51
-OAuth.retrieveCredential = function(credentialToken, credentialSecret) {                          // 52
-  return OAuth._retrievePendingCredential(credentialToken, credentialSecret);                     // 53
-};                                                                                                // 54
+OAuth.retrieveCredential = function(credentialToken, credentialSecret) {                          // 51
+  return OAuth._retrievePendingCredential(credentialToken, credentialSecret);                     // 52
+};                                                                                                // 53
+                                                                                                  // 54
                                                                                                   // 55
-                                                                                                  // 56
-// Listen to incoming OAuth http requests                                                         // 57
-WebApp.connectHandlers.use(function(req, res, next) {                                             // 58
-  // Need to create a Fiber since we're using synchronous http calls and nothing                  // 59
-  // else is wrapping this in a fiber automatically                                               // 60
-  Fiber(function () {                                                                             // 61
-    middleware(req, res, next);                                                                   // 62
-  }).run();                                                                                       // 63
-});                                                                                               // 64
-                                                                                                  // 65
-middleware = function (req, res, next) {                                                          // 66
-  // Make sure to catch any exceptions because otherwise we'd crash                               // 67
-  // the runner                                                                                   // 68
-  try {                                                                                           // 69
-    var serviceName = oauthServiceName(req);                                                      // 70
-    if (!serviceName) {                                                                           // 71
-      // not an oauth request. pass to next middleware.                                           // 72
-      next();                                                                                     // 73
-      return;                                                                                     // 74
-    }                                                                                             // 75
-                                                                                                  // 76
-    var service = registeredServices[serviceName];                                                // 77
-                                                                                                  // 78
-    // Skip everything if there's no service set by the oauth middleware                          // 79
-    if (!service)                                                                                 // 80
-      throw new Error("Unexpected OAuth service " + serviceName);                                 // 81
-                                                                                                  // 82
-    // Make sure we're configured                                                                 // 83
-    ensureConfigured(serviceName);                                                                // 84
-                                                                                                  // 85
-    var handler = OAuth._requestHandlers[service.version];                                        // 86
-    if (!handler)                                                                                 // 87
-      throw new Error("Unexpected OAuth version " + service.version);                             // 88
-    handler(service, req.query, res);                                                             // 89
-  } catch (err) {                                                                                 // 90
-    // if we got thrown an error, save it off, it will get passed to                              // 91
-    // the appropriate login call (if any) and reported there.                                    // 92
-    //                                                                                            // 93
-    // The other option would be to display it in the popup tab that                              // 94
-    // is still open at this point, ignoring the 'close' or 'redirect'                            // 95
-    // we were passed. But then the developer wouldn't be able to                                 // 96
-    // style the error or react to it in any way.                                                 // 97
-    if (req.query.state && err instanceof Error) {                                                // 98
-      try { // catch any exceptions to avoid crashing runner                                      // 99
-        OAuth._storePendingCredential(req.query.state, err);                                      // 100
-      } catch (err) {                                                                             // 101
-        // Ignore the error and just give up. If we failed to store the                           // 102
-        // error, then the login will just fail with a generic error.                             // 103
-        Log.warn("Error in OAuth Server while storing pending login result.\n" +                  // 104
-                 err.stack || err.message);                                                       // 105
-      }                                                                                           // 106
-    }                                                                                             // 107
-                                                                                                  // 108
-    // XXX the following is actually wrong. if someone wants to                                   // 109
-    // redirect rather than close once we are done with the OAuth                                 // 110
-    // flow, as supported by                                                                      // 111
-    // Oauth_renderOauthResults, this will still                                                  // 112
-    // close the popup instead. Once we fully support the redirect                                // 113
-    // flow (by supporting that in places such as                                                 // 114
-    // packages/facebook/facebook_client.js) we should revisit this.                              // 115
-    //                                                                                            // 116
-    // close the popup. because nobody likes them just hanging                                    // 117
-    // there.  when someone sees this multiple times they might                                   // 118
-    // think to check server logs (we hope?)                                                      // 119
-    closePopup(res);                                                                              // 120
-  }                                                                                               // 121
-};                                                                                                // 122
-                                                                                                  // 123
-OAuthTest.middleware = middleware;                                                                // 124
-                                                                                                  // 125
-// Handle /_oauth/* paths and extract the service name.                                           // 126
-//                                                                                                // 127
-// @returns {String|null} e.g. "facebook", or null if this isn't an                               // 128
-// oauth request                                                                                  // 129
-var oauthServiceName = function (req) {                                                           // 130
-  // req.url will be "/_oauth/<service name>?<action>"                                            // 131
-  var barePath = req.url.substring(0, req.url.indexOf('?'));                                      // 132
-  var splitPath = barePath.split('/');                                                            // 133
-                                                                                                  // 134
-  // Any non-oauth request will continue down the default                                         // 135
-  // middlewares.                                                                                 // 136
-  if (splitPath[1] !== '_oauth')                                                                  // 137
-    return null;                                                                                  // 138
-                                                                                                  // 139
-  // Find service based on url                                                                    // 140
-  var serviceName = splitPath[2];                                                                 // 141
-  return serviceName;                                                                             // 142
-};                                                                                                // 143
-                                                                                                  // 144
-// Make sure we're configured                                                                     // 145
-var ensureConfigured = function(serviceName) {                                                    // 146
-  if (!ServiceConfiguration.configurations.findOne({service: serviceName})) {                     // 147
-    throw new ServiceConfiguration.ConfigError();                                                 // 148
-  }                                                                                               // 149
-};                                                                                                // 150
-                                                                                                  // 151
-// Internal: used by the oauth1 and oauth2 packages                                               // 152
-OAuth._renderOauthResults = function(res, query, credentialSecret) {                              // 153
-  // We support ?close and ?redirect=URL. Any other query should just                             // 154
-  // serve a blank page. For tests, we support the                                                // 155
-  // `only_credential_secret_for_test` parameter, which just returns the                          // 156
-  // credential secret without any surrounding HTML. (The test needs to                           // 157
-  // be able to easily grab the secret and use it to log in.)                                     // 158
-  if (query.only_credential_secret_for_test) {                                                    // 159
-    res.writeHead(200, {'Content-Type': 'text/html'});                                            // 160
-    res.end(credentialSecret, 'utf-8');                                                           // 161
-  } else if (query.error) {                                                                       // 162
-    Log.warn("Error in OAuth Server: " + query.error);                                            // 163
-    closePopup(res);                                                                              // 164
-  } else if ('close' in query) { // check with 'in' because we don't set a value                  // 165
-    closePopup(res, query.state, credentialSecret);                                               // 166
-  } else if (query.redirect) {                                                                    // 167
-    // Only redirect to URLs on the same domain as this app.                                      // 168
-    // XXX No code in core uses this code path right now.                                         // 169
-    // XXX In order for the redirect flow to be fully supported, we'd                             // 170
-    // have to communicate the credentialSecret back to the app somehow.                          // 171
-    var redirectHostname = url.parse(query.redirect).hostname;                                    // 172
-    var appHostname = url.parse(Meteor.absoluteUrl()).hostname;                                   // 173
-    if (appHostname === redirectHostname) {                                                       // 174
-      // We rely on node to make sure the header is really only a single header                   // 175
-      // (not, for example, a url with a newline and then another header).                        // 176
-      res.writeHead(302, {'Location': query.redirect});                                           // 177
-    } else {                                                                                      // 178
-      res.writeHead(400);                                                                         // 179
-    }                                                                                             // 180
-    res.end();                                                                                    // 181
-  } else {                                                                                        // 182
-    res.writeHead(200, {'Content-Type': 'text/html'});                                            // 183
-    res.end('', 'utf-8');                                                                         // 184
-  }                                                                                               // 185
-};                                                                                                // 186
-                                                                                                  // 187
-var closePopup = function(res, state, credentialSecret) {                                         // 188
-                                                                                                  // 189
-  var isSafe = function (value) {                                                                 // 190
-    // This matches strings generated by `Random.secret` and                                      // 191
-    // `Random.id`.                                                                               // 192
-    return typeof value === "string" &&                                                           // 193
-      /^[a-zA-Z0-9\-_]+$/.test(value);                                                            // 194
-  };                                                                                              // 195
-                                                                                                  // 196
-  res.writeHead(200, {'Content-Type': 'text/html'});                                              // 197
-  // If we have a credentialSecret, report it back to the parent window, with                     // 198
-  // the corresponding state (which we sanitize because it came from a                            // 199
-  // query parameter). The parent window uses the state and credential secret                     // 200
-  // to log in over DDP.                                                                          // 201
-  var setCredentialSecret = '';                                                                   // 202
-  if (state && credentialSecret && isSafe(state) && isSafe(credentialSecret)) {                   // 203
-    setCredentialSecret = 'window.opener && ' +                                                   // 204
-      'window.opener.Package.oauth.OAuth._handleCredentialSecret(' +                              // 205
-      JSON.stringify(state) + ', ' + JSON.stringify(credentialSecret) + ');';                     // 206
-  }                                                                                               // 207
-  var host = Npm.require("url").parse(Meteor.absoluteUrl()).hostname, content =                   // 208
-        '<html><head><script>' + 'document.domain="'+host+'";' +                                  // 209
-        setCredentialSecret +                                                                     // 210
-        'window.close()</script></head></html>';                                                  // 211
-  res.end(content, 'utf-8');                                                                      // 212
-};                                                                                                // 213
-                                                                                                  // 214
-                                                                                                  // 215
-var OAuthEncryption = Package["oauth-encryption"] && Package["oauth-encryption"].OAuthEncryption; // 216
-                                                                                                  // 217
-var usingOAuthEncryption = function () {                                                          // 218
-  return OAuthEncryption && OAuthEncryption.keyIsLoaded();                                        // 219
-};                                                                                                // 220
-                                                                                                  // 221
-// Encrypt sensitive service data such as access tokens if the                                    // 222
-// "oauth-encryption" package is loaded and the oauth secret key has                              // 223
-// been specified.  Returns the unencrypted plaintext otherwise.                                  // 224
-//                                                                                                // 225
-// The user id is not specified because the user isn't known yet at                               // 226
-// this point in the oauth authentication process.  After the oauth                               // 227
-// authentication process completes the encrypted service data fields                             // 228
-// will be re-encrypted with the user id included before inserting the                            // 229
-// service data into the user document.                                                           // 230
-//                                                                                                // 231
-OAuth.sealSecret = function (plaintext) {                                                         // 232
-  if (usingOAuthEncryption())                                                                     // 233
-    return OAuthEncryption.seal(plaintext);                                                       // 234
-  else                                                                                            // 235
-    return plaintext;                                                                             // 236
-}                                                                                                 // 237
-                                                                                                  // 238
-// Unencrypt a service data field, if the "oauth-encryption"                                      // 239
-// package is loaded and the field is encrypted.                                                  // 240
-//                                                                                                // 241
-// Throws an error if the "oauth-encryption" package is loaded and the                            // 242
-// field is encrypted, but the oauth secret key hasn't been specified.                            // 243
-//                                                                                                // 244
-OAuth.openSecret = function (maybeSecret, userId) {                                               // 245
-  if (!Package["oauth-encryption"] || !OAuthEncryption.isSealed(maybeSecret))                     // 246
-    return maybeSecret;                                                                           // 247
+// Listen to incoming OAuth http requests                                                         // 56
+WebApp.connectHandlers.use(function(req, res, next) {                                             // 57
+  // Need to create a Fiber since we're using synchronous http calls and nothing                  // 58
+  // else is wrapping this in a fiber automatically                                               // 59
+  Fiber(function () {                                                                             // 60
+    middleware(req, res, next);                                                                   // 61
+  }).run();                                                                                       // 62
+});                                                                                               // 63
+                                                                                                  // 64
+middleware = function (req, res, next) {                                                          // 65
+  // Make sure to catch any exceptions because otherwise we'd crash                               // 66
+  // the runner                                                                                   // 67
+  try {                                                                                           // 68
+    var serviceName = oauthServiceName(req);                                                      // 69
+    if (!serviceName) {                                                                           // 70
+      // not an oauth request. pass to next middleware.                                           // 71
+      next();                                                                                     // 72
+      return;                                                                                     // 73
+    }                                                                                             // 74
+                                                                                                  // 75
+    var service = registeredServices[serviceName];                                                // 76
+                                                                                                  // 77
+    // Skip everything if there's no service set by the oauth middleware                          // 78
+    if (!service)                                                                                 // 79
+      throw new Error("Unexpected OAuth service " + serviceName);                                 // 80
+                                                                                                  // 81
+    // Make sure we're configured                                                                 // 82
+    ensureConfigured(serviceName);                                                                // 83
+                                                                                                  // 84
+    var handler = OAuth._requestHandlers[service.version];                                        // 85
+    if (!handler)                                                                                 // 86
+      throw new Error("Unexpected OAuth version " + service.version);                             // 87
+    handler(service, req.query, res);                                                             // 88
+  } catch (err) {                                                                                 // 89
+    // if we got thrown an error, save it off, it will get passed to                              // 90
+    // the appropriate login call (if any) and reported there.                                    // 91
+    //                                                                                            // 92
+    // The other option would be to display it in the popup tab that                              // 93
+    // is still open at this point, ignoring the 'close' or 'redirect'                            // 94
+    // we were passed. But then the developer wouldn't be able to                                 // 95
+    // style the error or react to it in any way.                                                 // 96
+    if (req.query.state && err instanceof Error) {                                                // 97
+      try { // catch any exceptions to avoid crashing runner                                      // 98
+        OAuth._storePendingCredential(req.query.state, err);                                      // 99
+      } catch (err) {                                                                             // 100
+        // Ignore the error and just give up. If we failed to store the                           // 101
+        // error, then the login will just fail with a generic error.                             // 102
+        Log.warn("Error in OAuth Server while storing pending login result.\n" +                  // 103
+                 err.stack || err.message);                                                       // 104
+      }                                                                                           // 105
+    }                                                                                             // 106
+                                                                                                  // 107
+    // close the popup. because nobody likes them just hanging                                    // 108
+    // there.  when someone sees this multiple times they might                                   // 109
+    // think to check server logs (we hope?)                                                      // 110
+    OAuth._endOfLoginResponse(res, {                                                              // 111
+      query: req.query,                                                                           // 112
+      error: err                                                                                  // 113
+    });                                                                                           // 114
+  }                                                                                               // 115
+};                                                                                                // 116
+                                                                                                  // 117
+OAuthTest.middleware = middleware;                                                                // 118
+                                                                                                  // 119
+// Handle /_oauth/* paths and extract the service name.                                           // 120
+//                                                                                                // 121
+// @returns {String|null} e.g. "facebook", or null if this isn't an                               // 122
+// oauth request                                                                                  // 123
+var oauthServiceName = function (req) {                                                           // 124
+  // req.url will be "/_oauth/<service name>?<action>"                                            // 125
+  var barePath = req.url.substring(0, req.url.indexOf('?'));                                      // 126
+  var splitPath = barePath.split('/');                                                            // 127
+                                                                                                  // 128
+  // Any non-oauth request will continue down the default                                         // 129
+  // middlewares.                                                                                 // 130
+  if (splitPath[1] !== '_oauth')                                                                  // 131
+    return null;                                                                                  // 132
+                                                                                                  // 133
+  // Find service based on url                                                                    // 134
+  var serviceName = splitPath[2];                                                                 // 135
+  return serviceName;                                                                             // 136
+};                                                                                                // 137
+                                                                                                  // 138
+// Make sure we're configured                                                                     // 139
+var ensureConfigured = function(serviceName) {                                                    // 140
+  if (!ServiceConfiguration.configurations.findOne({service: serviceName})) {                     // 141
+    throw new ServiceConfiguration.ConfigError();                                                 // 142
+  }                                                                                               // 143
+};                                                                                                // 144
+                                                                                                  // 145
+var isSafe = function (value) {                                                                   // 146
+  // This matches strings generated by `Random.secret` and                                        // 147
+  // `Random.id`.                                                                                 // 148
+  return typeof value === "string" &&                                                             // 149
+    /^[a-zA-Z0-9\-_]+$/.test(value);                                                              // 150
+};                                                                                                // 151
+                                                                                                  // 152
+// Internal: used by the oauth1 and oauth2 packages                                               // 153
+OAuth._renderOauthResults = function(res, query, credentialSecret) {                              // 154
+  // We expect the ?close parameter to be present, in which case we                               // 155
+  // close the popup at the end of the OAuth flow. Any other query                                // 156
+  // string should just serve a blank page. For tests, we support the                             // 157
+  // `only_credential_secret_for_test` parameter, which just returns the                          // 158
+  // credential secret without any surrounding HTML. (The test needs to                           // 159
+  // be able to easily grab the secret and use it to log in.)                                     // 160
+  //                                                                                              // 161
+  // XXX only_credential_secret_for_test could be useful for other                                // 162
+  // things beside tests, like command-line clients. We should give it a                          // 163
+  // real name and serve the credential secret in JSON.                                           // 164
+  if (query.only_credential_secret_for_test) {                                                    // 165
+    res.writeHead(200, {'Content-Type': 'text/html'});                                            // 166
+    res.end(credentialSecret, 'utf-8');                                                           // 167
+  } else {                                                                                        // 168
+    var details = { query: query };                                                               // 169
+    if (query.error) {                                                                            // 170
+      details.error = query.error;                                                                // 171
+    } else {                                                                                      // 172
+      var token = query.state;                                                                    // 173
+      var secret = credentialSecret;                                                              // 174
+      if (token && secret &&                                                                      // 175
+          isSafe(token) && isSafe(secret)) {                                                      // 176
+        details.credentials = { token: token, secret: secret};                                    // 177
+      } else {                                                                                    // 178
+        details.error = "invalid_credential_token_or_secret";                                     // 179
+      }                                                                                           // 180
+    }                                                                                             // 181
+                                                                                                  // 182
+    OAuth._endOfLoginResponse(res, details);                                                      // 183
+  }                                                                                               // 184
+};                                                                                                // 185
+                                                                                                  // 186
+// This "template" (not a real Spacebars template, just an HTML file                              // 187
+// with some ##PLACEHOLDER##s) communicates the credential secret back                            // 188
+// to the main window and then closes the popup.                                                  // 189
+OAuth._endOfLoginResponseTemplate = Assets.getText(                                               // 190
+  "end_of_login_response.html");                                                                  // 191
+                                                                                                  // 192
+// Renders `endOfLoginResponseTemplate` into some HTML and JavaScript                             // 193
+// that closes the popup at the end of the OAuth flow.                                            // 194
+OAuth._renderEndOfLoginResponse = function (setCredentialToken, token, secret) {                  // 195
+  // It would be nice to use Blaze here, but it's a little tricky                                 // 196
+  // because our mustaches would be inside a <script> tag, and Blaze                              // 197
+  // would treat the <script> tag contents as text (e.g. encode '&' as                            // 198
+  // '&amp;'). So we just do a simple replace.                                                    // 199
+  var result = OAuth._endOfLoginResponseTemplate.replace(                                         // 200
+      /##SET_CREDENTIAL_TOKEN##/, JSON.stringify(setCredentialToken));                            // 201
+  result = result.replace(/##DOMAIN##/,Npm.require("url").parse(Meteor.absoluteUrl()).hostname);  // 202
+  result = result.replace(                                                                        // 203
+    /##TOKEN##/, JSON.stringify(token));                                                          // 204
+  result = result.replace(                                                                        // 205
+    /##SECRET##/, JSON.stringify(secret));                                                        // 206
+  result = result.replace(                                                                        // 207
+    /##LOCAL_STORAGE_PREFIX##/,                                                                   // 208
+    JSON.stringify(OAuth._localStorageTokenPrefix));                                              // 209
+                                                                                                  // 210
+  return "<!DOCTYPE html>\n" + result;                                                            // 211
+};                                                                                                // 212
+                                                                                                  // 213
+// Writes an HTTP response to the popup window at the end of an OAuth                             // 214
+// login flow. At this point, if the user has successfully authenticated                          // 215
+// to the OAuth server and authorized this app, we communicate the                                // 216
+// credentialToken and credentialSecret to the main window. The main                              // 217
+// window must provide both these values to the DDP `login` method to                             // 218
+// authenticate its DDP connection. After communicating these vaues to                            // 219
+// the main window, we close the popup.                                                           // 220
+//                                                                                                // 221
+// We export this function so that developers can override this                                   // 222
+// behavior, which is particularly useful in, for example, some mobile                            // 223
+// environments where popups and/or `window.opener` don't work. For                               // 224
+// example, an app could override `OAuth._endOfLoginResponse` to put the                          // 225
+// credential token and credential secret in the popup URL for the main                           // 226
+// window to read them there instead of using `window.opener`. If you                             // 227
+// override this function, you take responsibility for writing to the                             // 228
+// request and calling `res.end()` to complete the request.                                       // 229
+//                                                                                                // 230
+// Arguments:                                                                                     // 231
+//   - res: the HTTP response object                                                              // 232
+//   - details:                                                                                   // 233
+//      - query: the query string on the HTTP request                                             // 234
+//      - credentials: { token: *, secret: * }. If present, this field                            // 235
+//        indicates that the login was successful. Return these values                            // 236
+//        to the client, who can use them to log in over DDP. If                                  // 237
+//        present, the values have been checked against a limited                                 // 238
+//        character set and are safe to include in HTML.                                          // 239
+//      - error: if present, a string or Error indicating an error that                           // 240
+//        occurred during the login. This can come from the client and                            // 241
+//        so shouldn't be trusted for security decisions or included in                           // 242
+//        the response without sanitizing it first. Only one of `error`                           // 243
+//        or `credentials` should be set.                                                         // 244
+OAuth._endOfLoginResponse = function (res, details) {                                             // 245
+                                                                                                  // 246
+  res.writeHead(200, {'Content-Type': 'text/html'});                                              // 247
                                                                                                   // 248
-  return OAuthEncryption.open(maybeSecret, userId);                                               // 249
-};                                                                                                // 250
-                                                                                                  // 251
-// Unencrypt fields in the service data object.                                                   // 252
-//                                                                                                // 253
-OAuth.openSecrets = function (serviceData, userId) {                                              // 254
-  var result = {};                                                                                // 255
-  _.each(_.keys(serviceData), function (key) {                                                    // 256
-    result[key] = OAuth.openSecret(serviceData[key], userId);                                     // 257
-  });                                                                                             // 258
-  return result;                                                                                  // 259
-};                                                                                                // 260
-                                                                                                  // 261
+  if (details.error) {                                                                            // 249
+    Log.warn("Error in OAuth Server: " +                                                          // 250
+             (details.error instanceof Error ?                                                    // 251
+              details.error.message : details.error));                                            // 252
+    res.end(OAuth._renderEndOfLoginResponse(false), "utf-8");                                     // 253
+    return;                                                                                       // 254
+  }                                                                                               // 255
+                                                                                                  // 256
+  if ("close" in details.query) {                                                                 // 257
+    // If we have a credentialSecret, report it back to the parent                                // 258
+    // window, with the corresponding credentialToken. The parent window                          // 259
+    // uses the credentialToken and credentialSecret to log in over DDP.                          // 260
+    res.end(OAuth._renderEndOfLoginResponse(true,                                                 // 261
+                                            details.credentials.token,                            // 262
+                                            details.credentials.secret),                          // 263
+            "utf-8");                                                                             // 264
+  } else {                                                                                        // 265
+    res.end("", "utf-8");                                                                         // 266
+  }                                                                                               // 267
+};                                                                                                // 268
+                                                                                                  // 269
+                                                                                                  // 270
+var OAuthEncryption = Package["oauth-encryption"] && Package["oauth-encryption"].OAuthEncryption; // 271
+                                                                                                  // 272
+var usingOAuthEncryption = function () {                                                          // 273
+  return OAuthEncryption && OAuthEncryption.keyIsLoaded();                                        // 274
+};                                                                                                // 275
+                                                                                                  // 276
+// Encrypt sensitive service data such as access tokens if the                                    // 277
+// "oauth-encryption" package is loaded and the oauth secret key has                              // 278
+// been specified.  Returns the unencrypted plaintext otherwise.                                  // 279
+//                                                                                                // 280
+// The user id is not specified because the user isn't known yet at                               // 281
+// this point in the oauth authentication process.  After the oauth                               // 282
+// authentication process completes the encrypted service data fields                             // 283
+// will be re-encrypted with the user id included before inserting the                            // 284
+// service data into the user document.                                                           // 285
+//                                                                                                // 286
+OAuth.sealSecret = function (plaintext) {                                                         // 287
+  if (usingOAuthEncryption())                                                                     // 288
+    return OAuthEncryption.seal(plaintext);                                                       // 289
+  else                                                                                            // 290
+    return plaintext;                                                                             // 291
+}                                                                                                 // 292
+                                                                                                  // 293
+// Unencrypt a service data field, if the "oauth-encryption"                                      // 294
+// package is loaded and the field is encrypted.                                                  // 295
+//                                                                                                // 296
+// Throws an error if the "oauth-encryption" package is loaded and the                            // 297
+// field is encrypted, but the oauth secret key hasn't been specified.                            // 298
+//                                                                                                // 299
+OAuth.openSecret = function (maybeSecret, userId) {                                               // 300
+  if (!Package["oauth-encryption"] || !OAuthEncryption.isSealed(maybeSecret))                     // 301
+    return maybeSecret;                                                                           // 302
+                                                                                                  // 303
+  return OAuthEncryption.open(maybeSecret, userId);                                               // 304
+};                                                                                                // 305
+                                                                                                  // 306
+// Unencrypt fields in the service data object.                                                   // 307
+//                                                                                                // 308
+OAuth.openSecrets = function (serviceData, userId) {                                              // 309
+  var result = {};                                                                                // 310
+  _.each(_.keys(serviceData), function (key) {                                                    // 311
+    result[key] = OAuth.openSecret(serviceData[key], userId);                                     // 312
+  });                                                                                             // 313
+  return result;                                                                                  // 314
+};                                                                                                // 315
+                                                                                                  // 316
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }).call(this);
@@ -409,6 +464,25 @@ var recreateError = function(errorDoc) {                                        
   return error;                                                                                   // 123
 };                                                                                                // 124
                                                                                                   // 125
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+}).call(this);
+
+
+
+
+
+
+(function () {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                //
+// packages/oauth/oauth_common.js                                                                 //
+//                                                                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                  //
+OAuth._localStorageTokenPrefix = "Meteor.oauth.";                                                 // 1
+                                                                                                  // 2
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }).call(this);

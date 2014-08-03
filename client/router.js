@@ -149,23 +149,42 @@ Router.map(function () {
 });
 
 
-/* resolve url helpers */
 
-Router.reload = function() {
-  var path = location.pathname + location.search + location.hash;
-  Router.go("/");
-  Router.go(path); 
+/* router plugins */
+
+Router.scrollToTop = function() {
+  scrollToTop();
 }
 
+// reload current route (hack)
+Router.reload = function() {
+  var path = Router.current().path;
+  Router.go('/about');
+  Deps.flush();
+  Router.go(path);
+}
+
+// browser refresh location
+Router.refresh = function(path) {
+  if (!path)
+    path = Router.current().path;
+  window.location.href = path;
+}
+
+// browser refresh location to new city
 Router.goToCity = function(city) {
   var url;
   
   var phrase = Session.get('invitationPhrase');
   if (phrase)
     url = Router.routes['invite'].url({phrase: Url.bitHash(phrase)});
+  
+  url = Url.replaceCity(city, url);
 
-  window.location.href = Url.replaceCity(city, url);
+  Router.refresh(url);
 }
+
+
 
 Router.routes['hacker'].path = function(userId, absolute) {
   if (_.isObject(userId)) userId = userId._id;

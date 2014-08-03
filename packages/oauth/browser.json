@@ -13,13 +13,16 @@
   "uses": [
     {
       "package": "meteor"
+    },
+    {
+      "package": "localstorage"
     }
   ],
   "resources": [
     {
       "type": "prelink",
       "file": "browser/packages/oauth.js",
-      "length": 10311,
+      "length": 12008,
       "offset": 0,
       "servePath": "/packages/oauth.js",
       "sourceMap": "browser/packages/oauth.js.map"

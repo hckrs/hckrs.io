@@ -100,11 +100,40 @@ OAuth._handleCredentialSecret = function (credentialToken, secret) {            
 // Used by accounts-oauth, which needs both a credentialToken and the             // 92
 // corresponding to credential secret to call the `login` method over DDP.        // 93
 OAuth._retrieveCredentialSecret = function (credentialToken) {                    // 94
-  var secret = credentialSecrets[credentialToken];                                // 95
-  delete credentialSecrets[credentialToken];                                      // 96
-  return secret;                                                                  // 97
-};                                                                                // 98
-                                                                                  // 99
+  // First check the secrets collected by OAuth._handleCredentialSecret,          // 95
+  // then check localStorage. This matches what we do in                          // 96
+  // end_of_login_response.html.                                                  // 97
+  var secret = credentialSecrets[credentialToken];                                // 98
+  if (! secret) {                                                                 // 99
+    var localStorageKey = OAuth._localStorageTokenPrefix +                        // 100
+          credentialToken;                                                        // 101
+    secret = Meteor._localStorage.getItem(localStorageKey);                       // 102
+    Meteor._localStorage.removeItem(localStorageKey);                             // 103
+  } else {                                                                        // 104
+    delete credentialSecrets[credentialToken];                                    // 105
+  }                                                                               // 106
+  return secret;                                                                  // 107
+};                                                                                // 108
+                                                                                  // 109
+////////////////////////////////////////////////////////////////////////////////////
+
+}).call(this);
+
+
+
+
+
+
+(function () {
+
+////////////////////////////////////////////////////////////////////////////////////
+//                                                                                //
+// packages/oauth/oauth_common.js                                                 //
+//                                                                                //
+////////////////////////////////////////////////////////////////////////////////////
+                                                                                  //
+OAuth._localStorageTokenPrefix = "Meteor.oauth.";                                 // 1
+                                                                                  // 2
 ////////////////////////////////////////////////////////////////////////////////////
 
 }).call(this);

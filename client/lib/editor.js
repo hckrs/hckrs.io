@@ -15,7 +15,7 @@ Editor = function(collection) {
   var state = new State(formId, {
     selectedId: null,
     mode: null,
-    active: false
+    active: false,
   });
 
 
@@ -25,16 +25,12 @@ Editor = function(collection) {
   var _setSelect = function(id) {
     if (mode() === 'add') return;
     state.set('selectedId', id);
-    _setActive();
   }
   var _setMode = function(mode) {
     if (mode === 'add') _setSelect(null);
     state.set('mode', mode);
-    _setActive();
   }
   var _setActive = function(active) {
-    if (_.isUndefined(active))
-      active = mode() === 'add' || (mode() === 'edit' && selected());
     state.set('active', active);
   }
 
@@ -49,17 +45,19 @@ Editor = function(collection) {
       id = null;
     _setSelect(id);
   }
-  var open = function(mode, id) {
-    _setMode(mode);
+  var open = function(newmode, id) {
+    _setMode(newmode);
     if (id) _setSelect(id);
+    _setActive(true);
   }
-  var close = function(mode, id) {
-    _setMode(mode || null);
-    if (id) _setSelect(id);
-    _setActive(false);     
+  var close = function(newmode, id) {
+    _setMode(newmode || null);
+    if (id) _setSelect(id);     
+    _setActive(false);
   }
-  var toggle = function(mode2, id) {
-    mode2 === mode() && active() && (!id || id === selectedId()) ? close() : open(mode2, id);
+  var toggle = function(newmode, id) {
+    var alreadyOpen = newmode === mode() && active() && (!id || id === selectedId());
+    alreadyOpen ? close() : open(newmode, id);
   }
 
   // getters
@@ -67,11 +65,11 @@ Editor = function(collection) {
   var mode = function() {
     return state.get('mode');
   }
-  var show = function() {
-    return active() && (mode() !== 'edit' || !isForeignCity(selected() && selected().city));
-  }
   var active = function() {
     return state.get('active');
+  }
+  var show = function() {
+    return mode() === 'add' || (mode() === 'edit' && active() && selected() && !isForeignCity(selected().city));
   }
   var action = function() {
     switch (mode()) {

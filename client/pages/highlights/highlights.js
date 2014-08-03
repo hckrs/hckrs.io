@@ -76,13 +76,13 @@ Template.highlights.events({
 
 // RENDERING
 
-var setupOnePageScroll = function() {
+var setupOnePageScroll = function(tmpl) {
 
   var buttonVisibility = function() {
-    var isFirst = $("#onePageScroll").isFirstPage();
-    var isLast = $("#onePageScroll").isLastPage();
-    $('#highlights a.up')[isFirst ? 'addClass' : 'removeClass']('hide');
-    $('#highlights a.down')[isLast ? 'addClass' : 'removeClass']('hide');
+    var isFirst = tmpl.$("#onePageScroll").isFirstPage();
+    var isLast = tmpl.$("#onePageScroll").isLastPage();
+    tmpl.$('#highlights a.up')[isFirst ? 'addClass' : 'removeClass']('hide');
+    tmpl.$('#highlights a.down')[isLast ? 'addClass' : 'removeClass']('hide');
   }
 
   var setSelectedHighlight = function(index) {
@@ -91,7 +91,7 @@ var setupOnePageScroll = function() {
     editor.select(highlightId);
   }
 
-  var $onePageScroll = $("#onePageScroll").onepage_scroll({
+  var $onePageScroll = tmpl.$("#onePageScroll").onepage_scroll({
     sectionContainer: "section", // sectionContainer accepts any kind of selector in case you don't want to use section
     easing: "ease", // Easing options accepts the CSS3 easing animation such "ease", "linear", "ease-in", "ease-out", "ease-in-out", or even cubic bezier value such as "cubic-bezier(0.175, 0.885, 0.420, 1.310)"
     animationTime: 900, // AnimationTime let you define how long each section takes to animate
@@ -119,7 +119,7 @@ var setupOnePageScroll = function() {
 
 
 Template.highlights.rendered = function() {
-  this.onePageScroll = setupOnePageScroll();  
+  this.onePageScroll = setupOnePageScroll(this);  
   
   var initialized = false;
   this.observer = Highlights.find().observe({

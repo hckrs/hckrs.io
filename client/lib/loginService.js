@@ -70,8 +70,9 @@ var loggedIn = function() {
     Router.go(redirectUrl);
   } else if(currentRoute === 'frontpage') {
     goToEntryPage();
-  } else { // reload page to trigger route actions again
-    Router.reload();
+  } else {
+    // nothing
+    // maybe we need to trigger route hooks here again?
   }
 
 }
@@ -163,7 +164,7 @@ checkInvitation = function() {
 
       if (err && err.reason === 'limit') {
 
-        Router.reload();
+        Router.scrollToTop();
 
         // show invitation limit reached message
         Session.set('invitationLimitReached', true);
@@ -177,7 +178,7 @@ checkInvitation = function() {
       
       } else if (err) {
 
-        Router.reload();
+        Router.scrollToTop();
 
         log("Error", err);
 
@@ -213,7 +214,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
       Meteor.call('requestProfileCompleted', function(err) {
         if (err) {
           Session.set('isIncompleteProfileError', true);
-          Router.reload();
+          Router.scrollToTop();
           log(err);
         } else {
           Session.set('isIncompleteProfileError', false);
@@ -223,7 +224,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
     });
   } else {
     checkAccess();
-    Router.reload();
+    Router.scrollToTop();
   }
 }
 
@@ -237,7 +238,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
     if (user.isAccessDenied && !user.isIncompleteProfile && checkInvited() && verifiedEmail()) {
       Meteor.call('requestAccess', function(err) {
         if (err) {
-          Router.reload();
+          Router.scrollToTop();
           log(err);
         } else {
           goToEntryPage();
