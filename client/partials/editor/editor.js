@@ -35,9 +35,9 @@ Template.editorForm.events({
     this.toggle('edit');
   },
   "click [action='visibility']": function(evt) {
-    var action = $(evt.currentTarget).attr('toggle') === 'off' ? '$addToSet' : '$pull';
-    var city = Session.get('currentCity');
-    window[this.collection].update(this.selectedId(), _.object([action], [{hiddenIn: city}]));
+    var toggle = $(evt.currentTarget).attr('toggle');
+    var method = 'toggle'+this.collection+'Visibility';
+    Meteor.call(method, this.selectedId(), toggle);
   },
    "click [action='cancel']": function() {
     this.close();

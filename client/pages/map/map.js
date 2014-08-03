@@ -16,8 +16,9 @@ var zoomLevelPictures = 14;
 MapController = DefaultController.extend({
   template: 'map',
   waitOn: function () {
+    var city = Session.get('currentCity');
     return [
-      Meteor.subscribe('places')
+      Meteor.subscribe('places', city)
     ];
   },
   onAfterAction: function() {
@@ -270,7 +271,7 @@ var openFeaturePopup = function(featureLayer, selected) {
       marker.openPopup();
 
       // ambassador can move markers
-      if (hasAmbassadorPermission() && editor.mode() === 'edit' && props.filter === 'places')
+      if (hasAmbassadorPermission(Meteor.userId(), props.city) && editor.mode() === 'edit' && props.filter === 'places')
         marker.dragging.enable();
     }
     else {
@@ -389,6 +390,7 @@ var placesFeatures = function() {
       "properties": {
         "filter": "places",
         "title": place.title,
+        "city": place.city,
         "description": place.description,
         "type": place.type,
         "url": place.url,

@@ -610,7 +610,7 @@ isAdmin = function(userId) {
 }
 isAmbassador = function(userId, city) {
   userId = userId || Meteor.userId();
-  city = city || (Session && Session.get('currentCity')) || UserProp('currentCity');
+  city = city || (this['Session'] && Session.get('currentCity')) || UserProp('currentCity');
   return !!OtherUserProp(userId, 'ambassador') && OtherUserProp(userId, 'city') === city;
 }
 hasAdminPermission = function(userId) {

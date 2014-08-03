@@ -15,8 +15,14 @@ PLACE_TYPE_OPTIONS = [
 
 Schemas.Place = new SimpleSchema([
   Schemas.default,
+  Schemas.userId,
   Schemas.city,
   {
+    "global": {
+      type: Boolean,
+      label: 'Show in all citys',
+      defaultValue: false
+    },
     "title": {
       type: String,
       optional: true
@@ -94,10 +100,27 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];  
 
-    return Places.find({});
+    if (city === 'all' && user.isAdmin)
+      return Places.find({});      
+      
+    if (user.currentCity === city)
+      return Places.find({$or: [{global: true}, {city: city}]});      
+
+    return [];
   });
 }
 
 
 
 
+
+
+/* Methods */
+
+Meteor.methods({
+  'togglePlacesVisibility': function(id, toggle) {
+    if (!hasAmbassadorPermission()) return;
+    var action = toggle === 'off' ? '$addToSet' : '$pull';
+    Places.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
+  }
+})

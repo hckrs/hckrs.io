@@ -4,7 +4,7 @@ AdminPlacesController = DefaultAdminController.extend({
   template: 'admin_places',
   waitOn: function () {
     return [ 
-      Meteor.subscribe('places'),
+      Meteor.subscribe('places', 'all'),
     ];
   }
 });

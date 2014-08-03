@@ -125,6 +125,11 @@ Meteor.methods({
   'updateHighlightsSort': function(sort) {
     if (!hasAmbassadorPermission()) return;
     HighlightsSort.upsert({city: UserProp('currentCity')}, {$set: {sort: sort}});
+  },
+  'toggleHighlightsVisibility': function(id, toggle) {
+    if (!hasAmbassadorPermission()) return;
+    var action = toggle === 'off' ? '$addToSet' : '$pull';
+    Highlights.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
   }
 })
 

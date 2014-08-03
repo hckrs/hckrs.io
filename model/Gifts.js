@@ -4,6 +4,7 @@
 Schemas.Gifts = new SimpleSchema([
   Schemas.default,
   Schemas.city,
+  Schemas.userId,
   {
     "global": {
       type: Boolean,
@@ -124,6 +125,11 @@ Meteor.methods({
   'updateGiftsSort': function(sort) {
     if (!hasAmbassadorPermission()) return;
     GiftsSort.upsert({city: UserProp('currentCity')}, {$set: {sort: sort}});
+  },
+  'toggleGiftsVisibility': function(id, toggle) {
+    if (!hasAmbassadorPermission()) return;
+    var action = toggle === 'off' ? '$addToSet' : '$pull';
+    Gifts.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
   }
 })
 
