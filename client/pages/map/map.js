@@ -224,9 +224,9 @@ var setupFeatureLayer = function(map) {
         marker.setIcon(L.icon({
           iconUrl:      "/img/markers/point.png",
           className:    "marker-hacker point",
-          iconSize:     [12, 12], // size of the icon
-          iconAnchor:   [6, 6], // point of the icon which will correspond to marker's location
-          popupAnchor:  [0, -6] // point from which the popup should open relative to the iconAnchor
+          iconSize:     [6, 6], // size of the icon
+          iconAnchor:   [3, 3], // point of the icon which will correspond to marker's location
+          popupAnchor:  [0, -3] // point from which the popup should open relative to the iconAnchor
         }));
       }
 
