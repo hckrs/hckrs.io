@@ -35,7 +35,7 @@
         {{!-- default toolbar --}}
 
         {{#if selected}}
-          {{#if IsForeignCity selected.city}}
+          {{#if selected.global}}
             <div class="text"><span class="icon icon-white icon-globe"></span></div>
           {{/if}}
           {{> visibilityButton}}
