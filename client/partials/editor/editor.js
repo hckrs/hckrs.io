@@ -4,11 +4,11 @@ Template.editorForm.helpers({
   'id': function() { return this.formId; },
   'collection': function() { return this.collection; },
   'editActive': function() { return this.active() ? 'active' : ''; },
-  'toolbarActive': function() { return this.active() && (this.mode() !== 'edit' || this.selected()); },
   'formActive': function() { return this.show(); }, 
   'mode': function() { return this.mode(); }, 
   'action': function() { return this.action(); }, 
   'selected': function() { return this.selected(); }, 
+  'disabled': function() { return this.selected() && isForeignCity(this.selected().city) ? 'disabled' : ''; }
 });
 
 Template.visibilityButton.visibility = function() {

@@ -412,11 +412,15 @@ html, body{
       .light{
         opacity: 0.65;
       }
-      .light:hover{
+      .light:hover:not([disabled]):not(.disabled){
         opacity: 1;
       }
-      .light.flat:hover{
+      .light.flat:hover:not([disabled]):not(.disabled){
         opacity: 0.65;
+      }
+      .light[disabled],
+      .light.disabled {
+        text-decoration: line-through;
       }
   }
 

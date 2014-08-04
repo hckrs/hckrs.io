@@ -74,7 +74,25 @@ Template.highlights.events({
 })
 
 
+
+
 // RENDERING
+
+var _index;
+var setSelectedHighlight = function(index) {
+  _index = _.isUndefined(index) ? _index : index;
+  var data = HighlightsSorted({fields: {_id: 1}});
+  var highlightId = data && data[_index] && data[_index]._id;
+  editor.select(highlightId);
+}
+
+// after cancel form which is in add-mode
+// we select the previous selected highlight item
+Template.highlights.events({ 
+   "click [action='cancel']": function() {
+    setSelectedHighlight();
+  },
+});
 
 var setupOnePageScroll = function(tmpl) {
 
@@ -83,12 +101,6 @@ var setupOnePageScroll = function(tmpl) {
     var isLast = tmpl.$("#onePageScroll").isLastPage();
     tmpl.$('#highlights a.up')[isFirst ? 'addClass' : 'removeClass']('hide');
     tmpl.$('#highlights a.down')[isLast ? 'addClass' : 'removeClass']('hide');
-  }
-
-  var setSelectedHighlight = function(index) {
-    var data = HighlightsSorted({fields: {_id: 1}});
-    var highlightId = data && data[index] && data[index]._id;
-    editor.select(highlightId);
   }
 
   var $onePageScroll = tmpl.$("#onePageScroll").onepage_scroll({
