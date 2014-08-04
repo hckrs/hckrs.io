@@ -1,18 +1,18 @@
 // Route Controller
 
-AdminGiftsController = DefaultAdminController.extend({
-  template: 'admin_gifts',
+AdminDealsController = DefaultAdminController.extend({
+  template: 'admin_deals',
   waitOn: function () {
     return [ 
-      Meteor.subscribe('gifts', 'all'),
+      Meteor.subscribe('deals', 'all'),
     ];
   }
 });
 
 
-Template.admin_gifts.helpers({
+Template.admin_deals.helpers({
   'collection': function() {
-    return Gifts.find().fetch();
+    return Deals.find().fetch();
   },
   'settings': function() {
     return {

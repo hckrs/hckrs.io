@@ -7,7 +7,7 @@ var routes = [
   [ 'admin_dashboard'    , '/admin/dashboard'   ],
   [ 'admin_highlights'   , '/admin/highlights'  ],
   [ 'admin_hackers'      , '/admin/hackers'     ],
-  [ 'admin_gifts'        , '/admin/gifts'       ],
+  [ 'admin_deals'        , '/admin/deals'       ],
   [ 'admin_places'       , '/admin/places'      ],
 
   // normal routes
@@ -20,7 +20,7 @@ var routes = [
   [ 'invitations'  , '/invitations'          ],
   [ 'mergeAccount' , '/mergeAccount'         ],
   [ 'map'          , '/map'                  ],
-  [ 'gifts'        , '/gifts'                ],
+  [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
   
   // special routes

@@ -1,7 +1,7 @@
 
 /* GIFTS */
 
-Schemas.Gifts = new SimpleSchema([
+Schemas.Deals = new SimpleSchema([
   Schemas.default,
   Schemas.city,
   Schemas.userId,
@@ -12,7 +12,7 @@ Schemas.Gifts = new SimpleSchema([
     },
     "title": {
       type: String,
-      label: 'Discount description'
+      label: 'Deal description'
     },
     "description": {
       type: String,
@@ -28,7 +28,7 @@ Schemas.Gifts = new SimpleSchema([
     "code": {
       type: String,
       optional: true,
-      label: 'Discount code / URL'
+      label: 'Deal code / URL'
     },
     "hiddenIn": {
       type: [String],
@@ -38,14 +38,14 @@ Schemas.Gifts = new SimpleSchema([
   }
 ]);
 
-Gifts = new Meteor.Collection('gifts', {
-  schema: Schemas.Gifts
+Deals = new Meteor.Collection('deals', {
+  schema: Schemas.Deals
 });
 
 
 /* sort */
 
-Schemas.GiftsSort = new SimpleSchema([
+Schemas.DealsSort = new SimpleSchema([
   Schemas.city,
   {
     "sort": {
@@ -54,8 +54,8 @@ Schemas.GiftsSort = new SimpleSchema([
   }
 ])
 
-GiftsSort = new Meteor.Collection('giftsSort', {
-  schema: Schemas.GiftsSort
+DealsSort = new Meteor.Collection('dealsSort', {
+  schema: Schemas.DealsSort
 });
 
 
@@ -64,10 +64,10 @@ GiftsSort = new Meteor.Collection('giftsSort', {
 
 /* Permissions */
 
-// Only ambassadors and admins are allowed to insert/update/remove gifts.
-// It is only allowed to attach the gifts that are visible for this user.
+// Only ambassadors and admins are allowed to insert/update/remove deals.
+// It is only allowed to attach the deals that are visible for this user.
 
-Gifts.allow({
+Deals.allow({
   insert: function(userId, doc) {
     return hasAmbassadorPermission(userId, doc.city);
   },
@@ -87,24 +87,24 @@ Gifts.allow({
 
 if (Meteor.isServer) {
 
-  // Only publish gifts for the city the user is visiting
-  Meteor.publish("gifts", function (city) {
+  // Only publish deals for the city the user is visiting
+  Meteor.publish("deals", function (city) {
     var user = Users.findOne(this.userId);
 
     if(!user || !allowedAccess(user._id))
       return [];  
 
     if (city === 'all' && user.isAdmin)
-      return Gifts.find({});
+      return Deals.find({});
 
     if (user.currentCity === city)
-      return Gifts.find({$or: [{global: true}, {city: city}]});
+      return Deals.find({$or: [{global: true}, {city: city}]});
 
     return [];
   });
 
   // Only publish sortings for the city the user is visiting
-  Meteor.publish("giftsSort", function (city) {
+  Meteor.publish("dealsSort", function (city) {
     var user = Users.findOne(this.userId);
     
     if(!user || !allowedAccess(user._id))
@@ -113,7 +113,7 @@ if (Meteor.isServer) {
     if (user.currentCity !== city)
       return []; 
 
-    return GiftsSort.find({city: city});
+    return DealsSort.find({city: city});
   });
 }
 
@@ -122,14 +122,14 @@ if (Meteor.isServer) {
 /* Methods */
 
 Meteor.methods({
-  'updateGiftsSort': function(sort) {
+  'updateDealsSort': function(sort) {
     if (!hasAmbassadorPermission()) return;
-    GiftsSort.upsert({city: UserProp('currentCity')}, {$set: {sort: sort}});
+    DealsSort.upsert({city: UserProp('currentCity')}, {$set: {sort: sort}});
   },
-  'toggleGiftsVisibility': function(id, toggle) {
+  'toggleDealsVisibility': function(id, toggle) {
     if (!hasAmbassadorPermission()) return;
     var action = toggle === 'off' ? '$addToSet' : '$pull';
-    Gifts.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
+    Deals.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
   }
 })
 

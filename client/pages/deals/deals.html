@@ -1,13 +1,13 @@
-<template name="gifts">
-  <div id="gifts" class="page">
+<template name="deals">
+  <div id="deals" class="page">
     
     {{#if isEmpty}}
-      <h2>No discounts right now</h2>
+      <h2>No deals right now</h2>
     {{else}}
-      <H2>Discounts</h2>
-      <div id="giftsContainer">
-        {{#each gifts}}
-          {{> gift}}
+      <H2>Deals</h2>
+      <div id="dealsContainer">
+        {{#each deals}}
+          {{> deal}}
         {{/each}}
       </div>
     {{/if}}
@@ -25,8 +25,8 @@
   </div>
 </template>
 
-<template name="gift">
-  <div class="gift area" data-id="{{_id}}" {{isSelected}}>
+<template name="deal">
+  <div class="deal area" data-id="{{_id}}" {{isSelected}}>
     
     {{#if hasAmbassadorPermission}}
       {{#if equals mode 'edit'}}

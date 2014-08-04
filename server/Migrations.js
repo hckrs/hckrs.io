@@ -100,11 +100,6 @@ var migrations = [
         Highlights.update(highlight._id, {$set: {global: false, url: highlight.website}, $unset: {website: true}}, {validate: false});
       });
       
-      // add global attribute to gifts + rename url
-      Gifts.find().forEach(function(gift) {
-        Gifts.update(gift._id, {$set: {global: false, url: gift.websiteUrl}, $unset: {websiteUrl: true, websiteName: true}}, {validate: false});
-      });
-      
       // add field 'createdAt' to migrations
       Migrations.find().forEach(function(migration) {
         Migrations.update(migration._id, {$set: {createdAt: migration.processedAt}}, {validate: false});
