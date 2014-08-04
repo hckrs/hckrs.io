@@ -94,15 +94,20 @@ var checkDuplicateAccounts = function() {
 // scroll to hash element (when present in url)
 var scrollToTop = function() {
   Session.equals('pageScrollDirection', null);
-  var hash = this.params.hash;
-  if (!hash) return $(window).scrollTop(0);
+  var params = Router.current().params;
+  
+  // scroll to top if there is no hash element
+  if (!params.hash) 
+    return $(window).scrollTop(0);
+
+  // wait for hash element to become on screen
+  var timer;
   var scrollTo = function() {
-    if (!$("#"+hash).length) return;
-    Meteor.clearInterval(timer);
-    $(window).scrollTo($("#"+hash), {duration: 0, offset: 0});  
-  }
-  scrollTo();
-  var timer = Meteor.setInterval(scrollTo, 200);
+    if (!$("#"+params.hash).length) return;
+    clearInterval(timer);
+    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});  
+  } 
+  timer = setInterval(scrollTo, 200);
 }
 
 
