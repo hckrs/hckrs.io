@@ -4,14 +4,12 @@ Template.editorForm.helpers({
   'id': function() { return this.formId; },
   'collection': function() { return this.collection; },
   'editActive': function() { return this.active() ? 'active' : ''; },
-  'formActive': function() { 
-    return this.show() && hasOwnerPermission(this.selected()); 
-  }, 
+  'formActive': function() { return this.show(); }, 
   'mode': function() { return this.mode(); }, 
   'action': function() { return this.action(); }, 
   'selected': function() { return this.selected(); }, 
   'disallowed': function() { 
-    return this.selected() && hasOwnerPermission(this.selected()) ? '' : 'disallowed'; 
+    return !this.selected() || hasOwnerPermission(this.selected()) ? '' : 'disallowed'; 
   }
 });
 
