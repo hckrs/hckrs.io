@@ -69,7 +69,7 @@ Editor = function(collection) {
     return state.get('active');
   }
   var show = function() {
-    return mode() === 'add' || (mode() === 'edit' && active() && selected() && !isForeignCity(selected().city));
+    return mode() === 'add' || (mode() === 'edit' && active() && selected());
   }
   var action = function() {
     switch (mode()) {

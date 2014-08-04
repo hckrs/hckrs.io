@@ -409,19 +409,23 @@ html, body{
       input[type="tel"]:focus, input[type="color"]:focus{
         border: 1px solid rgba(255,255,255,0.5);
       }
+      $opacity = 0.65;
       .light{
-        opacity: 0.65;
+        opacity: $opacity;
       }
-      .light:hover:not([disabled]):not(.disabled){
+      .light:hover{
         opacity: 1;
       }
-      .light.flat:hover:not([disabled]):not(.disabled){
-        opacity: 0.65;
+      .light.flat:hover{
+        opacity: $opacity;
       }
-      .light[disabled],
-      .light.disabled {
+      .light.disallowed {
         text-decoration: line-through;
       }
+      .light.disallowed:hover {
+        opacity: $opacity;
+      }
+
   }
 
 

@@ -609,15 +609,40 @@ isAdmin = function(userId) {
   return OtherUserProp(userId, 'isAdmin');
 }
 isAmbassador = function(userId, city) {
+  if (_.contains(CITYKEYS, userId)) {
+    city = userId;
+    userId = null;
+  }
   userId = userId || Meteor.userId();
   city = city || (this['Session'] && Session.get('currentCity')) || UserProp('currentCity');
   return !!OtherUserProp(userId, 'ambassador') && OtherUserProp(userId, 'city') === city;
+}
+isOwner = function(userId, doc) {
+  if (!userId) return false;
+  if (!doc) {
+    doc = userId;
+    userId = Meteor.userId();
+  }
+  docUserId = _.isObject(doc) ? doc.userId : doc;
+  return docUserId === userId;
 }
 hasAdminPermission = function(userId) {
   return isAdmin(userId);
 }
 hasAmbassadorPermission = function(userId, city) {
   return hasAdminPermission(userId) || isAmbassador(userId, city);
+}
+hasOwnerPermission = function(userId, doc) {
+  if (!userId) return false;
+  if (!doc) {
+    doc = userId;
+    userId = Meteor.userId();
+  }
+  if (!_.isObject(doc)) return;
+
+  if (doc.userId && isOwner(userId, doc)) return true;
+  else if (doc.city && isAmbassador(userId, doc.city)) return true;
+  else return isAdmin(userId);
 }
 checkAdminPermission = function(userId) {
   if (!hasAmbassadorPermission(userId))

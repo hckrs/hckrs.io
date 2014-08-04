@@ -59,7 +59,8 @@ Template.map.events({
       featureLayer.eachLayer(function(marker) {
         var dist = map.getCenter().distanceTo(marker.getLatLng());
         var isPlace = marker.feature.properties.filter === 'places';
-        if (isPlace && (!min || dist < minDist)) {
+        var permission = hasOwnerPermission(marker.feature.properties);
+        if (isPlace && permission && (!min || dist < minDist)) {
           min = marker;
           minDist = dist;
         }
@@ -271,7 +272,7 @@ var openFeaturePopup = function(featureLayer, selected) {
       marker.openPopup();
 
       // ambassador can move markers
-      if (hasAmbassadorPermission(Meteor.userId(), props.city) && editor.mode() === 'edit' && props.filter === 'places')
+      if (hasOwnerPermission(props) && editor.mode() === 'edit' && props.filter === 'places')
         marker.dragging.enable();
     }
     else {
@@ -391,6 +392,7 @@ var placesFeatures = function() {
         "filter": "places",
         "title": place.title,
         "city": place.city,
+        "userId": place.userId,
         "description": place.description,
         "type": place.type,
         "url": place.url,

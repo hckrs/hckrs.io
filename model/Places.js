@@ -74,13 +74,13 @@ Places = new Meteor.Collection('places', {
 
 Places.allow({
   insert: function(userId, doc) {
-    return hasAmbassadorPermission(userId, doc.city);
+    return hasAmbassadorPermission(userId, doc.city) || isOwner(userId, doc);
   },
   update: function(userId, doc, fieldNames, modifier) {
-    return hasAmbassadorPermission(userId, doc.city);
+    return hasAmbassadorPermission(userId, doc.city) || isOwner(userId, doc);
   },
   remove: function(userId, doc) {
-    return hasAmbassadorPermission(userId, doc.city);
+    return hasAmbassadorPermission(userId, doc.city) || isOwner(userId, doc);
   }
 });
 

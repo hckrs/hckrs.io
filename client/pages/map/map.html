@@ -2,17 +2,15 @@
   <div id="map">
     <div id="mapMode">
 
-      {{#if hasAmbassadorPermission}}
-        {{#editorForm editor}}
-          {{> afQuickField name='title'}}
-          {{> afQuickField name='description' rows="4"}}
-          {{> afQuickField name='url'}}
-          {{> afQuickField name='type'}}
-          {{> afQuickField name="global" id="global"}}
-          {{> afFieldInput name='location.lng' type="hidden"}}
-          {{> afFieldInput name='location.lat' type="hidden"}}
-        {{/editorForm}}
-      {{/if}}
+      {{#editorForm editor}}
+        {{> afQuickField name='title'}}
+        {{> afQuickField name='description' rows="4"}}
+        {{> afQuickField name='url'}}
+        {{> afQuickField name='type'}}
+        {{> afQuickField name="global" id="global"}}
+        {{> afFieldInput name='location.lng' type="hidden"}}
+        {{> afFieldInput name='location.lat' type="hidden"}}
+      {{/editorForm}}
     
       
     	<div id="filters" class="filter-ui hide"> {{!-- hidden --}}
