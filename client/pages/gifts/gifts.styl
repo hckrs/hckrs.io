@@ -5,6 +5,9 @@
 
 #gifts{
  
+  .area{
+    padding-top: 24px;
+  }
   .gift {
     &:hover{
       background-color: rgba(0,0,0,0.2);
@@ -12,15 +15,25 @@
     &[selected]{
       glow();
     }
+    .highlighted:first-child{
+      margin-right: 12px;
+      font-size: 24.5px;
+      background-color: rgba(0,0,0,0.3);
+      color: white;
+    }
     h3{
       float: left;
       margin: 0px;
-      margin-left: 12px;
       padding: 0px;
-      line-height: 1em;
+      line-height: 1.5em;
+      margin-bottom: 12px;
     }
     .description{
       clear: left;
+      margin-bottom: 12px;
+    }
+    .code{
+      margin-top: 12px;
     }
     .drag-handle {
       position: relative;
