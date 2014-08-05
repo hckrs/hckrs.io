@@ -87,7 +87,7 @@
                   <div style="background-image:url({{UserProp 'profile.picture'}});" class="pictureView small clickable"></div>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a href="{{pathFor 'hacker' _id=CurrentUserId}}"><i class="icon-user"></i> {{UserProp 'profile.name'}}</a></li>
+                  <li><a href="{{pathFor 'hacker' _id=CurrentUserId redirect=true}}"><i class="icon-user"></i> {{UserProp 'profile.name'}}</a></li>
                   {{#unless UserProp 'isAccessDenied'}}
                     <li><a href="{{pathFor 'invitations'}}"><i class="icon-plus"></i> invite hackers ({{UserProp 'invitations'}})</a></li>
                   {{/unless}}

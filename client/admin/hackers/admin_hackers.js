@@ -19,13 +19,13 @@ Template.admin_hackers.helpers({
       fields: [
         Field.date, 
         Field.city, 
-        { key: 'localRank', label: '#', fn: function(val, obj) { return Safe.hackerUrl(obj._id, {text: '#'+val}); } },
-        { key: 'profile.name', label: 'name', fn: function(val, obj) { return Safe.hackerUrl(obj._id, {text: val}); } },
+        { key: '_id', label: '#', fn: function(val, obj) { return userRank(obj) ? Safe.hackerUrl(obj, {text: '#'+userRank(obj)}) : '-'; } },
+        { key: 'profile.name', label: 'name', fn: function(val, obj) { return Safe.hackerUrl(obj, {text: val}); } },
         { key: 'profile.email', label: 'e-mail', fn: Field.fn.email },
         { key: 'invitations', label: 'free invites' },
         { key: '_id', label: 'status',
           fn: function(val, obj) { 
-            var labels = userStatusLabel(obj._id);
+            var labels = userStatusLabel(obj);
             var makeLabel = function(label) { return '<span class="label label-'+label.style+'">'+label.text+'</span>'; }
             return Safe.string(_.map(labels, makeLabel).join('<br/>'));  
           } 

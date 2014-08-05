@@ -21,15 +21,15 @@ Template.hackers.helpers({
   },
   "hackerViews": function() { 
     var transitionDelay = 0;
-    var getUserView = function(u) {
-      var user = userView(u._id);
+    var getUserView = function(user) {
+      user = userView(user);
       user.transitionDelay = Math.min(transitionDelay, 3);
       transitionDelay += 0.2
       return user;
     }
     var city = Session.get('currentCity');
     var selector = hasAmbassadorPermission() ? {city: city} : {city: city, isHidden: {$ne: true}};
-    return city && Users.find(selector, {fields: {_id: 1}, sort: {ambassador: -1, createdAt: -1}}).map(getUserView); 
+    return city && Users.find(selector, {sort: {ambassador: -1, accessAt: -1}}).map(getUserView); 
   }
 });
 

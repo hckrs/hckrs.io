@@ -15,6 +15,9 @@ Template.mergeAccount.events({
     goToEntryPage();
   },
   'click .mergeService': function(evt) { // defined in loginService.js
-    toggleService(evt, goToEntryPage); 
+    toggleService(evt, function() {
+      Session.set('requestMergeDuplicateAccount', false);
+      goToEntryPage();
+    }); 
   }
 })

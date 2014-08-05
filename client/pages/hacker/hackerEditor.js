@@ -45,12 +45,12 @@ Template.hackerEditor.events({
     if (confirm("Are you sure you want move this user to '"+cityName+"'?")) {
 
       // move
-      Meteor.call('moveUserToCity', userId, city, function(err, localRank) {
+      Meteor.call('moveUserToCity', userId, city, function(err) {
+        if (err) return;
 
         // redirect to new profile
-        var hash = Url.bitHash(localRank);
-        var rootUrl = Url.replaceCity(city, Url.baseUrl());
-        window.location.href = Meteor.absoluteUrl(hash, {rootUrl: rootUrl});;
+        var newUrl = Url.replaceCity(city, window.location.href);
+        Router.refresh(newUrl);
       }); 
 
     } else { 

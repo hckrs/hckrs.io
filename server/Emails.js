@@ -49,7 +49,7 @@ SendEmailsOnNewUser = function(userId) {
 
   var user = Users.findOne(userId);
   var city = user.city;
-  var hash = Url.bitHash(user.localRank);
+  var hash = Url.bitHash(user.globalId);
   var url = Meteor.absoluteUrl(hash);
   var cityUrl = Url.replaceCity(city, url);
   var cityHost = Url.hostname(cityUrl);  

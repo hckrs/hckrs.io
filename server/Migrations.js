@@ -87,7 +87,17 @@ var migrations = [
 
       // add field 'currentCity' to all users
       Users.find().forEach(function(user) {
-        Users.update(user._id, {$set: {currentCity: user.city}}, {validate: false});
+        Users.update(user._id, {
+          $set: {
+            globalId: user.globalRank,
+            currentCity: user.city,
+            accessAt: user.isAccessDenied ? undefined : user.createdAt,
+          }, 
+          $unset: {
+            localRank: true,
+            globalRank: true
+          }
+        }, {validate: false});
       });
 
       // rename field signedupAt to 'createdAt' for all invitations

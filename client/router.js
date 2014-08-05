@@ -24,7 +24,7 @@ var routes = [
   [ 'verifyEmail'  , '/verify-email/:token'  ],
   
   // special routes
-  [ 'hacker'       , '/:localRankHash'       ],
+  [ 'hacker'       , '/:bitHash'             ],
   [ 'invite'       , /^\/\+\/(.*)/           ],
 
 ];
@@ -75,7 +75,9 @@ var loginRequired = function() {
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
   if(UserProp('isAccessDenied')) {
-    this.redirect('hacker', Meteor.userId()); 
+    if (Meteor.userId() !== Url.userIdFromUrl(window.location.href)) {
+      this.redirect('hacker', Meteor.userId()); 
+    }
   }
 }
 
@@ -125,7 +127,7 @@ Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 Router.onBeforeAction(checkDuplicateAccounts, {except: noLoginRequired });
 
 // make sure that user is allowed to enter the site
-Router.onBeforeAction(allowedAccess, {except: ['hacker','mergeAccount'].concat(noLoginRequired) });
+Router.onBeforeAction(allowedAccess, {except: ['mergeAccount'].concat(noLoginRequired) });
 
 // log pageview to Google Analytics
 Router.onRun(GAnalytics.pageview);
@@ -195,15 +197,26 @@ Router.goToCity = function(city) {
 
 
 
-Router.routes['hacker'].path = function(userId, absolute) {
-  absolute = _.isBoolean(absolute) ? absolute : false;
-  if (_.isObject(userId)) userId = userId._id;
-  var hash = Url.bitHash(OtherUserProp(userId, 'localRank'));
-  return userIsForeign(userId) && !absolute ? "#" : "/"+hash;
+Router.routes['hacker'].path = function(user, disableForeign) {
+  var redirect = _.isObject(user) ? user.redirect || false : false; // default false
+  disableForeign = _.isBoolean(disableForeign) ? disableForeign : true; // default true
+  
+  user = OtherUserProps(user, ['globalId']);
+
+  if (!user || !user.globalId)
+    return;
+
+  if (!userIsForeign(user) || disableForeign !== true) // make path url
+    return "/" + Url.bitHash(user.globalId);
+
+  if (userIsForeign(user) && redirect)
+    return Router.routes['hacker'].url(user); // make full url
+
+  return '#' // no url
 }
-Router.routes['hacker'].url = function(userId) {
-  var path = Router.routes['hacker'].path(userId, true);
-  var city = OtherUserProp(userId, 'city');
+Router.routes['hacker'].url = function(user) {
+  var path = Router.routes['hacker'].path(user, false);
+  var city = OtherUserProp(user, 'city');
   var url = Url.replaceCity(city, Meteor.absoluteUrl(Url.stripTrailingSlash(path)));
   return url;
 }

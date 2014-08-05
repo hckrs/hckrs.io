@@ -19,12 +19,12 @@ Safe.email = function(email, options) {
   return email ? Safe.string('<a href="mailto:'+email+'">'+text+'</a>') : '';
 }
 
-Safe.hackerUrl = function(id, options) {
-  var url = Router.routes['hacker'].url(id);
+Safe.hackerUrl = function(user, options) {
+  var url = Router.routes['hacker'].url(user, false);
   return Safe.url(url, options);
 }
 
-Safe.hackerPath = function(id, options) {
-  var path = Router.routes['hacker'].path(id);
+Safe.hackerPath = function(user, options) {
+  var path = Router.routes['hacker'].path(user, false);
   return Safe.url(path, options);
 }

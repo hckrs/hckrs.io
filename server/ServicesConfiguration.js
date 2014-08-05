@@ -429,6 +429,16 @@ Accounts.onCreateUser(function (options, user) {
     user.isIncompleteProfile = true;
     user.isHidden = true;
 
+    // attach global id
+    var maxUser = Users.findOne({}, {fields: {globalId: true}, sort: {globalId: -1}});
+    user.globalId = ((maxUser || {}).globalId || 0) + 1;
+
+    // set invitation phrase
+    user.invitationPhrase = user.globalId * 2 + 77;
+
+    // give this user the default number of invite codes
+    user.invitations = Settings['defaultNumberOfInvitesForNewUsers'] || 0;
+
     // make the first user within the system admin
     if (Meteor.users.find().count() === 0) {
       user.isAdmin = true;
@@ -454,14 +464,16 @@ var attachUserToCity = function(userId, city) {
   if (user.city)
     throw new Meteor.Error(0, "already attached to a city!") 
   
-  // get city info including ranks for this (new) user
-  var userCityInfo = newUserCityInfo(city);
+  // set the city where this user becomes registered
+  var userCityInfo = {};
+  userCityInfo.city = city;
+  userCityInfo.currentCity = city;
 
   // update user with city information
   Users.update(user._id, {$set: userCityInfo});
 
   // automatic invite the first n users
-  if (userCityInfo.localRank <= Settings['firstNumberOfUsersAutoInvited'])
+  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited'])
     Users.update(user._id, {$unset: {isUninvited: true}});
 
   // make the first user within the system ambassador of this city
@@ -475,28 +487,6 @@ var attachUserToCity = function(userId, city) {
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);
-}
-
-var newUserCityInfo = function(city) {
-  var user = {}; // create object to build city info for new user
-
-  // set the city where this user becomes registered
-  user.city = city;
-  user.currentCity = city;
-
-  // determine and set the hacker ranking
-  var local = Meteor.users.findOne({city: city}, {sort: {localRank: -1}});
-  var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
-  user.localRank = (local && local.localRank || 0) + 1;
-  user.globalRank = (global && global.globalRank || 0) + 1;
-
-  // set invitation phrase
-  user.invitationPhrase = user.globalRank * 2 + 77;
-
-  // give this user the default number of invite codes
-  user.invitations = Settings['defaultNumberOfInvitesForNewUsers'] || 0;
-
-  return user;
 }
 
 
@@ -870,6 +860,11 @@ var requestAccessOfUser = function(userId) {
 
   // access allowed!
 
+  // set signup date
+  if (!user.accessAt)
+    Meteor.users.update(userId, {$set: {accessAt: new Date()}});
+
+
   // allow access for this user
   Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
 
@@ -943,19 +938,13 @@ var sendVerificationEmail = function(userId) {
 // move user to new city
 // NOTE: permission check must already be performed
 moveUserToCity = function(hackerId, city) { // called from Methods.js
-  var hacker = Users.findOne(hackerId);
-
-  var local = Meteor.users.findOne({city: city}, {sort: {localRank: -1}});
-  var localRank = (local && local.localRank || 0) + 1;
 
   // update user's city
   Users.update(hackerId, {$set: {
     city: city,
     currentCity: city,
-    localRank: localRank
+    accessAt: new Date()
   }});
-
-  return localRank;
 }
 
 

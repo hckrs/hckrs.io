@@ -1,5 +1,4 @@
 // Route Controller
-// path: "/:localRankHash"
 
 HackerController = DefaultController.extend({
   template: 'hacker',

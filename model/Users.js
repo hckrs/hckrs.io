@@ -117,14 +117,10 @@ var schema = {
   "currentCity": {      // the city this (admin) user is visiting
     type: String,
     allowedValues: CITYKEYS
-  }, 
-  "localRank": {        // assigned hacker number based on signup order in city
-    type: Number
   },   
-  "globalRank": {       // assigned hacker number based on signup order of all world hackers
+  "globalId": {       // assigned hacker number based on create-account-order of all world hackers
     type: Number
-  },  
-
+  },
   "invitationPhrase": { // uniq number that used in the invite url that this user can share with others
     type: Number
   },   
@@ -178,6 +174,10 @@ var schema = {
     type: Boolean,
     optional: true
   }, 
+  "accessAt": {         // moment that user get full access to some city (complete profile & invited)
+    type: Date,
+    optional: true,
+  },
   "isDeleted": {           // mark this account as deleted (probably merged with other account)
     type: Boolean,
     optional: true
@@ -208,8 +208,7 @@ var schema = {
 var weakSchema = {};
 weakSchema['city'] = {optional: true};
 weakSchema['currentCity'] = {optional: true};
-weakSchema['localRank'] = {optional: true};
-weakSchema['globalRank'] = {optional: true};
+weakSchema['globalId'] = {optional: true};
 weakSchema['invitationPhrase'] = {optional: true};
 weakSchema['invitations'] = {optional: true};
 weakSchema['profile.name'] = {optional: true};
@@ -247,7 +246,8 @@ var servicesSchema = {
 /* Setup */
 
 // Users collection already created by meteor, make an alias
-Users = Meteor.users; 
+Users = Meteor.users;
+
 
 // attach the weak schema to the user collection
 // later we have to verify the untrusted update actions
@@ -345,8 +345,7 @@ if (Meteor.isServer) {
   var userFieldsGlobal = [
     "city",
     "currentCity",
-    "localRank",
-    "globalRank",
+    "globalId",
     "invitationPhrase",
     "profile.name",
     "profile.picture",
@@ -356,7 +355,7 @@ if (Meteor.isServer) {
     "mergedWith",
   ];
   var userFieldsData = [
-    "createdAt",
+    "accessAt",
     "profile.location",
     "profile.homepage",
     "profile.company",
@@ -377,6 +376,7 @@ if (Meteor.isServer) {
     "profile.social",
   ];
   var userFieldsCurrentUser = [
+    "createdAt",
     "isAdmin",
     "isAccessDenied",
     "isUninvited",
@@ -569,17 +569,31 @@ if (Meteor.isServer) {
 
 // get some property for a user without other reactive dependencies
 // get single value using e.g. OtherUserProp('isAdmin') => Boolean
-OtherUserProp = function(userId, field, options) {
+OtherUserProp = function(user, field, options) {
+  
+  // memorized
+  var prop = _.isObject(user) ? pathValue(user, field) : undefined;
+  if (!_.isUndefined(prop))
+    return prop;
+  
+  var userId = _.isObject(user) ? user._id : user;
   var opt = {fields: _.object([field], [true])};
-  var user = Meteor.users.findOne(userId, _.extend(options || {}, opt));
+  user = Meteor.users.findOne(userId, _.extend(options || {}, opt));
   return pathValue(user, field); 
 }
 
 // pick some data from a user without all reactive dependencies
 // get obj including fields using e.g. OtherUserProps(['isAdmin','city']) => {_id:..., city:... ,isAdmin:...}
-OtherUserProps = function(userId, fields, options) {
+OtherUserProps = function(user, fields, options) {
+
+  // memorized
+  var props = _.isObject(user) ? _.pick(user, fields || []) : {};
+  if (fields && _.all(_.union(['_id'], fields), _.partial(_.has, props)))
+    return user;
+
+  var userId = _.isObject(user) ? user._id : user;
   var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};
-  return Meteor.users.findOne(userId, _.extend(options || {}, opt));
+  return Meteor.users.findOne(userId, _.extend(options || {}, opt));  
 }
 
 // get some property from Meteor.user() without other reactive dependencies
@@ -594,8 +608,8 @@ UserProps = function(fields, options) {
   return OtherUserProps(Meteor.userId(), fields, options)
 }
 
-UI.registerHelper('OtherUserProp', function(userId, prop) {
-  return OtherUserProp(userId, prop);
+UI.registerHelper('OtherUserProp', function(user, prop) {
+  return OtherUserProp(user, prop);
 });
 UI.registerHelper('UserProp', function(prop) {
   return UserProp(prop);
@@ -604,52 +618,53 @@ UI.registerHelper('UserProp', function(prop) {
 
 /* permission helpers */
 
-isAdmin = function(userId) {
-  userId = userId || Meteor.userId();
-  return OtherUserProp(userId, 'isAdmin');
+isAdmin = function(user) {
+  user = user || Meteor.userId();
+  return OtherUserProp(user, 'isAdmin');
 }
-isAmbassador = function(userId, city) {
-  if (_.contains(CITYKEYS, userId)) {
-    city = userId;
-    userId = null;
+isAmbassador = function(user, city) {
+  if (_.contains(CITYKEYS, user)) {
+    city = user;
+    user = null;
   }
-  userId = userId || Meteor.userId();
+  user = user || Meteor.userId();
   city = city || (this['Session'] && Session.get('currentCity')) || UserProp('currentCity');
-  return !!OtherUserProp(userId, 'ambassador') && OtherUserProp(userId, 'city') === city;
+  return !!OtherUserProp(user, 'ambassador') && OtherUserProp(user, 'city') === city;
 }
-isOwner = function(userId, doc) {
-  if (!userId) return false;
+isOwner = function(user, doc) {
+  if (!user) return false;
   if (!doc) {
-    doc = userId;
-    userId = Meteor.userId();
+    doc = user;
+    user = Meteor.userId();
   }
   docUserId = _.isObject(doc) ? doc.userId : doc;
+  var userId = _.isObject(user) ? user._id : user;
   return docUserId === userId;
 }
-hasAdminPermission = function(userId) {
-  return isAdmin(userId);
+hasAdminPermission = function(user) {
+  return isAdmin(user);
 }
-hasAmbassadorPermission = function(userId, city) {
-  return hasAdminPermission(userId) || isAmbassador(userId, city);
+hasAmbassadorPermission = function(user, city) {
+  return hasAdminPermission(user) || isAmbassador(user, city);
 }
-hasOwnerPermission = function(userId, doc) {
-  if (!userId) return false;
+hasOwnerPermission = function(user, doc) {
+  if (!user) return false;
   if (!doc) {
-    doc = userId;
-    userId = Meteor.userId();
+    doc = user;
+    user = Meteor.userId();
   }
   if (!_.isObject(doc)) return;
 
-  if (doc.userId && isOwner(userId, doc)) return true;
-  else if (doc.city && isAmbassador(userId, doc.city)) return true;
-  else return isAdmin(userId);
+  if (doc.userId && isOwner(user, doc)) return true;
+  else if (doc.city && isAmbassador(user, doc.city)) return true;
+  else return isAdmin(user);
 }
-checkAdminPermission = function(userId) {
-  if (!hasAmbassadorPermission(userId))
+checkAdminPermission = function(user) {
+  if (!hasAmbassadorPermission(user))
     throw new Meteor.Error(500, 'No privilege');
 }
-checkAmbassadorPermission = function(userId) {
-  if (!hasAmbassadorPermission(userId))
+checkAmbassadorPermission = function(user) {
+  if (!hasAmbassadorPermission(user))
     throw new Meteor.Error(500, 'No privilege');
 }
 
@@ -663,36 +678,55 @@ UI.registerHelper('hasAdminPermission', function() {
 
 /* data helpers */
 
-userView = function(userId, additionalFields) {
-  var user = OtherUserProps(userId, _.union(['profile.name','profile.picture'], additionalFields || []));
+userView = function(user, additionalFields) {
+  user = OtherUserProps(user, _.union(['globalId','profile.name','profile.picture'], additionalFields || []));
   if (user) {
-    user.foreign = userIsForeign(userId) ? {foreign: "", disabled: ""} : '';
-    user.label = userPictureLabel(userId);
+    user.foreign = userIsForeign(user) ? {foreign: "", disabled: ""} : '';
+    user.label = userPictureLabel(user);
   }
   return user;
 }
 
-userIsForeign = function(userId) {
-  var city = OtherUserProp(userId, 'city');
+userIsForeign = function(user) {
+  var city = OtherUserProp(user, 'city');
   return isForeignCity(city);
 }
 
-userPictureLabel = function(userId) {
-  userId = userId || Meteor.userId();
-  var user = OtherUserProps(userId, ['city','localRank','mergedWith','isDeleted','isAccessDenied','isHidden','ambassador'])
-  if (user.mergedWith)             return "Merged with #"+OtherUserProp(user.mergedWith, 'localRank');
+
+var _userRanks = {};
+userRank = function(user) {
+  user = user || Meteor.userId();
+  var userId = _.isObject(user) ? user._id : user;
+
+  // calculate
+  if (!_userRanks[userId]) {
+    var userCity = OtherUserProp(user, 'city', {reactive: false});
+    var memo = function(user, i) { _userRanks[user._id] = i+1; };
+    Users.find({city: userCity, isHidden: {$ne: true}}, {sort: {accessAt: 1}, fields: {_id: 1}, reactive: false}).forEach(memo);
+  }
+
+  // memo
+  return _userRanks[userId];
+}
+
+userPictureLabel = function(user) {
+  user = user || Meteor.userId();
+  var userId = _.isObject(user) ? user._id : user;
+  user = OtherUserProps(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','ambassador'])
+  if (user.mergedWith)             return "Merged with #"+userRank(user.mergedWith);
   if (user.isDeleted)              return "Deleted";
   if (user.isAccessDenied)         return "No Access";
   if (user.isHidden)               return "Hidden";
   if (userIsForeign(userId))       return CITYMAP[user.city].name;
   if (user.ambassador)             return user.ambassador.title || "Ambassador";
-  else                             return "#"+user.localRank;
+  else                             return "#"+userRank(user);
 }
 
-userStatusLabel = function(userId) {
-  userId = userId || Meteor.userId();
-  var user = OtherUserProps(userId, undefined); // XXX TODO, SPECIFY fields
+userStatusLabel = function(user) {
+  user = user || Meteor.userId();
+  user = OtherUserProps(user, undefined); // XXX TODO, SPECIFY fields
   var labels = [];
+
   var unverifiedEmail = !_.findWhere(user.emails, {address: user.profile.email, verified: true});
   if (user.isUninvited)         labels.push({style: 'important', text: 'Not invited'});
   if (!user.profile.name)       labels.push({style: 'important', text: 'No name'});
@@ -706,15 +740,20 @@ userStatusLabel = function(userId) {
   return labels;
 }
 
-userSocialName = function(userId, service) {
-  var socialUrl = OtherUserProp(userId, 'profile.social.'+service)
+userSocialName = function(user, service) {
+  var socialUrl = OtherUserProp(user, 'profile.social.'+service)
   return socialNameFromUrl(service, socialUrl);
 }
 
-UI.registerHelper('UserView', function(userId) {
-  return userView(userId);
+UI.registerHelper('UserView', function(user) {
+  return userView(user);
 });
 
-UI.registerHelper('UserSocialName', function(userId, service) {
-  return userSocialName(userId, service);
+
+UI.registerHelper('UserRank', function(user) {
+  return userRank(user);
+});
+
+UI.registerHelper('UserSocialName', function(user, service) {
+  return userSocialName(user, service);
 });

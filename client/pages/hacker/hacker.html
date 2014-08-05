@@ -156,7 +156,7 @@
       <div class="controls">
         <input type="email" name="profile.email" class="text save email {{required 'profile.email'}}" value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
         {{#if required 'profile.email'}}
-          <span class="available-description">— not visible by other users</span><br/>
+          <span class="available-description">— email will be not visible by other users</span><br/>
         {{/if}}
         {{#if isDuplicateEmail}}
           <span class="help-inline">Already used in another account!</span>
@@ -325,7 +325,7 @@
           {{#each profile.hacking}}
             <div class="hacking-tag">{{this}}</div>
           {{/each}}
-        <div class="hacker-number">hacker #{{localRank}} in {{CurrentCity.name}}</div>
+        <div class="hacker-number">hacker #{{UserRank this}} in {{CurrentCity.name}}</div>
       </div>
     </div>
     
@@ -397,7 +397,6 @@
     {{/if}}
 
     {{#if isCompanyOrLocation}}
-
     <div class="line">
       <div class="handle">
         company / school
