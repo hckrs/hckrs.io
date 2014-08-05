@@ -1,6 +1,10 @@
 
 <template name="hacker">
 
+  {{#if hasAmbassadorPermission}}
+    {{> hackerEditor}}
+  {{/if}}
+
   <div class="main-alerts">
     {{#if isCurrentUser}}
       {{#if HackerProp 'isAccessDenied'}}
@@ -85,10 +89,6 @@
 
     <div class="page-space"></div>
   </div>
-
-  {{#if hasAmbassadorPermission}}
-    {{> hackerEditor}}
-  {{/if}}
 
 </template>
 

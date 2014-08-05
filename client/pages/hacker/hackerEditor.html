@@ -1,7 +1,7 @@
 
 <template name="hackerEditor">
   <div id="hackerEditor" class="alert-wrapper">
-    <div class="alert alert-info">
+    <div class="panel">
       
       {{#if statusLabels}}
         <h3>Status</h3>
@@ -12,44 +12,50 @@
         </div>
       {{/if}}
 
-      <h3>Ambassador Tools</h3>
+      <h3>Tools</h3>
       <fieldset>
 
         {{#if HackerProp 'isUninvited'}}
-          Invite user: 
-          <button action="invite" by="anonymous" class="btn">anonymous</button> or
-          <button action="invite" by="ambassador" class="btn">by myself</button>
+          <label>Invite user</label>
+          <div class="input">
+            <button action="invite" by="anonymous" class="btn btn-inverse">anonymous</button> or
+            <button action="invite" by="ambassador" class="btn btn-inverse">by myself</button>
+          </div>
           <br/>
         {{/if}}
 
         {{#if unverifiedEmail}}
-          Verify email address:
-          <button action="verifyEmail" class="btn">Skip verification</button>
-          <button action="sendVerificationEmail" class="btn">Resend verification e-mail</button>
+          <label>Verify email address</label>
+          <div class="input">
+            <button action="verifyEmail" class="btn btn-inverse">Skip verification</button>
+            <button action="sendVerificationEmail" class="btn btn-inverse">Resend verification e-mail</button>
+          </div>
           <br/>
         {{/if}}
         
         {{#if HackerProp 'profile.email'}}
-          Message: 
-          <button action="email" class="btn">Send e-mail</button>
+          <label>Message</label>
+          <div class="input">
+            <button action="email" class="btn btn-inverse">Send e-mail</button>
+          </div>
           <br/>
         {{/if}}
 
-        Free invite slots: 
-        <input type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" />
+        <label>Free invite slots</label>
+        <div class="input">
+          <input type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" />
+        </div>
         <br/>
+        {{!-- Admin tools --}}
+
+        {{#if hasAdminPermission}}
+          <label>Change city</label>
+          <div class="input">
+            {{> citySelect}}
+          </div>
+        {{/if}}
 
       </fieldset>
-
-
-      {{!-- Admin tools --}}
-
-      {{#if hasAdminPermission}}
-        <h3>Admin Tools</h3>
-        <fieldset>
-          Switch city: {{> citySelect}}
-        </fieldset>
-      {{/if}}
 
     </div>
   </div>
