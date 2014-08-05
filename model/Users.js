@@ -143,16 +143,17 @@ var schema = {
 
   /* administration details */
 
-  "ambassador": {       // only when user is ambassador    
-    type: Object,
+  "isAmbassador": {       // only when user is ambassador    
+    type: Boolean,
     optional: true,
+  },
+  "ambassador": {         // additional ambassador info
+    type: Object,
+    optional: true
   },
   "ambassador.title": { // custom title of this ambassador     
     type: String,
     optional: true         
-  },
-  "ambassador.city": {  // refer to the city where this user is ambassor
-    type: String
   },
   "isAccessDenied": {      // user isn't allowed to enter the site unless he is invited and profile complete and email verified 
     type: Boolean,
@@ -371,6 +372,7 @@ if (Meteor.isServer) {
     "profile.email",
   ];
   var userFieldsAmbassador = [
+    "isAmbassador",
     "ambassador",
     "profile.email",
     "profile.social",
@@ -405,7 +407,7 @@ if (Meteor.isServer) {
     'isAdmin',
     'city',
     'currentCity',
-    'ambassador'
+    'isAmbassador'
   ];
 
 
@@ -464,7 +466,7 @@ if (Meteor.isServer) {
     var hasAccess = permissions.isAccessDenied != true;
     var isSameCity = cityMatch(permissions.city, doc.city);
     var isAdmin = permissions.isAdmin;
-    var isAmbassador = permissions.ambassador;
+    var isAmbassador = permissions.isAmbassador;
 
 
     // holds which fields to publish        
@@ -474,7 +476,7 @@ if (Meteor.isServer) {
     // publish this data of all users anyway
     useFields.push(userFieldsGlobal);
     
-    if (doc.ambassador)
+    if (doc.isAmbassador)
       useFields.push(userFieldsAmbassador);
 
     
@@ -629,7 +631,7 @@ isAmbassador = function(user, city) {
   }
   user = user || Meteor.userId();
   city = city || (this['Session'] && Session.get('currentCity')) || UserProp('currentCity');
-  return !!OtherUserProp(user, 'ambassador') && OtherUserProp(user, 'city') === city;
+  return OtherUserProp(user, 'isAmbassador') && OtherUserProp(user, 'city') === city;
 }
 isOwner = function(user, doc) {
   if (!user) return false;
@@ -712,13 +714,13 @@ userRank = function(user) {
 userPictureLabel = function(user) {
   user = user || Meteor.userId();
   var userId = _.isObject(user) ? user._id : user;
-  user = OtherUserProps(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','ambassador'])
+  user = OtherUserProps(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','isAmbassador','ambassador'])
   if (user.mergedWith)             return "Merged with #"+userRank(user.mergedWith);
   if (user.isDeleted)              return "Deleted";
   if (user.isAccessDenied)         return "No Access";
   if (user.isHidden)               return "Hidden";
   if (userIsForeign(userId))       return CITYMAP[user.city].name;
-  if (user.ambassador)             return user.ambassador.title || "Ambassador";
+  if (user.isAmbassador)           return pathValue(user, 'ambassador.title') || "Ambassador";
   else                             return "#"+userRank(user);
 }
 
@@ -736,7 +738,7 @@ userStatusLabel = function(user) {
   if (user.isAccessDenied)      labels.push({style: 'warning', text: 'No access'});
   if (user.isHidden)            labels.push({style: 'warning', text: 'Hidden'});
   if (user.isAdmin)             labels.push({style: 'success', text: 'Admin'});
-  if (user.ambassador)          labels.push({style: 'success', text: 'Ambassador'});
+  if (user.isAmbassador)        labels.push({style: 'success', text: 'Ambassador'});
   return labels;
 }
 

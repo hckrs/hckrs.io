@@ -79,8 +79,11 @@ exec = function(func) {
 fieldsObj = function(obj) {
   var objToArray = function(obj) {
     var field = function(val, prefix) {
-      var arr = _.isArray(val) ? val : objToArray(val);
-      return _.map(arr, function(postfix) { return prefix+'.'+postfix; });
+      var arr;
+      if (_.isArray(val))       arr = val;
+      else if (_.isObject(val)) arr = objToArray(val);
+      else return prefix;
+      return _.map(arr, function(postfix) { return prefix+'.'+postfix; });  
     }
     return _.flatten(_.map(obj, field));
   }

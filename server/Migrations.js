@@ -92,6 +92,8 @@ var migrations = [
             globalId: user.globalRank,
             currentCity: user.city,
             accessAt: user.isAccessDenied ? undefined : user.createdAt,
+            isAmbassador: user.ambassador ? true : undefined,
+            ambassador: user.ambassador ? _.pick(user.ambassador, 'title') : undefined,
           }, 
           $unset: {
             localRank: true,

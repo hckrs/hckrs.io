@@ -29,7 +29,7 @@ Template.hackers.helpers({
     }
     var city = Session.get('currentCity');
     var selector = hasAmbassadorPermission() ? {city: city} : {city: city, isHidden: {$ne: true}};
-    return city && Users.find(selector, {sort: {ambassador: -1, accessAt: -1}}).map(getUserView); 
+    return city && Users.find(selector, {sort: {isAmbassador: -1, accessAt: -1}}).map(getUserView); 
   }
 });
 

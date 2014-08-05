@@ -477,13 +477,8 @@ var attachUserToCity = function(userId, city) {
     Users.update(user._id, {$unset: {isUninvited: true}});
 
   // make the first user within the system ambassador of this city
-  if (Meteor.users.find().count() === 1) {
-    var ambassador = {
-      city: city,
-      title: "hckrs.io developer",
-    }; 
-    Users.update(user._id, {$set: {ambassador: ambassador}});
-  }
+  if (Meteor.users.find().count() === 1)
+    Users.update(user._id, {$set: {isAmbassador: true, ambassador: {title: "Co-founder"}}});
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);

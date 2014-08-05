@@ -34,16 +34,17 @@ Template.ambassadors.helpers({
     var city = Session.get('currentCity');
     var fields = fieldsObj({
       profile: ['name','picture','email'],
-      ambassador: ['title']
+      'isAmbassador': true,
+      'ambassador': true
     });
     var transform = function(user) {
       user.twitter = userSocialName(user._id, 'twitter');
       return user;
     }
-    return city && Users.find({"ambassador.city": city}, {fields: fields}).map(transform);
+    return city && Users.find({city: city, isAmbassador: true}, {fields: fields}).map(transform);
   },
   "title": function() {
-    return this.ambassador.title || "Ambassador";
+    return pathValue(this, 'ambassador.title') || "Ambassador";
   }
 });
 
