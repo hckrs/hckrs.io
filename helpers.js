@@ -21,6 +21,13 @@ allIn = function(values, allowedValues) {
   return _.all(values, function(v) { return _.contains(allowedValues, v); });
 }
 
+// make sure we have an array
+// transform if it is not already
+array = function(val) {
+  if (_.isArray(val)) return val;
+  return _.compact([val]);
+}
+
 // return an array with uniq value
 // compared by the _.isEqual function
 uniqFilter = function(arr) {
@@ -37,6 +44,20 @@ omitNull = function(obj) {
 omitEmpty = function(o) {
   _.each(o, function(v, k){ if(!v) delete o[k]; });
   return o;
+}
+
+wrap = function(val, wrap1, wrap2) {
+  return [wrap1, val, wrap2].join('');
+}
+
+sentenceFromList = function(val, sep, sep2, wrap1, wrap2) {
+  val = _.map(val, function(v) { return wrap(v, wrap1, wrap2); });
+  return _.compact([_.initial(val).join(sep), _.last(val)]).join(sep2);
+}
+
+// get label from an options list
+getLabel = function(optionsList, value) {
+  return (_.findWhere(optionsList, {value: value})||{}).label;
 }
 
 // find a value in an object by giving a path
@@ -330,6 +351,10 @@ if (Meteor.isClient) {
   // template helper for testing if a Session variable equals a specified value
   UI.registerHelper('SessionEquals', function(key, val) {
     return Session.equals(key, val);
+  });
+
+  UI.registerHelper('Constant', function(key) {
+    return window[key];
   });
 
   // template helper for stripping the protocol of an url

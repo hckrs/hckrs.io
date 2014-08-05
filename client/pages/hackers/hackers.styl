@@ -13,7 +13,36 @@
    	}
   }
 
+  .total {
+    text-align: center;
+  }
+
+  #hackersFilter {
+    width: 600px;
+    margin: 0 auto;
+    
+    .chosen-select {
+      width: 100%;
+    }
+    
+    .chosen-container {
+      .chosen-drop, .chosen-results {
+        max-height: 350px;
+      }
+      .group-result { /* optgroup */
+        margin: 10px 0px;
+      }
+      .group-option {
+        display: inline-block;
+        padding: 5px 8px;
+      }
+      .group-option:hover {
+        font-weight: normal;
+      }
+    }
+  }
 }
+
 
 
 /* HACKER */
@@ -106,4 +135,6 @@ a.pictureViewLink[foreign] {
   transform: none !important;
   cursor: default !important;
 }
+
+
 

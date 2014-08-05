@@ -1,13 +1,21 @@
 <template name="hackers">
   <div id="hackers" class="page">
+
+
+    {{> hackersFilter}}
+
+    <div class="total">
+      <strong>{{totalHackers}}</strong> hackers in {{CurrentCity.name}} 
+      {{#if hacking}}are hacking {{{hacking}}}{{/if}}<br/>
+      {{#if skills}}with the following programming skills {{{skills}}}{{/if}}
+    </div>
     
     {{#each hackerViews}}
       {{> hackersEntry}}    
     {{/each}}
    
-    <div style="clear:both;"></div>
-    <strong>{{totalHackers}}</strong> hackers in {{CurrentCity.name}}.
-
+    <div class="clear"></div>
+    
 
     {{> invitations_partial}}
 
@@ -22,5 +30,26 @@
       {{profile.name}}
     </a>
     <br/>
+  </div>
+</template>
+
+<template name="hackersFilter">
+  <div id="hackersFilter">
+    <form id="hackersFilterForm">
+      
+      <select name="filter" class="chosen-select" multiple data-placeholder=" filter hackers" >
+        <optgroup label="Hacking">
+          {{#each Constant "HACKING_OPTIONS"}}
+            <option value="hacking-{{value}}">{{label}}</option>
+          {{/each}}    
+        </optgroup>
+        <optgroup label="Skills">
+          {{#each Constant "SKILLS"}}
+            <option value="skill-{{name}}">{{name}}</option>
+          {{/each}}  
+        </optgroup>
+      </select>
+
+    </form>
   </div>
 </template>

@@ -1,3 +1,10 @@
+var state = new State('hackers', {
+  filter: {
+    hacking: [],
+    skills: []
+  }
+});
+
 
 // Route Controller
 
@@ -13,13 +20,36 @@ HackersController = DefaultController.extend({
 
 /* HACKERS list */
 
-// bind hackers to template
+var selector = function(inclHidden) {
+  var city = Session.get('currentCity');
+  var filter = state.get('filter');
+
+  var selector = {
+    "city": city
+  };
+
+  if (!_.isEmpty(filter.hacking))
+    _.extend(selector, {"profile.hacking": {$all: filter.hacking}});
+
+  if (!_.isEmpty(filter.skills))
+    _.extend(selector, {"profile.skills": {$all: filter.skills}});
+  
+  if (!hasAmbassadorPermission() || !inclHidden)
+    _.extend(selector, {"isHidden": {$ne: true}});
+  
+  return selector;
+}
+
+
+/* template data */
+
 Template.hackers.helpers({
   "totalHackers": function() {
-    var city = Session.get('currentCity');
-    return (city && Meteor.users.find({city: city, isHidden: {$ne: true}}).count()) || ''; 
+    return Meteor.users.find(selector()).count(); 
   },
   "hackerViews": function() { 
+    var city = Session.get('currentCity');
+    
     var transitionDelay = 0;
     var getUserView = function(user) {
       user = userView(user);
@@ -27,9 +57,45 @@ Template.hackers.helpers({
       transitionDelay += 0.2
       return user;
     }
-    var city = Session.get('currentCity');
-    var selector = hasAmbassadorPermission() ? {city: city} : {city: city, isHidden: {$ne: true}};
-    return city && Users.find(selector, {sort: {isAmbassador: -1, accessAt: -1}}).map(getUserView); 
+
+    var options = {sort: {isAmbassador: -1, accessAt: -1}};
+    return Users.find(selector(true), options).map(getUserView); 
+  },
+  'hacking': function() {
+    var hacking = state.get('filter').hacking;
+    var hackingLabels = _.map(hacking, _.partial(getLabel, HACKING_OPTIONS));
+    var hackingSentence = sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');    
+    return hackingSentence;
+  },
+  'skills': function() {
+    var skillsLabels = state.get('filter').skills;
+    var skillsSentence = sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');    
+    return skillsSentence;
   }
 });
+
+
+/* events */
+
+Template.hackersFilter.rendered = function() {
+  this.$("select").chosen({search_contains:true}).change(filterFormChanged);
+}
+
+
+
+/* state */
+
+// when filter changed
+// process form input and save state
+var filterFormChanged = function(event) {
+  var $form = $(event.currentTarget).parents('form:first');
+  var formData = $form.serializeObject();
+  var items = array(formData.filter);
+  
+  var filter =_.groupBy(items, function(item){ return /^hacking/.test(item) ? 'hacking' : 'skills'; });
+  filter.hacking = _.invoke(filter.hacking, 'replace', /^hacking-/, '');
+  filter.skills = _.invoke(filter.skills, 'replace', /^skill-/, '');
+
+  state.set('filter', filter);
+}
 

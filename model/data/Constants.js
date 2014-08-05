@@ -1,8 +1,20 @@
 // CONSTANTS 
 // some of this data can be moved to the database in the future
 
+HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenation  */
+  {value: "web", label: "Web"},
+  {value: "apps", label: "Apps"},
+  {value: "software", label: "Software"},
+  {value: "game", label: "Game"},
+  {value: "design", label: "Design"},
+  {value: "life", label: "Life"},
+  {value: "hardware", label: "Hardware"},
+  {value: "opensource", label: "Open Source"},
+  {value: "growth", label: "Growth"},
+], 'label');
 
-HACKING = ['web','apps','software','game','design','life','hardware','opensource','growth'].sort();
+HACKING = _.pluck(HACKING_OPTIONS, 'value');
+
 
 ITEM_TYPES = ["article", "ask", "audio", "book", "event", "hack", "location", "picture", "product", "show", "video", "work"];
 
