@@ -40,12 +40,12 @@
       <select name="filter" class="chosen-select" multiple data-placeholder=" filter hackers" >
         <optgroup label="Hacking">
           {{#each Constant "HACKING_OPTIONS"}}
-            <option value="hacking-{{value}}">{{label}}</option>
+            <option value="hacking-{{value}}" {{selectedHacking}}>{{label}}</option>
           {{/each}}    
         </optgroup>
         <optgroup label="Skills">
           {{#each Constant "SKILLS"}}
-            <option value="skill-{{name}}">{{name}}</option>
+            <option value="skill-{{name}}" {{selectedSkill}}>{{name}}</option>
           {{/each}}  
         </optgroup>
       </select>

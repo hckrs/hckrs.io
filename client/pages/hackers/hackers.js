@@ -74,6 +74,15 @@ Template.hackers.helpers({
   }
 });
 
+Template.hackersFilter.helpers({
+  'selectedHacking': function() {
+    return _.contains(state.get('filter').hacking, this.value) ? 'selected' : '';
+  },
+  'selectedSkill': function() {
+    return _.contains(state.get('filter').skills, this.name) ? 'selected' : '';
+  }
+});
+
 
 /* events */
 
