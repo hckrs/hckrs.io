@@ -41,6 +41,44 @@
       }
     }
   }
+
+  $hackerWidth = 260px;
+  .hacker {
+    position: relative;
+    width: $hackerWidth;
+    .hacking {
+      position: absolute;
+      div {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        text-align: center;
+        width: $hackerWidth - 40px;
+        height: $hackerWidth - 40px;
+        padding: 20px;
+        &:nth-child(1) { transform: rotate(-60deg); }
+        &:nth-child(2) { transform: rotate(-30deg); }
+        &:nth-child(3) { transform: rotate(0deg); }
+        &:nth-child(4) { transform: rotate(30deg); }
+        &:nth-child(5) { transform: rotate(60deg); }
+        &:nth-child(6) { transform: rotate(90deg); }
+        &:nth-child(7) { transform: rotate(120deg); }
+        &:nth-child(8) { transform: rotate(150deg); }
+        &:nth-child(9) { transform: rotate(180deg); }
+        span {
+          display: inline-block;
+          padding: 0px 4px;
+          &.highlighted {
+            background-color: rgba(255,255,0, 0.9);
+            border-radius: 5px;
+            color: #222;
+          }
+        }
+        
+      }
+
+    }
+  }
 }
 
 

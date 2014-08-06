@@ -25,6 +25,11 @@
 
 <template name="hackersEntry">
   <div class="hacker">
+    <div class="hacking">
+      {{#each hacking}}
+        <div><span class="{{highlighted}}">{{this}}</span></div>
+      {{/each}}
+    </div>
     <a class="hackers-name pictureViewLink" href="{{pathFor 'hacker'}}" {{foreign}}>
       <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}} label="{{label}}"></div>
       {{profile.name}}

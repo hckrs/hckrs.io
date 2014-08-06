@@ -74,6 +74,15 @@ Template.hackers.helpers({
   }
 });
 
+Template.hackersEntry.helpers({
+  'hacking': function() {
+    return OtherUserProp(this, 'profile.hacking').sort();
+  },
+  'highlighted': function() {
+    return _.contains(state.get('filter').hacking, _.toArray(this).join('')) ? 'highlighted' : '';
+  }
+})
+
 Template.hackersFilter.helpers({
   'selectedHacking': function() {
     return _.contains(state.get('filter').hacking, this.value) ? 'selected' : '';
