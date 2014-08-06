@@ -19,9 +19,9 @@ Template.admin_hackers.helpers({
       fields: [
         Field.date, 
         Field.city, 
-        { key: '_id', label: '#', fn: function(val, obj) { return userRank(obj) ? Safe.hackerUrl(obj, {text: '#'+userRank(obj)}) : '-'; } },
-        { key: 'profile.name', label: 'name', fn: function(val, obj) { return Safe.hackerUrl(obj, {text: val}); } },
-        { key: 'profile.email', label: 'e-mail', fn: Field.fn.email },
+        { key: 'globalId', label: '#', sortByValue: true, fn: function(val, obj) { return Safe.hackerUrl(obj, {text: userRank(obj) ? '#'+userRank(obj) : '-'}); } },
+        { key: 'profile.name', label: 'name', sortByValue: true, fn: function(val, obj) { return Safe.hackerUrl(obj, {text: val || '-'}); } },
+        { key: 'profile.email', label: 'e-mail', sortByValue: true, fn: Field.fn.email },
         { key: 'invitations', label: 'free invites' },
         { key: '_id', label: 'status',
           fn: function(val, obj) { 

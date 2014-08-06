@@ -21,6 +21,7 @@ Field = {}
 Field.date = {
   key: 'createdAt',
   label: 'date',
+  sortByValue: true,
   fn: function(val, obj) {
     return moment(val).fromNow();
   }
