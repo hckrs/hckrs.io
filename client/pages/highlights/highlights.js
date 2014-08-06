@@ -73,26 +73,28 @@ Template.highlights.events({
   }
 })
 
+// after cancel form which is in add-mode
+// we select the previous selected highlight item
+Template.highlights.events({ 
+  "click [action='cancel']": function() {
+    editor.select(indexToId(1));
+  },
+});
 
 
 
 // RENDERING
 
-var _index;
-var setSelectedHighlight = function(index) {
-  _index = _.isUndefined(index) ? _index : index;
+var indexToId = function(index) {
   var data = HighlightsSorted({fields: {_id: 1}});
-  var highlightId = data && data[_index] && data[_index]._id;
-  editor.select(highlightId);
+  return data &&  index > 0 && data[index-1] && data[index-1]._id;
+}
+var idToIndex = function(id) {
+  var data = HighlightsSorted({fields: {_id: 1}}).map(_.property('_id'));
+  return _.indexOf(data, id) + 1;
 }
 
-// after cancel form which is in add-mode
-// we select the previous selected highlight item
-Template.highlights.events({ 
-   "click [action='cancel']": function() {
-    setSelectedHighlight();
-  },
-});
+
 
 var setupOnePageScroll = function(tmpl) {
 
@@ -106,24 +108,21 @@ var setupOnePageScroll = function(tmpl) {
   var $onePageScroll = tmpl.$("#onePageScroll").onepage_scroll({
     sectionContainer: "section", // sectionContainer accepts any kind of selector in case you don't want to use section
     easing: "ease", // Easing options accepts the CSS3 easing animation such "ease", "linear", "ease-in", "ease-out", "ease-in-out", or even cubic bezier value such as "cubic-bezier(0.175, 0.885, 0.420, 1.310)"
-    animationTime: 900, // AnimationTime let you define how long each section takes to animate
+    animationTime: 400, // AnimationTime let you define how long each section takes to animate
     pagination: true, // You can either show or hide the pagination. Toggle true for show, false for hide.
     updateURL: false, // Toggle this true if you want the URL to be updated automatically when the user scroll to each page.
     loop: false, // You can have the page loop back to the top/bottom when the user navigates at up/down on the first/last page.
     responsiveFallback: false, // You can fallback to normal page scroll by defining the width of the browser in which you want the responsive fallback to be triggered. For example, set this to 600 and whenever the browser's width is less than 600, the fallback will kick in.
     afterMove: function() {
-      var index = $onePageScroll.getIndex() - 1;
+      var index = $onePageScroll.getIndex();
       buttonVisibility(index)
-      setSelectedHighlight(index);
+      editor.select(indexToId(index))
     }
   });
 
   // make sortable for ambassadors
   if (hasAmbassadorPermission())
     HighlightEditor.initSortable();
-
-  setSelectedHighlight(0);
-  buttonVisibility(0);
   
   return $onePageScroll;
 }
@@ -131,6 +130,8 @@ var setupOnePageScroll = function(tmpl) {
 
 
 Template.highlights.rendered = function() {
+  var self = this;
+
   this.onePageScroll = setupOnePageScroll(this);  
   
   var initialized = false;
@@ -139,11 +140,30 @@ Template.highlights.rendered = function() {
     'removed': function() { Router.reload(); }
   });
   initialized = true;
+
+  // observe selected
+  var move = function(id) {
+    var index = $('#onePageScroll section[data-id="'+id+'"]').data('index');
+    self.onePageScroll.moveTo(index || 1);
+  }
+  this.selectedObserver = editor.observe('selectedId', move);
+
+  
+  // move to selected first
+  if (editor.selectedId())
+    move(editor.selectedId())
+
+  // set first selected
+  if (!editor.selectedId())
+    editor.select(indexToId(1))  
+
+  
 }
 
 Template.highlights.destroyed = function() {
   this.onePageScroll.disable();
   this.observer.stop();
+  this.selectedObserver.stop();
 }
 
 

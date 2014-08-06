@@ -6,7 +6,7 @@
     
     <div id="onePageScroll">
       {{#each highlights}}
-        <section>
+        <section data-id="{{_id}}">
           <div class="photo" style="background-image:url({{imageUrl}});"></div>
           {{#if url}}
             <a href="{{url}}" target="_blank">
