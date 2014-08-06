@@ -53,8 +53,8 @@ Template.hackers.helpers({
     var transitionDelay = 0;
     var getUserView = function(user) {
       user = userView(user);
-      user.transitionDelay = Math.min(transitionDelay, 3);
-      transitionDelay += 0.2
+      user.transitionDelay = Math.min(transitionDelay, 1);
+      transitionDelay += 0.1
       return user;
     }
 

@@ -93,31 +93,10 @@ var checkDuplicateAccounts = function() {
     this.redirect('hacker', Meteor.userId());
 }
 
-// scroll to hash element (when present in url)
-var scrollToTop = function() {
-  Session.equals('pageScrollDirection', null);
-  var params = Router.current().params;
-  
-  // scroll to top if there is no hash element
-  if (!params.hash) 
-    return $(window).scrollTop(0);
-
-  // wait for hash element to become on screen
-  var timer;
-  var scrollTo = function() {
-    if (!$("#"+params.hash).length) return;
-    clearInterval(timer);
-    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});  
-  } 
-  timer = setInterval(scrollTo, 200);
-}
 
 
 // set meta data
 Router.onRun(setMetaData);
-
-// scroll to top when user enters a route
-Router.onRun(scrollToTop);
 
 // make sure the user is logged in, except for the pages below
 Router.onRun(loginRequired, {except: noLoginRequired});
@@ -133,6 +112,45 @@ Router.onBeforeAction(allowedAccess, {except: ['mergeAccount'].concat(noLoginReq
 Router.onRun(GAnalytics.pageview);
 
 
+
+// save and restore scroll state for every page
+
+var scrollState = new State('routerScrollState', {
+  routes: {}
+});
+
+Router.restoreScrollState = function() {
+  var params = Router.current().params;
+  var route = Router.current().path;
+  var top = scrollState.get(route);
+
+  if (top === 0 && params.hash)
+    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});  
+  else
+    $(window).scrollTop(top || 0);  
+}
+
+var scrollHandler = function(event) {
+  var route = Router.current().path;
+  var top = $(window).scrollTop();
+  scrollState.set(route, top);
+}
+
+Meteor.startup(function() {
+  var routes = _.map(Router.routes, _.property('name'));
+
+  _.each(Template, function(template, templateName) {
+    if (_.contains(routes, templateName)) { // is route template
+      var prevRenderFunc = template.rendered;
+      template.rendered = function() {
+        if (prevRenderFunc) prevRenderFunc.call(this);  
+        Router.restoreScrollState(); // restore scroll state
+      }
+    }
+  });
+
+  $(window).on("scrollstop", scrollHandler);
+});
 
 
 
@@ -164,7 +182,7 @@ Router.map(function () {
 /* router plugins */
 
 Router.scrollToTop = function() {
-  scrollToTop();
+  $(window).scrollTop(0); 
 }
 
 // reload current route (hack)
