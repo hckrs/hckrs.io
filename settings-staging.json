@@ -28,6 +28,11 @@
     "secret": "45Lj8VEJSXgtCTGBAyw8TLW3EG40msiz0dZKZhwZi0"
   },
 
+  "MailChimpOptions": {
+    "apiKey": "178483d491497f6951a3a4a6758f3ee8-us7",
+    "listId": "b32e95f96f"
+  },
+
   "newrelic": {
     "NEW_RELIC_LICENSE_KEY": "74c38a63cd258d4834daea40cb5509eed29bc3db",
     "NEW_RELIC_APP_NAME": "hckrs-staging"

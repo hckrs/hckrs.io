@@ -8,7 +8,8 @@
       "iron-router": {},
       "iron-router-progress": {},
       "GAnalytics": {},
-      "reactive-table": {}
+      "reactive-table": {},
+      "mailchimp": {}
     },
     "packages": {
       "autoform": {
@@ -18,8 +19,8 @@
       },
       "collection2": {
         "git": "https://github.com/aldeed/meteor-collection2.git",
-        "tag": "v0.4.4",
-        "commit": "c70deb36e10f63238b884529eea1e38cf0789903"
+        "tag": "v0.4.5",
+        "commit": "336903730249197b3358dac31b1bd5ed64fecc50"
       },
       "collection-hooks": {
         "git": "https://github.com/matb33/meteor-collection-hooks.git",
@@ -45,6 +46,11 @@
         "git": "https://github.com/ecohealthalliance/reactive-table.git",
         "tag": "v0.3.17",
         "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
+      },
+      "mailchimp": {
+        "git": "https://github.com/MiroHibler/meteor-mailchimp.git",
+        "tag": "v0.4.2",
+        "commit": "7d100e96b37eb931f4e1d9544da677bb43fe8b5b"
       },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",

@@ -533,18 +533,27 @@ if (Meteor.isServer) {
 
   // after updating
   Users.after.update(function(userId, doc, fieldNames, modifier, options) {
-
+    var prevUser = this.previous;
+    var prevEmail = pathValue(prevUser, 'profile.email');
+    var user = doc;
+    var email = modifier.$set && modifier.$set['profile.email'];
+    
     /* 
       handle new e-mailaddress 
       insert into user's emails array 
       and send a verification e-mail
     */
+    if (email && email !== prevEmail) {
 
-    if (modifier.$set && modifier.$set['profile.email']) {
-      var email = modifier.$set['profile.email'];
-      var user = Users.findOne(userId);
       var emails = user.emails;
-      var found = _.findWhere(emails, {address: email});
+      var found = _.findWhere(emails, {address: email});      
+
+      // Unsubscribe previous email from mailing list
+      try {
+        Mailing.unsubscribe(prevUser);
+      } catch(e) {
+        console.log('unsubscribe error', e);
+      }
 
       // insert new e-mail
       if (!found)
@@ -556,6 +565,10 @@ if (Meteor.isServer) {
         Accounts.sendVerificationEmail(userId, email);
         Users.update(userId, {$set: {'isAccessDenied': true}});
       }
+
+      // e-mail already verified, give access to site
+      if (found && found.verified)
+        requestAccessOfUser(userId)  
 
       // remove previous mailaddress
       Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 10000);
@@ -589,9 +602,11 @@ OtherUserProp = function(user, field, options) {
 OtherUserProps = function(user, fields, options) {
 
   // memorized
-  var props = _.isObject(user) ? _.pick(user, fields || []) : {};
-  if (fields && _.all(_.union(['_id'], fields), _.partial(_.has, props)))
-    return user;
+  if (_.isObject(user) && fields) {
+    var userHasProp = function(field) { return !_.isUndefined(pathValue(user, field)); };
+    if (_.all(_.union(['_id'], fields), userHasProp))
+      return user;
+  }
 
   var userId = _.isObject(user) ? user._id : user;
   var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};

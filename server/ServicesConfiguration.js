@@ -832,14 +832,11 @@ var requestAccess = function() {
 
 // when this function is called, is must already be verified that 
 // the user is allowed to do this operation
-var requestAccessOfUser = function(userId) {
+requestAccessOfUser = function(userId) { 
   var user = Meteor.users.findOne(userId);
 
   if (!user)
     throw new Meteor.Error(500, "Unknow user");
-
-  if (user.isAccessDenied != true)
-    throw new Meteor.Error(500, "User has already access to the site.");
 
   if (!user.city) 
     throw new Meteor.Error(500, "User isn't attached to some city.");    
@@ -855,16 +852,23 @@ var requestAccessOfUser = function(userId) {
 
   // access allowed!
 
-  // set signup date
-  if (!user.accessAt)
-    Meteor.users.update(userId, {$set: {accessAt: new Date()}});
-
-
   // allow access for this user
   Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
 
   // request visibility
   requestVisibilityOfUser(userId);
+
+  // subscribe to mailing list of user's city
+  Mailing.subscribe(userId);
+
+  // don't execute commands below again if user has already access
+  if (user.isAccessDenied != true)
+    return;
+
+  // set signup date
+  if (!user.accessAt)
+    Meteor.users.update(userId, {$set: {accessAt: new Date()}});
+
 }
 
 
@@ -934,20 +938,20 @@ var sendVerificationEmail = function(userId) {
 // NOTE: permission check must already be performed
 moveUserToCity = function(hackerId, city) { // called from Methods.js
 
+  // unsubscribe from mailing list
+  Mailing.unsubscribe(hackerId);
+
   // update user's city
   Users.update(hackerId, {$set: {
     city: city,
     currentCity: city,
     accessAt: new Date()
   }});
+
+  // subscribe to new mailing list
+  Mailing.subscribe(hackerId);
 }
 
-
-// test some functionality
-// XXX, check secutiry for client-calls
-var test = function() {
-  /* empty */
-}
 
 
 // define methods that can be called from the client-side
@@ -959,7 +963,6 @@ Meteor.methods({
   "removeServiceFromUser": removeServiceFromCurrentUser,
   "forceEmailVerification": forceEmailVerification,
   "sendVerificationEmail": sendVerificationEmail,
-  "test": test 
 });
 
 

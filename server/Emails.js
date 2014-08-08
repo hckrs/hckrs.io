@@ -81,3 +81,54 @@ SendEmailsOnNewUser = function(userId) {
 }
 
 
+
+/* Mail Chimp Interace */
+
+Mailing = {};
+
+Mailing.subscribe = function(user, cb) {
+  user = OtherUserProps(user, ['city','profile.email','profile.name']);
+  
+  var city = user.city;
+  var email = pathValue(user, 'profile.email');
+  var splitName = (pathValue(user, 'profile.name') || "").split(' ');
+  var firstName = _.first(splitName) || undefined;
+  var lastName = _.rest(splitName).join(' ') || undefined;
+
+  var params = {
+    id: CITYMAP[city].mailChimpListId,
+    double_optin: false,
+    update_existing: true,
+    replace_interests: false,
+    email: {email: email},
+    merge_vars: {
+      "FNAME": firstName,
+      "LNAME": lastName,
+      groupings: []
+    }
+  };
+
+  console.log('subscribe', params)
+
+  new MailChimp().call('lists', 'subscribe', params, cb || function(){});
+}
+
+Mailing.unsubscribe = function(user, noDelete, cb) {
+  user = OtherUserProps(user, ['city','profile.email']);
+
+  var city = user.city;
+  var email = pathValue(user, 'profile.email');
+
+  var params = {
+    id: CITYMAP[city].mailChimpListId,
+    email: {email: email},
+    delete_member: !noDelete,
+    send_goodbye: false,
+    send_notify: !!noDelete,
+  }
+
+  console.log('unsubscribe', params)
+
+  new MailChimp().call('lists', 'unsubscribe', params, cb || function(){});
+}
+
