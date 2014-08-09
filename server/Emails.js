@@ -86,26 +86,51 @@ SendEmailsOnNewUser = function(userId) {
 
 Mailing = {};
 
-Mailing.subscribe = function(user, cb) {
-  user = OtherUserProps(user, ['city','profile.email','profile.name']);
-  
-  var city = user.city;
-  var email = pathValue(user, 'profile.email');
-  var splitName = (pathValue(user, 'profile.name') || "").split(' ');
-  var firstName = _.first(splitName) || undefined;
-  var lastName = _.rest(splitName).join(' ') || undefined;
+Mailing.fields = [
+  'city',
+  'globalId',
+  'profile.email',
+  'profile.name',
+  'profile.picture',
+  'profile.hacking',
+  'profile.available',
+  'invitations',
+  'invitationPhrase',
+  'isAmbassador',
+  'isAdmin',
+  'isIncompleteProfile',
+  'isUninvited'
+];
+
+Mailing.subscribe = function(user, options, cb) {
+  user = OtherUserProps(user, Mailing.fields);
+  options = options || {};
 
   var params = {
-    id: CITYMAP[city].mailChimpListId,
-    double_optin: false,
+    id: MailChimpOptions['listId'],
     update_existing: true,
-    replace_interests: false,
-    email: {email: email},
+    email: {email: options.previousEmail || user.profile.email},
     merge_vars: {
-      "FNAME": firstName,
-      "LNAME": lastName,
-      groupings: []
-    }
+      "email": options.previousEmail ? user.profile.email : undefined,
+      "NAME": user.profile.name || "",
+      "CITY_ID": user.city,
+      "CITY_NAME": CITYMAP[user.city].name,
+      "PROFILE": userProfileUrl(user),
+      "PICTURE": user.profile.picture,
+      "INVITES": user.invitations,
+      "INVITE_URL": userInviteUrl(user),
+      "IS_AMBSSDR": user.isAmbassador ? "true" : "false",
+      "IS_ADMIN": user.isAdmin ? "true" : "false",
+      "IS_INCOMPL": user.isIncompleteProfile ? "true" : "false",
+      "IS_UNINVIT": user.isUninvited ? "true" : "false",
+      "groupings": [
+        { name: 'hacking', groups: user.profile.hacking || [] },
+        { name: 'available', groups: user.profile.available || [] }
+      ]
+    },
+    replace_interests: true,
+    double_optin: false,
+    send_welcome: false,
   };
 
   console.log('subscribe', params)
@@ -113,22 +138,47 @@ Mailing.subscribe = function(user, cb) {
   new MailChimp().call('lists', 'subscribe', params, cb || function(){});
 }
 
-Mailing.unsubscribe = function(user, noDelete, cb) {
-  user = OtherUserProps(user, ['city','profile.email']);
-
-  var city = user.city;
-  var email = pathValue(user, 'profile.email');
-
+Mailing.unsubscribe = function(emailToDelete, keepInList, cb) {
+  
   var params = {
-    id: CITYMAP[city].mailChimpListId,
-    email: {email: email},
-    delete_member: !noDelete,
+    id: MailChimpOptions['listId'],
+    email: {email: emailToDelete},
+    delete_member: !keepInList,
     send_goodbye: false,
-    send_notify: !!noDelete,
+    send_notify: !!keepInList,
   }
 
   console.log('unsubscribe', params)
 
   new MailChimp().call('lists', 'unsubscribe', params, cb || function(){});
 }
+
+// Observer user data changes and update mailing list
+Meteor.startup(function() {
+  var initialized = false;
+
+  var selector = {
+    "city": {$exists: true, $ne: ""}, 
+    "profile.email": {$exists: true, $ne: ""}
+  };
+
+  Users.find(selector, {fields: fieldsArray(Mailing.fields)}).observe({
+    added: function(user) {
+      if (!initialized) return;
+      Mailing.subscribe(user);
+    },
+    changed: function(newUser, oldUser) {
+      var options = {};
+      
+      if (newUser.profile.email !== oldUser.profile.email) 
+        options.previousEmail = oldUser.profile.email;
+
+      Mailing.subscribe(newUser, options);
+    }
+  });
+
+  initialized = true;  
+});
+
+
 

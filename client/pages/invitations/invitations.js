@@ -26,11 +26,9 @@ Template.invitations_partial.helpers({
     return _.range(UserProp('invitations')); 
   },
   'link': function() { 
-    var phrase = Url.bitHash(UserProp('invitationPhrase'));
-    return Router.routes['invite'].url({phrase: phrase}); 
+    return Router.routes['invite'].url(); 
   },
   'linkUrl': function() { 
-    var phrase = Url.bitHash(UserProp('invitationPhrase'));
-    return encodeURIComponent(Router.routes['invite'].url({phrase: phrase})); 
+    return encodeURIComponent(Router.routes['invite'].url()); 
   }
 });

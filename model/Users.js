@@ -61,7 +61,7 @@ var schema = {
   },
   "profile.available": {  // array with items where user is available for (drink|lunch|email)*
     type: [ String ],
-    allowedValues: ['drink','lunch','email'],
+    allowedValues: _.pluck(AVAILABLE_OPTIONS, 'value'),
     optional: true
   },
   "profile.skills": { // array of skill name
@@ -534,26 +534,20 @@ if (Meteor.isServer) {
   // after updating
   Users.after.update(function(userId, doc, fieldNames, modifier, options) {
     var prevUser = this.previous;
-    var prevEmail = pathValue(prevUser, 'profile.email');
     var user = doc;
-    var email = modifier.$set && modifier.$set['profile.email'];
+
+    var prevEmail = pathValue(prevUser, 'profile.email');
+    var email = pathValue(user, 'profile.email');
     
     /* 
       handle new e-mailaddress 
       insert into user's emails array 
       and send a verification e-mail
     */
-    if (email && email !== prevEmail) {
+    if (modifier.$set && modifier.$set['profile.email'] && email !== prevEmail) {
 
       var emails = user.emails;
       var found = _.findWhere(emails, {address: email});      
-
-      // Unsubscribe previous email from mailing list
-      try {
-        Mailing.unsubscribe(prevUser);
-      } catch(e) {
-        console.log('unsubscribe error', e);
-      }
 
       // insert new e-mail
       if (!found)
@@ -755,6 +749,18 @@ userStatusLabel = function(user) {
   if (user.isAdmin)             labels.push({style: 'success', text: 'Admin'});
   if (user.isAmbassador)        labels.push({style: 'success', text: 'Ambassador'});
   return labels;
+}
+
+userProfileUrl = function(user) {
+  user = OtherUserProps(user, ['city','globalId']);
+  var hash = Url.bitHash(user.globalId);
+  return Url.replaceCity(user.city, Meteor.absoluteUrl(hash));
+}
+
+userInviteUrl = function(user) {
+  user = user || Meteor.userId();
+  var phrase = OtherUserProp(user, 'invitationPhrase');
+  return Meteor.absoluteUrl('+/' + Url.bitHash(phrase));
 }
 
 userSocialName = function(user, service) {

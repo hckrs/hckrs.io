@@ -1,6 +1,11 @@
 // CONSTANTS 
 // some of this data can be moved to the database in the future
 
+
+/* Hacking Types */
+// ********************************
+// !!! ALSO MODIFY IN MailChimp !!! 
+// ********************************
 HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenation  */
   {value: "web", label: "Web"},
   {value: "apps", label: "Apps"},
@@ -14,6 +19,17 @@ HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenatio
 ], 'label');
 
 HACKING = _.pluck(HACKING_OPTIONS, 'value');
+
+
+/* Available Types */
+// ********************************
+// !!! ALSO MODIFY IN MailChimp !!! 
+// ********************************
+AVAILABLE_OPTIONS = [
+  {value: "drink", label: 'Drink'},
+  {value: "lunch", label: 'Lunch'},
+  {value: "email", label: 'Email'},
+]
 
 
 ITEM_TYPES = ["article", "ask", "audio", "book", "event", "hack", "location", "picture", "product", "show", "video", "work"];

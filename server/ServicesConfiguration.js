@@ -852,23 +852,19 @@ requestAccessOfUser = function(userId) {
 
   // access allowed!
 
+  // execute these commands if user had previously no access
+  if (user.isAccessDenied === true) {
+    
+    // set signup date
+    if (!user.accessAt)
+      Meteor.users.update(userId, {$set: {accessAt: new Date()}});
+  }
+
   // allow access for this user
   Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
 
   // request visibility
   requestVisibilityOfUser(userId);
-
-  // subscribe to mailing list of user's city
-  Mailing.subscribe(userId);
-
-  // don't execute commands below again if user has already access
-  if (user.isAccessDenied != true)
-    return;
-
-  // set signup date
-  if (!user.accessAt)
-    Meteor.users.update(userId, {$set: {accessAt: new Date()}});
-
 }
 
 
@@ -938,18 +934,12 @@ var sendVerificationEmail = function(userId) {
 // NOTE: permission check must already be performed
 moveUserToCity = function(hackerId, city) { // called from Methods.js
 
-  // unsubscribe from mailing list
-  Mailing.unsubscribe(hackerId);
-
   // update user's city
   Users.update(hackerId, {$set: {
     city: city,
     currentCity: city,
     accessAt: new Date()
   }});
-
-  // subscribe to new mailing list
-  Mailing.subscribe(hackerId);
 }
 
 
