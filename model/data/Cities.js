@@ -1232,7 +1232,7 @@ var cities = [
       longitude: 6.89841690469321,
       backgroundImage: "/img/backgrounds/enschede.jpg",
       backgroundImageNight: "",
-      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=####&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
+      agenda: "",
       mapbox: "",
       twitter: "hckrsEnschede"
   },
@@ -1244,7 +1244,7 @@ var cities = [
       longitude: 5.12264611584469,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=####&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
+      agenda: "",
       mapbox: "",
       twitter: ""
   },
