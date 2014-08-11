@@ -7,7 +7,7 @@ var cities = [
       longitude: 6.0838209,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_qlfihdagjcq4thcksdm5q2nas4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -19,7 +19,7 @@ var cities = [
       longitude: 9.9193939,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_i44ss7itiq4sapk86lietv80a4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -31,7 +31,7 @@ var cities = [
       longitude: 10.2134046,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_hd97vlu12eq8i1hd1s3jtlavms@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -67,7 +67,7 @@ var cities = [
       longitude: -83.376678,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_5hd41ok3u6h7nd32496m5fgvc0@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -79,7 +79,7 @@ var cities = [
       longitude: 2.1700437,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_qjsst0ee185aa56srmruepfens@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -91,7 +91,7 @@ var cities = [
       longitude: 27.566667,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_ci2rogcd64n3697ij9i0v4p6fo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -103,7 +103,7 @@ var cities = [
       longitude: -5.9301554,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_a9sd3kllubphhaog59eopmdcgo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -115,7 +115,7 @@ var cities = [
       longitude: 20.4568089,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_176gcnca2c2dpfsvbljvemqrmc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -127,7 +127,7 @@ var cities = [
       longitude: 5.37306653035156,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_aob2tfusjijuqmu1n5s35pie54@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -139,11 +139,11 @@ var cities = [
       longitude: 13.3888599,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_7j2dstk2sf1k8b3b933iqpcico@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
-  { /* added becose it's a capital */
+  { /* added because it's a capital */
       key:  "bern",
       name: "Bern",
       country: "CH",
@@ -151,7 +151,7 @@ var cities = [
       longitude: 7.444608,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "", /* no google agenda found */
       mapbox: "",
       twitter: ""
   },
@@ -163,7 +163,7 @@ var cities = [
       longitude: -1.8980726,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_4ruo6jcoo2hl9qe1h19vu6rt8k@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -175,7 +175,7 @@ var cities = [
       longitude: 18.413076,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_p47bt6dh6c0tmgu61qt9kl6rb8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -187,7 +187,7 @@ var cities = [
       longitude: 17.1096711,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_lo8qcu5aetn2c1rb882m6s72rs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -199,7 +199,7 @@ var cities = [
       longitude: 4.36748762309029,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_gjucl6jbj867tuhdocmvpckevc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -211,7 +211,7 @@ var cities = [
       longitude: 26.1027436,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_dmjbdgp6fmq4lh8gmdi5ki71lo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -223,7 +223,7 @@ var cities = [
       longitude: 0.124862,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_u092tvn0r309rit3qafdp8c7j0@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -235,7 +235,7 @@ var cities = [
       longitude: -3.1836873,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_9ij8urq2vv011iqfopm652eeqo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -247,7 +247,7 @@ var cities = [
       longitude: 24.313764,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "", /* no google agenda found */
       mapbox: "",
       twitter: ""
   },
@@ -259,7 +259,7 @@ var cities = [
       longitude: 23.5900604,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_fuv77h9g3i55vbpj2slgn87nr8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -271,7 +271,7 @@ var cities = [
       longitude: 6.9580232,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_3ocjhr3e2ibkncd87ljamatqs8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -283,7 +283,7 @@ var cities = [
       longitude: 12.5700724,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_p61vqdc6m1nvsaertntq2ehp5g@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -295,7 +295,7 @@ var cities = [
       longitude: -8.4705806,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_ukjdpjvqe1ohnfi73nal16a7to@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -307,7 +307,7 @@ var cities = [
       longitude: 15.981919,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_t15f16vi3mcuok7h2jcbafp9do@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -319,7 +319,7 @@ var cities = [
       longitude: 33.366667,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_ddi74rap400o9m07vmp0kigjrs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -331,19 +331,19 @@ var cities = [
       longitude: 14.4378,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_gkuu50nmk4oebkt36npk620s8g@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },/*
   {
-      key:  "republic",
+      key:  "republic", 
       name: "Republic",
       country: "",
       latitude: 39.8266503,
       longitude: -97.6580834,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=####&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },*/
@@ -367,7 +367,7 @@ var cities = [
       longitude: -6.2600969,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_mh2jg9ohk92hke6pna7498i024@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -379,7 +379,7 @@ var cities = [
       longitude: 6.7637565,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_d745a0vbqqedlh2cboed2hb53c@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -403,7 +403,7 @@ var cities = [
       longitude: 24.753575,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_gt6pumj6kj11um7dhup83nfl5s@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -415,7 +415,7 @@ var cities = [
       longitude: 7.2665608,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_k0h597ujtl0jte2n2a92almci8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },/*
@@ -427,7 +427,7 @@ var cities = [
       longitude: -7.863112,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_dihqq1ahc64rfj1difdu9qf9hk@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },*/
@@ -439,7 +439,7 @@ var cities = [
       longitude: -9.03834040962519,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_jgat14e6544n7dgb2t45ed9b4s@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -451,7 +451,7 @@ var cities = [
       longitude: 18.6542888,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_s0o7u8g7qamscjnkaf9fjtiudk@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },/* small citys near Gdansk
@@ -487,7 +487,7 @@ var cities = [
       longitude: 6.1466014,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_in692t1dm08sdjhlgo7u3aa9cs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -499,7 +499,7 @@ var cities = [
       longitude: 3.7239194,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_982p2h8n7emii7t8srrejredqs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -511,7 +511,7 @@ var cities = [
       longitude: 4.3996325,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_982p2h8n7emii7t8srrejredqs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -523,7 +523,7 @@ var cities = [
       longitude: 4.7014992,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_982p2h8n7emii7t8srrejredqs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -535,7 +535,7 @@ var cities = [
       longitude: 14.505751,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "", /* no agenda found */
       mapbox: "",
       twitter: ""
   },
@@ -547,7 +547,7 @@ var cities = [
       longitude: 11.9670171,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_scu5efu02hla4flliirrponffk@group.calendar.google.com&ctz=Sweden/Gothenburg&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -559,7 +559,7 @@ var cities = [
       longitude: -3.602192,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_to4hjgmsvrt36pdisuguek7kgs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -595,7 +595,7 @@ var cities = [
       longitude: 3.956659,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "", /* no google agenda found */
       mapbox: "",
       twitter: ""
   },
@@ -607,7 +607,7 @@ var cities = [
       longitude: 10.000654,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_0m2olt4e693vgn24cut53ooboo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -619,7 +619,7 @@ var cities = [
       longitude: 9.7385532,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_7edn3pb99c31c400t02po8gcnk@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -631,7 +631,7 @@ var cities = [
       longitude: 24.9414566,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_d46spdkmhsqljpv930gv90q6ug@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -643,7 +643,7 @@ var cities = [
       longitude: 19.040235,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_p1qfiticeqi4hv4bqg09cj4obc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -655,7 +655,7 @@ var cities = [
       longitude: -21.933333,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_qqg2blqk6bsnnn3m6objs9ta4g%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -667,7 +667,7 @@ var cities = [
       longitude: 12.48018,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_pffo8f55rcli0i1d04pv5lftk8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -679,7 +679,7 @@ var cities = [
       longitude: 30.5234,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_2onm1u8l5cjftgl5pqf4jtvrf0@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -691,11 +691,11 @@ var cities = [
       longitude: 19.9368564,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_8c5nnm5spgm8f2fhh7n3qqt9c4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
-  {
+  /*{
       key:  "kyiv",
       name: "Kyiv",
       country: "UA",
@@ -706,7 +706,7 @@ var cities = [
       agenda: "",
       mapbox: "",
       twitter: ""
-  },
+  }, */
   {
       key:  "riga", /* original : country of latvia */
       name: "Rīga",
@@ -715,7 +715,7 @@ var cities = [
       longitude: 24.105186,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_8g76nj5d1v7sbt9g85jqg4k61c@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -727,7 +727,7 @@ var cities = [
       longitude: 12.3747049,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_t3m2ng18e5s0pk1oi8tkf994g4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -739,7 +739,7 @@ var cities = [
       longitude: 5.5734204,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_2h8l35jnat168ev13n1urcnbm0@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -763,7 +763,7 @@ var cities = [
       longitude: -8.6302084,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_r7p0gcr2nn02nvfeei99tmc74g@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -775,7 +775,7 @@ var cities = [
       longitude: 25.279651,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_8v88s6t90hsi0abu62g2674fcs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -787,7 +787,7 @@ var cities = [
       longitude: -2.9805393,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_0bpp16oc88il49ov9p1mvhgdec@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -799,7 +799,7 @@ var cities = [
       longitude: -0.1276597,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_0i46olq295j7au2e9em3b7apr4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -811,7 +811,7 @@ var cities = [
       longitude: 6.129583,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_cktfubf1m80hbegnq9le2471fg@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -847,7 +847,7 @@ var cities = [
       longitude: 21.427996,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_5nt8u8m1v7i7dua0u9ph7esb9c@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis", /* country agenda */
       mapbox: "",
       twitter: ""
   },
@@ -859,7 +859,7 @@ var cities = [
       longitude: -3.77181653956588,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_sr8c9il98997c7vskvs0eqgtto@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -871,7 +871,7 @@ var cities = [
       longitude: -2.2447445,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_hove29dbd5r1bkuk09pvquqtnk@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -895,7 +895,7 @@ var cities = [
       longitude: 37.6173,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_6opdf2qpdoq9ujck7nd5o8lfn4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -907,7 +907,7 @@ var cities = [
       longitude: 11.5754815,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_siiidaq2dgq8pc6gd8lqk5te74%40group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -919,7 +919,7 @@ var cities = [
       longitude: 11.0772978,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_8ntotredufsm5ubocbo85cg7ms@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -931,7 +931,7 @@ var cities = [
       longitude: 10.7391112,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_67psrg7gt9802n701vq8smgiko@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -943,7 +943,7 @@ var cities = [
       longitude: -1.2582135,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_09iqkt66hlml85tt27ks8voh60@group.calendar.google.com&ctz=Europe/London&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -967,7 +967,7 @@ var cities = [
       longitude: 19.266667,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "", /* no google agenda found */
       mapbox: "",
       twitter: ""
   },/* university near paris
@@ -979,7 +979,7 @@ var cities = [
       longitude: 2.172576,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_irqd3s6psm5j3h10j2o49jtduc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },*/
@@ -992,7 +992,7 @@ var cities = [
       longitude: 13.4606445,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_u0v9bi9lnp3gtifm65n2selmig@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },*//* small city in germany
@@ -1004,7 +1004,7 @@ var cities = [
       longitude: 17.9057338,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_kippffljlnku5csf9gv7in5o0g@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },*/
@@ -1016,7 +1016,7 @@ var cities = [
       longitude: -9.139337,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_5k67mvfcugbqsi4fbn11dtlvqg@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1028,7 +1028,7 @@ var cities = [
       longitude: 16.9333644,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_n5n3df80iqvc4ct9ffc6sfrd18@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1052,7 +1052,7 @@ var cities = [
       longitude: -4.251806,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_js4kqqbn4dvece04996153hmg8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1064,7 +1064,7 @@ var cities = [
       longitude: -1.4702278,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_lq47k47tmr1quorusj152cr8p4@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1076,7 +1076,7 @@ var cities = [
       longitude: 23.3230598,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_unaemng3shoa9uphmu2kmi0mi0@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1088,7 +1088,7 @@ var cities = [
       longitude: 5.7324722,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_ggojj2kvgrr898dodbrpakuar8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1100,7 +1100,7 @@ var cities = [
       longitude: 18.0710935,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_u2op0l5u8ao8si8jt5gag78imc@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1112,7 +1112,7 @@ var cities = [
       longitude: 9.1829049,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_bbsbl8q0sfpqfp40kmm0p6lpqo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1124,7 +1124,7 @@ var cities = [
       longitude: -4.00272971491907,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_o40jbidusftpn66851sp4vdfho@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },/* no tech scene
@@ -1136,7 +1136,7 @@ var cities = [
       longitude: -16.6218483519602,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=####&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },*/
@@ -1160,7 +1160,7 @@ var cities = [
       longitude: 19.818698,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "", /* No google agenda found */ 
       mapbox: "",
       twitter: ""
   },
@@ -1172,7 +1172,7 @@ var cities = [
       longitude: 27.9017131,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_hdt2ai1rlbemeijb815apanhg8@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1184,7 +1184,7 @@ var cities = [
       longitude: 16.3725042,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_6cadrqskd8d4r87obk2ge15clo@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1196,19 +1196,19 @@ var cities = [
       longitude: 21.0067265,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_p9l3n40e8tie6inr2j7cnei14o@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
   {
-      key:  "wroclaw", // original wrocław
+      key:  "wroclaw", // original wrocÅ‚aw
       name: "Wrocław",
       country: "PL",
       latitude: 51.1122376,
       longitude: 17.0344333,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_2mg07pj6uarh0euf74g8r8hfn0@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1220,7 +1220,7 @@ var cities = [
       longitude: 8.5404434,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_m46lig2l30o5frurvsnv90gsrs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1232,7 +1232,7 @@ var cities = [
       longitude: 6.89841690469321,
       backgroundImage: "/img/backgrounds/enschede.jpg",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=####&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: "hckrsEnschede"
   },
@@ -1244,7 +1244,7 @@ var cities = [
       longitude: 5.12264611584469,
       backgroundImage: "",
       backgroundImageNight: "",
-      agenda: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=####&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
       twitter: ""
   },
@@ -1253,7 +1253,7 @@ var cities = [
 // map country codes to names
 COUNTRYCODES = {
   "AF": "Afghanistan",
-  "AX": "Åland Islands",
+  "AX": "Ã…land Islands",
   "AL": "Albania",
   "DZ": "Algeria",
   "AS": "American Samoa",
@@ -1306,10 +1306,10 @@ COUNTRYCODES = {
   "CD": "Congo, the Democratic Republic of the",
   "CK": "Cook Islands",
   "CR": "Costa Rica",
-  "CI": "Côte d'Ivoire",
+  "CI": "CÃ´te d'Ivoire",
   "HR": "Croatia",
   "CU": "Cuba",
-  "CW": "Curaçao",
+  "CW": "CuraÃ§ao",
   "CY": "Cyprus",
   "CZ": "Czech Republic",
   "DK": "Denmark",
@@ -1432,11 +1432,11 @@ COUNTRYCODES = {
   "PT": "Portugal",
   "PR": "Puerto Rico",
   "QA": "Qatar",
-  "RE": "Réunion",
+  "RE": "RÃ©union",
   "RO": "Romania",
   "RU": "Russian Federation",
   "RW": "Rwanda",
-  "BL": "Saint Barthélemy",
+  "BL": "Saint BarthÃ©lemy",
   "SH": "Saint Helena",
   "KN": "Saint Kitts and Nevis",
   "LC": "Saint Lucia",
@@ -1520,4 +1520,3 @@ CITYMAP = _.indexBy(CITIES, 'key');
 
 // a map containing country codes associated with their cities
 COUNTRYMAP = _.groupBy(CITIES, 'country');
-

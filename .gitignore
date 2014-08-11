@@ -4,3 +4,5 @@
 node_modules
 backup
 .docs/Screenshots
+
+packages/mailchimp
