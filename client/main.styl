@@ -267,6 +267,14 @@ html, body{
           select:hover {
             background-color: rgba(0,0,0,0.2);
           }
+          @-moz-document url-prefix() {
+            optgroup{
+              background-color: #fff;
+            }
+            select:hover {
+              background-color: none;
+            }
+          }
         }
 
         .account {  
@@ -446,12 +454,29 @@ html, body{
       background-color: rgba(255,255,255,0.15);
       text-indent: 0.01px; /* Removes default arrow from firefox*/
       text-overflow: "";  /*Removes default arrow from firefox*/
-
       padding-left: 12px;
       font-size: 18px;
       line-height: 18px;
       height: 33px;
+
+      optgroup{
+        padding: 16px 12px 0px 12px;
+        font-style: normal;
+        font-weight: normal;
+        color: #ccc;
+        option{
+          color: #000;
+          padding: 5px 20px 3px 20px;
+        }
+      }
     }
+    @-moz-document url-prefix() {
+      select {
+        background-image: none !important;
+      }
+    }
+
+
 
     select:active, select:focus {
       outline-style: none; -moz-outline-style:none;
