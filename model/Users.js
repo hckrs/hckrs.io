@@ -715,12 +715,12 @@ userPictureLabel = function(user) {
   user = user || Meteor.userId();
   var userId = _.isObject(user) ? user._id : user;
   user = OtherUserProps(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','isAmbassador','ambassador'])
-  if (user.mergedWith)             return "Merged with #"+userRank(user.mergedWith);
-  if (user.isDeleted)              return "Deleted";
-  if (user.isAccessDenied)         return "No Access";
-  if (user.isHidden)               return "Hidden";
+  if (user.mergedWith)             return "merged with #"+userRank(user.mergedWith);
+  if (user.isDeleted)              return "deleted";
+  if (user.isAccessDenied)         return "no access";
+  if (user.isHidden)               return "hidden";
   if (userIsForeign(userId))       return CITYMAP[user.city].name;
-  if (user.isAmbassador)           return pathValue(user, 'ambassador.title') || "Ambassador";
+  if (user.isAmbassador)           return pathValue(user, 'ambassador.title') || "admin"; // ambassador displayed as 'admin'
   else                             return "#"+userRank(user);
 }
 
@@ -730,15 +730,15 @@ userStatusLabel = function(user) {
   var labels = [];
 
   var unverifiedEmail = !_.findWhere(user.emails, {address: user.profile.email, verified: true});
-  if (user.isUninvited)         labels.push({style: 'important', text: 'Not invited'});
-  if (!user.profile.name)       labels.push({style: 'important', text: 'No name'});
-  if (!user.profile.email)      labels.push({style: 'important', text: 'No email'});
-  if (unverifiedEmail)          labels.push({style: 'important', text: 'Email unverified'});
-  if (user.isIncompleteProfile) labels.push({style: 'warning', text: 'Incomplete profile'});
-  if (user.isAccessDenied)      labels.push({style: 'warning', text: 'No access'});
-  if (user.isHidden)            labels.push({style: 'warning', text: 'Hidden'});
-  if (user.isAdmin)             labels.push({style: 'success', text: 'Admin'});
-  if (user.isAmbassador)        labels.push({style: 'success', text: 'Ambassador'});
+  if (user.isUninvited)         labels.push({style: 'important', text: 'not invited'});
+  if (!user.profile.name)       labels.push({style: 'important', text: 'no name'});
+  if (!user.profile.email)      labels.push({style: 'important', text: 'no email'});
+  if (unverifiedEmail)          labels.push({style: 'important', text: 'email unverified'});
+  if (user.isIncompleteProfile) labels.push({style: 'warning', text: 'incomplete profile'});
+  if (user.isAccessDenied)      labels.push({style: 'warning', text: 'no access'});
+  if (user.isHidden)            labels.push({style: 'warning', text: 'hidden'});
+  if (user.isAdmin)             labels.push({style: 'success', text: 'admin'});
+  if (user.isAmbassador)        labels.push({style: 'success', text: 'ambassador'});
   return labels;
 }
 
