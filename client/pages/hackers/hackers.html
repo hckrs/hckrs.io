@@ -5,9 +5,9 @@
     {{> hackersFilter}}
 
     <div class="total">
-      <strong>{{totalHackers}}</strong> hackers in {{CurrentCity.name}} 
-      {{#if hacking}}are hacking {{{hacking}}}{{/if}}<br/>
-      {{#if skills}}with programming skills {{{skills}}}{{/if}}
+      <strong>{{totalHackers}}</strong>
+      {{#if hacking}}{{{hacking}}} {{/if}} hackers in {{CurrentCity.name}} <br/>
+      {{#if skills}}that do {{{skills}}}{{/if}}
     </div>
     
     {{#each hackerViews}}
@@ -37,7 +37,7 @@
   <div id="hackersFilter">
     <form id="hackersFilterForm">
       
-      <select name="filter" class="chosen-select" multiple data-placeholder=" filter hackers" >
+      <select name="filter" class="chosen-select" multiple data-placeholder="search hackers" >
         <optgroup label="Hacking">
           {{#each Constant "HACKING_OPTIONS"}}
             <option value="hacking-{{value}}" {{selectedHacking}}>{{label}}</option>
