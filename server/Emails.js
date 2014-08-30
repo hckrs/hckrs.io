@@ -182,3 +182,99 @@ Meteor.startup(function() {
 
 
 
+/* 
+Options {
+  from_name: String,
+  from_email: String,
+  to_name: String,
+  subject: String,
+  html: String,
+  segments: {
+    match: String(all|any),
+    conditions: [
+      { field: 'CITY_ID', op: 'eq', value: 'utrecht' }
+    ]
+  },
+  test: String(EMAIL) // optional
+} 
+*/
+Mailing.send = function(options) {
+
+  var params = {
+    type: "regular",
+    options: {
+      list_id: MailChimpOptions['listId'],
+      subject: options.subject,
+      from_email: options.from_email,
+      from_name: options.from_name,
+      to_name: options.to_name,
+      authenticate: false, // ??????
+      analytics: {}, // ???
+    },
+    content: { html: options.html },
+    segment_opts: options.segments
+  }
+
+  var mailChimp = new MailChimp();
+  mailChimp.call('campaigns', 'create', params, function(err, res) {
+    console.log(err, res);
+    if (err) return;
+
+    if (options.test) {
+      mailChimp.call('campaigns', 'send-test', {cid: res.id, test_emails: [options.test]}, function(err,res) {
+        console.log(err, res)
+      });
+    } else {
+      mailChimp.call('campaigns', 'send', {cid: res.id}, function(err,res) {
+        console.log(err, res)
+      });
+    }
+  }) 
+}
+
+Mailing.ambassadorSendTestNewsletter = function(subject, content) {
+  return Mailing.ambassadorSendNewsletter(subject, content, true);
+}
+
+Mailing.ambassadorSendNewsletter = function(subject, content, isTest) {
+  checkAmbassadorPermission();
+
+  var ambassador = Meteor.user();
+  var city = ambassador.currentCity;
+
+  var html = Assets.getText('email-templates/default/default.html')
+  html = html.replace(/{{content}}/g, content);
+  html = html.replace(/{{ambassadorImage}}/g, ambassador.profile.picture);
+  html = html.replace(/{{ambassadorUrl}}/g, userProfileUrl(ambassador));
+  html = html.replace(/{{ambassadorName}}/g, ambassador.profile.name);
+  html = html.replace(/{{ambassadorTitle}}/g, userPictureLabel(ambassador));
+
+  Mailing.send({
+    from_name: ambassador.profile.name + " / hckrs.io",
+    from_email: "mail@hckrs.io", //ambassador.profile.email,
+    to_name: "Hackers " + CITYMAP[city].name,
+    subject: subject,
+    html: html,
+    segments: {
+      match: 'all',
+      conditions: [
+        { field: 'CITY_ID', op: 'eq', value: city }
+      ]
+    },
+    test: isTest ? ambassador.profile.email : undefined
+  });
+}
+
+
+
+
+Meteor.methods({
+  'ambassadorSendTestNewsletter': function(mail) {
+    Mailing.ambassadorSendTestNewsletter(mail.subject, mail.message, true);
+  },
+  'ambassadorSendNewsletter': function(mail) {
+    Mailing.ambassadorSendNewsletter(mail.subject, mail.message);
+  }
+});
+
+

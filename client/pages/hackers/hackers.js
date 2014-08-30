@@ -83,12 +83,33 @@ Template.hackersFilter.helpers({
   }
 });
 
+Template.hackersToolbar.helpers({
+  'method': "ambassadorSendTestNewsletter",
+  'schema': function() {
+    return new SimpleSchema({
+      "subject": {
+        type: String
+      },
+      "message": {
+        type: String
+      }
+    });
+  }
+});
+
+
 
 /* events */
 
 Template.hackersFilter.rendered = function() {
   this.$("select").chosen({search_contains:true}).change(filterFormChanged);
 }
+
+AutoForm.addHooks('hackersNewsletterEditorForm', {
+  'onSuccess': function(operation, result) {
+    console.log(operation, result)
+  }
+});
 
 
 
