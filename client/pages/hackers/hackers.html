@@ -5,9 +5,9 @@
     {{> hackersFilter}}
 
     <div class="total">
-      <strong>{{totalHackers}}</strong>
-      {{#if hacking}}{{{hacking}}} {{/if}} hackers in {{CurrentCity.name}} <br/>
-      {{#if skills}}that do {{{skills}}}{{/if}}
+      <strong>{{total}}</strong>
+      {{#if hacking}}{{{hacking}}}{{/if}} {{Plural "hacker" total}} in {{CurrentCity.name}} <br/>
+      {{#if skills}}that {{Plural "does" "do" total}} {{{skills}}}{{/if}}
     </div>
     
     {{#each hackerViews}}
@@ -15,7 +15,6 @@
     {{/each}}
    
     <div class="clear"></div>
-    
 
     {{> invitations_partial}}
 

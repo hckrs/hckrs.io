@@ -44,7 +44,7 @@ var selector = function(inclHidden) {
 /* template data */
 
 Template.hackers.helpers({
-  "totalHackers": function() {
+  "total": function() {
     return Meteor.users.find(selector()).count(); 
   },
   "hackerViews": function() { 

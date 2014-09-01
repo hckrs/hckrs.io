@@ -405,6 +405,14 @@ if (Meteor.isClient) {
     return isForeignCity(city);
   });
 
+  UI.registerHelper('Plural', function(single, plural, count) {
+    if (_.isNumber(plural)) {
+      count = plural;
+      plural = single.pluralize();
+    }
+    return count === 1 ? single : plural;
+  });
+
 }
 
 
