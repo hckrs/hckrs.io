@@ -40,7 +40,8 @@ Field.private = {
   key: 'private',
   label: 'private',
   fn: function(val, obj) {
-    return val ? Safe.string('<span class="icon icon-globe"></span>') : '';
+    var icon = val ? 'icon-home' : 'icon-globe';
+    return Safe.string('<span class="icon '+icon+'"></span>');
   }
 }
 
