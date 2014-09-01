@@ -220,17 +220,17 @@
       <label class="control-label" for="inputCompany">company / school</label>
       <div class="controls">
         <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-        <input type="url" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="http://" style="" id="inputCompanyUrl" /><br/>
+        <input type="url" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
         <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
           <div class="event-catch-overlay"></div>
           <div id="editMap" class="map"></div>
-          <button class="close-map btn btn-large">Close</button>
+          <a class="close-map"><img src="img/close.svg" /></a>
         </div>
       </div>
     </div>
 
     <div class="control-group">
-      <label class="control-label">available for</label>
+      <label class="control-label">open to</label>
       <div class="controls">
         <label for="inputAvailableDrink" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
@@ -249,6 +249,37 @@
         <label for="inputAvailableEmail" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
           e-mail <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to get in touch</span>
+        </label>
+
+        <div class="clear"></div>
+
+        <label for="inputAvailableCall" class="checkbox">
+          <input type="checkbox" name="profile.available" class="save" id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
+          call <span class="available-description">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
+          <div class="details">
+            <input type="text" name="profile.skype" class="text save" value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
+            <input type="text" name="profile.phone" class="text save" value="{{profile.phone}}" placeholder="phone" id="inputPhone" />
+          </div>
+        </label>
+
+        <div class="clear"></div>
+
+        <label for="inputAvailableCowork" class="checkbox">
+          <input type="checkbox" name="profile.available" class="save" id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
+          coworking <span class="available-description">— hackers can see your email address to get in touch to come work at your place</span>
+          <div class="details">
+            Location picker (?)
+          </div>
+        </label>
+
+        <div class="clear"></div>
+
+        <label for="inputAvailableCouchsurf" class="checkbox">
+          <input type="checkbox" name="profile.available" class="save" id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
+          couchsurfing <span class="available-description">— hackers traveling to {{CurrentCity.name}} can see your email address and/or phone number to get in touch to stay at your place</span>
+          <div class="details">
+            Location picker (?)
+          </div>
         </label>
       </div>
     </div>
@@ -424,7 +455,7 @@
     {{#if profile.available}}
     <div class="line">
       <div class="handle">
-        available to
+        open to
       </div>
       <div class="output">
         {{#if contains profile.available "drink"}}
@@ -436,6 +467,19 @@
         {{#if contains profile.available "email"}}
         <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
         {{/if}}
+        <!-- 
+        {{#if contains profile.available "call"}}
+        <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
+        {{/if}}
+        {{#if contains profile.available "skype"}}
+        <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
+        {{/if}}
+        {{#if contains profile.available "cowork"}}
+        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
+        {{/if}}
+        {{#if contains profile.available "host"}}
+        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
+        {{/if}} -->
       </div>
       <div class="clear"></div>
     </div>
