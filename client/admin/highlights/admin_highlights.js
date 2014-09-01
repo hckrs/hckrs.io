@@ -21,7 +21,7 @@ Template.admin_highlights.helpers({
       fields: [
         Field.date, 
         Field.city, 
-        Field.global, 
+        Field.private, 
         'title', 
         'subtitle', 
         Field.url, 

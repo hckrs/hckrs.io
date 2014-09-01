@@ -10,23 +10,33 @@ Template.editorForm.helpers({
   'selected': function() { return this.selected(); }, 
   'disallowed': function() { 
     return !this.selected() || hasOwnerPermission(this.selected()) ? '' : 'disallowed'; 
-  }
-});
-
-Template.visibilityButton.visibility = function() {
-  var city = Session.get('currentCity');
-  var isHidden = !!window[this.collection].findOne({_id: this.selectedId(), hiddenIn: city});
-  return {
-    text: isHidden ? 'Hidden' : '',
-    icon: isHidden ? 'icon-eye-close' : 'icon-eye-open',
-    clss: isHidden ? 'flat' : '',
-    attr: {
-      action: 'visibility',
-      toggle: isHidden ? 'on' : 'off',  
-      title: isHidden ? 'Click to make VISIBLE for your users.' : 'Click to HIDE for your users.',
+  },
+  'privacy': function() {
+    var city = Session.get('currentCity');
+    var doc = window[this.collection].findOne({_id: this.selectedId()});
+    return {
+      icon: doc.private ? 'icon-home' : 'icon-globe',
+      attr: {
+        action: 'privacy',
+        toggle: doc.private ? 'off' : 'on',  
+        title: doc.private ? 'Click to make this item available for all cities' : 'Click to make this item only available in ' + CITYMAP[city].name,
+      }
+    }
+  },
+  'visibility': function() {
+    var city = Session.get('currentCity');
+    var isHidden = !!window[this.collection].findOne({_id: this.selectedId(), hiddenIn: city});  
+    var txt = isHidden ? 'SHOW' : 'HIDE';
+    return {
+      icon: isHidden ? 'icon-eye-close' : 'icon-eye-open',
+      attr: {
+        action: 'visibility',
+        toggle: isHidden ? 'on' : 'off',  
+        title: 'Click to '+txt+' current item in ' + CITYMAP[city].name,
+      }
     }
   }
-}
+});
 
 
 Template.editorForm.events({
@@ -35,6 +45,11 @@ Template.editorForm.events({
   },
   "click [action='edit']": function() {
     this.toggle('edit');
+  },
+  "click [action='privacy']": function(evt) {
+    var toggle = $(evt.currentTarget).attr('toggle');
+    var method = 'toggle'+this.collection+'Privacy';
+    Meteor.call(method, this.selectedId(), toggle);
   },
   "click [action='visibility']": function(evt) {
     var toggle = $(evt.currentTarget).attr('toggle');

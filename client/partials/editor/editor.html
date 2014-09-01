@@ -24,7 +24,6 @@
         {{#if equals mode "edit"}}
           <button type="button" action="remove" class="btn btn-small light btn-inverse"><span class="icon icon-white icon-trash"></span></button>
           <div class="pull-right">
-            {{> visibilityButton}}
             <button type="button" action="cancel" class="btn btn-small light btn-inverse">Cancel</button>
             <button type="submit" class="btn btn-small btn-primary">Save</button>
           </div>
@@ -35,10 +34,12 @@
         {{!-- default toolbar --}}
 
         {{#if selected}}
-          {{#if selected.global}}
-            <div class="text"><span class="icon icon-white icon-globe"></span></div>
-          {{/if}}
-          {{> visibilityButton}}
+        {{#if hasAmbassadorPermission}}
+          <div class="text">  
+            <a href="#" {{privacy.attr}}><span class="icon icon-white {{privacy.icon}}"></span></a>
+            <a href="#" {{visibility.attr}}><span class="icon icon-white {{visibility.icon}}"></span></a>
+          </div>
+        {{/if}}
         {{/if}}
         <button type="button" class="btn btn-small btn-inverse light {{editActive}} {{disallowed}}" action="edit"><span class="icon icon-white icon-pencil"></span> Edit</button>
         <button type="button" class="btn btn-small btn-inverse light" action="add"><span class="icon icon-white icon-plus"></span></button>
@@ -51,17 +52,3 @@
   {{/autoForm}}
 </template>
 
-
-
-<template name="visibilityButton">
-  {{#if hasAmbassadorPermission}}
-    <div class="btn-group dropup">
-      <button type="button" class="btn btn-small btn-inverse light {{visibility.clss}}" {{visibility.attr}}><span class="icon icon-white {{visibility.icon}}"></span> {{visibility.text}}</button>
-      <button type="button" class="btn btn-small btn-inverse light dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <li><a href="#" action="visibility" toggle="on">Show in {{CurrentCity.name}}</a></li>
-        <li><a href="#" action="visibility" toggle="off">Hide in {{CurrentCity.name}}</a></li>
-      </ul>
-    </div>
-  {{/if}}
-</template>

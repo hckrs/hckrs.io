@@ -4,12 +4,10 @@
 Schemas.Highlight = new SimpleSchema([
   Schemas.default,
   Schemas.userId,
+  Schemas.private(true),
+  Schemas.hiddenIn,
   Schemas.city,
   {
-    "global": {
-      type: Boolean,
-      label: 'Show in all citys'
-    },
     "imageUrl": {
       type: String,
       label: 'Image URL'
@@ -29,11 +27,6 @@ Schemas.Highlight = new SimpleSchema([
       regEx: SimpleSchema.RegEx.Url,
       autoValue: AutoValue.prefixUrlWithHTTP,
       label: 'Website URL'
-    },
-    "hiddenIn": {
-      type: [String],
-      allowedValues: CITYKEYS,
-      optional: true
     },
   }
 ]);
@@ -98,7 +91,7 @@ if (Meteor.isServer) {
       return Highlights.find({});      
 
     if (user.currentCity === city)
-      return Highlights.find({$or: [{global: true}, {city: city}]});      
+      return Highlights.find({$or: [{private: false}, {city: city}]});      
 
     return [];
   });
@@ -130,6 +123,10 @@ Meteor.methods({
     if (!hasAmbassadorPermission()) return;
     var action = toggle === 'off' ? '$addToSet' : '$pull';
     Highlights.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
+  },
+  'toggleHighlightsPrivacy': function(id, toggle) {
+    if (!hasAmbassadorPermission()) return;
+    Highlights.update(id, {$set: {private: toggle === 'on'}});
   }
 })
 

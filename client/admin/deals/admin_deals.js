@@ -21,7 +21,7 @@ Template.admin_deals.helpers({
       fields: [
         Field.date, 
         Field.city, 
-        Field.global, 
+        Field.private, 
         'title', 
         'description', 
         Field.url, 

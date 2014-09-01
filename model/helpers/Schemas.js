@@ -46,6 +46,24 @@ Schemas.city = new SimpleSchema({
   }
 });
 
+Schemas.private = function(private) {
+  return new SimpleSchema({
+    "private": {
+      type: Boolean,
+      label: 'Private to ' + (CITYMAP[Url.city()] || {}).name,
+      defaultValue: !!private
+    }
+  });
+}
+
+Schemas.hiddenIn = new SimpleSchema({
+  "hiddenIn": {
+    type: [String],
+    allowedValues: CITYKEYS,
+    optional: true
+  },
+});
+
 
 /* (auto)value modifiers */
 

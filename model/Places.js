@@ -17,12 +17,9 @@ Schemas.Place = new SimpleSchema([
   Schemas.default,
   Schemas.userId,
   Schemas.city,
+  Schemas.private(false),
+  Schemas.hiddenIn,
   {
-    "global": {
-      type: Boolean,
-      label: 'Show in all citys',
-      defaultValue: false
-    },
     "title": {
       type: String,
       optional: true
@@ -52,11 +49,6 @@ Schemas.Place = new SimpleSchema([
     "location.lng": {
       type: Number,
       decimal: true
-    },
-    "hiddenIn": {
-      type: [String],
-      allowedValues: CITYKEYS,
-      optional: true
     },
   }
 ]);
@@ -104,7 +96,7 @@ if (Meteor.isServer) {
       return Places.find({});      
       
     if (user.currentCity === city)
-      return Places.find({$or: [{global: true}, {city: city}]});      
+      return Places.find({$or: [{private: false}, {city: city}]});      
 
     return [];
   });
@@ -122,5 +114,9 @@ Meteor.methods({
     if (!hasAmbassadorPermission()) return;
     var action = toggle === 'off' ? '$addToSet' : '$pull';
     Places.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
+  },
+  'togglePlacesPrivacy': function(id, toggle) {
+    if (!hasAmbassadorPermission()) return;
+    Places.update(id, {$set: {private: toggle === 'on'}});
   }
 })

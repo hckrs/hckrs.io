@@ -36,9 +36,9 @@ Field.city = {
   }
 }
 
-Field.global = {
-  key: 'global',
-  label: 'global',
+Field.private = {
+  key: 'private',
+  label: 'private',
   fn: function(val, obj) {
     return val ? Safe.string('<span class="icon icon-globe"></span>') : '';
   }

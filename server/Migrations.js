@@ -120,6 +120,26 @@ var migrations = [
       // done
       callback();
     }
+  },
+
+  { // 1 sep 2014
+    name: "Simple Schema - private attribute",
+    task: function(callback) {
+      // rename global attribute to private
+
+      Highlights.find().forEach(function(highlight) {
+        Highlights.update(highlight._id, {$unset: {global: true}, $set: {private: !highlight.global}}, {validate: false});
+      });
+      Places.find().forEach(function(place) {
+        Places.update(place._id, {$unset: {global: true}, $set: {private: !place.global}}, {validate: false});
+      });
+      Deals.find().forEach(function(deal) {
+        Deals.update(deal._id, {$unset: {global: true}, $set: {private: !deal.global}}, {validate: false});
+      });
+
+      // done
+      callback();
+    }
   }
 
 ];

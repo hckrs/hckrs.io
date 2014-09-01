@@ -5,11 +5,9 @@ Schemas.Deals = new SimpleSchema([
   Schemas.default,
   Schemas.city,
   Schemas.userId,
+  Schemas.private(true),
+  Schemas.hiddenIn,
   {
-    "global": {
-      type: Boolean,
-      label: 'Show in all citys'
-    },
     "title": {
       type: String,
       label: 'Deal description'
@@ -29,11 +27,6 @@ Schemas.Deals = new SimpleSchema([
       type: String,
       optional: true,
       label: 'Deal code / URL'
-    },
-    "hiddenIn": {
-      type: [String],
-      allowedValues: CITYKEYS,
-      optional: true
     },
   }
 ]);
@@ -98,7 +91,7 @@ if (Meteor.isServer) {
       return Deals.find({});
 
     if (user.currentCity === city)
-      return Deals.find({$or: [{global: true}, {city: city}]});
+      return Deals.find({$or: [{private: false}, {city: city}]});
 
     return [];
   });
@@ -130,6 +123,10 @@ Meteor.methods({
     if (!hasAmbassadorPermission()) return;
     var action = toggle === 'off' ? '$addToSet' : '$pull';
     Deals.update(id, _.object([action], [{hiddenIn: UserProp('currentCity')}]));
+  },
+  'toggleDealsPrivacy': function(id, toggle) {
+    if (!hasAmbassadorPermission()) return;
+    Deals.update(id, {$set: {private: toggle === 'on'}});
   }
 })
 

@@ -21,7 +21,7 @@ Template.admin_places.helpers({
       fields: [
         Field.date, 
         Field.city, 
-        Field.global,
+        Field.private,
         'type', 
         'title', 
         'description', 
