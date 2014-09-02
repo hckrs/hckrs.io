@@ -44,7 +44,6 @@
       z-index: 10;
       width: inherit;
       height: inherit;
-      opacity: 0.9;
       transition: opacity 0.1s ease-in;
 
       .leaflet-popup-content {
@@ -61,11 +60,7 @@
 
       &:hover { /* hovering map */
         cursor: pointer;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 1);  
-      }
-
-      &:hover + .map {
-        opacity: 0.8;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);  
       }
     }
     
@@ -75,12 +70,12 @@
       top: 30px;
       right: 30px;
       z-index: 111;
+      cursor: pointer;
     }
     
     &.active { /* map in fullscreen mode */
       .map {
         z-index: 110;
-        opacity: 1;
         cursor: crosshair;
 
         /* effect before closing fullscreen */
@@ -268,7 +263,30 @@
   DIV.controls{
     line-height: 30px;
     color: #e2e2e2;
+
+    label{
+      font-weight: bold;
+
+      .details{
+        display: none;
+      }
+      input[type=checkbox]:checked ~ .details{
+          display: block;
+      }
+      input[type=text]{
+        margin-top: 6px;
+      }
+      .available-description{
+        font-weight: normal;
+        opacity: 0;
+      }
+      &:hover .available-description{
+        opacity: 1;
+      }
+    }
   }
+
+
 
   .available-description{
     color:#E2E2E2;

@@ -36,7 +36,7 @@
   <div id="hackersFilter">
     <form id="hackersFilterForm">
       
-      <select name="filter" class="chosen-select" multiple data-placeholder="search hackers" >
+      <select name="filter" class="chosen-select" multiple data-placeholder="&nbsp;search hackers &mdash; ex. Growth hackers that do Ruby on Rails" >
         <optgroup label="Hacking">
           {{#each Constant "HACKING_OPTIONS"}}
             <option value="hacking-{{value}}" {{selectedHacking}}>{{label}}</option>
