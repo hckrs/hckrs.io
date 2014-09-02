@@ -21,6 +21,11 @@ allIn = function(values, allowedValues) {
   return _.all(values, function(v) { return _.contains(allowedValues, v); });
 }
 
+// check if some of the values are present in all values
+someIn = function(values, allValues) {
+  return _.some(values, function(v) { return _.contains(allValues, v); });
+}
+
 // make sure we have an array
 // transform if it is not already
 array = function(val) {
@@ -72,6 +77,7 @@ pathValue = function(obj, path) {
   }); 
   return current;
 }
+property = pathValue;
 
 errorSuccess = function(errHandler, sucHandler) {
   return function(err, result) {

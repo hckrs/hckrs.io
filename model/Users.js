@@ -20,7 +20,15 @@ var schema = {
   "profile.email": {  // e-mailadress (can be hidden if user want it)
     type: String,
     regEx: SimpleSchema.RegEx.Email
-  },     
+  },    
+  "profile.skype": { // skype address
+    type: String,
+    optional: true,
+  },
+  "profile.phone": { // phone number
+    type: String,
+    optional: true,
+  },
   "profile.picture": {  // url of an avatar for this user
     type: String
   },    
@@ -61,7 +69,7 @@ var schema = {
   },
   "profile.available": {  // array with items where user is available for (drink|lunch|email)*
     type: [ String ],
-    allowedValues: ['drink','lunch','email'],
+    allowedValues: AVAILABLE,
     optional: true
   },
   "profile.skills": { // array of skill name
@@ -274,6 +282,8 @@ Users.deny({
     var userPermission = [
       'updatedAt',
       'profile.email',
+      'profile.skype',
+      'profile.phone',
       'profile.picture',
       'profile.name',
       "profile.location",
@@ -368,10 +378,14 @@ if (Meteor.isServer) {
     "profile.favoriteSkills",
     // DON'T INCLUDE: "profile.socialPicture",
   ];
-  var userFieldsEmail = [
+  var userFieldsEmail = [ // visible when user 'available for email' is checked
     "profile.email",
   ];
-  var userFieldsAmbassador = [
+  var userFieldsCall = [ // visible when 'available for call' is checked
+    "profile.skype",
+    "profile.phone",
+  ];
+  var userFieldsAmbassador = [  // all users can see always this addtional fields from ambassadors
     "isAmbassador",
     "ambassador",
     "profile.email",
@@ -392,6 +406,7 @@ if (Meteor.isServer) {
     userFieldsGlobal, 
     userFieldsData, 
     userFieldsEmail, 
+    userFieldsCall, 
     userFieldsAmbassador, 
     userFieldsCurrentUser
   );  
@@ -485,10 +500,16 @@ if (Meteor.isServer) {
     // and the published user is in the same city
     if (hasAccess && isSameCity) {
       useFields.push(userFieldsData);
+
+      var available = property(doc, 'profile.available') || [];
       
       // only publish e-mailadresses of user who accepted that
-      if (doc.profile && doc.profile.available && doc.profile.available.length)
+      if (someIn(['drink','lunch','email','cowork','couchsurf'], available))
         useFields.push(userFieldsEmail);
+    
+      // only publish phone/skype information of user who accepted that
+      if (someIn(['call', 'couchsurf'], available))
+        useFields.push(userFieldsCall);
     }
 
     // include all user data when logged in as admin or ambassador
@@ -498,6 +519,7 @@ if (Meteor.isServer) {
         (permissions && permissions._id === doc._id)) {
       useFields.push(userFieldsData); // include user data
       useFields.push(userFieldsEmail); // include e-mail
+      useFields.push(userFieldsCall); // include e-mail
       useFields.push(userFieldsCurrentUser); // include private info
     }
 

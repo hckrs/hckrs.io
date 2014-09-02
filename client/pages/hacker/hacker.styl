@@ -267,12 +267,6 @@
     label{
       font-weight: bold;
 
-      .details{
-        display: none;
-      }
-      input[type=checkbox]:checked ~ .details{
-          display: block;
-      }
       input[type=text]{
         margin-top: 6px;
       }
@@ -283,6 +277,9 @@
       &:hover .available-description{
         opacity: 1;
       }
+    }
+    label > .details{
+      display: block;
     }
   }
 

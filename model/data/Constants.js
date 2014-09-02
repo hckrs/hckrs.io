@@ -16,7 +16,35 @@ HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenatio
 HACKING = _.pluck(HACKING_OPTIONS, 'value');
 
 
-ITEM_TYPES = ["article", "ask", "audio", "book", "event", "hack", "location", "picture", "product", "show", "video", "work"];
+AVAILABLE_OPTIONS = [
+  {value: 'drink', label: 'drink'},
+  {value: 'lunch', label: 'lunch'},
+  {value: 'email', label: 'email'},
+  {value: 'call', label: 'call'},
+  {value: 'cowork', label: 'cowork'},
+  {value: 'couchsurf', label: 'couchsurf'},
+];
+
+AVAILABLE = _.pluck(AVAILABLE_OPTIONS, 'value');
+
+
+ITEM_OPTIONS = [
+  {value: "article", label: "article"},
+  {value: "ask", label: "ask"},
+  {value: "audio", label: "audio"},
+  {value: "book", label: "book"},
+  {value: "event", label: "event"},
+  {value: "hack", label: "hack"},
+  {value: "location", label: "location"},
+  {value: "picture", label: "picture"},
+  {value: "product", label: "product"},
+  {value: "show", label: "show"},
+  {value: "video", label: "video"},
+  {value: "work", label: "work"},
+];
+
+ITEM_TYPES = _.pluck(ITEM_OPTIONS, 'value');
+
 
 SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"ActionScript"},{"name":"Ada"},{"name":"Android"},{"name":"Angular.js"},

@@ -256,11 +256,12 @@
         <label for="inputAvailableCall" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
           call <span class="available-description">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
-          <div class="details">
-            <input type="text" name="profile.skype" class="text save" value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
-            <input type="text" name="profile.phone" class="text save" value="{{profile.phone}}" placeholder="phone" id="inputPhone" />
-          </div>
         </label>
+        <div class="clear details {{#unless checked 'profile.available' 'call'}}hide{{/unless}}">
+          <input type="text" name="profile.skype" class="text save" value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
+          <input type="text" name="profile.phone" class="text save" value="{{profile.phone}}" placeholder="phone" id="inputPhone" />
+        </div>
+        
 
         <div class="clear"></div>
 
@@ -467,19 +468,20 @@
         {{#if contains profile.available "email"}}
         <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
         {{/if}}
-        <!-- 
         {{#if contains profile.available "call"}}
-        <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
-        {{/if}}
-        {{#if contains profile.available "skype"}}
-        <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
+          {{#if profile.phone}}
+          <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
+          {{/if}}
+          {{#if profile.skype}}
+          <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
+          {{/if}}
         {{/if}}
         {{#if contains profile.available "cowork"}}
         <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
         {{/if}}
-        {{#if contains profile.available "host"}}
+        {{#if contains profile.available "couchsurf"}}
         <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
-        {{/if}} -->
+        {{/if}}
       </div>
       <div class="clear"></div>
     </div>
