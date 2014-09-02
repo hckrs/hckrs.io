@@ -92,10 +92,10 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];  
 
-    if (city === 'all' && user.isAdmin)
+    if (city === 'all' && isAdmin(user))
       return Places.find({});      
       
-    if (user.currentCity === city)
+    if (user.city === city || isAdmin(user))
       return Places.find({$or: [{private: false}, {city: city}]});      
 
     return [];

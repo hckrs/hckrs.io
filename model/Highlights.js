@@ -87,10 +87,10 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];  
 
-    if (city === 'all' && user.isAdmin)
+    if (city === 'all' && isAdmin(user))
       return Highlights.find({});      
 
-    if (user.currentCity === city)
+    if (user.city === city || isAdmin(user))
       return Highlights.find({$or: [{private: false}, {city: city}]});      
 
     return [];
@@ -103,10 +103,10 @@ if (Meteor.isServer) {
     if(!user || !allowedAccess(user._id))
       return [];  
 
-    if (user.currentCity !== city)
-      return []; 
+    if (user.city === city || isAdmin(user))
+      return HighlightsSort.find({city: city}); 
 
-    return HighlightsSort.find({city: city});
+    return [];
   });
 }
 
