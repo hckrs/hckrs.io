@@ -30,7 +30,10 @@
 
   "MailChimpOptions": {
     "apiKey": "178483d491497f6951a3a4a6758f3ee8-us7",
-    "listId": "b4bb387d48"
+    "listId": "b4bb387d48",
+    "group-available": "",
+    "group-hacking": "",
+    "group-mailings": ""
   },
 
   "newrelic": {

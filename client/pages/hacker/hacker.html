@@ -308,6 +308,19 @@
       </div>
     </div>
 
+    <div class="control-group">
+      <label class="control-label">mailings</label>
+      <div class="controls">
+        {{#each Constant "MAILING_OPTIONS"}}
+          <label for="inputMailing-{{value}}" class="checkbox">
+            <input type="checkbox" name="mailings" class="save" id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
+            {{label}} <span class="mailing-description">{{description}}</span>
+          </label>
+          <div class="clear"></div>
+        {{/each}}
+      </div>
+    </div>
+
   </form>
 
 </template>

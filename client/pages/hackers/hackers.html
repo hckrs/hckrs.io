@@ -58,9 +58,14 @@
 <template name="hackersToolbar">
   <div id="hackersToolbar">
     {{!-- hier kan de status-toolbar komen --}}
-
+    <br/><br/>
     <div id="hackersNewsletterEditor">
       {{#autoForm id="hackersNewsletterEditorForm" schema=schema type="method" meteormethod=method resetOnSuccess=false}}
+        {{#afFieldSelect name="group" id="group"}}
+          <option value="local_admin_messages">local admin messages</option>
+          <option value="local_meetup_announcements">local meetup announcements</option>
+          <option value="event_announcements">event announcements</option>
+        {{/afFieldSelect}}
         {{> afQuickField name="subject" id="subject"}}
         {{> afQuickField name="message" id="message" rows="15"}}
         <button type="button" class="btn">Cancel</button>

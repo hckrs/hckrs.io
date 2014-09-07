@@ -1,3 +1,5 @@
+var MailChimpOptions = Settings['MailChimpOptions'];
+
 
 /* MAIL TEMPLATES */
 
@@ -94,6 +96,7 @@ Mailing.fields = [
   'profile.picture',
   'profile.hacking',
   'profile.available',
+  'mailings',
   'invitations',
   'invitationPhrase',
   'isAmbassador',
@@ -102,9 +105,15 @@ Mailing.fields = [
   'isUninvited'
 ];
 
-Mailing.subscribe = function(user, options, cb) {
-  user = OtherUserProps(user, Mailing.fields);
-  options = options || {};
+
+// subscribe task
+// which will update the user information within MailChimp
+var _subscribe = function(options, cb) {
+  user = OtherUserProps(options.user, Mailing.fields);
+
+  var quotedItemString = function(array) {
+    return _.map(array || [], function(item) { return "'"+item+"'"; }).join(',');
+  }
 
   var params = {
     id: MailChimpOptions['listId'],
@@ -123,9 +132,12 @@ Mailing.subscribe = function(user, options, cb) {
       "IS_ADMIN": user.isAdmin ? "true" : "false",
       "IS_INCOMPL": user.isIncompleteProfile ? "true" : "false",
       "IS_UNINVIT": user.isUninvited ? "true" : "false",
+      // 'AVAILABLE': quotedItemString(user.profile.available),
+      // 'HACKING': quotedItemString(user.profile.hacking),
       "groupings": [
-        { name: 'hacking', groups: user.profile.hacking || [] },
-        { name: 'available', groups: user.profile.available || [] }
+        { name: "available", groups: user.profile.available || [] },
+        { name: "hacking", groups: user.profile.hacking || [] },
+        { name: "mailings", groups: user.mailings || [] },
       ]
     },
     replace_interests: true,
@@ -135,7 +147,19 @@ Mailing.subscribe = function(user, options, cb) {
 
   console.log('subscribe', params)
 
-  new MailChimp().call('lists', 'subscribe', params, cb || function(){});
+  new MailChimp().call('lists', 'subscribe', params, cb);
+}
+
+
+// only send 5 subscribe tasks simultaneous to MailChimp. 
+var _queue = async.queue(Meteor.bindEnvironment(_subscribe), 5);
+
+Mailing.subscribe = function(user, options, cb) {
+  options = options || {};
+  options.user = user;
+
+  // queue subscribe task
+  _queue.push(options, cb || function(){});
 }
 
 Mailing.unsubscribe = function(emailToDelete, keepInList, cb) {
@@ -208,6 +232,7 @@ Mailing.send = function(options) {
       from_email: options.from_email,
       from_name: options.from_name,
       to_name: options.to_name,
+      inline_css: true,
       authenticate: false, // ??????
       analytics: {}, // ???
     },
@@ -215,34 +240,56 @@ Mailing.send = function(options) {
     segment_opts: options.segments
   }
 
+  console.log('Send mailing:', params.options);
+  console.log('To users:', options.segments);
+
+  // on test environments, send always test e-mails. Never mail the users
+  if (Settings['environment'] !== 'production') {
+    console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
+    if (!options.test)
+      throw new Meteor.Error(500, "No test e-mail account specified");
+  }
+
   var mailChimp = new MailChimp();
   mailChimp.call('campaigns', 'create', params, function(err, res) {
-    console.log(err, res);
-    if (err) return;
+    if (err) throw new Meteor.Error(500, "Mail failed", err);
 
     if (options.test) {
       mailChimp.call('campaigns', 'send-test', {cid: res.id, test_emails: [options.test]}, function(err,res) {
-        console.log(err, res)
+        if (err) throw new Meteor.Error(500, "Mail failed", err);
       });
     } else {
       mailChimp.call('campaigns', 'send', {cid: res.id}, function(err,res) {
-        console.log(err, res)
+        if (err) throw new Meteor.Error(500, "Mail failed", err);
       });
     }
   }) 
 }
 
-Mailing.ambassadorSendTestNewsletter = function(subject, content) {
-  return Mailing.ambassadorSendNewsletter(subject, content, true);
+Mailing.ambassadorSendTestNewsletter = function(subject, content, group) {
+  return Mailing.ambassadorSendNewsletter(subject, content, group, true);
 }
 
-Mailing.ambassadorSendNewsletter = function(subject, content, isTest) {
+Mailing.ambassadorSendNewsletter = function(subject, content, group, isTest) {
   checkAmbassadorPermission();
+    
+  if (!_.contains(MAILING_VALUES, group)) 
+    throw new Meteor.Error(500, "no valid group specified");
+
+  // on test environments, send always test e-mails. Never mail the users
+  if (Settings['environment'] !== 'production')
+    isTest = true;
 
   var ambassador = Meteor.user();
   var city = ambassador.currentCity;
+  var email = property(ambassador, 'ambassador.email');
 
-  var html = Assets.getText('email-templates/default/default.html')
+  if (!email)
+    throw new Meteor.Error(500, "no ambassador email specified");
+
+
+  var html = Assets.getText('email-templates/wrapper.html')
+  html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
   html = html.replace(/{{ambassadorImage}}/g, ambassador.profile.picture);
   html = html.replace(/{{ambassadorUrl}}/g, userProfileUrl(ambassador));
@@ -251,17 +298,20 @@ Mailing.ambassadorSendNewsletter = function(subject, content, isTest) {
 
   Mailing.send({
     from_name: ambassador.profile.name + " / hckrs.io",
-    from_email: "mail@hckrs.io", //ambassador.profile.email,
+    from_email: email,
     to_name: "Hackers " + CITYMAP[city].name,
     subject: subject,
     html: html,
     segments: {
       match: 'all',
       conditions: [
-        { field: 'CITY_ID', op: 'eq', value: city }
+        { field: 'CITY_ID', op: 'eq', value: city },
+        { field: 'interests-' + MailChimpOptions['group-mailings'], op: 'one', value: group },
+        //{ field: 'interests-XXX', op: 'all', value: "apps,web" },
+        //{ field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" },
       ]
     },
-    test: isTest ? ambassador.profile.email : undefined
+    test: isTest ? email : undefined
   });
 }
 
@@ -270,11 +320,17 @@ Mailing.ambassadorSendNewsletter = function(subject, content, isTest) {
 
 Meteor.methods({
   'ambassadorSendTestNewsletter': function(mail) {
-    Mailing.ambassadorSendTestNewsletter(mail.subject, mail.message, true);
+    return Mailing.ambassadorSendTestNewsletter(mail.subject, mail.message, mail.group);
   },
   'ambassadorSendNewsletter': function(mail) {
-    Mailing.ambassadorSendNewsletter(mail.subject, mail.message);
-  }
+    return Mailing.ambassadorSendNewsletter(mail.subject, mail.message, mail.group);
+  },
+  // 'test-chimp': function() {
+  //   var mailChimp = new MailChimp();
+  //   mailChimp.call('lists', 'interest-groupings', {id: MailChimpOptions['listId']}, function(err, res) {
+  //     console.log(err, res);
+  //   });
+  // }
 });
 
 

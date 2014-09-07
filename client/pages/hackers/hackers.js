@@ -87,6 +87,10 @@ Template.hackersToolbar.helpers({
   'method': "ambassadorSendTestNewsletter",
   'schema': function() {
     return new SimpleSchema({
+      "group": {
+        type: String,
+        allowedValues: MAILING_VALUES
+      },
       "subject": {
         type: String
       },

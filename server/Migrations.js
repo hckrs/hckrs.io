@@ -120,7 +120,39 @@ var migrations = [
       // done
       callback();
     }
-  }
+  },
+
+  { // 7 sep 2014
+    name: "Ambassador",
+    task: function(callback) {
+
+      // set ambassadors e-mailadress default to "mail@hckrs.io"
+      Meteor.users.update({isAmbassador: true}, {$set: {"ambassador.email": ""}}, {multi: true});
+
+      // done
+      callback();
+    }
+  },
+
+  { // 7 sep 2014
+    name: "Mailings",
+    task: function(callback) {
+
+      var initial_mailings = [
+        "local_meetup_announcements",
+        "local_admin_messages",
+        "event_announcements",
+        "global_new_features",
+        //"help_requests",
+      ];
+
+      // subscribe users to initial mailing lists
+      Meteor.users.update({}, {$set: {mailings: initial_mailings}}, {multi: true})
+
+      // done
+      callback();
+    }
+  },
 
 ];
 

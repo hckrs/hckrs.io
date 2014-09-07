@@ -3,10 +3,8 @@
 
 
 /* Hacking Types */
-// ********************************
-// !!! ALSO MODIFY IN MailChimp !!! 
-// ********************************
-HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenation  */
+/* value = identifier, label = display represenation  */
+HACKING_OPTIONS = _.sortBy([ // !!! ALSO MODIFY IN MAILCHIMP !!! 
   {value: "web", label: "Web"},
   {value: "apps", label: "Apps"},
   {value: "software", label: "Software"},
@@ -22,14 +20,21 @@ HACKING = _.pluck(HACKING_OPTIONS, 'value');
 
 
 /* Available Types */
-// ********************************
-// !!! ALSO MODIFY IN MailChimp !!! 
-// ********************************
-AVAILABLE_OPTIONS = [
+AVAILABLE_OPTIONS = [ // !!! ALSO MODIFY IN MAILCHIMP !!! 
   {value: "drink", label: 'Drink'},
   {value: "lunch", label: 'Lunch'},
   {value: "email", label: 'Email'},
 ]
+
+/* Mailings Types */
+MAILING_OPTIONS = [ // !!! ALSO MODIFY IN MAILCHIMP !!! 
+  {value: "local_meetup_announcements", label: 'local meetup announcements', description: ""},
+  {value: "local_admin_messages", label: 'local admin messages', description: ""},
+  {value: "event_announcements", label: 'event announcements', description: ""},
+  {value: "global_new_features", label: 'global new features', description: ""},
+  {value: "help_requests", label: 'help requests from hckrs.io', description: ""},
+];
+MAILING_VALUES = _.pluck(MAILING_OPTIONS, 'value');
 
 
 ITEM_TYPES = ["article", "ask", "audio", "book", "event", "hack", "location", "picture", "product", "show", "video", "work"];

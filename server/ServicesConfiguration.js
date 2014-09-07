@@ -332,6 +332,9 @@ var mergeUserData = function(firstUser, secondUser) {
   if (!_.isUndefined(mergedData.isAdmin))
     mergedData.isAdmin = !!(firstUser.isAdmin || secondUser.isAdmin);
 
+  if (!_.isUndefined(mergedData.isAmbassador))
+    mergedData.isAmbassador = !!(firstUser.isAmbassador || secondUser.isAmbassador);
+
   return mergedData;
 }
 
@@ -478,7 +481,7 @@ var attachUserToCity = function(userId, city) {
 
   // make the first user within the system ambassador of this city
   if (Meteor.users.find().count() === 1)
-    Users.update(user._id, {$set: {isAmbassador: true, ambassador: {title: "Co-founder"}}});
+    Users.update(user._id, {$set: {isAmbassador: true, ambassador: {title: "Co-founder", email: "mail@hckrs.io"}}});
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);

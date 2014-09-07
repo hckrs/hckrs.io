@@ -140,6 +140,14 @@ var schema = {
     type: Boolean
   },
 
+  /* mailing options */
+
+  "mailings": {
+    type: [ String ],
+    allowedValues: _.pluck(MAILING_OPTIONS, 'value'),
+    optional: true
+  },
+
 
   /* administration details */
 
@@ -150,6 +158,10 @@ var schema = {
   "ambassador": {         // additional ambassador info
     type: Object,
     optional: true
+  },
+  "ambassador.email": { // ambassador email address @hckrs.io
+    type: SimpleSchema.RegEx.Email,
+    optional: true         
   },
   "ambassador.title": { // custom title of this ambassador     
     type: String,
@@ -261,8 +273,8 @@ Users.attachSchema(Schemas.WeakUser)
 
 /* Permissions */
 
-// meteor allow users to update their public profiles
-// therefore we need the DENY rules for the user collection.
+// meteor allow users to update their public profiles therefore we need to
+// specify DENY rules for the user collection to overwrite meteor rules.
 
 Users.allow(ALL);
 Users.deny({
@@ -284,6 +296,7 @@ Users.deny({
       "profile.available",
       "profile.skills",
       "profile.favoriteSkills",
+      "mailings",
     ];
 
     var ambassadorPermission = [
@@ -386,6 +399,7 @@ if (Meteor.isServer) {
     "invitations",
     "profile.socialPicture",
     "emails",
+    "mailings",
   ];
 
   var allUserFields = _.union(
