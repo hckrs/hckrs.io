@@ -56,21 +56,34 @@
 </template>
 
 <template name="hackersToolbar">
-  <div id="hackersToolbar">
-    {{!-- hier kan de status-toolbar komen --}}
-    <br/><br/>
-    <div id="hackersNewsletterEditor">
-      {{#autoForm id="hackersNewsletterEditorForm" schema=schema type="method" meteormethod=method resetOnSuccess=false}}
-        {{#afFieldSelect name="group" id="group"}}
-          <option value="local_admin_messages">local admin messages</option>
-          <option value="local_meetup_announcements">local meetup announcements</option>
-          <option value="event_announcements">event announcements</option>
-        {{/afFieldSelect}}
-        {{> afQuickField name="subject" id="subject"}}
-        {{> afQuickField name="message" id="message" rows="15"}}
-        <button type="button" class="btn">Cancel</button>
-        <button type="submit" class="btn btn-default btn-info">Send me a preview</button>
-      {{/autoForm}}
+  <div id="hackersToolbar" class="toolbar-section">
+    
+    {{#if active}}
+      <div class="panel">
+        <div id="hackersNewsletterEditor">
+          <div class="title">Mail all hackers in {{CurrentCity.name}}</div>
+          {{#autoForm id="hackersNewsletterEditorForm" schema=schema resetOnSuccess=false}}
+            <label for="template">Template</label>
+            {{#afFieldSelect name="group" id="template"}}
+              <option value="local_ambassador_messages" template="localMessage">message</option>
+              <option value="local_meetup_announcements" template="localMeetup">meetup</option>
+              <option value="local_meetup_announcements" template="localMeetupReminder">meetup reminder</option>
+            {{/afFieldSelect}}
+            {{> afQuickField name="subject" id="subject" class="input-xxlarge"}}
+            {{> afQuickField name="message" id="message" rows="10" class="input-xxlarge"}}
+            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="submit" preview="true" class="btn btn-inverse">Send me a preview</button>
+          {{/autoForm}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="toolbar">
+      <div class="pull-right">
+        <button type="button" toggle="panel" class="btn btn-small light btn-inverse">{{#if active}}Close{{else}}Send Mailing{{/if}}</button>
+      </div>
+      <div class="clear"></div>
     </div>
+    
   </div>
 </template>

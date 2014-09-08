@@ -1,7 +1,8 @@
 var state = new State('hackers', {
   filter: {
     hacking: [],
-    skills: []
+    skills: [],
+    toolbarOpen: false,
   }
 });
 
@@ -84,7 +85,9 @@ Template.hackersFilter.helpers({
 });
 
 Template.hackersToolbar.helpers({
-  'method': "ambassadorSendTestNewsletter",
+  'active': function() {
+    return state.get('toolbarOpen') ? 'active' : '';
+  },
   'schema': function() {
     return new SimpleSchema({
       "group": {
@@ -105,15 +108,60 @@ Template.hackersToolbar.helpers({
 
 /* events */
 
+Template.hackersToolbar.events({
+  'change select[name="group"]': function(evt) {
+    setTemplate();
+  },
+  'click [toggle="panel"]': function() {
+    state.toggle('toolbarOpen');
+    Deps.flush();
+    setTemplate();
+  },
+  'click [type="submit"]': function(evt) {
+    evt.preventDefault();
+    var $form = $("#hackersNewsletterEditorForm");
+    var formData = $form.serializeObject();
+    var isPreview = $(evt.currentTarget).attr('preview') === "true";
+    var isValid = AutoForm.validateForm("hackersNewsletterEditorForm");
+    if (isValid)
+      sendMailing(formData, isPreview)
+  }
+})
+
 Template.hackersFilter.rendered = function() {
   this.$("select").chosen({search_contains:true}).change(filterFormChanged);
 }
 
-AutoForm.addHooks('hackersNewsletterEditorForm', {
-  'onSuccess': function(operation, result) {
-    console.log(operation, result)
-  }
-});
+
+
+/* mailing */
+
+var loadEmailTemplate = function(templateName) {
+  var tmpl_subject = Template['emailSubject_' + templateName],
+      tmpl_message = Template['emailMessage_' + templateName],
+      subject = Blaze.toHTML(tmpl_subject),
+      message = Blaze.toHTML(tmpl_message, {ambassadorName: "jarno"});
+  
+  return { subject: subject, message: message };
+}
+
+var setTemplate = function() {
+  var $mailing = $("#hackersNewsletterEditor"),
+      $subject = $mailing.find('[name="subject"]'),
+      $message = $mailing.find('[name="message"]'),
+      $option = $mailing.find('[name="group"] option:selected'),
+      templateName = $option.attr('template'),
+      template = loadEmailTemplate(templateName);
+  $subject.val(template.subject);
+  $message.val(template.message);
+}
+
+var sendMailing = function(mail, isTest) {
+  Meteor.call('ambassadorMailing', mail, isTest, function(err, res) {
+    if (err) return console.log('Mailing failed')
+    console.log(isTest ? 'Send test mail' : 'Mailing succeed');
+  });
+}
 
 
 

@@ -76,7 +76,7 @@ body {
   padding: 20px;
 }
 
-.content-block {
+.block {
   padding: 0 0 20px;
 }
 
@@ -144,7 +144,7 @@ a {
   text-decoration: underline;
 }
 
-.btn-primary {
+.button {
   text-decoration: none;
   color: #FFF;
   background-color: #348eda;
@@ -285,23 +285,9 @@ a {
 				<table class="main" width="100%" cellpadding="0" cellspacing="0">
 					<tr>
 						<td class="content-wrap">
-							<table width="100%" cellpadding="0" cellspacing="0">
-								<tr>
-									<td class="content-block">
-										{{content}}
-									</td>
-								</tr>
-								<tr>
-									<td class="content-block">
-										<a href="http://hckrs.io" class="btn-primary">open hckrs.io</a>
-									</td>
-								</tr>
-								<tr>
-									<td class="content-block">
-										&mdash; {{ambassadorName}}
-									</td>
-								</tr>
-							</table>
+							
+              {{content}}
+              
 						</td>
 					</tr>
 				</table>

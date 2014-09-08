@@ -140,7 +140,7 @@ var migrations = [
 
       var initial_mailings = [
         "local_meetup_announcements",
-        "local_admin_messages",
+        "local_ambassador_messages",
         "event_announcements",
         "global_new_features",
         //"help_requests",

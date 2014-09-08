@@ -296,13 +296,9 @@ Mailing.ambassadorSendNewsletter = function(subject, content, group, isTest) {
     throw new Meteor.Error(500, "no ambassador email specified");
 
 
-  var html = Assets.getText('email-templates/wrapper.html')
+  var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
-  html = html.replace(/{{ambassadorImage}}/g, ambassador.profile.picture);
-  html = html.replace(/{{ambassadorUrl}}/g, userProfileUrl(ambassador));
-  html = html.replace(/{{ambassadorName}}/g, ambassador.profile.name);
-  html = html.replace(/{{ambassadorTitle}}/g, userPictureLabel(ambassador));
 
   Mailing.send({
     from_name: ambassador.profile.name + " / hckrs.io",
@@ -327,12 +323,12 @@ Mailing.ambassadorSendNewsletter = function(subject, content, group, isTest) {
 
 
 Meteor.methods({
-  'ambassadorSendTestNewsletter': function(mail) {
-    return Mailing.ambassadorSendTestNewsletter(mail.subject, mail.message, mail.group);
+  'ambassadorMailing': function(mail, isTest) {
+    return Mailing.ambassadorSendNewsletter(mail.subject, mail.message, mail.group, isTest);
   },
-  'ambassadorSendNewsletter': function(mail) {
-    return Mailing.ambassadorSendNewsletter(mail.subject, mail.message, mail.group);
-  },
+  // 'ambassadorSendNewsletter': function(mail) {
+  //   return Mailing.ambassadorSendNewsletter(mail.subject, mail.message, mail.group);
+  // },
   // 'test-chimp': function() {
   //   var mailChimp = new MailChimp();
   //   mailChimp.call('lists', 'interest-groupings', {id: MailChimpOptions['listId']}, function(err, res) {
