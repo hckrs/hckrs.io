@@ -489,7 +489,7 @@ var cities = [
       backgroundImageNight: "",
       agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_in692t1dm08sdjhlgo7u3aa9cs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
-      twitter: ""
+      twitter: "hckrsGeneva"
   },
   {
       key:  "gent",
@@ -513,7 +513,7 @@ var cities = [
       backgroundImageNight: "",
       agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_982p2h8n7emii7t8srrejredqs@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
-      twitter: ""
+      twitter: "hckrsParis"
   },
   {
       key:  "leuven",
@@ -573,7 +573,7 @@ var cities = [
       backgroundImageNight: "",
       agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_dlg5tkvdf2mqg683mq8etl197s@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
-      twitter: ""
+      twitter: "hckrsGrenoble"
   },
   {
       key:  "groningen",
@@ -753,7 +753,7 @@ var cities = [
       backgroundImageNight: "",
       agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_nbsk0f97uhck487jcnup069jks@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
       mapbox: "",
-      twitter: ""
+      twitter: "hckrsLille"
   },
   {
       key:  "limerick",
