@@ -145,7 +145,7 @@ var _subscribe = function(options, cb) {
     send_welcome: false,
   };
 
-  console.log('subscribe', params)
+  // console.log('subscribe', params)
 
   new MailChimp().call('lists', 'subscribe', params, cb);
 }
@@ -172,7 +172,7 @@ Mailing.unsubscribe = function(emailToDelete, keepInList, cb) {
     send_notify: !!keepInList,
   }
 
-  console.log('unsubscribe', params)
+  // console.log('unsubscribe', params)
 
   new MailChimp().call('lists', 'unsubscribe', params, cb || function(){});
 }
@@ -246,8 +246,10 @@ Mailing.send = function(options) {
   // on test environments, send always test e-mails. Never mail the users
   if (Settings['environment'] !== 'production') {
     console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
-    if (!options.test)
+    if (!options.test) {
+      console.log("No test e-mail account specified");
       throw new Meteor.Error(500, "No test e-mail account specified");
+    }
   }
 
   var mailChimp = new MailChimp();
@@ -256,11 +258,17 @@ Mailing.send = function(options) {
 
     if (options.test) {
       mailChimp.call('campaigns', 'send-test', {cid: res.id, test_emails: [options.test]}, function(err,res) {
-        if (err) throw new Meteor.Error(500, "Mail failed", err);
+        if (err) {
+          console.log("Mailed failed", err);
+          throw new Meteor.Error(500, "Mail failed", err);
+        }
       });
     } else {
       mailChimp.call('campaigns', 'send', {cid: res.id}, function(err,res) {
-        if (err) throw new Meteor.Error(500, "Mail failed", err);
+        if (err) {
+          console.log("Mailed failed", err);
+          throw new Meteor.Error(500, "Mail failed", err);
+        }
       });
     }
   }) 
