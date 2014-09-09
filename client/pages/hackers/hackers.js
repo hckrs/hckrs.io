@@ -124,6 +124,9 @@ Template.hackersToolbar.events({
     var formData = $form.serializeObject();
     var isPreview = $button.attr('preview') === "true";
     var isValid = AutoForm.validateForm("hackersNewsletterEditorForm");
+
+    // preserve line breaks in message
+    formData.message = formData.message.replace(/\n/g, '<br/>');
     
     if (isValid) {
 
