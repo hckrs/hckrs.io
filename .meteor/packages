@@ -17,8 +17,8 @@ http
 email
 
 amplify
-bootstrap
 jquery
+bootstrap
 underscore
 stylus
 
@@ -33,3 +33,4 @@ iron-router-progress
 GAnalytics
 reactive-table
 mailchimp
+pnotify

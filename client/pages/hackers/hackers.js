@@ -117,14 +117,43 @@ Template.hackersToolbar.events({
     Deps.flush();
     setTemplate();
   },
-  'click [type="submit"]': function(evt) {
+  'click [action="submit"]': function(evt) {
     evt.preventDefault();
+    var $button = $(evt.currentTarget);
     var $form = $("#hackersNewsletterEditorForm");
     var formData = $form.serializeObject();
-    var isPreview = $(evt.currentTarget).attr('preview') === "true";
+    var isPreview = $button.attr('preview') === "true";
     var isValid = AutoForm.validateForm("hackersNewsletterEditorForm");
-    if (isValid)
-      sendMailing(formData, isPreview)
+    
+    if (isValid) {
+
+      // send mailing
+      sendMailing(formData, isPreview);
+
+      // disable button for a few seconds
+      var text = $button.text();
+      $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');
+      setTimeout(function() {
+        $button.removeAttr('disabled').removeClass('disabled').text(text);
+
+        // done, close toolbar
+        if (isPreview) {
+          new PNotify({
+              title: '[TEST] E-mail Sent',
+              text: 'You will receive a test e-mail in seconds.',
+              icon: false
+          });
+        } else {
+          state.set('toolbarOpen', false);
+          new PNotify({
+              title: 'E-mail Sent',
+              text: 'To all users of ' + CITYMAP[Session.get('currentCity')].name,
+              icon: false
+          });
+        }
+      }, 2500);
+
+    }
   }
 })
 
