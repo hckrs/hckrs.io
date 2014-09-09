@@ -34,7 +34,18 @@ Meteor.methods({
   },
 
   'moveUserToCity': function(hackerId, city) {
-    checkAdminPermission();
+    var hacker = Users.findOne(hackerId);
+    
+    if (hackerId === Meteor.userId())
+      throw new Meteor.Error(500, "can't move yourself");  
+    
+    if (!hacker)
+      throw new Meteor.Error(500, "no such user");  
+
+    if (!_.contains(CITYKEYS, city))
+      throw new Meteor.Error(500, "no valid city");  
+
+    checkAmbassadorPermission(Meteor.user(), hacker.city);
 
     // move
     return moveUserToCity(hackerId, city);

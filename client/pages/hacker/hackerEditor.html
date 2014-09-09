@@ -46,14 +46,13 @@
           <input type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" />
         </div>
         <br/>
-        {{!-- Admin tools --}}
 
-        {{#if hasAdminPermission}}
+        {{#unless owner}}
           <label>Change city</label>
           <div class="input">
             {{> citySelect}}
           </div>
-        {{/if}}
+        {{/unless}}
 
       </fieldset>
 

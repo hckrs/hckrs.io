@@ -705,8 +705,8 @@ checkAdminPermission = function(user) {
   if (!hasAmbassadorPermission(user))
     throw new Meteor.Error(500, 'No privilege');
 }
-checkAmbassadorPermission = function(user) {
-  if (!hasAmbassadorPermission(user))
+checkAmbassadorPermission = function(user, city) {
+  if (!hasAmbassadorPermission(user, city))
     throw new Meteor.Error(500, 'No privilege');
 }
 

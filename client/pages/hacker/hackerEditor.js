@@ -41,6 +41,7 @@ Template.hackerEditor.events({
     var city = $(evt.currentTarget).val();
     var cityName = CITYMAP[city].name;
     var userId = hackerId();
+    var userName = hackerProp('profile.name');
 
     if (confirm("Are you sure you want move this user to '"+cityName+"'?")) {
 
@@ -48,9 +49,14 @@ Template.hackerEditor.events({
       Meteor.call('moveUserToCity', userId, city, function(err) {
         if (err) return;
 
-        // redirect to new profile
-        var newUrl = Url.replaceCity(city, window.location.href);
-        Router.refresh(newUrl);
+        new PNotify({
+          title: 'Moved to ' + cityName,
+          text: 'Moved \'' + userName + '\' to ' + cityName,
+          icon: false
+        });
+
+        // redirect to hackers page
+        Router.go('hackers');
       }); 
 
     } else { 
@@ -67,6 +73,9 @@ Template.hackerEditor.events({
 
 
 Template.hackerEditor.helpers({
+  'owner': function() {
+    return hackerProp('_id') === Meteor.userId();
+  },
   'unverifiedEmail': function() {
     return _.findWhere(hackerProp('emails'), {address: hackerProp('profile.email'), verified: false});
   },
