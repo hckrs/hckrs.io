@@ -158,13 +158,7 @@ var migrations = [
     name: "Mailings",
     task: function(callback) {
 
-      var initial_mailings = [
-        "local_meetup_announcements",
-        "local_ambassador_messages",
-        "event_announcements",
-        "global_new_features",
-        //"help_requests",
-      ];
+      var initial_mailings = _.chain(MAILING_OPTIONS).where({checked: true}).pluck('value').value();
 
       // subscribe users to initial mailing lists
       Meteor.users.update({}, {$set: {mailings: initial_mailings}}, {multi: true, validate: false})

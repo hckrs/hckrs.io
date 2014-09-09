@@ -34,11 +34,11 @@ AVAILABLE = AVAILABLE_VALUES; // backward compatability
 
 /* Mailings Types */
 MAILING_OPTIONS = [ // !!! ALSO MODIFY IN MAILCHIMP !!! 
-  {value: "local_meetup_announcements", label: 'local meetup announcements', description: ""},
-  {value: "local_ambassador_messages", label: 'local admin messages', description: ""},
-  {value: "event_announcements", label: 'announcements for external events', description: ""},
-  {value: "global_new_features", label: 'global new features', description: ""},
-  {value: "help_requests", label: 'help requests from hckrs.io', description: ""},
+  {value: "local_meetup_announcements", label: 'local meetup announcements', description: "", checked: true},
+  {value: "local_ambassador_messages", label: 'local admin messages', description: "", checked: true},
+  {value: "event_announcements", label: 'announcements for external events', description: "", checked: true},
+  {value: "global_new_features", label: 'global new features', description: "", checked: true},
+  {value: "help_requests", label: 'help requests from hckrs.io', description: "", checked: false},
 ];
 MAILING_VALUES = _.pluck(MAILING_OPTIONS, 'value');
 

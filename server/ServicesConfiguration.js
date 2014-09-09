@@ -442,6 +442,9 @@ Accounts.onCreateUser(function (options, user) {
     // give this user the default number of invite codes
     user.invitations = Settings['defaultNumberOfInvitesForNewUsers'] || 0;
 
+    // subscribe user to mailings
+    user.mailings = _.chain(MAILING_OPTIONS).where({checked: true}).pluck('value').value();
+
     // make the first user within the system admin
     if (Meteor.users.find().count() === 0) {
       user.isAdmin = true;
