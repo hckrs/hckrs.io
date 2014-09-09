@@ -69,7 +69,7 @@ var schema = {
   },
   "profile.available": {  // array with items where user is available for (drink|lunch|email)*
     type: [ String ],
-    allowedValues: AVAILABLE,
+    allowedValues: _.pluck(AVAILABLE_OPTIONS, 'value'),
     optional: true
   },
   "profile.skills": { // array of skill name
@@ -148,6 +148,14 @@ var schema = {
     type: Boolean
   },
 
+  /* mailing options */
+
+  "mailings": {
+    type: [ String ],
+    allowedValues: _.pluck(MAILING_OPTIONS, 'value'),
+    optional: true
+  },
+
 
   /* administration details */
 
@@ -158,6 +166,10 @@ var schema = {
   "ambassador": {         // additional ambassador info
     type: Object,
     optional: true
+  },
+  "ambassador.email": { // ambassador email address @hckrs.io
+    type: SimpleSchema.RegEx.Email,
+    optional: true         
   },
   "ambassador.title": { // custom title of this ambassador     
     type: String,
@@ -269,8 +281,8 @@ Users.attachSchema(Schemas.WeakUser)
 
 /* Permissions */
 
-// meteor allow users to update their public profiles
-// therefore we need the DENY rules for the user collection.
+// meteor allow users to update their public profiles therefore we need to
+// specify DENY rules for the user collection to overwrite meteor rules.
 
 Users.allow(ALL);
 Users.deny({
@@ -294,6 +306,7 @@ Users.deny({
       "profile.available",
       "profile.skills",
       "profile.favoriteSkills",
+      "mailings",
     ];
 
     var ambassadorPermission = [
@@ -400,6 +413,7 @@ if (Meteor.isServer) {
     "invitations",
     "profile.socialPicture",
     "emails",
+    "mailings",
   ];
 
   var allUserFields = _.union(
@@ -555,18 +569,21 @@ if (Meteor.isServer) {
 
   // after updating
   Users.after.update(function(userId, doc, fieldNames, modifier, options) {
+    var prevUser = this.previous;
+    var user = doc;
 
+    var prevEmail = pathValue(prevUser, 'profile.email');
+    var email = pathValue(user, 'profile.email');
+    
     /* 
       handle new e-mailaddress 
       insert into user's emails array 
       and send a verification e-mail
     */
+    if (modifier.$set && modifier.$set['profile.email'] && email !== prevEmail) {
 
-    if (modifier.$set && modifier.$set['profile.email']) {
-      var email = modifier.$set['profile.email'];
-      var user = Users.findOne(userId);
       var emails = user.emails;
-      var found = _.findWhere(emails, {address: email});
+      var found = _.findWhere(emails, {address: email});      
 
       // insert new e-mail
       if (!found)
@@ -578,6 +595,10 @@ if (Meteor.isServer) {
         Accounts.sendVerificationEmail(userId, email);
         Users.update(userId, {$set: {'isAccessDenied': true}});
       }
+
+      // e-mail already verified, give access to site
+      if (found && found.verified)
+        requestAccessOfUser(userId)  
 
       // remove previous mailaddress
       Meteor.setTimeout(_.partial(cleanEmailAddress, userId), 10000);
@@ -611,9 +632,11 @@ OtherUserProp = function(user, field, options) {
 OtherUserProps = function(user, fields, options) {
 
   // memorized
-  var props = _.isObject(user) ? _.pick(user, fields || []) : {};
-  if (fields && _.all(_.union(['_id'], fields), _.partial(_.has, props)))
-    return user;
+  if (_.isObject(user) && fields) {
+    var userHasProp = function(field) { return !_.isUndefined(pathValue(user, field)); };
+    if (_.all(_.union(['_id'], fields), userHasProp))
+      return user;
+  }
 
   var userId = _.isObject(user) ? user._id : user;
   var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};
@@ -762,6 +785,18 @@ userStatusLabel = function(user) {
   if (user.isAdmin)             labels.push({style: 'success', text: 'admin'});
   if (user.isAmbassador)        labels.push({style: 'success', text: 'ambassador'});
   return labels;
+}
+
+userProfileUrl = function(user) {
+  user = OtherUserProps(user, ['city','globalId']);
+  var hash = Url.bitHash(user.globalId);
+  return Url.replaceCity(user.city, Meteor.absoluteUrl(hash));
+}
+
+userInviteUrl = function(user) {
+  user = user || Meteor.userId();
+  var phrase = OtherUserProp(user, 'invitationPhrase');
+  return Meteor.absoluteUrl('+/' + Url.bitHash(phrase));
 }
 
 userSocialName = function(user, service) {

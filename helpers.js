@@ -79,6 +79,8 @@ pathValue = function(obj, path) {
 }
 property = pathValue;
 
+property = pathValue;
+
 errorSuccess = function(errHandler, sucHandler) {
   return function(err, result) {
     if (err) errHandler(err, result)

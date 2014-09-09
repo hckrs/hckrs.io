@@ -6,6 +6,8 @@
     "iron-router": {},
     "iron-router-progress": {},
     "GAnalytics": {},
-    "reactive-table": {}
+    "reactive-table": {},
+    "mailchimp": {},
+    "pnotify": {}
   }
 }

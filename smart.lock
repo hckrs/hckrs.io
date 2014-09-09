@@ -8,18 +8,20 @@
       "iron-router": {},
       "iron-router-progress": {},
       "GAnalytics": {},
-      "reactive-table": {}
+      "reactive-table": {},
+      "mailchimp": {},
+      "pnotify": {}
     },
     "packages": {
       "autoform": {
         "git": "https://github.com/aldeed/meteor-autoform.git",
-        "tag": "v0.16.1",
-        "commit": "34a447fd3a1b3164c78f865aabbac3ddc2d033fb"
+        "tag": "v1.0.0",
+        "commit": "5a5977dd9b66d8109d766b41fb5dc1a0ac3e83be"
       },
       "collection2": {
         "git": "https://github.com/aldeed/meteor-collection2.git",
-        "tag": "v0.4.4",
-        "commit": "c70deb36e10f63238b884529eea1e38cf0789903"
+        "tag": "v0.4.6",
+        "commit": "80554182486be0d8e74f7ed02194a5649d712e27"
       },
       "collection-hooks": {
         "git": "https://github.com/matb33/meteor-collection-hooks.git",
@@ -43,8 +45,18 @@
       },
       "reactive-table": {
         "git": "https://github.com/ecohealthalliance/reactive-table.git",
-        "tag": "v0.3.17",
-        "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
+        "tag": "v0.3.21",
+        "commit": "7068f1011b46b6312bd8c21c2d3b91d4e3cbcd59"
+      },
+      "mailchimp": {
+        "git": "https://github.com/MiroHibler/meteor-mailchimp.git",
+        "tag": "v0.4.2",
+        "commit": "7d100e96b37eb931f4e1d9544da677bb43fe8b5b"
+      },
+      "pnotify": {
+        "git": "https://github.com/kidovate/meteor-pnotify.git",
+        "tag": "v2.0.6",
+        "commit": "cbd0bb220d03b20b247e4a6a7bdfc3d2c8064216"
       },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",
@@ -53,8 +65,8 @@
       },
       "moment": {
         "git": "https://github.com/acreeger/meteor-moment.git",
-        "tag": "v2.6.0",
-        "commit": "26156df681750fd6e6ed77043eef32b6653ebbdf"
+        "tag": "v2.8.1",
+        "commit": "722ea63783d594341023836b7d418ab2567dab8c"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",

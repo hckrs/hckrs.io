@@ -206,7 +206,7 @@ Router.goToCity = function(city) {
   
   var phrase = Session.get('invitationPhrase');
   if (phrase)
-    url = Router.routes['invite'].url({phrase: Url.bitHash(phrase)});
+    url = Router.routes['invite'].url({invitationPhrase: phrase});
   
   url = Url.replaceCity(city, url);
 
@@ -215,32 +215,28 @@ Router.goToCity = function(city) {
 
 
 
-Router.routes['hacker'].path = function(user, disableForeign) {
-  var redirect = _.isObject(user) ? user.redirect || false : false; // default false
-  disableForeign = _.isBoolean(disableForeign) ? disableForeign : true; // default true
+Router.routes['hacker'].path = function(user) {
+  var redirect = (_.isObject(user) && user.redirect) || false;
   
   user = OtherUserProps(user, ['globalId']);
 
   if (!user || !user.globalId)
     return;
 
-  if (!userIsForeign(user) || disableForeign !== true) // make path url
-    return "/" + Url.bitHash(user.globalId);
-
   if (userIsForeign(user) && redirect)
     return Router.routes['hacker'].url(user); // make full url
 
-  return '#' // no url
+  if (userIsForeign(user))
+    return '#'; // no url
+
+  return "/" + Url.bitHash(user.globalId);
 }
 Router.routes['hacker'].url = function(user) {
-  var path = Router.routes['hacker'].path(user, false);
-  var city = OtherUserProp(user, 'city');
-  var url = Url.replaceCity(city, Meteor.absoluteUrl(Url.stripTrailingSlash(path)));
-  return url;
+  return userProfileUrl(user);
 }
 
-Router.routes['invite'].url = function(params) {
-  return Meteor.absoluteUrl('+/' + params.phrase);
+Router.routes['invite'].url = function(user) {
+  return userInviteUrl(user);
 }
 
 

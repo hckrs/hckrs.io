@@ -1248,12 +1248,12 @@ var cities = [
       mapbox: "",
       twitter: ""
   },
-]
+];
 
 // map country codes to names
 COUNTRYCODES = {
   "AF": "Afghanistan",
-  "AX": "Ã…land Islands",
+  "AX": "Åland Islands",
   "AL": "Albania",
   "DZ": "Algeria",
   "AS": "American Samoa",
@@ -1306,10 +1306,10 @@ COUNTRYCODES = {
   "CD": "Congo, the Democratic Republic of the",
   "CK": "Cook Islands",
   "CR": "Costa Rica",
-  "CI": "CÃ´te d'Ivoire",
+  "CI": "Côte d'Ivoire",
   "HR": "Croatia",
   "CU": "Cuba",
-  "CW": "CuraÃ§ao",
+  "CW": "Curaçao",
   "CY": "Cyprus",
   "CZ": "Czech Republic",
   "DK": "Denmark",
@@ -1432,11 +1432,11 @@ COUNTRYCODES = {
   "PT": "Portugal",
   "PR": "Puerto Rico",
   "QA": "Qatar",
-  "RE": "RÃ©union",
+  "RE": "Réunion",
   "RO": "Romania",
   "RU": "Russian Federation",
   "RW": "Rwanda",
-  "BL": "Saint BarthÃ©lemy",
+  "BL": "Saint Barthélemy",
   "SH": "Saint Helena",
   "KN": "Saint Kitts and Nevis",
   "LC": "Saint Lucia",

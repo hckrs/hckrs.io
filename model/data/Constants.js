@@ -1,7 +1,10 @@
 // CONSTANTS 
 // some of this data can be moved to the database in the future
 
-HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenation  */
+
+/* Hacking Types */
+/* value = identifier, label = display represenation  */
+HACKING_OPTIONS = _.sortBy([ // !!! ALSO MODIFY IN MAILCHIMP !!! 
   {value: "web", label: "Web"},
   {value: "apps", label: "Apps"},
   {value: "software", label: "Software"},
@@ -12,11 +15,12 @@ HACKING_OPTIONS = _.sortBy([ /* value = identifier, label = display represenatio
   {value: "opensource", label: "Open Source"},
   {value: "growth", label: "Growth"},
 ], 'label');
+HACKING_VALUES = _.pluck(HACKING_OPTIONS, 'value');
+HACKING = HACKING_VALUES; // backward compatible
 
-HACKING = _.pluck(HACKING_OPTIONS, 'value');
 
-
-AVAILABLE_OPTIONS = [
+/* Available Types */
+AVAILABLE_OPTIONS = [  // !!! ALSO MODIFY IN MAILCHIMP !!! 
   {value: 'drink', label: 'drink'},
   {value: 'lunch', label: 'lunch'},
   {value: 'email', label: 'email'},
@@ -24,10 +28,22 @@ AVAILABLE_OPTIONS = [
   {value: 'cowork', label: 'cowork'},
   {value: 'couchsurf', label: 'couchsurf'},
 ];
+AVAILABLE_VALUES = _.pluck(AVAILABLE_OPTIONS, 'value');
+AVAILABLE = AVAILABLE_VALUES; // backward compatability
 
-AVAILABLE = _.pluck(AVAILABLE_OPTIONS, 'value');
+
+/* Mailings Types */
+MAILING_OPTIONS = [ // !!! ALSO MODIFY IN MAILCHIMP !!! 
+  {value: "local_meetup_announcements", label: 'local meetup announcements', description: ""},
+  {value: "local_ambassador_messages", label: 'local admin messages', description: ""},
+  {value: "event_announcements", label: 'announcements for external events', description: ""},
+  {value: "global_new_features", label: 'global new features', description: ""},
+  {value: "help_requests", label: 'help requests from hckrs.io', description: ""},
+];
+MAILING_VALUES = _.pluck(MAILING_OPTIONS, 'value');
 
 
+/* Good Stuff types */
 ITEM_OPTIONS = [
   {value: "article", label: "article"},
   {value: "ask", label: "ask"},
@@ -42,8 +58,8 @@ ITEM_OPTIONS = [
   {value: "video", label: "video"},
   {value: "work", label: "work"},
 ];
-
-ITEM_TYPES = _.pluck(ITEM_OPTIONS, 'value');
+ITEM_VALUES = _.pluck(ITEM_OPTIONS, 'value');
+ITEM_TYPES = ITEM_VALUES; // backward compatible
 
 
 SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},

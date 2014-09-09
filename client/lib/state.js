@@ -18,6 +18,9 @@ State = function(namespace, defaults) {
     if (_.isUndefined(this.get(field)))
       this.set(field, val);
   }
+  this.toggle = function(field) {
+    this.set(field, !this.get(field));
+  }
    
   this.getObj = function(fields) {
     fields = fields || allFields;

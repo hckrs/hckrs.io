@@ -14,19 +14,19 @@ var migrations = [
     task: function(callback) {
       
       // change (allowAccess & isInvited) to isAccessDenied
-      Meteor.users.update({$or: [{allowAccess: {$ne: true}}, {isInvited: {$ne: true}}]}, {$set: {isAccessDenied: true, isHidden: true}}, {multi: true});
+      Meteor.users.update({$or: [{allowAccess: {$ne: true}}, {isInvited: {$ne: true}}]}, {$set: {isAccessDenied: true, isHidden: true}}, {multi: true, validate: false});
 
       // unset allowAccess
-      Meteor.users.update({}, {$unset: {allowAccess: true}}, {multi: true});
+      Meteor.users.update({}, {$unset: {allowAccess: true}}, {multi: true, validate: false});
 
       // unset isInvited
-      Meteor.users.update({}, {$unset: {isInvited: true}}, {multi: true});  
+      Meteor.users.update({}, {$unset: {isInvited: true}}, {multi: true, validate: false});  
       
       // hide deleted accounts
-      Meteor.users.update({isDeleted: true}, {$set: {isHidden: true}}, {multi: true});      
+      Meteor.users.update({isDeleted: true}, {$set: {isHidden: true}}, {multi: true, validate: false});      
 
       // make users with localRank===1 mayor
-      Meteor.users.update({localRank: 1}, {$set: {isMayor: true}}, {multi: true});      
+      Meteor.users.update({localRank: 1}, {$set: {isMayor: true}}, {multi: true, validate: false});      
 
       // done
       callback();
@@ -38,7 +38,7 @@ var migrations = [
     task: function(callback) {
       
       // change (allowAccess & isInvited) to isAccessDenied
-      Meteor.users.update({isAccessDenied: true}, {$set: {isIncompleteProfile: true}}, {multi: true});
+      Meteor.users.update({isAccessDenied: true}, {$set: {isIncompleteProfile: true}}, {multi: true, validate: false});
 
       // done
       callback();
@@ -54,7 +54,7 @@ var migrations = [
       Meteor.users.find().forEach(function(user) {
         var isInvited = !!(user.isMayor || Invitations.findOne({ receivingUser: user._id }));
         if (!isInvited)
-          Meteor.users.update(user._id, {$set: {isUninvited: true, isAccessDenied: true, isHidden: true}});
+          Meteor.users.update(user._id, {$set: {isUninvited: true, isAccessDenied: true, isHidden: true}}, {validate: false});
       });
 
       // done
@@ -66,14 +66,14 @@ var migrations = [
     name: "Multicity with Ambassadors",
     task: function(callback) {
 
-      Meteor.users.update({}, {$set: {city: "lyon"}}, {multi: true});
-      Meteor.users.update({isMayor: true}, {$unset: {isMayor: true}, $set: {ambassador: {city: "lyon"}}}, {multi: true});
+      Meteor.users.update({}, {$set: {city: "lyon"}}, {multi: true, validate: false});
+      Meteor.users.update({isMayor: true}, {$unset: {isMayor: true}, $set: {ambassador: {city: "lyon"}}}, {multi: true, validate: false});
 
       // move user Jarno to city Utrecht (no ambassador)
-      Meteor.users.update("ZRYjqoG48R895CiDZ", {$unset: {ambassador: true, isHidden: true}, $set: {city: "utrecht", localRank: 1}});
+      Meteor.users.update("ZRYjqoG48R895CiDZ", {$unset: {ambassador: true, isHidden: true}, $set: {city: "utrecht", localRank: 1}}, {validate: false});
 
       // move user Daan to enschede and make him ambassador
-      Meteor.users.update("3mbb7xSWpJoNxsygf", {$set: {city: "enschede", localRank: 1, ambassador: {city: "enschede"}}});
+      Meteor.users.update("3mbb7xSWpJoNxsygf", {$set: {city: "enschede", localRank: 1, ambassador: {city: "enschede"}}}, {validate: false});
 
       // done
       callback();
@@ -140,7 +140,39 @@ var migrations = [
       // done
       callback();
     }
-  }
+  },
+
+  { // 7 sep 2014
+    name: "Ambassador",
+    task: function(callback) {
+
+      // set ambassadors e-mailadress default to "mail@hckrs.io"
+      Meteor.users.update({isAmbassador: true}, {$set: {ambassador: {title: "ambassador", email: ""}}}, {multi: true, validate: false});
+
+      // done
+      callback();
+    }
+  },
+
+  { // 7 sep 2014
+    name: "Mailings",
+    task: function(callback) {
+
+      var initial_mailings = [
+        "local_meetup_announcements",
+        "local_ambassador_messages",
+        "event_announcements",
+        "global_new_features",
+        //"help_requests",
+      ];
+
+      // subscribe users to initial mailing lists
+      Meteor.users.update({}, {$set: {mailings: initial_mailings}}, {multi: true, validate: false})
+
+      // done
+      callback();
+    }
+  },
 
 ];
 

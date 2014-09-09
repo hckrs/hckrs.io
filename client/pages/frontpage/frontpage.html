@@ -60,7 +60,13 @@
       <div class="hacker">
         <div style="background-image:url({{profile.picture}});" class="pictureView route-transition"></div>
         <div class="name">{{profile.name}}</div>
-        <div class="ambassador">{{title}}</div>
+        <div class="ambassador">
+          {{#if ambassador.title}}
+            {{ambassador.title}}
+          {{else}}
+            Ambassador
+          {{/if}}
+        </div>
         {{#if twitter}}
           <a href="https://twitter.com/{{twitter}}" target="_blank" class="action action-tweet">@{{twitter}}</a> 
         {{/if}}

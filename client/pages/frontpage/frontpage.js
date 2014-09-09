@@ -43,9 +43,6 @@ Template.ambassadors.helpers({
     }
     return city && Users.find({city: city, isAmbassador: true}, {fields: fields}).map(transform);
   },
-  "title": function() {
-    return pathValue(this, 'ambassador.title') || "Ambassador";
-  }
 });
 
 
@@ -62,7 +59,7 @@ Template.frontpage.events({
 
 Template.ambassadors.events({
   "click .action-email": function() {
-    var email = this.profile.email;
+    var email = this.ambassador.email || this.profile.email;
     location.href = "mailto:" + email;
   }
 });

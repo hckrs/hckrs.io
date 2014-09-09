@@ -332,6 +332,9 @@ var mergeUserData = function(firstUser, secondUser) {
   if (!_.isUndefined(mergedData.isAdmin))
     mergedData.isAdmin = !!(firstUser.isAdmin || secondUser.isAdmin);
 
+  if (!_.isUndefined(mergedData.isAmbassador))
+    mergedData.isAmbassador = !!(firstUser.isAmbassador || secondUser.isAmbassador);
+
   return mergedData;
 }
 
@@ -478,7 +481,7 @@ var attachUserToCity = function(userId, city) {
 
   // make the first user within the system ambassador of this city
   if (Meteor.users.find().count() === 1)
-    Users.update(user._id, {$set: {isAmbassador: true, ambassador: {title: "Co-founder"}}});
+    Users.update(user._id, {$set: {isAmbassador: true, ambassador: {title: "Co-founder", email: "mail@hckrs.io"}}});
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);
@@ -832,14 +835,11 @@ var requestAccess = function() {
 
 // when this function is called, is must already be verified that 
 // the user is allowed to do this operation
-var requestAccessOfUser = function(userId) {
+requestAccessOfUser = function(userId) { 
   var user = Meteor.users.findOne(userId);
 
   if (!user)
     throw new Meteor.Error(500, "Unknow user");
-
-  if (user.isAccessDenied != true)
-    throw new Meteor.Error(500, "User has already access to the site.");
 
   if (!user.city) 
     throw new Meteor.Error(500, "User isn't attached to some city.");    
@@ -855,10 +855,13 @@ var requestAccessOfUser = function(userId) {
 
   // access allowed!
 
-  // set signup date
-  if (!user.accessAt)
-    Meteor.users.update(userId, {$set: {accessAt: new Date()}});
-
+  // execute these commands if user had previously no access
+  if (user.isAccessDenied === true) {
+    
+    // set signup date
+    if (!user.accessAt)
+      Meteor.users.update(userId, {$set: {accessAt: new Date()}});
+  }
 
   // allow access for this user
   Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
@@ -943,12 +946,6 @@ moveUserToCity = function(hackerId, city) { // called from Methods.js
 }
 
 
-// test some functionality
-// XXX, check secutiry for client-calls
-var test = function() {
-  /* empty */
-}
-
 
 // define methods that can be called from the client-side
 Meteor.methods({
@@ -959,7 +956,6 @@ Meteor.methods({
   "removeServiceFromUser": removeServiceFromCurrentUser,
   "forceEmailVerification": forceEmailVerification,
   "sendVerificationEmail": sendVerificationEmail,
-  "test": test 
 });
 
 
