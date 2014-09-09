@@ -38,7 +38,6 @@ initializeMap = function(mapElement, latlng, userLocation, editable) {
   if (editable) {
     var timer;
     map.on('click', function(evt) {
-      console.log(timer)
       if (timer){
         clearTimeout(timer);
         timer = null
@@ -189,7 +188,7 @@ var resetMapSize = function($map, init) {
 /* DATABASE operations */
 
 var saveLocation = function(location) {
-  Meteor.users.update(Meteor.userId(), {$set: {'profile.location': location}});
+  Meteor.users.update(Meteor.userId(), {$set: {'profile.location': _.pick(location, 'lat', 'lng')}});
 }
 
 var removeLocation = function() {

@@ -34,16 +34,11 @@ var schema = {
   },    
   
   "profile.location": {  // workplace (school / company)
-    type: Object,
+    type: new SimpleSchema({
+      lat: {type: Number, decimal: true},
+      lng: {type: Number, decimal: true},
+    }),
     optional: true
-  },
-  "profile.location.lat": { // latitude
-    type: Number,
-    decimal: true
-  },
-  "profile.location.lng": { // longitude
-    type: Number,
-    decimal: true
   },
   "profile.homepage": { // external website of user
     type: String,
