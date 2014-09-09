@@ -305,11 +305,16 @@ Users.deny({
     ];
 
     var ambassadorPermission = [
-      'invitations'
+      'invitations',
     ];
 
     var adminPermission = [
-      'currentCity'
+      'currentCity',
+
+      /* also alow, only for easy updates */
+      'isAmbassador',
+      'ambassador',
+      'profile',
     ];
 
     // determine the permissions of user who edit this doc

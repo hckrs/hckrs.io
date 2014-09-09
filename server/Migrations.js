@@ -147,7 +147,7 @@ var migrations = [
     task: function(callback) {
 
       // set ambassadors e-mailadress default to "mail@hckrs.io"
-      Meteor.users.update({isAmbassador: true}, {$set: {ambassador: {title: "ambassador", email: ""}}}, {multi: true, validate: false});
+      Meteor.users.update({isAmbassador: true}, {$set: {ambassador: {title: "admin", email: ""}}}, {multi: true, validate: false});
 
       // done
       callback();
@@ -162,6 +162,19 @@ var migrations = [
 
       // subscribe users to initial mailing lists
       Meteor.users.update({}, {$set: {mailings: initial_mailings}}, {multi: true, validate: false})
+
+      // done
+      callback();
+    }
+  },
+
+  { // 9 sep 2014
+    name: "Ambassador emails",
+    task: function(callback) {
+
+      // set ambassador email
+      Meteor.users.update({_id: "eKbavA5AyWWjPB9LT"}, {$set: {"ambassador.email": "toon@hckrs.io"}}, {validate: false});
+      Meteor.users.update({_id: "ZRYjqoG48R895CiDZ"}, {$set: {ambassador: {title: "admin", email: "jarno@hckrs.io"}}}, {validate: false});
 
       // done
       callback();
