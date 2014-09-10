@@ -46,5 +46,5 @@ var data = {
 // automatic link data helpers to all templates
 _.each(templates, function(tmpl) {
   Template['emailSubject_' + tmpl].helpers(data);
-  Template['emailMessage_' + tmpl].helpers(data);
+  Template['emailContent_' + tmpl].helpers(data);
 })

@@ -150,7 +150,7 @@ Template.hackersFilter.rendered = function() {
 
 var loadEmailTemplate = function(templateName) {
   var tmpl_subject = Template['emailSubject_' + templateName],
-      tmpl_message = Template['emailMessage_' + templateName],
+      tmpl_message = Template['emailContent_' + templateName],
       subject = Blaze.toHTML(tmpl_subject),
       message = Blaze.toHTML(tmpl_message);
   
