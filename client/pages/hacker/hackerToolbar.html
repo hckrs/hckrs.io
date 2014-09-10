@@ -1,0 +1,72 @@
+<template name="hackerToolbar">
+  <div id="hackerToolbar" class="toolbar-section">
+
+    {{#if hasAmbassadorPermission}}
+    
+      {{#if active "mail"}}
+        {{> hackerToolbarPanelMail}}
+      {{/if}}
+
+      {{#if active "moveCity"}}
+        <div class="panel">
+          <div class="title">Move user to other city</div>
+          {{> citySelect}}
+          <small>Contact the user first, because<br/>this profile becomes invisible!</small>
+        </div>
+      {{/if}}
+
+      <div class="toolbar">
+        <div class="pull-right">
+          
+          {{#if statusLabels}}
+            {{#each statusLabels}}
+              <span class="text label label-{{style}}">{{text}}</span>
+            {{/each}}
+          {{/if}}
+
+          {{#if HackerProp 'isUninvited'}}
+            <button action="invite" by="anonymous" class="btn btn-inverse btn-small light" data-toggle="tooltip" title="Skip invitation. This user gets directly access to the site."><span class="icon-white icon-user"></span> Invite / activate</button>
+          {{/if}}
+
+          {{#if unverifiedEmail}}
+            <button action="sendVerificationEmail" class="btn btn-inverse  btn-small light" data-toggle="tooltip" title="Resend verification email to this user"><span class="icon-white icon-envelope" ></span> Verify</button>
+            <button action="verifyEmail" class="btn btn-inverse btn-small light" data-toggle="tooltip" title="Skip verification of user's email address [NOT RECOMMENDED]"><span class="icon-white icon-envelope"></span> Force</button>
+          {{/if}}
+          
+          {{#unless owner}}
+            <button type="button" panel="moveCity" class="btn btn-small light btn-inverse {{active 'moveCity'}}" data-toggle="tooltip" title="Move user to another city"><span class="icon-home icon-white"></span></button>
+          {{/unless}}
+          
+          <input type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" style="width:35px;" data-toggle="tooltip" title="#number of free invite slots" />
+
+
+          {{#if HackerProp 'profile.email'}}
+            <button type="button" panel="mail" class="btn btn-small light btn-inverse {{active 'mail'}}" data-toggle="tooltip" title="Send {{profile.name}} an email"><span class="icon-white icon-envelope"></span></button>
+          {{/if}}
+
+        </div>
+        <div class="clear"></div>
+      </div>
+    
+    {{/if}}
+
+  </div>
+</template>
+
+<template name="hackerToolbarPanelMail">
+  <div id="hackerMail" class="panel">
+    <div class="title">Mail {{profile.name}}</div>
+    {{#autoForm id="hackerMailForm" schema=mailSchema}}
+      <label for="template">Template</label>
+      {{#afFieldSelect name="group" id="template"}}
+        <option template="personalMessage">message</option>
+        <option template="personalMissingInfo">missing information</option>
+        <option template="personalWelcome">welcome</option>
+        <option template="personalInviteSlots">invite slots added</option>
+      {{/afFieldSelect}}
+      {{> afQuickField name="subject" id="subject" class="input-xxlarge"}}
+      {{> afQuickField name="message" id="message" rows="10" class="input-xxlarge"}}
+      <button action="submit" class="btn btn-primary">Send</button>
+    {{/autoForm}}
+  </div>
+</template>

@@ -6,7 +6,7 @@ var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
 var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
 
 
-Template.hackerEditor.events({
+Template.hackerToolbar.events({
   "click [action='invite']": function(evt) {
     var by = $(evt.currentTarget).attr('by');
     var userId = hackerId();
@@ -72,7 +72,7 @@ Template.hackerEditor.events({
 })
 
 
-Template.hackerEditor.helpers({
+Template.hackerToolbar.helpers({
   'owner': function() {
     return hackerProp('_id') === Meteor.userId();
   },
@@ -83,3 +83,7 @@ Template.hackerEditor.helpers({
     return userStatusLabel(hackerId());
   }
 })
+
+Template.hackerToolbar.rendered = function() {
+  $('[data-toggle="tooltip"]').tooltip();
+}
