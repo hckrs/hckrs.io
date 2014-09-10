@@ -18,8 +18,11 @@ State = function(namespace, defaults) {
     if (_.isUndefined(this.get(field)))
       this.set(field, val);
   }
-  this.toggle = function(field) {
-    this.set(field, !this.get(field));
+  this.toggle = function(field, val) {
+    if (_.isUndefined(val)) // normal toggle
+      this.set(field, !this.get(field)); 
+    else // unset = when value already set, set = when it isn't current value
+      this.set(field, this.equals(field, val) ? null : val);
   }
    
   this.getObj = function(fields) {

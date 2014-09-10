@@ -115,13 +115,18 @@ var _subscribe = function(options, cb) {
     return _.map(array || [], function(item) { return "'"+item+"'"; }).join(',');
   }
 
+  var name = user.profile.name || "";
+
   var params = {
     id: MailChimpOptions['listId'],
     update_existing: true,
     email: {email: options.previousEmail || user.profile.email},
     merge_vars: {
       "email": options.previousEmail ? user.profile.email : undefined,
-      "NAME": user.profile.name || "",
+      "USER_ID": user._id,
+      "FNAME": _.first(name.split(' ')),
+      "LNAME": _.rest(name.split(' ')).join(' '),
+      "NAME": name,
       "CITY_ID": user.city,
       "CITY_NAME": CITYMAP[user.city].name,
       "PROFILE": userProfileUrl(user),
@@ -274,19 +279,10 @@ Mailing.send = function(options) {
   }) 
 }
 
-Mailing.ambassadorSendTestNewsletter = function(subject, content, group) {
-  return Mailing.ambassadorSendNewsletter(subject, content, group, true);
-}
-
-Mailing.ambassadorSendNewsletter = function(subject, content, group, isTest) {
+// ambassador can send mail to some group specified by selector
+// either {userId: String} or {mailing: String from MAILING_VALUES}
+Mailing.ambassadorMail = function(subject, content, selector, isTest) {
   checkAmbassadorPermission();
-    
-  if (!_.contains(MAILING_VALUES, group)) 
-    throw new Meteor.Error(500, "no valid group specified");
-
-  // on test environments, send always test e-mails. Never mail the users
-  if (Settings['environment'] !== 'production')
-    isTest = true;
 
   var ambassador = Meteor.user();
   var city = ambassador.currentCity;
@@ -295,26 +291,51 @@ Mailing.ambassadorSendNewsletter = function(subject, content, group, isTest) {
   if (!email)
     throw new Meteor.Error(500, "no ambassador email specified");
 
+  if (selector.userId && (Users.findOne(selector.userId) || {}).city !== city)
+    throw new Meteor.Error(500, "not allowed", "Ambassador not allowed to mail this user");
+
+  if (selector.mailing && !_.contains(MAILING_VALUES, selector.mailing)) 
+    throw new Meteor.Error(500, "no allowed", "no valid group specified");
+
+  // on test environments, send always test e-mails. Never mail the users
+  if (Settings['environment'] !== 'production')
+    isTest = true;
 
   var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
 
+  // segments
+  // e.g. {match: 'all', conditions: [{field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" }]}
+  var segments;
+  if (selector.userId) {
+    segments = {
+      match: 'all', 
+      conditions: [
+        { field: 'USER_ID', op: 'eq', value: selector.userId }
+      ]
+    }
+  }
+  if (selector.mailing) {
+    segments = {
+      match: 'all', 
+      conditions: [
+        { field: 'CITY_ID', op: 'eq', value: city },
+        { field: 'interests-' + MailChimpOptions['group-mailings'], op: 'one', value: selector.mailing },
+      ]
+    } 
+  }
+
+  if (!segments) 
+    throw new Meteor.Error(500, "no segement", "no valid segment specified");
+
   Mailing.send({
     from_name: ambassador.profile.name + " / hckrs.io",
     from_email: email,
-    to_name: "Hackers " + CITYMAP[city].name,
+    to_name: "*|NAME|*",
     subject: subject,
     html: html,
-    segments: {
-      match: 'all',
-      conditions: [
-        { field: 'CITY_ID', op: 'eq', value: city },
-        { field: 'interests-' + MailChimpOptions['group-mailings'], op: 'one', value: group },
-        //{ field: 'interests-XXX', op: 'all', value: "apps,web" },
-        //{ field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" },
-      ]
-    },
+    segments: segments,
     test: isTest ? email : undefined
   });
 }
@@ -323,12 +344,9 @@ Mailing.ambassadorSendNewsletter = function(subject, content, group, isTest) {
 
 
 Meteor.methods({
-  'ambassadorMailing': function(mail, isTest) {
-    return Mailing.ambassadorSendNewsletter(mail.subject, mail.message, mail.group, isTest);
+  'ambassadorMail': function(mail, isTest) {
+    return Mailing.ambassadorMail(mail.subject, mail.message, mail.selector, isTest);
   },
-  // 'ambassadorSendNewsletter': function(mail) {
-  //   return Mailing.ambassadorSendNewsletter(mail.subject, mail.message, mail.group);
-  // },
   // 'test-chimp': function() {
   //   var mailChimp = new MailChimp();
   //   mailChimp.call('lists', 'interest-groupings', {id: MailChimpOptions['listId']}, function(err, res) {

@@ -12,6 +12,10 @@ HackerController = DefaultController.extend({
 });
 
 
+// state
+var state = new State('hacker', {
+  activePanel: null,  /* mail, edit, null */ 
+});
 
 
 /* HACKER 
@@ -188,6 +192,98 @@ Template.hackerEdit.events({
   "click .toggleService": toggleService,
 });
 
+Template.hackerToolbar.events({
+  'click [panel]': function(evt) {
+    state.toggle('activePanel', $(evt.currentTarget).attr('panel'));
+    Deps.flush();
+    setTemplate();
+  },
+});
+
+Template.hackerToolbarPanelMail.events({
+  'change select[name="group"]': function(evt) {
+    setTemplate();
+  },
+  'click [action="submit"]': function(evt) {
+    evt.preventDefault();
+
+    var $button = $(evt.currentTarget);
+    var $form = $("#hackerMailForm");
+    var formData = $form.serializeObject();
+
+    // validate email
+    if (!AutoForm.validateForm("hackerMailForm"))
+      return;
+
+    // disable button for a few seconds
+    var text = $button.text();
+    $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');
+    var cb = function() {
+      $button.removeAttr('disabled').removeClass('disabled').text(text);
+    }
+    
+    // send mail
+    sendMailing(formData, cb);
+  }
+})
+
+
+/* mailing */
+
+var loadEmailTemplate = function(templateName) {
+  var tmpl_subject = Template['emailSubject_' + templateName],
+      tmpl_message = Template['emailMessage_' + templateName],
+      subject = Blaze.toHTML(tmpl_subject),
+      message = Blaze.toHTML(tmpl_message);
+  
+  return { subject: subject, message: message };
+}
+
+var setTemplate = function() {
+  var $mailing = $("#hackerMailForm"),
+      $subject = $mailing.find('[name="subject"]'),
+      $message = $mailing.find('[name="message"]'),
+      $option = $mailing.find('[name="group"] option:selected'),
+      templateName = $option.attr('template'),
+      template = loadEmailTemplate(templateName);
+  $subject.val(template.subject);
+  $message.val(template.message);
+}
+
+var sendMailing = function(mail, cb) {
+
+  // preserve line breaks in message
+  mail.message = mail.message.replace(/\n/g, '<br/>');
+
+  // selector (recipient)
+  mail.selector = {userId: hackerId()};
+
+  // send mail from server
+  Meteor.call('ambassadorMail', mail, function(err, res) {
+    
+    // error handling
+    if (err) {
+      console.log('Mail failed')
+      new PNotify({
+        title: 'Mail failed',
+        text: "Mailing isn't sent correctly.",
+        type: 'error',
+        icon: false
+      });
+    } else {
+      console.log('Mail send');  
+      new PNotify({
+        title: 'Mail sent',
+        text: 'E-mail sent to user ' + hackerProp('profile.name'),
+        icon: false
+      });
+      state.set('activePanel', null);
+    }
+
+    cb(err);
+  });
+}
+
 
 
 // TEMPLATE DATA
@@ -241,7 +337,21 @@ Template.hackerView.helpers({
   }
 });
 
+Template.hackerToolbar.helpers({
+  'active': function(panel) {
+    return state.equals('activePanel', panel) ? 'active' : '';
+  },
+});
 
+Template.hackerToolbarPanelMail.helpers({
+  'mailSchema': function() {
+    return new SimpleSchema({
+      "group": { type: String },
+      "subject": { type: String },
+      "message": { type: String }
+    });
+  }
+});
 
 
 // RENDERING

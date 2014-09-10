@@ -1,9 +1,9 @@
 var state = new State('hackers', {
   filter: {
     hacking: [],
-    skills: [],
-    toolbarOpen: false,
-  }
+    skills: []
+  },
+  toolbarOpen: false,
 });
 
 
@@ -119,44 +119,24 @@ Template.hackersToolbar.events({
   },
   'click [action="submit"]': function(evt) {
     evt.preventDefault();
+    
     var $button = $(evt.currentTarget);
     var $form = $("#hackersNewsletterEditorForm");
     var formData = $form.serializeObject();
     var isPreview = $button.attr('preview') === "true";
-    var isValid = AutoForm.validateForm("hackersNewsletterEditorForm");
-
-    // preserve line breaks in message
-    formData.message = formData.message.replace(/\n/g, '<br/>');
     
-    if (isValid) {
+    if (!AutoForm.validateForm("hackersNewsletterEditorForm"))
+      return;
 
-      // send mailing
-      sendMailing(formData, isPreview);
+    // disable button for a few seconds
+    var text = $button.text();
+    $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');  
+    var cb = function() { 
+      $button.removeAttr('disabled').removeClass('disabled').text(text);
+    };
 
-      // disable button for a few seconds
-      var text = $button.text();
-      $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');
-      setTimeout(function() {
-        $button.removeAttr('disabled').removeClass('disabled').text(text);
-
-        // done, close toolbar
-        if (isPreview) {
-          new PNotify({
-              title: '[TEST] E-mail Sent',
-              text: 'You will receive a test e-mail in seconds.',
-              icon: false
-          });
-        } else {
-          state.set('toolbarOpen', false);
-          new PNotify({
-              title: 'E-mail Sent',
-              text: 'To all users of ' + CITYMAP[Session.get('currentCity')].name,
-              icon: false
-          });
-        }
-      }, 2500);
-
-    }
+    // send mailing
+    sendMailing(formData, isPreview, cb);
   }
 })
 
@@ -172,7 +152,7 @@ var loadEmailTemplate = function(templateName) {
   var tmpl_subject = Template['emailSubject_' + templateName],
       tmpl_message = Template['emailMessage_' + templateName],
       subject = Blaze.toHTML(tmpl_subject),
-      message = Blaze.toHTML(tmpl_message, {ambassadorName: "jarno"});
+      message = Blaze.toHTML(tmpl_message);
   
   return { subject: subject, message: message };
 }
@@ -188,10 +168,43 @@ var setTemplate = function() {
   $message.val(template.message);
 }
 
-var sendMailing = function(mail, isTest) {
-  Meteor.call('ambassadorMailing', mail, isTest, function(err, res) {
-    if (err) return console.log('Mailing failed')
-    console.log(isTest ? 'Send test mail' : 'Mailing succeed');
+var sendMailing = function(mail, isTest, cb) {
+  
+  // preserve line breaks in message
+  mail.message = mail.message.replace(/\n/g, '<br/>');
+
+  // selector (recipient)
+  mail.selector = {mailing: mail.group};
+
+  Meteor.call('ambassadorMail', mail, isTest, function(err, res) {
+    if (err) {
+      console.log('Mailing failed')
+      new PNotify({
+        title: 'Mail failed',
+        text: 'Something went wrong while sending mail.',
+        type: 'error',
+        icon: false
+      });
+    } else {
+      // done, close toolbar
+      if (isTest) {
+        console.log('Send test mail');
+        new PNotify({
+          title: '[TEST] E-mail Sent',
+          text: 'You will receive a test e-mail in seconds.',
+          icon: false
+        });
+      } else {
+        console.log('Mailing succeed');
+        new PNotify({
+          title: 'E-mail Sent',
+          text: 'To all users of ' + CITYMAP[Session.get('currentCity')].name,
+          icon: false
+        });
+        state.set('toolbarOpen', false);
+      }
+    }
+    cb(err);  
   });
 }
 
