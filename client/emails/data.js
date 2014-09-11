@@ -18,28 +18,28 @@ var templates = [
 ]
 
 /* 
-  The data helpers specified below are available within email templates.
-  Use the meteor bracket notation for this, e.g. {{city}}.
-  Additional there are the MailChimp Merge Tags that can be 
-  used to personalize recipient's email.
-  Merge tags look like *|NAME|*
+  The data helpers specified below are the general tags that can be used in
+  email templates. Therefore use meteor's bracket notation, e.g. {{staff.email}}.
+  
+  You CANN'T use this tags to personalize the email to the recipient, but therefore 
+  you can use MailChimp's Merge Tags. Merge tags look like *|NAME|*.
   They are specified in MailChimp > Lists > Settings > Merge Tags.
-  Also there are general Merge tags, described here: 
+  Also there are more general Merge tags, described here: 
   http://kb.mailchimp.com/merge-tags/all-the-merge-tags-cheatsheet#Merge-tags-for-personalization 
 */
 var data = {
   'city': function() {
     return CITYMAP[Session.get('currentCity')].name;
   },
-  'ambassadorName': function() {
-    return Meteor.user().profile.name;
+  'name': function() {
+    return property(Meteor.user(), 'profile.name');
   },
-  'ambassadorTitle': function() {
-    return Meteor.user().ambassador.title || "admin";
+  'title': function() {
+    return property(Meteor.user(), 'staff.title');
   },
-  'ambassadorEmail': function() {
-    return Meteor.user().ambassador.email;
-  }
+  'email': function() {
+    return property(Meteor.user(), 'staff.email');
+  },
 }
 
 

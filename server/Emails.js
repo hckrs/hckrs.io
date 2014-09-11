@@ -286,7 +286,7 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 
   var ambassador = Meteor.user();
   var city = ambassador.currentCity;
-  var email = property(ambassador, 'ambassador.email');
+  var email = property(ambassador, 'staff.email');
 
   if (!email)
     throw new Meteor.Error(500, "no ambassador email specified");

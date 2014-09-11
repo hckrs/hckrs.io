@@ -35,7 +35,7 @@ Template.ambassadors.helpers({
     var fields = fieldsObj({
       profile: ['name','picture','email'],
       'isAmbassador': true,
-      'ambassador': true
+      'staff': true
     });
     var transform = function(user) {
       user.twitter = userSocialName(user._id, 'twitter');
@@ -59,7 +59,7 @@ Template.frontpage.events({
 
 Template.ambassadors.events({
   "click .action-email": function() {
-    var email = this.ambassador.email || this.profile.email;
+    var email = this.staff.email || this.profile.email;
     location.href = "mailto:" + email;
   }
 });

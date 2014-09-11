@@ -2,7 +2,7 @@
 
 var routes = [
   
-  // ambassador routes
+  // staff routes
   [ 'admin'              , '/admin'             ],
   [ 'admin_dashboard'    , '/admin/dashboard'   ],
   [ 'admin_highlights'   , '/admin/highlights'  ],

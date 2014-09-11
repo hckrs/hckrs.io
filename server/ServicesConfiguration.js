@@ -448,6 +448,10 @@ Accounts.onCreateUser(function (options, user) {
     // make the first user within the system admin
     if (Meteor.users.find().count() === 0) {
       user.isAdmin = true;
+      user.staff = {
+        title: "Co-founder", 
+        email: "mail@hckrs.io",
+      };
     }
 
   }
@@ -481,10 +485,6 @@ var attachUserToCity = function(userId, city) {
   // automatic invite the first n users
   if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited'])
     Users.update(user._id, {$unset: {isUninvited: true}});
-
-  // make the first user within the system ambassador of this city
-  if (Meteor.users.find().count() === 1)
-    Users.update(user._id, {$set: {isAmbassador: true, ambassador: {title: "Co-founder", email: "mail@hckrs.io"}}});
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);

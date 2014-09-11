@@ -181,6 +181,22 @@ var migrations = [
     }
   },
 
+  { // 11 sep 2014
+    name: "Rename ambassador to staff",
+    task: function(callback) {
+
+      // set ambassador email
+      Users.find({ambassador: {$exists: true}}).forEach(function(ambassador) {
+        Users.update(ambassador._id, {$set: {staff: ambassador.ambassador}, $unset: {ambassador: true}}, {validate: false});
+      });
+
+      // done
+      callback();
+    }
+  },
+
+  
+
 ];
 
 

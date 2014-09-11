@@ -154,21 +154,22 @@ var schema = {
 
   /* administration details */
 
-  "isAmbassador": {       // only when user is ambassador    
-    type: Boolean,
-    optional: true,
-  },
-  "ambassador": {         // additional ambassador info
+  "staff": {         // additional ambassador info
     type: Object,
     optional: true
   },
-  "ambassador.email": { // ambassador email address @hckrs.io
+  "staff.email": { // ambassador email address @hckrs.io
     type: SimpleSchema.RegEx.Email,
     optional: true         
   },
-  "ambassador.title": { // custom title of this ambassador     
+  "staff.title": { // custom title of this ambassador     
     type: String,
     optional: true         
+  },
+
+  "isAmbassador": {       // only when user is ambassador    
+    type: Boolean,
+    optional: true,
   },
   "isAccessDenied": {      // user isn't allowed to enter the site unless he is invited and profile complete and email verified 
     type: Boolean,
@@ -313,7 +314,7 @@ Users.deny({
 
       /* also alow, only for easy updates */
       'isAmbassador',
-      'ambassador',
+      'staff',
       'profile',
     ];
 
@@ -400,7 +401,7 @@ if (Meteor.isServer) {
   ];
   var userFieldsAmbassador = [  // all users can see always this addtional fields from ambassadors
     "isAmbassador",
-    "ambassador",
+    "staff",
     "profile.email",
     "profile.social",
   ];
@@ -759,13 +760,13 @@ userRank = function(user) {
 userPictureLabel = function(user) {
   user = user || Meteor.userId();
   var userId = _.isObject(user) ? user._id : user;
-  user = OtherUserProps(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','isAmbassador','ambassador'])
+  user = OtherUserProps(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','isAmbassador','staff'])
   if (user.mergedWith)             return "merged with #"+userRank(user.mergedWith);
   if (user.isDeleted)              return "deleted";
   if (user.isAccessDenied)         return "no access";
   if (user.isHidden)               return "hidden";
   if (userIsForeign(userId))       return CITYMAP[user.city].name;
-  if (user.isAmbassador)           return pathValue(user, 'ambassador.title') || "admin"; // ambassador displayed as 'admin'
+  if (user.isAmbassador)           return pathValue(user, 'staff.title'); // ambassador displayed as 'admin'
   else                             return "#"+userRank(user);
 }
 
