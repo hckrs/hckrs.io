@@ -316,7 +316,7 @@ Users.deny({
       'isAmbassador',
       'isAdmin',
       'staff.title',
-      'staff.email'
+      'staff.email',
     ];
 
     // determine the permissions of user who edit this doc
@@ -379,6 +379,7 @@ if (Meteor.isServer) {
     "isAccessDenied",
     "isDeleted",
     "mergedWith",
+    "staff",
   ];
   var userFieldsData = [
     "accessAt",
@@ -402,7 +403,6 @@ if (Meteor.isServer) {
   ];
   var userFieldsAmbassador = [  // all users can see always this addtional fields from ambassadors
     "isAmbassador",
-    "staff",
     "profile.email",
     "profile.social",
   ];
