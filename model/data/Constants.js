@@ -62,7 +62,7 @@ ITEM_VALUES = _.pluck(ITEM_OPTIONS, 'value');
 ITEM_TYPES = ITEM_VALUES; // backward compatible
 
 
-SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
+SKILLS = _.compact([{"name":"ABAP"},,{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"ActionScript"},{"name":"Ada"},{"name":"Android"},{"name":"Angular.js"},
 {"name":"Apache"},{"name":"ApacheConf"},{"name":"Apex"},
 {"name":"AppleScript"},{"name":"Arc"},{"name":"Arduino"},
@@ -92,7 +92,7 @@ SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"Haskell"},{"name":"Haxe"},{"name":"IIS"},
 {"name":"IRC log"},{"name":"Io"},{"name":"Ioke"},{"name":"Joomla!"},{"name":"J2EE"},
 {"name":"JSON"},{"name":"Java"},{"name":"Java Server Pages"},
-{"name":"JavaScript"},{"name":"JavaScriptMVC"},{"name":"Jasmine.js"},{"name":"Julia"},,{"name":"Karrigell"},{"name":"Knockout.js"},{"name":"Kotlin"},
+{"name":"JavaScript"},{"name":"JavaScriptMVC"},{"name":"Jasmine.js"},{"name":"Julia"},{"name":"Karrigell"},{"name":"Knockout.js"},{"name":"Kotlin"},
 {"name":"LLVM"},{"name":"Lasso"},{"name":"Leaflet.js"},{"name":"Less"},{"name":"LilyPond"},
 {"name":"Linux"},{"name":"Lisp"},{"name":"Literate CoffeeScript"},
 {"name":"Literate Haskell"},{"name":"Lithium"},{"name":"LiveScript"},{"name":"Logos"},
@@ -120,7 +120,7 @@ SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"Scala"},{"name":"Scheme"},{"name":"Scilab"},
 {"name":"Self"},{"name":"Shell"},{"name":"Sinatra"},
 {"name":"Smalltalk"},{"name":"Smarty"},{"name":"Socket.io"},{"name":"Sproutcore"},{"name":"Standard ML"},
-{"name":"Struts"},{"name":"SuperCollider"},,{"name":"Symfony"},{"name":"TOML"},
+{"name":"Struts"},{"name":"SuperCollider"},{"name":"Symfony"},{"name":"TOML"},
 {"name":"TXL"},{"name":"Tcl"},{"name":"Tcsh"},{"name":"TeX"},
 {"name":"Tea"},{"name":"Textile"},{"name":"Turing"},
 {"name":"Twig"},{"name":"Twisted"},{"name":"Twitter bootstrap"},{"name":"TypeScript"},{"name":"TYPO3"},{"name":"Underscore.js"},{"name":"Unix"},
@@ -129,7 +129,7 @@ SKILLS = [{"name":"ABAP"},{"name":"ASP"},{"name":"ASP.NET"},
 {"name":"XML"},{"name":"XProc"},{"name":"XQuery"},{"name":"XS"},
 {"name":"XSLT"},{"name":"Xtend"},{"name":"xui.js"},{"name":"YAML"},{"name":"Yii Framework"},{"name":"YUI"},{"name":"Zend"},
 {"name":"eC"},{"name":"edn"},{"name":"fish"},{"name":"jQuery"},
-{"name":"mupad"},{"name":"ooc"},{"name":"reStructuredText"},{"name":"Zope"},{"name":"ZURB Foundation"}];
+{"name":"mupad"},{"name":"ooc"},{"name":"reStructuredText"},{"name":"Zope"},{"name":"ZURB Foundation"}]);
 
 SKILL_NAMES = _.map(SKILLS, function(skill) { return skill.name; });
 
