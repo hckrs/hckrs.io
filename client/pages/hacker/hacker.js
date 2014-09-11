@@ -50,7 +50,7 @@ var addToSet = function(event) {
   exec(function() {
     var action = checked ? '$addToSet' : '$pull';
     var modifier = _.object([ action ], [ _.object([field], [value]) ]);
-    Meteor.users.update(Meteor.userId(), modifier);
+    Users.update(hackerId(), modifier);
 
     // log
     if (checked)
@@ -75,7 +75,7 @@ var saveChangedField = function(event, cb) {
 
   exec(function() {
     var modifier = _.object([ value ? '$set' : '$unset' ], [ _.object([field], [value]) ]);
-    Meteor.users.update(Meteor.userId(), modifier, cb);
+    Users.update(hackerId(), modifier, cb);
   });
 }
 
@@ -164,11 +164,9 @@ Template.hacker.events({
     evt.preventDefault();
     checkCompletedProfile();
   },
-});
 
-Template.hackerEdit.events({
   // general autosave input fields
-  "blur input.text.save": function(evt) {
+  "blur input[autosave]": function(evt) {
     var callback;
     
     // callback after changing email field
@@ -178,9 +176,11 @@ Template.hackerEdit.events({
     saveChangedField(evt, callback);
     
   },
-  "keyup input.text.save": fieldChanged,
-  "click input[type='checkbox'].save": addToSet,
+  "keyup input[autosave]": fieldChanged,
+  "click input[type='checkbox'][autosave]": addToSet,
+});
 
+Template.hackerEdit.events({
   // special input fields
   "click .current-picture": showPictureChoser,
   "mouseleave .picture-choser": hidePictureChoser,

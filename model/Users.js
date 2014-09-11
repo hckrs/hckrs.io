@@ -314,8 +314,9 @@ Users.deny({
 
       /* also alow, only for easy updates */
       'isAmbassador',
-      'staff',
-      'profile',
+      'isAdmin',
+      'staff.title',
+      'staff.email'
     ];
 
     // determine the permissions of user who edit this doc

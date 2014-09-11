@@ -15,6 +15,25 @@
         </div>
       {{/if}}
 
+      {{#if active "flags"}}
+        <div class="panel">
+          <div class="title">Staff member</div>
+          <button class="btn btn-inverse {{flag 'isAmbassador'}}" flag="isAmbassador">city admin</button>
+          {{#unless owner}}
+            <button class="btn btn-inverse {{flag 'isAdmin'}}" flag="isAdmin">site admin</button>
+          {{/unless}}
+          {{#if staff}}
+            <br><br>
+            <div class="staff">
+              <label for="title">custom admin title <span class="required-star">*</span></label>
+              <input type="text" id="title" name="staff.title" autosave placeholder="e.g. 'admin'" value="{{HackerProp 'staff.title'}}" required />
+              <label for="email">hckrs.io email address <span class="required-star">*</span></label>
+              <input type="email" id="email" name="staff.email" autosave placeholder="e.g. 'toon@hckrs.io'" value="{{HackerProp 'staff.email'}}" required />
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
       <div class="toolbar">
         <div class="pull-right">
           
@@ -33,15 +52,19 @@
             <button action="verifyEmail" class="btn btn-inverse btn-small light" data-toggle="tooltip" title="Skip verification of user's email address [NOT RECOMMENDED]"><span class="icon-white icon-envelope"></span> Force</button>
           {{/if}}
           
-          {{#unless owner}}
-            <button type="button" panel="moveCity" class="btn btn-small light btn-inverse {{active 'moveCity'}}" data-toggle="tooltip" title="Move user to another city"><span class="icon-home icon-white"></span></button>
-          {{/unless}}
-          
           <input type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" style="width:35px;" data-toggle="tooltip" title="#number of free invite slots" />
 
 
           {{#if HackerProp 'profile.email'}}
             <button type="button" panel="mail" class="btn btn-small light btn-inverse {{active 'mail'}}" data-toggle="tooltip" title="Send {{profile.name}} an email"><span class="icon-white icon-envelope"></span></button>
+          {{/if}}
+
+          {{#unless owner}}
+            <button type="button" panel="moveCity" class="btn btn-small light btn-inverse {{active 'moveCity'}}" data-toggle="tooltip" title="Move user to another city"><span class="icon-home icon-white"></span></button>
+          {{/unless}}
+
+          {{#if hasAdminPermission}}
+            <button type="button" panel="flags" class="btn btn-small light btn-inverse {{active 'flags'}}" data-toggle="tooltip" title="Manage admin / ambassador flags"><span class="icon-flag icon-white"></span></button>
           {{/if}}
 
         </div>

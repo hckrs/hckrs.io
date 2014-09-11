@@ -109,6 +109,12 @@ Template.hackerToolbar.events({
       $(evt.currentTarget).val(Session.get('currentCity'));
     }
 
+  },
+  'click [flag]': function(evt) {
+    var $flag = $(evt.currentTarget);
+    var flag = $flag.attr('flag');
+    var activate = !$flag.hasClass('active');
+    Users.update(hackerId(), _.object([activate ? '$set' : '$unset'], [_.object([flag], [true])]));
   }
 });
 
@@ -155,6 +161,12 @@ Template.hackerToolbar.helpers({
   'active': function(panel) {
     return state.equals('activePanel', panel) ? 'active' : '';
   },
+  'flag': function(flag) {
+    return hackerProp(flag) ? 'active' : '';
+  },
+  'staff': function() {
+    return hasAmbassadorPermission(hackerId());
+  }
 });
 
 Template.hackerToolbarPanelMail.helpers({
