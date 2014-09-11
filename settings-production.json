@@ -3,6 +3,7 @@
     "environment": "production",
     "ga": { "account": "UA-46665682-1" },
     "simpleSchemeDebug": false,
+    
     "mapbox": {
       "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
     },
@@ -29,11 +30,11 @@
   },
 
   "MailChimpOptions": {
-    "apiKey": "178483d491497f6951a3a4a6758f3ee8-us7",
+    "apiKey": "d6a78b6b869e9548dcfa7d2fdd6cd72b-us7",
     "listId": "b4bb387d48",
-    "group-available": "",
-    "group-hacking": "",
-    "group-mailings": ""
+    "group-available": "7961",
+    "group-hacking": "7957",
+    "group-mailings": "8233"
   },
 
   "newrelic": {

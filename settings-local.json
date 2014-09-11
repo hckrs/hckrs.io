@@ -3,10 +3,11 @@
     "environment": "local",
     "ga": { "account": null },
     "simpleSchemeDebug": true,
+   
     "mapbox": {
       "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
     },
-
+    
     "facebook": {
       "appId": "1480186128886809"
     },
