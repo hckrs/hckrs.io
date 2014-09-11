@@ -332,6 +332,9 @@ var mergeUserData = function(firstUser, secondUser) {
   if (!_.isUndefined(mergedData.isAdmin))
     mergedData.isAdmin = !!(firstUser.isAdmin || secondUser.isAdmin);
 
+  if (!_.isUndefined(mergedData.isAmbassador))
+    mergedData.isAmbassador = !!(firstUser.isAmbassador || secondUser.isAmbassador);
+
   return mergedData;
 }
 
@@ -353,7 +356,7 @@ var mergeUsers = function(user, existingUser) {
   var mergedUserData = mergeUserData(surviveUser, zombieUser);
   removeUser(zombieUser._id);
   Meteor.users.update(zombieUser._id, {$set: {mergedWith: surviveUser._id}});
-  Meteor.users.update(surviveUser._id, mergedUserData);
+  Meteor.users.update(surviveUser._id, mergedUserData, {validate: false});
 
   // replace all userID references in other collections
   Invitations.update({broadcastUser: zombieUser._id}, {$set: {broadcastUser: surviveUser._id}}, {multi: true});
@@ -406,6 +409,10 @@ Accounts.onCreateUser(function (options, user) {
   // extend user object with additional fetched user information
   user = extendUserByFetchingService(user, serviceName);
 
+  // additional fields
+  if (!user.emails)
+    user.emails = [];
+
   // find an existing user that probaly match this identity
   var existingUser = findExistingUser(user);  
 
@@ -425,9 +432,26 @@ Accounts.onCreateUser(function (options, user) {
     user.isIncompleteProfile = true;
     user.isHidden = true;
 
+    // attach global id
+    var maxUser = Users.findOne({}, {fields: {globalId: true}, sort: {globalId: -1}});
+    user.globalId = ((maxUser || {}).globalId || 0) + 1;
+
+    // set invitation phrase
+    user.invitationPhrase = user.globalId * 2 + 77;
+
+    // give this user the default number of invite codes
+    user.invitations = Settings['defaultNumberOfInvitesForNewUsers'] || 0;
+
+    // subscribe user to mailings
+    user.mailings = _.chain(MAILING_OPTIONS).where({checked: true}).pluck('value').value();
+
     // make the first user within the system admin
     if (Meteor.users.find().count() === 0) {
       user.isAdmin = true;
+      user.staff = {
+        title: "Co-founder", 
+        email: "mail@hckrs.io",
+      };
     }
 
   }
@@ -450,48 +474,20 @@ var attachUserToCity = function(userId, city) {
   if (user.city)
     throw new Meteor.Error(0, "already attached to a city!") 
   
-  // get city info including ranks for this (new) user
-  var userCityInfo = newUserCityInfo(city);
+  // set the city where this user becomes registered
+  var userCityInfo = {};
+  userCityInfo.city = city;
+  userCityInfo.currentCity = city;
 
   // update user with city information
   Users.update(user._id, {$set: userCityInfo});
 
   // automatic invite the first n users
-  if (userCityInfo.localRank <= Settings['firstNumberOfUsersAutoInvited'])
+  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited'])
     Users.update(user._id, {$unset: {isUninvited: true}});
-
-  // make the first user within the system ambassador of this city
-  if (Meteor.users.find().count() === 1) {
-    var ambassador = {
-      city: city,
-      title: "hckrs.io developer",
-    }; 
-    Users.update(user._id, {$set: {ambassador: ambassador}});
-  }
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);
-}
-
-var newUserCityInfo = function(city) {
-  var user = {}; // create object to build city info for new user
-
-  // set the city where this user becomes registered
-  user.city = city;
-
-  // determine and set the hacker ranking
-  var local = Meteor.users.findOne({city: city}, {sort: {localRank: -1}});
-  var global = Meteor.users.findOne({}, {sort: {globalRank: -1}});
-  user.localRank = (local && local.localRank || 0) + 1;
-  user.globalRank = (global && global.globalRank || 0) + 1;
-
-  // set invitation phrase
-  user.invitationPhrase = user.globalRank * 2 + 77;
-
-  // give this user the default number of invite codes
-  user.invitations = Settings['defaultNumberOfInvitesForNewUsers'] || 0;
-
-  return user;
 }
 
 
@@ -636,7 +632,7 @@ var addServiceToCurrentUser = function(token, secret, service) {
   } else {
 
     // only add the new service data to this user
-    Meteor.users.update(userId, extendedUser);
+    Meteor.users.update(userId, extendedUser, {validate: false});
 
   }
 }
@@ -783,8 +779,7 @@ verifyInvitationOfUser = function(phrase, userId) {
   // insert invitation couple in database
   Invitations.insert({
     broadcastUser: broadcastUser._id,
-    receivingUser: userId, 
-    signedupAt: new Date()
+    receivingUser: userId
   });  
 
   // decrement broadcast user's unused invitations
@@ -843,14 +838,11 @@ var requestAccess = function() {
 
 // when this function is called, is must already be verified that 
 // the user is allowed to do this operation
-var requestAccessOfUser = function(userId) {
+requestAccessOfUser = function(userId) { 
   var user = Meteor.users.findOne(userId);
 
   if (!user)
     throw new Meteor.Error(500, "Unknow user");
-
-  if (user.isAccessDenied != true)
-    throw new Meteor.Error(500, "User has already access to the site.");
 
   if (!user.city) 
     throw new Meteor.Error(500, "User isn't attached to some city.");    
@@ -865,6 +857,14 @@ var requestAccessOfUser = function(userId) {
     throw new Meteor.Error(500, "emailNotVerified", "e-mailaddress isn't verified.");
 
   // access allowed!
+
+  // execute these commands if user had previously no access
+  if (user.isAccessDenied === true) {
+    
+    // set signup date
+    if (!user.accessAt)
+      Meteor.users.update(userId, {$set: {accessAt: new Date()}});
+  }
 
   // allow access for this user
   Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
@@ -902,11 +902,52 @@ var requestVisibilityOfUser = function(userId) {
 }
 
 
-// test some functionality
-// XXX, check secutiry for client-calls
-var test = function() {
-  /* empty */
+// When user have manually entered e-mail address he must verify it.
+// Admins can force to skip this process
+var forceEmailVerification = function(userId) {
+  var user = Users.findOne(userId);
+  var emails = _.pluck(user.emails, 'address');
+
+  if (!hasAmbassadorPermission())
+    throw new Meteor.Error(500, "No permissions");
+  if (!user)
+    throw new Meteor.Error(500, "User doesn't exists");
+  if (!_.contains(emails, user.profile.email))
+    throw new Meteor.Error(500, "E-mail not registered", "E-mail address not present in user's list of addresses.")
+  if (_.findWhere(user.emails, {address: user.profile.email, verified: true}))
+    throw new Meteor.Error(500, "E-mail already verified")    
+
+  // force verification
+  Users.update({_id: userId, "emails.address": user.profile.email}, {$set: {"emails.$.verified": true}});
+
+  // request access of user
+  requestAccessOfUser(userId);
 }
+
+// Resend verification email
+var sendVerificationEmail = function(userId) {
+  var user = Users.findOne(userId);
+
+  if (!hasAmbassadorPermission())
+    throw new Meteor.Error(500, "No permissions");
+  if (!user)
+    throw new Meteor.Error(500, "User doesn't exists");
+
+  Accounts.sendVerificationEmail(userId, user.profile.email);
+}
+
+// move user to new city
+// NOTE: permission check must already be performed
+moveUserToCity = function(hackerId, city) { // called from Methods.js
+
+  // update user's city
+  Users.update(hackerId, {$set: {
+    city: city,
+    currentCity: city,
+    accessAt: new Date()
+  }});
+}
+
 
 
 // define methods that can be called from the client-side
@@ -916,7 +957,8 @@ Meteor.methods({
   "verifyInvitation": verifyInvitation,
   "addServiceToUser": addServiceToCurrentUser,
   "removeServiceFromUser": removeServiceFromCurrentUser,
-  "test": test 
+  "forceEmailVerification": forceEmailVerification,
+  "sendVerificationEmail": sendVerificationEmail,
 });
 
 

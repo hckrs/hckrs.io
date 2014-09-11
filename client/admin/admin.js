@@ -1,48 +1,67 @@
+AdminController = DefaultAdminController.extend({
+  onBeforeAction: function() {
+    Router.go('admin_highlights');
+  }
+});
 
-Admin = {};
-
-Admin.inviteUser = function(userId) {
-  check(userId, String);
-
-  return serverCall('inviteUser', userId);
-}
-
-Admin.inviteUserByToon = function(userId) {
-  check(userId, String);
-
-  return serverCall('inviteUserByToon', userId);
-}
-
-Admin.inviteUserByUser = function(userId, broadcastUserId) {
-  check(userId, String);
-  check(broadcastUserId, String);
-
-  return serverCall('inviteUserByUser', userId, broadcastUserId);
-}
-
-
-// utility function for devleopment
-// reset local storage
-Admin.resetLocalStorage = function() {
-  _.each(_.keys(amplify.store()), function(key) { amplify.store(key, null); });
-}
+Template.admin_header.helpers({
+  'active': function(route) {
+    return Router.current().route.name === route ? 'active' : '';
+  }
+})
 
 
 
-// helpers
 
-var serverCall = function() {
-  var args = _.toArray(arguments);
-  args.push(logSuccess); 
-  Meteor.call.apply(this, args);
-  return "Called '"+args[0]+"'";
-}
+/* DATA FIELD */
 
-var logSuccess = function(err, res) {
-  if (err) {
-    console.log("ERROR", err);
-  } else {
-    console.log("SUCCESS");
-    console.log(res)
+
+Field = {}
+
+Field.date = {
+  key: 'createdAt',
+  label: 'date',
+  sortByValue: true,
+  fn: function(val, obj) {
+    return moment(val).fromNow();
   }
 }
+
+Field.city = {
+  key: 'city',
+  label: 'city',
+  fn: function(val, obj) {
+    var url = Url.replaceCity(val, Meteor.absoluteUrl());
+    return Safe.url(url, {text: val});
+  }
+}
+
+Field.private = {
+  key: 'private',
+  label: 'private',
+  fn: function(val, obj) {
+    var icon = val ? 'icon-home' : 'icon-globe';
+    return Safe.string('<span class="icon '+icon+'"></span>');
+  }
+}
+
+Field.url = {
+  key: 'url',
+  label: 'url',
+  fn: function(val, obj) {
+    text = obj['urlText'] || 'link';
+    return Safe.url(val, {text: text});
+  }
+}
+
+
+/* functions */
+
+Field.fn = {}
+
+Field.fn.email = function(val, obj) {
+  return val ? Safe.email(val, {text: 'e-mail'}) : '';
+}
+
+
+

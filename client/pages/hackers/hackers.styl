@@ -1,12 +1,10 @@
-@import 'nib'
+@import "nib"
 
 #hackers {
   .pictureView.route-transition {
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform: scale(0);
-    opacity: 0.8;
     &.activated {
-    	opacity: 1;
     	transform: scale(1);
    	}
     &:hover {
@@ -15,6 +13,81 @@
    	}
   }
 
+  .total {
+    text-align: center;
+  }
+
+  #hackersFilter {
+    width: 600px;
+    margin: 0 auto;
+
+    .chosen-select {
+      width: 100%;
+    }
+  }
+
+}
+
+
+.chosen-container {
+  .chosen-drop, .chosen-results {
+    max-height: 400px;
+  }
+  .group-option {
+    display: inline-block;
+    padding: 5px 8px;
+  }
+  .group-option:hover {
+    font-weight: normal;
+  }
+}
+
+/* style all chosen fields at once */
+.chosen-container {
+  .group-result { /* optgroup */
+    margin: 18px 0px 10px 10px;
+    color: #777;
+    clear: both;
+    width: 100%;
+  }
+}
+
+.chosen-container .chosen-results li{
+  float: left;
+  font-weight: normal !important;
+  .highlighted{
+    padding: 0px;
+    margin: 0px;
+  }
+}
+
+.chosen-container-multi .chosen-choices{
+  li.search-field input[type="text"]{
+    color: #e7e7e7;
+  }
+
+  li.search-choice {
+    position: relative;
+    margin: 3px 0 3px 5px;
+    padding: 6px 23px 7px 10px;
+    border: 1px solid #FFF;
+    border-radius: 0px;
+    background-color: none !important;
+    background: none;
+    color: #222;
+    background-color: rgba(255,255,255,0.3);
+    line-height: 13px;
+    cursor: default;
+    opacity: 0.9;
+    .search-choice-close{
+      top: 8px;
+    }
+
+    .search-choice-close {
+      background: url('/img/chosen-sprite.png') -42px -10px no-repeat;
+
+    }
+  }
 }
 
 
@@ -60,14 +133,20 @@
     border-radius: 16px;
   }  
 
-  &:before {
+  &[label]:not([label=""]):before {
     content: attr(label);
-    color: white; 
+  }
+  &:before {
+    color: #fff; 
     font-weight: bold;
     cursor: default;
     background-color: rgba(0,0,0,0.5);
-    font-size: 19px;
-    line-height: 280px; 
+    font-size: 12px;
+    line-height: 320px;
+    border-radius: 1px;
+    padding: 0px 5px;
+    max-width: 135px;
+    white-space: nowrap;
   }
   &.small:before {
     font-size: 11px;
@@ -103,4 +182,6 @@ a.pictureViewLink[foreign] {
   transform: none !important;
   cursor: default !important;
 }
+
+
 

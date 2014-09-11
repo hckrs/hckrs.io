@@ -3,14 +3,8 @@
 .DS_Store
 node_modules
 backup
-docs/Screenshots
 
-packages/autoform
+.docs/Screenshots
 
-packages/collection2
-
-packages/kadira
-
-packages/simple-schema
-
-packages/moment
+packages/mailchimp
+packages/pnotify

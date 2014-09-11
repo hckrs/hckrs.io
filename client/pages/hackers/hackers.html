@@ -1,22 +1,90 @@
 <template name="hackers">
   <div id="hackers" class="page">
-    
-    {{#each hackers}}
-    <div class="hacker">
-      <a class="hackers-name pictureViewLink" href="{{pathFor 'hacker'}}" {{foreign}}>
-        <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}} label="{{PictureViewLabel}}"></div>
-        {{profile.name}}
-      </a>
-      <br/>
+
+
+    {{> hackersFilter}}
+
+    <div class="total">
+      <strong>{{total}}</strong>
+      {{#if hacking}}{{{hacking}}}{{/if}} {{Plural "hacker" total}} in {{CurrentCity.name}} <br/>
+      {{#if skills}}that {{Plural "does" "do" total}} {{{skills}}}{{/if}}
     </div>
+    
+    {{#each hackerViews}}
+      {{> hackersEntry}}    
     {{/each}}
    
-    <div style="clear:both;"></div>
-    <strong>{{totalHackers}}</strong> hackers in {{CurrentCity.name}}.
-
+    <div class="clear"></div>
 
     {{> invitations_partial}}
+    {{> hackersToolbar}}
 
     <div class="page-space"></div>
+  </div>
+</template>
+
+<template name="hackersEntry">
+  <div class="hacker">
+    <a class="hackers-name pictureViewLink" href="{{pathFor 'hacker'}}" {{foreign}}>
+      <div style="background-image:url({{profile.picture}});transition-delay:{{transitionDelay}}s;" class="pictureView route-transition" {{foreign}} label="{{label}}"></div>
+      {{profile.name}}
+    </a>
+    <br/>
+  </div>
+</template>
+
+<template name="hackersFilter">
+  <div id="hackersFilter">
+    <form id="hackersFilterForm">
+      
+      <select name="filter" class="chosen-select" multiple data-placeholder="&nbsp;search hackers &mdash; ex. Growth hackers that do Ruby on Rails" >
+        <optgroup label="Hacking">
+          {{#each Constant "HACKING_OPTIONS"}}
+            <option value="hacking-{{value}}" {{selectedHacking}}>{{label}}</option>
+          {{/each}}    
+        </optgroup>
+        <optgroup label="Skills">
+          {{#each Constant "SKILLS"}}
+            <option value="skill-{{name}}" {{selectedSkill}}>{{name}}</option>
+          {{/each}}  
+        </optgroup>
+      </select>
+
+    </form>
+  </div>
+</template>
+
+<template name="hackersToolbar">
+  <div id="hackersToolbar" class="toolbar-section">
+  {{#if hasAmbassadorPermission}}
+    
+    {{#if active}}
+      <div class="panel">
+        <div id="hackersNewsletterEditor">
+          <div class="title">Mail all hackers in {{CurrentCity.name}}</div>
+          {{#autoForm id="hackersNewsletterEditorForm" schema=schema resetOnSuccess=false}}
+            <label for="template">Template</label>
+            {{#afFieldSelect name="group" id="template"}}
+              <option value="local_ambassador_messages" template="localMessage">message</option>
+              <option value="local_meetup_announcements" template="localMeetup">meetup</option>
+              <option value="local_meetup_announcements" template="localMeetupReminder">meetup reminder</option>
+            {{/afFieldSelect}}
+            {{> afQuickField name="subject" id="subject" class="input-xxlarge"}}
+            {{> afQuickField name="message" id="message" rows="10" class="input-xxlarge"}}
+            <button action="submit" class="btn btn-primary">Send</button>
+            <button action="submit" preview="true" class="btn btn-inverse">Send me a preview</button>
+          {{/autoForm}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="toolbar">
+      <div class="pull-right">
+        <button type="button" toggle="panel" class="btn btn-small light btn-inverse {{active}}"><span class="icon-white icon-envelope" ></span> Send Mailing</button>
+      </div>
+      <div class="clear"></div>
+    </div>
+    
+  {{/if}}
   </div>
 </template>

@@ -1,10 +1,7 @@
 
 DefaultController = RouteController.extend({
-  
+  layoutTemplate: "main",
   onRun: function() {
-
-    // change the style of the navigation header to default, every route
-    Interface.setHeaderStyle('default');
 
   },
   onBeforeAction: function() {
@@ -15,14 +12,16 @@ DefaultController = RouteController.extend({
   },
   onAfterAction: function() {
 
-    // empty
+    // change the style of the navigation header to default, every route
+    Interface.setHeaderStyle('default');
 
   },
   onStop: function() {
 
-    // change the style of the navigation header to default, after every route
-    Interface.setHeaderStyle('default');
 
   }
 });
 
+DefaultAdminController = DefaultController.extend({
+  layoutTemplate: "admin_layout"
+});

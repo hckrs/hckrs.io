@@ -2,6 +2,14 @@
 
 var routes = [
   
+  // staff routes
+  [ 'admin'              , '/admin'             ],
+  [ 'admin_dashboard'    , '/admin/dashboard'   ],
+  [ 'admin_highlights'   , '/admin/highlights'  ],
+  [ 'admin_hackers'      , '/admin/hackers'     ],
+  [ 'admin_deals'        , '/admin/deals'       ],
+  [ 'admin_places'       , '/admin/places'      ],
+
   // normal routes
   [ 'about'        , '/about'                ],
   [ 'agenda'       , '/agenda'               ],
@@ -11,12 +19,12 @@ var routes = [
   [ 'highlights'   , '/highlights'           ],
   [ 'invitations'  , '/invitations'          ],
   [ 'mergeAccount' , '/mergeAccount'         ],
-  [ 'places'       , '/places'               ],
-  [ 'sponsors'     , '/sponsors'             ],
+  [ 'map'          , '/map'                  ],
+  [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
   
   // special routes
-  [ 'hacker'       , '/:localRankHash'       ],
+  [ 'hacker'       , '/:bitHash'             ],
   [ 'invite'       , /^\/\+\/(.*)/           ],
 
 ];
@@ -66,53 +74,83 @@ var loginRequired = function() {
 
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
-  if(Meteor.user() && Meteor.user().isAccessDenied) {
-    this.redirect('hacker', Meteor.user()); 
+  if(UserProp('isAccessDenied')) {
+    if (Meteor.userId() !== Url.userIdFromUrl(window.location.href)) {
+      this.redirect('hacker', Meteor.userId()); 
+    }
   }
 }
 
 // check if there are duplicate accounts, if so request for merge
 var checkDuplicateAccounts = function() {
-  if (Session.get('requestMergeDuplicateAccount')) {
+  var request = Session.get('requestMergeDuplicateAccount');
+  var currentRoute = Router.current().route.name;
+  
+  if (request && currentRoute !== 'mergeAccount')
     this.redirect('mergeAccount');
-  }
+  
+  if (!request && currentRoute === 'mergeAccount')
+    this.redirect('hacker', Meteor.userId());
 }
 
-// scroll to hash element (when present in url)
-var scrollToTop = function() {
-  Session.equals('pageScrollDirection', null);
-  var hash = this.params.hash;
-  if (!hash) return $(window).scrollTop(0);
-  var scrollTo = function() {
-    if (!$("#"+hash).length) return;
-    Meteor.clearInterval(timer);
-    $(window).scrollTo($("#"+hash), {duration: 0, offset: 0});  
-  }
-  scrollTo();
-  var timer = Meteor.setInterval(scrollTo, 200);
-}
 
 
 // set meta data
 Router.onRun(setMetaData);
 
-// scroll to top when user enters a route
-Router.onRun(scrollToTop);
-
 // make sure the user is logged in, except for the pages below
 Router.onRun(loginRequired, {except: noLoginRequired});
 Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 
-// make sure that user is allowed to enter the site
-Router.onBeforeAction(allowedAccess, {except: ['hacker','mergeAccount'].concat(noLoginRequired) });
-
 // check for duplicate accounts, if so request for merge
-Router.onBeforeAction(checkDuplicateAccounts, {except: ['mergeAccount'].concat(noLoginRequired) });
+Router.onBeforeAction(checkDuplicateAccounts, {except: noLoginRequired });
+
+// make sure that user is allowed to enter the site
+Router.onBeforeAction(allowedAccess, {except: ['mergeAccount'].concat(noLoginRequired) });
 
 // log pageview to Google Analytics
 Router.onRun(GAnalytics.pageview);
 
 
+
+// save and restore scroll state for every page
+
+var scrollState = new State('routerScrollState', {
+  routes: {}
+});
+
+Router.restoreScrollState = function() {
+  var params = Router.current().params;
+  var route = Router.current().path;
+  var top = scrollState.get(route);
+
+  if (top === 0 && params.hash)
+    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});  
+  else
+    $(window).scrollTop(top || 0);  
+}
+
+var scrollHandler = function(event) {
+  var route = Router.current().path;
+  var top = $(window).scrollTop();
+  scrollState.set(route, top);
+}
+
+Meteor.startup(function() {
+  var routes = _.map(Router.routes, _.property('name'));
+
+  _.each(Template, function(template, templateName) {
+    if (_.contains(routes, templateName)) { // is route template
+      var prevRenderFunc = template.rendered;
+      template.rendered = function() {
+        if (prevRenderFunc) prevRenderFunc.call(this);  
+        Router.restoreScrollState(); // restore scroll state
+      }
+    }
+  });
+
+  $(window).on("scrollstop", scrollHandler);
+});
 
 
 
@@ -121,8 +159,7 @@ Router.onRun(GAnalytics.pageview);
 /* global router configuration */
 
 Router.configure({
-  autoRender: true,
-  layoutTemplate: "main"
+  autoRender: true
 });
 
 IronRouterProgress.configure({
@@ -141,30 +178,65 @@ Router.map(function () {
 });
 
 
-/* resolve url helpers */
 
-Router.reload = function() {
-  var path = location.pathname + location.search + location.hash;
-  Router.go("/");
-  Router.go(path); 
+/* router plugins */
+
+Router.scrollToTop = function() {
+  $(window).scrollTop(0); 
 }
 
+// reload current route (hack)
+Router.reload = function() {
+  var path = Router.current().path;
+  Router.go('/about');
+  Deps.flush();
+  Router.go(path);
+}
+
+// browser refresh location
+Router.refresh = function(path) {
+  if (!path)
+    path = Router.current().path;
+  window.location.href = path;
+}
+
+// browser refresh location to new city
 Router.goToCity = function(city) {
   var url;
   
   var phrase = Session.get('invitationPhrase');
   if (phrase)
-    url = Router.routes['invite'].url({phrase: Url.bitHash(phrase)});
+    url = Router.routes['invite'].url({invitationPhrase: phrase});
+  
+  url = Url.replaceCity(city, url);
 
-  window.location.href = Url.replaceCity(city, url);
+  Router.refresh(url);
 }
+
+
 
 Router.routes['hacker'].path = function(user) {
-  return user.isForeign ? "#" : "/"+user.localRankHash;
+  var redirect = (_.isObject(user) && user.redirect) || false;
+  
+  user = OtherUserProps(user, ['globalId']);
+
+  if (!user || !user.globalId)
+    return;
+
+  if (userIsForeign(user) && redirect)
+    return Router.routes['hacker'].url(user); // make full url
+
+  if (userIsForeign(user))
+    return '#'; // no url
+
+  return "/" + Url.bitHash(user.globalId);
+}
+Router.routes['hacker'].url = function(user) {
+  return userProfileUrl(user);
 }
 
-Router.routes['invite'].url = function(params) {
-  return Meteor.absoluteUrl('+/' + params.phrase);
+Router.routes['invite'].url = function(user) {
+  return userInviteUrl(user);
 }
 
 

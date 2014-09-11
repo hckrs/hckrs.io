@@ -21,6 +21,18 @@ allIn = function(values, allowedValues) {
   return _.all(values, function(v) { return _.contains(allowedValues, v); });
 }
 
+// check if some of the values are present in all values
+someIn = function(values, allValues) {
+  return _.some(values, function(v) { return _.contains(allValues, v); });
+}
+
+// make sure we have an array
+// transform if it is not already
+array = function(val) {
+  if (_.isArray(val)) return val;
+  return _.compact([val]);
+}
+
 // return an array with uniq value
 // compared by the _.isEqual function
 uniqFilter = function(arr) {
@@ -39,6 +51,20 @@ omitEmpty = function(o) {
   return o;
 }
 
+wrap = function(val, wrap1, wrap2) {
+  return [wrap1, val, wrap2].join('');
+}
+
+sentenceFromList = function(val, sep, sep2, wrap1, wrap2) {
+  val = _.map(val, function(v) { return wrap(v, wrap1, wrap2); });
+  return _.compact([_.initial(val).join(sep), _.last(val)]).join(sep2);
+}
+
+// get label from an options list
+getLabel = function(optionsList, value) {
+  return (_.findWhere(optionsList, {value: value})||{}).label;
+}
+
 // find a value in an object by giving a path
 // pathValue(user, "profile.name") --> user['profile']['name']
 pathValue = function(obj, path) {
@@ -51,6 +77,9 @@ pathValue = function(obj, path) {
   }); 
   return current;
 }
+property = pathValue;
+
+property = pathValue;
 
 errorSuccess = function(errHandler, sucHandler) {
   return function(err, result) {
@@ -73,12 +102,57 @@ exec = function(func) {
   Meteor.setTimeout(func, 50);
 }
 
+// create a mongo field specifier object from an nested object with field names
+// but at this time meteor is reactive on top-level properties, so defining
+// nested objects is not leading to better performance
+fieldsObj = function(obj) {
+  var objToArray = function(obj) {
+    var field = function(val, prefix) {
+      var arr;
+      if (_.isArray(val))       arr = val;
+      else if (_.isObject(val)) arr = objToArray(val);
+      else return prefix;
+      return _.map(arr, function(postfix) { return prefix+'.'+postfix; });  
+    }
+    return _.flatten(_.map(obj, field));
+  }
+  return fieldsArray(objToArray(obj));
+}
+// create a mongo field specifier object from array with field names
+fieldsArray = function(fields) {
+ return _.object(fields, _.map(fields, function() { return 1; })); 
+}
+
 // get new Date() object by using format YYYY-MM-DD hh::mm:ss
 newDate = function(dateString) {
   if (!dateString)
     return moment().toDate();
   return moment(dateString, "YYYY-MM-DD hh:mm:ss").toDate();
 }
+
+dateTimeFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "YYYY/MM/DD hh:mm";
+  return moment(date).format(format);
+}
+
+dateFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "YYYY/MM/DD";
+  return moment(date).format(format);
+}
+
+timeFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "hh:mm";
+  return moment(date).format(format);
+}
+
+
+
 
 fixedDecimals = function(value, decimals) {
   return parseFloat(value).toFixed(decimals);
@@ -91,12 +165,16 @@ convertToCurrency = function(value) {
 }
 
 
-// check if some user is foreign
-// that mean he is registered in an other city
+// check if some doc is foreign
+// that means that doc is created in an other city
 // with respect to the current city subdomain
-isForeign = function(user) {
-  var city = Session.get('currentCity');
-  return !city || !user.city || city !== user.city;
+isForeignCity = function(otherCity) {
+  var currentCity = Meteor.isClient ? Session.get('currentCity') : UserProp('currentCity');
+  return currentCity && otherCity && currentCity !== otherCity;
+}
+
+socialNameFromUrl = function(service, url) {
+  return (url && /[^./]*$/.exec(url)[0]) || "";
 }
 
 
@@ -135,6 +213,7 @@ geocode = function(address, cb) {
   else
     HTTP.get(url, options, function(err, res) { cb(response(res)); });
 }
+
 
 getDistanceFromLatLonObj = function(latlong1, latlong2) {
   var lat1 = latlong1.latitude || latlong1.lat;
@@ -179,6 +258,19 @@ findClosestCity = function(latlon) {
   if (!latlon) return null;
   return _.min(CITIES, _.partial(getDistanceFromLatLonObj, latlon)).key;
 }
+
+getCityLocation = function(city) {
+  var city = CITYMAP[city] || {};
+  if (!city.latitude || !city.longitude) return null;
+  else return {lat: city.latitude, lng: city.longitude};
+}
+
+
+
+
+
+
+
 
 
 
@@ -230,8 +322,6 @@ if (Meteor.isClient) {
       $elm.removeClass(className);
     }, duration || 1000);
   }
-
-
   
 
   // return the class name(s) if predicate holds
@@ -257,6 +347,10 @@ if (Meteor.isClient) {
     return Settings['environment'];
   });  
 
+  UI.registerHelper('CurrentUserId', function() {
+    return Meteor.userId();
+  });
+
   // template helper to use the value of a Session variable directly in the template
   UI.registerHelper('Session', function(key) {
     return Session.get(key);
@@ -265,6 +359,10 @@ if (Meteor.isClient) {
   // template helper for testing if a Session variable equals a specified value
   UI.registerHelper('SessionEquals', function(key, val) {
     return Session.equals(key, val);
+  });
+
+  UI.registerHelper('Constant', function(key) {
+    return window[key];
   });
 
   // template helper for stripping the protocol of an url
@@ -280,8 +378,7 @@ if (Meteor.isClient) {
 
   // template helper to transform Date() object to readable tring
   UI.registerHelper('Date', function(date, format) {
-    if (!date) return "";
-    return moment(date).format(format);
+    return dateFormat(date, format);
   });
 
   // template helper to convert number to valuta string 
@@ -312,18 +409,18 @@ if (Meteor.isClient) {
     return CITYMAP[city];
   });
 
-  UI.registerHelper('PictureViewLabel', function() {
-    var user = this;
-    var label = "#" + user.localRank;
-    if (user.isHidden) label = "No Access";
-    else if (user.city && user.isForeign) label = CITYMAP[user.city].name;
-    else if (user.ambassador) label = "Ambassador";
-    return label;
+  UI.registerHelper('IsForeignCity', function(city) {
+    return isForeignCity(city);
   });
 
-  UI.registerHelper('foreign', function() {
-    return this.isForeign ? {foreign: "", disabled: ""} : '';
+  UI.registerHelper('Plural', function(single, plural, count) {
+    if (_.isNumber(plural)) {
+      count = plural;
+      plural = single.pluralize();
+    }
+    return count === 1 ? single : plural;
   });
+
 }
 
 

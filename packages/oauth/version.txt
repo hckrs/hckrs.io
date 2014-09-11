@@ -1,7 +1,14 @@
-c03bb01b6d
+package: d4b5e3e0be
+date: 03/08/2014
+meteor: 0.8.3
 
-MODIFICATIONS
 
-/os/oauth.js
-line 216: host = Npm.require("url").parse(Meteor.absoluteUrl()).hostname, 
-line 217: 'document.domain="'+host+'";' +
+REPLACE LINE 210 in os/packages/oauth.js:
+
+result = result.replace(/##DOMAIN##/,Npm.require("url").parse(Meteor.absoluteUrl()).hostname);  // 202
+
+
+INSERT LINE 5+6 (begin of <script>) in os/packages/oauth/end_of_login_repsone.js:
+
+  // Modified by Jarno Le Conte
+  document.domain = '##DOMAIN##';

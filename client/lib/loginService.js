@@ -49,6 +49,11 @@ var loggedIn = function() {
   // log
   GAnalytics.event("LoginService", "login", "automatically");
 
+  // set currentCity (which user is visiting) based on city in the url
+  if (Meteor.user().isAdmin)
+    Users.update(Meteor.userId(), {$set: {currentCity: Session.get('currentCity')}})
+
+
   // XXX maybe we can do this on the server side, because
   // meteor introduces a function called Accounts.validateLoginAttempt()
   checkDuplicateIdentity();
@@ -65,8 +70,9 @@ var loggedIn = function() {
     Router.go(redirectUrl);
   } else if(currentRoute === 'frontpage') {
     goToEntryPage();
-  } else { // reload page to trigger route actions again
-    Router.reload();
+  } else {
+    // nothing
+    // maybe we need to trigger route hooks here again?
   }
 
 }
@@ -102,7 +108,7 @@ UI.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
 UI.registerHelper('tellUsMore', function() {
-  return Meteor.user().isIncompleteProfile;
+  return UserProp('isIncompleteProfile');
 });
 UI.registerHelper('isInvited', function() {
   return checkInvited();
@@ -124,15 +130,13 @@ checkDuplicateIdentity = function() {
   var currentService = amplify.store('currentLoginService');
   var previousSession = amplify.store('previousLoginSession');
   
-  var isRecentlyCreated = new Date().getTime() - Meteor.user().createdAt.getTime() < 2*60*1000; //5min
-  var isOtherService = previousSession && currentService && previousSession.service != currentService;
-  var isOtherAccount = previousSession && previousSession.userId != Meteor.userId();
-  var isAlreadyMerged = previousSession && (!Users.findOne(previousSession.userId) || Users.findOne(previousSession.userId).isDeleted);
-  
-  // when this is a new account (created in the last 2 minutes), then we check
-  // if there are previously login session with an other account with different service
-  // if so we notify the user that he has possible 2 account and we request to merge them
-  var requestMerge = isRecentlyCreated && isOtherService && isOtherAccount && !isAlreadyMerged;
+  if (previousSession) {
+    // if there are previously login session with an other account with different service
+    // if so we notify the user that he has possible 2 account and we request to merge them
+    var isOtherService = currentService && previousSession.service != currentService;
+    var isOtherAccount = previousSession.userId != Meteor.userId();
+    var requestMerge = isOtherService && isOtherAccount;
+  }
 
   Session.set('previousLoginSession', previousSession);
   Session.set('requestMergeDuplicateAccount', requestMerge);
@@ -150,7 +154,6 @@ checkDuplicateIdentity = function() {
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
 checkInvitation = function() {
-
   var phrase = Session.get('invitationPhrase');
   var broadcastUser = Users.findOne({invitationPhrase: phrase});
 
@@ -161,7 +164,7 @@ checkInvitation = function() {
 
       if (err && err.reason === 'limit') {
 
-        Router.reload();
+        Router.scrollToTop();
 
         // show invitation limit reached message
         Session.set('invitationLimitReached', true);
@@ -175,7 +178,7 @@ checkInvitation = function() {
       
       } else if (err) {
 
-        Router.reload();
+        Router.scrollToTop();
 
         log("Error", err);
 
@@ -211,7 +214,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
       Meteor.call('requestProfileCompleted', function(err) {
         if (err) {
           Session.set('isIncompleteProfileError', true);
-          Router.reload();
+          Router.scrollToTop();
           log(err);
         } else {
           Session.set('isIncompleteProfileError', false);
@@ -221,7 +224,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
     });
   } else {
     checkAccess();
-    Router.reload();
+    Router.scrollToTop();
   }
 }
 
@@ -235,7 +238,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
     if (user.isAccessDenied && !user.isIncompleteProfile && checkInvited() && verifiedEmail()) {
       Meteor.call('requestAccess', function(err) {
         if (err) {
-          Router.reload();
+          Router.scrollToTop();
           log(err);
         } else {
           goToEntryPage();
@@ -247,18 +250,17 @@ checkAccess = function() { /* GLOBAL, called from router.js */
 
 // check if user is invited
 var checkInvited = function() { //GLOBAL, used in hacker.js
-  return !Meteor.user().isUninvited;
+  return !UserProp('isUninvited');
 }
 
 // check if user's profile e-mail address is verified
 var verifiedEmail = function() { //GLOBAL, used in hacker.js
-  var user = Meteor.user();
-  return !!_.findWhere(user.emails, {address: user.profile.email, verified: true});
+  return !!_.findWhere(UserProp('emails'), {address: UserProp('profile.email'), verified: true});
 }
 
 // check if user's profile e-mail address is not verified
 var isUnverifiedEmail = function() {
-  return Meteor.user().profile.email && !verifiedEmail();
+  return UserProp('profile.email') && !verifiedEmail();
 }
 
 

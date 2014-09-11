@@ -37,11 +37,11 @@
   
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
 
-  <link href='//api.tiles.mapbox.com/mapbox.js/v1.4.0/mapbox.css' rel='stylesheet' />
-  <!--[if lte IE 8]>
-    <link href='//api.tiles.mapbox.com/mapbox.js/v1.4.0/mapbox.ie.css' rel='stylesheet' />
-  <![endif]-->
-  <script src='//api.tiles.mapbox.com/mapbox.js/v1.4.0/mapbox.js'></script>
+  <link href='//api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
+  <script src='//api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 
   <link rel="shortcut icon" href="/img/favicons/favicon.ico">
   <link rel="apple-touch-icon" sizes="57x57" href="/img/favicons/apple-touch-icon-57x57.png">
@@ -68,7 +68,7 @@
 </body>
 
 <template name="main">
-  <div id="mainWrapper">
+  <div id="mainWrapper" class="main-layout">
     {{> header}}
     {{> yield}}
   </div>
@@ -84,10 +84,35 @@
        
         <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
        
-        {{#with currentUser}}
+
+          <!-- right menu -->
+          <div class="session">
+            
+            {{#if hasAdminPermission}}
+              {{> citySelect}}
+              <a href="{{pathFor 'admin'}}" action="admin" class="button btn btn-inverse light"><i class="icon icon-white icon-wrench"></i></a>
+            {{/if}}
           
+            <div class="account">
+              <div class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <div style="background-image:url({{UserProp 'profile.picture'}});" class="pictureView small clickable"></div>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{pathFor 'hacker' _id=CurrentUserId redirect=true}}"><i class="icon-user"></i> {{UserProp 'profile.name'}}</a></li>
+                  {{#unless UserProp 'isAccessDenied'}}
+                    <li><a href="{{pathFor 'invitations'}}"><i class="icon-plus"></i> invite hackers ({{UserProp 'invitations'}})</a></li>
+                  {{/unless}}
+                  <li class="divider"></li>
+                  <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
           <div class="menu">
-            {{#unless isAccessDenied}}
+            {{#unless UserProp 'isAccessDenied'}}
               
               <div class="menu-item">
                 <a href="{{pathFor 'hackers'}}">hackers</a>
@@ -99,44 +124,20 @@
               </div>
               {{/if}}
               
-              {{#if CurrentCity.mapbox}}
               <div class="menu-item">
-                <a href="{{pathFor 'places'}}">places</a>
+                <a href="{{pathFor 'map'}}">map</a>
               </div>
-              {{/if}}
               
+              <div class="menu-item">
+                <a href="{{pathFor 'deals'}}">deals</a>
+              </div>
+
               <div class="menu-item">
                 <a href="{{pathFor 'books'}}">books</a>
               </div>
 
-              {{#if isAdmin}}
-              <div class="menu-item">
-                {{> citySelect}}
-              </div>
-              {{/if}}
-
             {{/unless}}
           </div>
-          
-          <div class="account">
-            <!--<div class="karma">67</div>-->
-            <div class="dropdown">
-              <a href="{{pathFor 'hacker'}}" class="dropdown-toggle" data-toggle="dropdown">
-                <div style="background-image:url({{profile.picture}});" class="pictureView small clickable"></div>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="{{pathFor 'hacker'}}"><i class="icon-user"></i> {{profile.name}}</a></li>
-                {{#unless isAccessDenied}}
-                  <li><a href="{{pathFor 'invitations'}}"><i class="icon-plus"></i> invite hackers ({{currentUser.invitations}})</a></li>
-                  <li><a href="{{pathFor 'sponsors'}}"><i class="icon-gift"></i> gifts</a></li>
-                {{/unless}}
-                <li class="divider"></li>
-                <li><a href="" id="signOutButton"><i class="icon-remove"></i> sign out</a></li>
-              </ul>
-            </div>
-          </div>
-        
-        {{/with}}
 
         <div class="clear"></div>
       </div>
@@ -153,15 +154,18 @@
       {{#each countries}}
         <optgroup label="{{name}}">
           {{#each cities}}
-            <option value="{{key}}" {{selected key}}>{{name}}</option>
+            <option value="{{key}}" {{selected key}}>
+              {{name}}
+              {{#if usersCount}}
+                 ({{visibleUsersCount}} / {{usersCount}}) 
+              {{/if}}
+            </option>
           {{/each}}
         </optgroup>
       {{/each}}
     </select>
   </form>
 </template>
-
-
 
 
 

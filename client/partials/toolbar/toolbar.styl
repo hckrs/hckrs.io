@@ -1,0 +1,66 @@
+
+// $panelWidth = 220px;
+$panelPadding = 28px;
+$toolbarPadding = 5px;
+
+.toolbar-section {
+  position: fixed;
+  z-index: 2;
+  right: 20px;
+  bottom: 10px;
+  padding: 20px;
+  margin: 0px;
+
+  .toolbar,
+  .panel {
+    border-radius: 5px;
+    background-color: rgba(20,20,20,0.9);
+  }
+
+  .toolbar {
+    margin: 0px;
+    padding: $toolbarPadding;
+
+    .text {
+      position: relative;
+      top: 2px;
+      .icon {
+        position: relative;
+        top: 2px;
+      }
+    }
+
+    input {
+      margin-bottom: 0px;
+      padding: 2px 6px;
+    }
+  }
+  
+  .panel {
+    padding: $panelPadding;
+    color: #fff;
+    margin-bottom: 5px;
+    .title {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+    }
+    form {
+      margin-bottom: 0px;
+    }
+    label {
+      display: block;
+      margin-left: 6px;
+    }
+    .has-error span {
+      display: block;
+      margin-left: 6px;
+      color: #ee0000; /* error */
+      position: relative;
+      top: -5px;
+      margin-bottom: 5px;
+    }
+    [flag].active { /* active flag */
+      background-color: green;
+    }
+  }
+}

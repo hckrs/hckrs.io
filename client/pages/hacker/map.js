@@ -20,12 +20,12 @@ Meteor.startup(function() {
 
 
 // initialize the map so the user can pick a location
-initializeMap = function(mapElement, latlng, user, editable) {
+initializeMap = function(mapElement, latlng, userLocation, editable) {
   $map = $(mapElement);
   defaultLocation = latlng; // location of city
 
   var mapStyle = Settings['mapboxDefault'];
-  var location = user.profile.location || defaultLocation;
+  var location = userLocation || defaultLocation;
 
   // map options
   var mapOptions = {
@@ -38,7 +38,6 @@ initializeMap = function(mapElement, latlng, user, editable) {
   if (editable) {
     var timer;
     map.on('click', function(evt) {
-      console.log(timer)
       if (timer){
         clearTimeout(timer);
         timer = null
@@ -189,7 +188,7 @@ var resetMapSize = function($map, init) {
 /* DATABASE operations */
 
 var saveLocation = function(location) {
-  Meteor.users.update(Meteor.userId(), {$set: {'profile.location': location}});
+  Meteor.users.update(Meteor.userId(), {$set: {'profile.location': _.pick(location, 'lat', 'lng')}});
 }
 
 var removeLocation = function() {

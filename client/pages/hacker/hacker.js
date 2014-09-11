@@ -1,5 +1,4 @@
 // Route Controller
-// path: "/:localRankHash"
 
 HackerController = DefaultController.extend({
   template: 'hacker',
@@ -15,6 +14,7 @@ HackerController = DefaultController.extend({
 
 
 
+
 /* HACKER 
    - general user info
    - skills & favorites
@@ -26,7 +26,13 @@ HackerController = DefaultController.extend({
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hacker = function () { return Users.findOne(hackerId()); }
+var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
+var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
+
+UI.registerHelper('HackerProp', function(prop) {
+  return hackerProp(prop);
+});
+
 
 // DB: checkbox-to-array
 // when user check or uncheck a checkboxes it will be saved to the database.
@@ -44,7 +50,7 @@ var addToSet = function(event) {
   exec(function() {
     var action = checked ? '$addToSet' : '$pull';
     var modifier = _.object([ action ], [ _.object([field], [value]) ]);
-    Meteor.users.update(Meteor.userId(), modifier);
+    Users.update(hackerId(), modifier);
 
     // log
     if (checked)
@@ -63,13 +69,13 @@ var saveChangedField = function(event, cb) {
   var $elm = $(event.currentTarget); //input element
   var field = $elm.attr('name');
   var value = $elm.val();
-
+  
   // show feedback on input element
   addTemporaryClass($elm, 'saved');
 
   exec(function() {
-    var modifier = _.object([ '$set' ], [ _.object([field], [value]) ]);
-    Meteor.users.update(Meteor.userId(), modifier, cb);
+    var modifier = _.object([ value ? '$set' : '$unset' ], [ _.object([field], [value]) ]);
+    Users.update(hackerId(), modifier, cb);
   });
 }
 
@@ -138,7 +144,7 @@ var pictureChanged = function(event) {
 
 // count the number of social services the user is connected to
 var countSocialServices = function() {
-  return _.compact(_.values(hacker().profile.social || {})).length
+  return _.compact(_.values(hackerProp('profile.social') || {})).length
 }
 
 // check if the profile we are viewing is owned by the logged in user
@@ -158,11 +164,9 @@ Template.hacker.events({
     evt.preventDefault();
     checkCompletedProfile();
   },
-});
 
-Template.hackerEdit.events({
   // general autosave input fields
-  "blur input.text.save": function(evt) {
+  "blur input[autosave]": function(evt) {
     var callback;
     
     // callback after changing email field
@@ -172,9 +176,11 @@ Template.hackerEdit.events({
     saveChangedField(evt, callback);
     
   },
-  "keyup input.text.save": fieldChanged,
-  "click input[type='checkbox'].save": addToSet,
+  "keyup input[autosave]": fieldChanged,
+  "click input[type='checkbox'][autosave]": addToSet,
+});
 
+Template.hackerEdit.events({
   // special input fields
   "click .current-picture": showPictureChoser,
   "mouseleave .picture-choser": hidePictureChoser,
@@ -185,10 +191,14 @@ Template.hackerEdit.events({
 
 
 
+
+
+
 // TEMPLATE DATA
 
+
 Template.hacker.helpers({
-  "hacker": function() { return hacker(); },
+  'hacker': function() { return hackerProps(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'isEditMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },
   'activeMode': function(mode) { 
@@ -203,11 +213,11 @@ Template.hackerEdit.helpers({
     return !pathValue(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
   },
   "selected": function(socialPicture) { 
-    var isSelected = Meteor.user().profile.picture == socialPicture;
+    var isSelected = UserProp('profile.picture') == socialPicture;
     return  isSelected ? 'checked' : "";
   },
   "checked": function(field, value) {
-    var isChecked = _.contains(pathValue(Meteor.user(), field), value);
+    var isChecked = _.contains(UserProp(field), value);
     return isChecked ? 'checked' : "";
   },
   "changePictureAllowed": function() {
@@ -227,20 +237,13 @@ Template.hackerEdit.helpers({
 });
 
 Template.hackerView.helpers({
-  "checked": function(field, value) {
-    var isChecked = _.contains(pathValue(Meteor.user(), field), value);
-    return isChecked ? 'checked="checked"' : "";
-  },
   "urlCurrentUser": function() { 
-    var currentUser = Meteor.user();
-    return Router.routes['hacker'].url(currentUser); 
+    return Router.routes['hacker'].url(UserProp("_id")); 
   },
   "isCompanyOrLocation": function() {
     return !!(this.profile.company || this.profile.location);
   }
 });
-
-
 
 
 // RENDERING
@@ -251,7 +254,7 @@ Template.hackerEdit.rendered = function() {
   if (this.find('#editMap')) {
     var city = CITYMAP[Session.get('currentCity')] || {};
     var latlng = {lat: city.latitude, lng: city.longitude};
-    initializeMap(this.find('#editMap'), latlng, Meteor.user(), true); // initialize map
+    initializeMap(this.find('#editMap'), latlng, UserProp('profile.location'), true); // initialize map
   }
 }
 
@@ -259,8 +262,12 @@ Template.hackerView.rendered = function() {
   if (this.find('#viewMap')) {
     var city = Session.get('currentCity') || {};
     var latlng = {lat: city.latitude, lng: city.longitude};
-    initializeMap(this.find('#viewMap'), latlng, hacker(), false); // initialize map
+    initializeMap(this.find('#viewMap'), latlng, hackerProp('profile.location'), false); // initialize map
   }
+
+  // render social follow buttons
+  FB.XFBML.parse();
+  twttr.widgets.load();
 }
 
 

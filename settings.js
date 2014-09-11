@@ -23,3 +23,10 @@ Settings['firstNumberOfUsersAutoInvited'] = 10;
 
 
 
+
+// Third-party packages
+
+SimpleSchema.debug = Settings['simpleSchemeDebug']
+
+if (Meteor.isClient)
+	AutoForm.setDefaultTemplate('plain');

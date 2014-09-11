@@ -24,10 +24,13 @@ Meteor.startup(function() {
 
   // observer login state
   Login.init();
-  
+
+  // Facebook SDK
+  initFacebook();  
+
+  // Twitter SDK
+  initTwitter();  
 });
-
-
 
 
 
@@ -56,13 +59,59 @@ var checkCurrentCity = function() {
 
 // automatically activate page transitions after templates are loaded
 var initPageTransitions = function() {
+  
+  // disable animation when back-button from browser is pressed
+  var disableTransition = false;
+  window.addEventListener('popstate', function() {
+    disableTransition = true;
+    setTimeout(function() { 
+      disableTransition = false; 
+    }, 500);
+  });
+
+  // animate route-transition after template is rendered
   _.each(Template, function(template, templateName) {
     var prevRenderFunc = template.rendered;
     template.rendered = function() {
-      if (prevRenderFunc) prevRenderFunc.call(this);
-      Meteor.setTimeout(function() {
-        $(".route-transition").addClass('activated');
-      }, 200);
+      if (prevRenderFunc) prevRenderFunc.call(this);  
+      var $transitions = this.$(".route-transition");
+      setTimeout(function() {
+        $transitions.addClass('activated');
+        if (!disableTransition) 
+          $transitions.addClass('animated');
+      }, 0);
     }
   });
+}
+
+// initialize Facebook SDK
+var initFacebook = function() {
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : Settings['facebook'].appId,
+      xfbml      : false,
+      version    : 'v2.0'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) return;
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+}
+
+// initialize Twitter SDK
+var initTwitter = function () {
+  (function(d,s,id){
+    var js, fjs = d.getElementsByTagName(s)[0], p=/^http:/.test(d.location)?'http':'https';
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = p + '://platform.twitter.com/widgets.js';
+    fjs.parentNode.insertBefore(js,fjs);
+  }(document, 'script', 'twitter-wjs'));
 }

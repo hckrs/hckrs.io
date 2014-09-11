@@ -1,0 +1,62 @@
+<template name="deals">
+  <div id="deals" class="page">
+    
+    {{#if isEmpty}}
+      <h2>No deals right now</h2>
+    {{else}}
+      <H2>Deals</h2>
+      <div id="dealsContainer">
+        {{#each deals}}
+          {{> deal}}
+        {{/each}}
+      </div>
+    {{/if}}
+
+    {{#if hasAmbassadorPermission}}
+      {{#editorForm editor}}
+        {{> afQuickField name="title" id="title"}}
+        {{> afQuickField name="description" id="description"}}
+        {{> afQuickField name="url" id="url"}}
+        {{> afQuickField name="code" id="code"}}
+        {{> afQuickField name="private" id="private"}}
+      {{/editorForm}}
+    {{/if}}
+
+  </div>
+</template>
+
+<template name="deal">
+  <div class="deal area" data-id="{{_id}}" {{isSelected}}>
+    
+    {{#if hasAmbassadorPermission}}
+      {{#if equals mode 'edit'}}
+        <div class="drag-handle"></div>
+      {{/if}}
+    {{/if}}
+
+    <p>  
+      <div class="highlighted">{{title}}</div>
+      {{#if url}}
+        <H3><a href="{{url}}" target="_blank">{{Domain url}}</a></h3>
+      {{/if}}
+      {{#if description}}
+        <div class="description">{{description}}</div>
+      {{/if}}
+      {{#if code}}
+        {{#if equals codeType "url"}}
+          <a href="{{code}}" target="_blank">{{code}}</a>
+        {{else}}
+          <span class="code highlighted">{{code}}</span>
+        {{/if}}
+      {{/if}}
+    </p>
+
+    <div class="clear"></div>
+  </div>
+</template>
+
+
+
+
+
+

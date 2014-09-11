@@ -2,11 +2,54 @@ var Future = Npm.require("fibers/future");
 var Path = Npm.require('path');
 var Url = Npm.require('url');
 
+
+// implementations
+
+
+
+
+
 /* server methods */
 // these are methods that can be called from the client
 // but executed on the server because of the use of private data
 
 Meteor.methods({
+  
+  'inviteUserAnonymous': function(userId) {
+    checkAmbassadorPermission();
+
+    forceInvitationOfUser(userId);
+  },
+
+
+  'inviteUserAmbassador': function(userId) {
+    checkAmbassadorPermission();
+
+    var phrase = UserProp('invitationPhrase');
+    
+    if (!phrase || !Match.test(phrase, Number))
+      throw new Meteor.Error(500, "invalid phrase");
+    
+    verifyInvitationOfUser(phrase, userId);
+  },
+
+  'moveUserToCity': function(hackerId, city) {
+    var hacker = Users.findOne(hackerId);
+    
+    if (hackerId === Meteor.userId())
+      throw new Meteor.Error(500, "can't move yourself");  
+    
+    if (!hacker)
+      throw new Meteor.Error(500, "no such user");  
+
+    if (!_.contains(CITYKEYS, city))
+      throw new Meteor.Error(500, "no valid city");  
+
+    checkAmbassadorPermission(Meteor.user(), hacker.city);
+
+    // move
+    return moveUserToCity(hackerId, city);
+  },
 
   // search the user that is associated with the given e-mail verification token
   'getEmailVerificationTokenUser': function(token) {
@@ -25,9 +68,7 @@ Meteor.methods({
   },
 
   'requestWebPageImages': function(query, maxResults) {
-    
-    if (!this.userId)
-      throw new Meteor.Error(500, 'not authorized');
+    checkAdminPermission();
 
     var url = 'https://www.google.com/search';
     var options = {
@@ -59,11 +100,6 @@ Meteor.methods({
   }
 
 });
-
-
-
-
-// METHODS implementations
 
 
 

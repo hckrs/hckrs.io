@@ -10,16 +10,25 @@ InvitationsController = DefaultController.extend({
 });
 
 Template.invitations_partial.helpers({
-  'unusedTotal': function() { return Meteor.user().invitations; },
-  'invitedTotal': function() { return Invitations.find({broadcastUser: Meteor.userId()}).count(); },
-  'invitedUsers': function() { return _.invoke(Invitations.find({broadcastUser: Meteor.userId()}, {sort: {signedupAt: 1}}).fetch(), 'receiver'); },
-  'availableSlots': function() { return _.range(Meteor.user().invitations); },
+  'unusedTotal': function() { 
+    return UserProp('invitations'); 
+  },
+  'invitedTotal': function() { 
+    return Invitations.find({broadcastUser: Meteor.userId()}).count(); 
+  },
+  'invitedUserViews': function() { 
+    var getUserView = function(u) { 
+      return userView(u.receivingUser); 
+    };
+    return Invitations.find({broadcastUser: Meteor.userId()}, {fields: {receivingUser: 1}, sort: {createdAt: 1}}).map(getUserView);
+  },
+  'availableSlots': function() { 
+    return _.range(UserProp('invitations')); 
+  },
   'link': function() { 
-    var phrase = Url.bitHash(Meteor.user().invitationPhrase);
-    return Router.routes['invite'].url({phrase: phrase}); 
+    return Router.routes['invite'].url(); 
   },
   'linkUrl': function() { 
-    var phrase = Url.bitHash(Meteor.user().invitationPhrase);
-    return encodeURIComponent(Router.routes['invite'].url({phrase: phrase})); 
+    return encodeURIComponent(Router.routes['invite'].url()); 
   }
 });

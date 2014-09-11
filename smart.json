@@ -1,10 +1,13 @@
 {
   "packages": {
-    "iron-router": {},
-    "GAnalytics": {},
+    "autoform": {},
+    "collection2": {},
     "collection-hooks": {},
-    "imagemagick": {},
+    "iron-router": {},
     "iron-router-progress": {},
-    "kadira": {}
+    "GAnalytics": {},
+    "reactive-table": {},
+    "mailchimp": {},
+    "pnotify": {}
   }
 }

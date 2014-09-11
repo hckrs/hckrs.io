@@ -34,28 +34,7 @@ UI.body.rendered = function() {
 
 
 
-/* CITY SELECT */
 
-Template.citySelect.helpers({
-  "countries": function() {
-    var countries = _.map(COUNTRYMAP, function(cities, code) {
-      return { name: COUNTRYCODES[code] || "Other", cities: cities };
-    });
-    return _.sortBy(countries, 'name');
-  },
-  "selected": function(city) {
-    return Session.equals('currentCity', city) ? 'selected' : '';
-  }
-});
-
-Template.citySelect.events({
-  "change select": function(evt) {
-    var city = $(evt.currentTarget).val();
-    exec(function() {
-      Router.goToCity(city);  
-    });
-  }
-});
 
 
 
@@ -79,6 +58,15 @@ Template.header.helpers({
   }
 });
 
+Template.header.events({
+  "change #citySelect select": function(evt) {
+    var city = $(evt.currentTarget).val();
+    exec(function() {
+      Router.goToCity(city);  
+    });
+  }
+});
+
 // header rendering 
 // hide or show header based on scrolling
 Template.main.rendered = function() {
@@ -95,6 +83,55 @@ Template.main.rendered = function() {
 }
 
 
+// precalculate city user-counters
+var _cityCount, _cityVisibleCount; 
+
+var _calculateCount = function() {
+  var users = Users.find({}, {fields: {city: true}, reactive: false}).fetch();
+  var visibleUsers = Users.find({isHidden: {$ne: true}}, {fields: {city: true}, reactive: false}).fetch();
+  _cityCount = _.countBy(users, 'city');
+  _cityVisibleCount = _.countBy(visibleUsers, 'city');
+}
+
+var getCityCount = function() {
+  if (!_cityCount) _calculateCount();
+  return _cityCount;
+}
+var getCityVisibleCount = function() {
+  if (!_cityVisibleCount) _calculateCount();
+  return _cityVisibleCount;
+}
+
+
+
+/* CITY SELECT */
+
+Template.citySelect.helpers({
+  "countries": function() {
+    
+    var createCityEntry = _.identity;
+
+    if (hasAdminPermission()) {
+      createCityEntry = function(city) {
+        city.usersCount = getCityCount()[city.key];
+        city.visibleUsersCount = getCityVisibleCount()[city.key];
+        return city;
+      }
+    }
+    
+    var createCountryEntry = function(cities, countryCode) {
+      return { 
+        "name": COUNTRYCODES[countryCode] || "Other", 
+        "cities": _.map(cities, createCityEntry)
+      };
+    }
+
+    return _.sortBy(_.map(COUNTRYMAP, createCountryEntry), 'name');
+  },
+  "selected": function(city) {
+    return Session.equals('currentCity', city) ? 'selected' : '';
+  }
+});
 
 
 

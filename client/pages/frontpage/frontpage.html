@@ -13,7 +13,7 @@
 
     {{> citySelect}} {{!-- defined in main.js --}}
     
-    {{#if currentUser}}
+    {{#if CurrentUserId}}
       <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
     {{else}}
       {{#if CurrentCity}}
@@ -64,9 +64,11 @@
       <div class="hacker">
         <div style="background-image:url({{profile.picture}});" class="pictureView route-transition"></div>
         <div class="name">{{profile.name}}</div>
-        <div class="ambassador">{{title}}</div>
-        {{#if profile.socialName.twitter}}
-          <a href="https://twitter.com/{{profile.socialName.twitter}}" target="_blank" class="action action-tweet">@{{profile.socialName.twitter}}</a> 
+        <div class="ambassador">
+            {{staff.title}}
+        </div>
+        {{#if twitter}}
+          <a href="https://twitter.com/{{twitter}}" target="_blank" class="action action-tweet">@{{twitter}}</a> 
         {{/if}}
         <a href="#" class="action action-email">e-mail</a>
 
