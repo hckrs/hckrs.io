@@ -315,6 +315,7 @@ Users.deny({
       /* also alow, only for easy updates */
       'isAmbassador',
       'isAdmin',
+      'staff',
       'staff.title',
       'staff.email',
     ];
