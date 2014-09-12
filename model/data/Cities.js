@@ -1230,7 +1230,7 @@ var cities = [
       country: "NL",
       latitude: 52.2161111,
       longitude: 6.89841690469321,
-      backgroundImage: "/img/backgrounds/enschede.jpg",
+      backgroundImage: "",
       backgroundImageNight: "",
       agenda: "",
       mapbox: "",
