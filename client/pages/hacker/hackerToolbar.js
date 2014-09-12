@@ -114,6 +114,11 @@ Template.hackerToolbar.events({
     var $flag = $(evt.currentTarget);
     var flag = $flag.attr('flag');
     var activate = !$flag.hasClass('active');
+
+    // make property staff in doc if not already exists
+    if (!hackerProp('staff'))
+      Users.update(hackerId(), {$set: {staff: {}}});
+    
     Users.update(hackerId(), _.object([activate ? '$set' : '$unset'], [_.object([flag], [true])]));
   }
 });
