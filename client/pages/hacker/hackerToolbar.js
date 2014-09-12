@@ -209,7 +209,6 @@ var setTemplate = function(tmpl) {
   var $mailing = $("#hackerMailForm"),
       $select = $mailing.find('[name="group"]'),
       $option = $select.find('option[template="'+tmpl+'"]');
-      console.log(tmpl, $select, $option)
   $select.val(''); // reset current selected template
   $option.attr('selected', 'selected'); // select correct template
   fillTemplate();

@@ -3,10 +3,12 @@ Invite some friends!
 </template>
 
 <template name="emailContent_personalInviteSlots">
-I just added you some slots, you can now invite #slots friends in {{city}} or abroad!
-Your personal invite code is : #code
+I just added you some slots, you can now invite {{inviteSlots}} friends in {{city}} or abroad!
+Your personal invite code is : {{inviteUrl}}
             
-<a href="http://hckrs.io" class="button">hckrs.io</a>
+<a href="http://{{citykey}}.hckrs.io" class="button">hckrs.io</a>
 
-&mdash; {{ambassadorName}}
+&mdash; {{staffName}}
+{{{staffTwitter}}}
+
 </template>

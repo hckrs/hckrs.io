@@ -27,18 +27,46 @@ var templates = [
   Also there are more general Merge tags, described here: 
   http://kb.mailchimp.com/merge-tags/all-the-merge-tags-cheatsheet#Merge-tags-for-personalization 
 */
+
+// XXX currently hack in hacker data
+// in future meteor releases we can make use of Blaze.toHTMLWithData
+var hackerId = function () { return Session.get('hackerId'); }
+var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
+
 var data = {
+  'name': function() {
+    return hackerProp('profile.name').split(' ')[0];
+  },
+  'inviteSlots': function() {
+    return hackerProp('invitations') || 0;
+  },
+  'inviteUrl': function() {
+    return userInviteUrl(hackerId());
+  },
   'city': function() {
     return CITYMAP[Session.get('currentCity')].name;
   },
-  'name': function() {
-    return property(Meteor.user(), 'profile.name');
+  'citykey': function() { // lower case city name
+    return Session.get('currentCity');
   },
-  'title': function() {
+  'staffName': function() {
+    return property(Meteor.user(), 'profile.name').split(' ')[0];
+  },
+  'staffTitle': function() {
     return property(Meteor.user(), 'staff.title');
   },
-  'email': function() {
+  'staffEmail': function() {
     return property(Meteor.user(), 'staff.email');
+  },
+  'staffTwitter': function() {
+    var twitter = CITYMAP[Session.get('currentCity')].twitter;
+    return Safe.string(twitter ? '<a href="https://twitter.com/'+twitter+'">@'+twitter+'</a>' : ''); 
+  },
+  'staffPhone': function() {
+    var phone = property(Meteor.user(), 'profile.phone');
+    var available = property(Meteor.user(), 'profile.available');
+    var visible = _.contains(available, 'call');
+    return visible && phone ? phone : ''; 
   },
 }
 

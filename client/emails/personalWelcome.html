@@ -3,13 +3,14 @@ Welcome to {{city}}
 </template>
 
 <template name="emailContent_personalWelcome">
-Congrats *|FNAME|*, you are now a member of {{city}}.hckrs.io.
+Congrats {{name}}, you are now a member of {{citykey}}.hckrs.io.
 
-You can invite #slots friends with you personnal invite URL : #code
+You can invite {{inviteSlots}} friends with you personnal invite URL : {{inviteUrl}}
 If you need more slots, you can send me an email.
             
-<a href="http://hckrs.io" class="button">hckrs.io</a>
+<a href="http://{{citykey}}.hckrs.io" class="button">hckrs.io</a>
 
-&mdash; {{ambassadorName}}
+&mdash; {{staffName}}
+{{{staffTwitter}}}
 
 </template>
