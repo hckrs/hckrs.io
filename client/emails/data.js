@@ -15,6 +15,7 @@ var templates = [
   'personalMessage',
   'personalMissingInfo',
   'personalWelcome',
+  'personalWelcome10first',
 ]
 
 /* 
