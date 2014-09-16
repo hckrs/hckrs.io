@@ -12,7 +12,6 @@ facebook
 github
 twitter
 oauth1
-oauth
 http
 email
 
@@ -21,16 +20,13 @@ jquery
 bootstrap
 underscore
 stylus
+aldeed:autoform
+aldeed:collection2
+mrt:collection-hooks
+iron:router
+mrt:iron-router-progress
+datariot:ganalytics
+aslagle:reactive-table
+mrt:mailchimp
+mrt:pnotify-bootstrap-3
 
-newrelic
-node-dependencies
-
-autoform
-collection2
-collection-hooks
-iron-router
-iron-router-progress
-GAnalytics
-reactive-table
-mailchimp
-pnotify

@@ -67,7 +67,7 @@ Meteor.methods({
     return user;    
   },
 
-  'requestWebPageImages': function(query, maxResults) {
+  'requestWebPageImages': function(query, maxResults) { /* XXX need to INSTALL cheerio */
     checkAdminPermission();
 
     var url = 'https://www.google.com/search';
