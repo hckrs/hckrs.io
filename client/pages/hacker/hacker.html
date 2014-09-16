@@ -264,7 +264,7 @@
 
         <label for="inputAvailableCowork" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
-          coworking <span class="available-description">— hackers can see your email address to get in touch to come work at your place</span>
+          co-work <span class="available-description">— hackers can see your email address to get in touch to come work at your place</span>
           <div class="details"></div>
         </label>
 
@@ -485,10 +485,10 @@
           {{/if}}
         {{/if}}
         {{#if contains profile.available "cowork"}}
-        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
+        <a href="mailto:{{profile.email}}?subject=Can I co-work at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
         {{/if}}
         {{#if contains profile.available "couchsurf"}}
-        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
+        <a href="mailto:{{profile.email}}?subject=Can I couchsurf at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
         {{/if}}
       </div>
       <div class="clear"></div>
