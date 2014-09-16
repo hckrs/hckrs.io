@@ -17,7 +17,6 @@ email
 
 amplify
 jquery
-bootstrap
 underscore
 stylus
 aldeed:autoform
@@ -28,5 +27,6 @@ mrt:iron-router-progress
 datariot:ganalytics
 aslagle:reactive-table
 mrt:mailchimp
-mrt:pnotify-bootstrap-3
+bootstrap
+kidovate:pnotify
 
