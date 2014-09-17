@@ -1,31 +1,40 @@
 Crawler = {};
 
+// fetch usernames from github related to all cities from hckrs.io
+Crawler.fetchGithubUsersInAllCities = function(cb) {
+
+  if (Meteor.isClient)
+    return call('crawlFetchGithubUsersInAllCities', cb);  
+
+  async.forEachSeries(CITYKEYS, Meteor.bindEnvironment(Crawler.fetchGithubUsersInCity), cb || function(){});
+}
+
 // fetch from github all usersnames related to the given city.
 // These usernames will be stored in the database.
-Crawler.fetchGithubUsersInCity = function(city) {
+Crawler.fetchGithubUsersInCity = function(city, cb) {
   check(city, Match.In(CITYKEYS));
   
   if (Meteor.isClient)
-    return call('crawlFetchGithubUsersInCity', city);  
+    return call('crawlFetchGithubUsersInCity', city, cb);  
   
   // query
   var cityName = CITYMAP[city].name;
   var query = "location:" + cityName.replace(' ', '+');
   
   // fetch and store each user
-  forEachUsers(query, 1, _.partial(storeUser, city));
+  forEachUsers(query, 1, _.partial(storeUser, city), cb);
 }
 
 
 // Fetch additional userdata for each username
 // obtained by the function Crawler.fetchGithubUsersInCity()
-Crawler.fetchGithubUserData = function() {
+Crawler.fetchGithubUserData = function(cb) {
   
   if (Meteor.isClient)
-    return call('crawlFetchGithubUserData');  
+    return call('crawlFetchGithubUserData', cb);  
   
   // fetch additional userdata for each user
-  fetchUserData();
+  fetchUserData(cb);
 }
 
 
@@ -36,7 +45,11 @@ if (Meteor.isServer) {
 
   var GithubDump = new Meteor.Collection('githubDump');
 
-  var forEachUsers = function(query, page, iterator) {
+  var forEachUsers = function(query, page, iterator, cb) {
+    
+    if (page > 10) 
+      return cb && cb();
+
     console.log('fetch github search', query, page);
 
     var params = {
@@ -53,8 +66,13 @@ if (Meteor.isServer) {
     _.each(users, iterator);  
 
     // recurse
-    if (users.length) 
-      forEachUsers(query, page + 1, iterator);
+    if (users.length) {
+      setTimeout(Meteor.bindEnvironment(function(){
+        forEachUsers(query, page + 1, iterator, cb);
+      }), 3000);
+    }
+    else 
+      cb && cb();
   }
 
   var storeUser = function(city, user) {
@@ -64,12 +82,12 @@ if (Meteor.isServer) {
     GithubDump.upsert({id: user.id}, {$set: doc});
   }
 
-  var fetchUserData = function() {
+  var fetchUserData = function(cb) {
     var docs = GithubDump.find({isFetched: {$ne: true}}).fetch();
     async.forEachSeries(docs, Meteor.bindEnvironment(function(doc, cb) {
       fetchSingleUserData(doc);
       setTimeout(cb, 12);
-    }));
+    }), cb);
   }
 
   var fetchSingleUserData = function(doc) {
@@ -102,8 +120,10 @@ if (Meteor.isServer) {
   /* METHODS */
 
   Meteor.methods({
+    'crawlFetchGithubUsersInAllCities': Crawler.fetchGithubUsersInAllCities,
     'crawlFetchGithubUsersInCity': Crawler.fetchGithubUsersInCity,
     'crawlFetchGithubUserData': Crawler.fetchGithubUserData,
+
   });
 
 }
