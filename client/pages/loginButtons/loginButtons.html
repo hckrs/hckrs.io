@@ -1,0 +1,13 @@
+<template name="loginButtons">
+  <div id="loginButtons">
+    {{#if serviceLoginError}}
+      <div class="error">{{{serviceLoginError}}}</div>
+    {{/if}}
+    <div class="login-buttons"> 
+      <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
+      <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
+      <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
+      <div class="join-us"></div>
+    </div>
+  </div>
+</template>

@@ -25,10 +25,12 @@ var getBackground = function() {
 }
 
 UI.body.rendered = function() {
-  Deps.autorun(function() {
-    var bg = getBackground();
-    $("body").css('background-image', 'url("' + bg + '")');
-  });
+  if (Router.current().route.name !== 'loginButtons') {
+    Deps.autorun(function() {
+      var bg = getBackground();
+      $("body").css('background-image', 'url("' + bg + '")');
+    });
+  }
 }
 
 

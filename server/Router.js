@@ -5,6 +5,16 @@ var URL = Npm.require('url');
 // SERVER SIDE routes
 
 Router.map(function () {
+
+  // specify this route explicitly so that the routes below will not be triggered
+  this.route('loginButtons', {
+    where: 'server',
+    path: '/login-buttons/:city',
+    action: function () {
+      this.next(); 
+    }
+  });
+
   this.route('any', {
     where: 'server',
     path: '/*',
