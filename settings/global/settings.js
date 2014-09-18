@@ -1,10 +1,15 @@
 
+// check if settingsfile is missing
+if (!Meteor.settings || !Meteor.settings.public || !Meteor.settings.public.environment)
+  throw new Meteor.Error(500, "Settings file missing!");
+
 
 // SETTINGS file for both CLIENT & SERVER
 // along with this file their is /Server/Settings.js which only runs on server
 
-Settings = _.deepExtend(this.Settings || {}, Meteor.settings.public);
-
+Settings = {}
+Settings = _.deepExtend(Settings, _.omit(Meteor.settings, 'public'))
+Settings = _.deepExtend(Settings, Meteor.settings.public);
 
 
 
