@@ -70,7 +70,9 @@ var initPageTransitions = function() {
   });
 
   // animate route-transition after template is rendered
-  _.each(Template, function(template, templateName) {
+  _.each(_.keys(Template), function(templateName) {
+    var template = Template[templateName];
+    if (!template) return;
     var prevRenderFunc = template.rendered;
     template.rendered = function() {
       if (prevRenderFunc) prevRenderFunc.call(this);  
