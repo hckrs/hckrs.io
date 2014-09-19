@@ -16,7 +16,7 @@
     {{#unless CurrentUserId}}
       {{#if CurrentCity}}
         {{!-- login within iframe because of the subdomain cross origin policy --}}
-        <iframe src="{{urlFor 'loginButtons' city=CurrentCity.key}}" class="login-buttons-frame"></iframe>
+        <iframe src="{{urlFor 'loginButtons' city=CurrentCity.key}}" class="login-buttons-frame" scrolling="no"></iframe>
       {{/if}}
     {{/unless}}
 
