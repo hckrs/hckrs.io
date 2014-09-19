@@ -243,26 +243,26 @@ var setupFeatureLayer = function(map) {
 
 var setupFilters = function(featureLayer, $) {
 
-  // which filters are active/checked?
-  var getActiveFilters = function() {
-    return $("[filter]:checked").map(function() { 
-      return $(this).attr('filter'); 
-    });
-  }
+  // // which filters are active/checked?
+  // var getActiveFilters = function() {
+  //   return $("[filter]:checked").map(function() { 
+  //     return $(this).attr('filter'); 
+  //   });
+  // }
 
-  // update filters, show markers of activated filters
-  var updateFilters = function() {
-    var activeFilters = getActiveFilters();
-    featureLayer.setFilter(function(feature) {
-      return _.contains(activeFilters, feature.properties.filter);
-    });
-  }
+  // // update filters, show markers of activated filters
+  // var updateFilters = function() {
+  //   var activeFilters = getActiveFilters();
+  //   featureLayer.setFilter(function(feature) {
+  //     return _.contains(activeFilters, feature.properties.filter);
+  //   });
+  // }
 
-  // handlers
-  $("[filter]").on('change', updateFilters);
+  // // handlers
+  // $("[filter]").on('change', updateFilters);
 
-  // initial call
-  updateFilters();
+  // // initial call
+  // updateFilters();
 }
 
 var openFeaturePopup = function(featureLayer, selected) {
