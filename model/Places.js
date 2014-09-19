@@ -53,9 +53,10 @@ Schemas.Place = new SimpleSchema([
   }
 ]);
 
-Places = new Meteor.Collection('places', {
-  schema: Schemas.Place
-});
+// collection
+Places = new Meteor.Collection('places');
+Places.attachSchema(Schemas.Place)
+
 
 
 

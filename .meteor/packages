@@ -19,8 +19,6 @@ amplify
 jquery
 underscore
 stylus
-aldeed:autoform
-aldeed:collection2
 mrt:collection-hooks
 iron:router
 mrt:iron-router-progress
@@ -30,3 +28,6 @@ mrt:mailchimp
 bootstrap
 kidovate:pnotify
 pauloborges:repl
+aldeed:autoform
+aldeed:collection2
+

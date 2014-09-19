@@ -1,9 +1,4 @@
 
-// Meteor.users is a collection that is already defined by meteor.
-// But we attach a schema to validate content.
-Users = Meteor.users;
-
-
 // ATTENTION: when changing the model, make sure you also change
 // the publish, permissions and merging rules in  this file and
 // ServicesConfiguration.js
@@ -208,6 +203,10 @@ Schemas.User = new SimpleSchema([Schemas.default, {
 
 }]);
 
+
+// Meteor.users is a collection that is already defined by meteor.
+// But we attach a schema to validate content.
+Users = Meteor.users;
 
 
 

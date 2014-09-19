@@ -23,9 +23,10 @@ Schemas.Migration = new SimpleSchema([
 ]);
 
 
-Migrations = new Meteor.Collection('migrations', {
-  schema: Schemas.Migration
-});
+// collection
+Migrations = new Meteor.Collection('migrations');
+Migrations.attachSchema(Schemas.Migration)
+
 
 
 

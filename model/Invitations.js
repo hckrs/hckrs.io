@@ -16,9 +16,10 @@ Schemas.Invitation = new SimpleSchema([
   }
 ]);
 
-Invitations = new Meteor.Collection('invitations', {
-  schema: Schemas.Invitation
-});
+// collection
+Invitations = new Meteor.Collection('invitations');
+Invitations.attachSchema(Schemas.Invitation)
+
 
 
 /* Permissions */
