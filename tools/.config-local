@@ -1,0 +1,6 @@
+#!/bin/sh
+ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ".." && pwd )"
+
+l_address="localhost"
+l_port=3001
+l_database="meteor"
