@@ -64,7 +64,7 @@ var schema = {
   },
   "profile.available": {  // array with items where user is available for (drink|lunch|email)*
     type: [ String ],
-    allowedValues: _.pluck(AVAILABLE_OPTIONS, 'value'),
+    allowedValues: AVAILABLE_VALUES,
     optional: true
   },
   "profile.skills": { // array of skill name
