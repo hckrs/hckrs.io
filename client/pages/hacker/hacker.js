@@ -5,9 +5,9 @@ HackerController = DefaultController.extend({
   waitOn: function () {
     return [];
   },
-  onBeforeAction: function() { 
+  onRun: function() {
     Session.set('hackerId', Url.userIdFromUrl());
-    Session.set('hackerEditMode', true);
+    Session.set('hackerEditMode', UserProp('isAccessDenied'));  
   }
 });
 
@@ -136,7 +136,7 @@ var pictureChanged = function(event) {
 
   // store in database
   exec(function() {
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.picture': value}});
+    Meteor.users.update(hackerId(), {$set: {'profile.picture': value}});
   });
 }
 
@@ -199,10 +199,11 @@ Template.hackerEdit.events({
 
 Template.hacker.helpers({
   'hacker': function() { return hackerProps(); },
+  'canEdit': function() { return isCurrentUser() || hasAmbassadorPermission(); },
   'isCurrentUser': function() { return isCurrentUser(); },
-  'isEditMode': function() { return isCurrentUser() && Session.get('hackerEditMode'); },
+  'isEditMode': function() { return Session.get('hackerEditMode'); },
   'activeMode': function(mode) { 
-    var currentMode = isCurrentUser() && Session.get('hackerEditMode') ? 'edit' : 'preview';
+    var currentMode = Session.get('hackerEditMode') ? 'edit' : 'preview';
     return currentMode === mode ? 'active' : '';
   }
 });
@@ -213,11 +214,11 @@ Template.hackerEdit.helpers({
     return !pathValue(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
   },
   "selected": function(socialPicture) { 
-    var isSelected = UserProp('profile.picture') == socialPicture;
+    var isSelected = hackerProp('profile.picture') == socialPicture;
     return  isSelected ? 'checked' : "";
   },
   "checked": function(field, value) {
-    var isChecked = _.contains(UserProp(field), value);
+    var isChecked = _.contains(hackerProp(field), value);
     return isChecked ? 'checked' : "";
   },
   "changePictureAllowed": function() {
@@ -254,7 +255,7 @@ Template.hackerEdit.rendered = function() {
   if (this.find('#editMap')) {
     var city = CITYMAP[Session.get('currentCity')] || {};
     var latlng = {lat: city.latitude, lng: city.longitude};
-    initializeMap(this.find('#editMap'), latlng, UserProp('profile.location'), true); // initialize map
+    initializeMap(this.find('#editMap'), latlng, hackerProp('profile.location'), true); // initialize map
   }
 }
 
