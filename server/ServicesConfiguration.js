@@ -482,9 +482,13 @@ var attachUserToCity = function(userId, city) {
   // update user with city information
   Users.update(user._id, {$set: userCityInfo});
 
-  // automatic invite the first n users
-  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited'])
-    Users.update(user._id, {$unset: {isUninvited: true}});
+  // automatic invite the first n users, and give them more invites
+  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited']) {
+    Users.update(user._id, {
+      $unset: {isUninvited: true}, 
+      $set: {invitations: Settings['defaultNumberOfInvitesForAutoInvitedUsers']}
+    });
+  }
 
   // let ambassadors/admins know that a new user has registered the site
   SendEmailsOnNewUser(user._id);

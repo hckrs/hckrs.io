@@ -55,7 +55,7 @@
       possibility to edit his data.
     --}}
 
-    {{#if isCurrentUser}}
+    {{#if canEdit}}
       <div class="btn-group mode">
         <button action="switch-mode" mode="edit" class="btn btn-small {{activeMode 'edit'}}"><span class="icon icon-pencil"></span> edit</button>
         <button action="switch-mode" mode="preview" class="btn btn-small {{activeMode 'preview'}}"><span class="icon icon-eye-open"></span> preview</button>
@@ -216,8 +216,8 @@
     <div class="control-group">
       <label class="control-label" for="inputCompany">company / school</label>
       <div class="controls">
-        <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-        <input type="url" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
+        <input type="text" name="profile.company" class="text save" autosave value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
+        <input type="url" name="profile.companyUrl" class="text save" autosave value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
         <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
           <div class="event-catch-overlay"></div>
           <div id="editMap" class="map"></div>

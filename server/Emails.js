@@ -55,8 +55,8 @@ SendEmailsOnNewUser = function(userId) {
   var url = Meteor.absoluteUrl(hash);
   var cityUrl = Url.replaceCity(city, url);
   var cityHost = Url.hostname(cityUrl);  
-  var toAmbassadors = _.compact(Users.find({city: city, "isAmbassador": true}).map(function(u) { return u.profile.email; }));
-  var toAdmin = _.difference(_.compact(Users.find({"isAdmin": true}).map(function(u) { return u.profile.email; })), toAmbassadors);
+  var toAmbassadors = _.compact(Users.find({city: city, "isAmbassador": true}).map(function(u) { return property(u, 'staff.email'); }));
+  var toAdmin = _.difference(toAmbassadors, _.compact(Users.find({"isAdmin": true}).map(function(u) { return property(u, 'staff.email'); })));
   var userEmail = user.profile.email;
 
   var status = [];
