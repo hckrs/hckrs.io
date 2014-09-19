@@ -3,7 +3,3 @@
 .DS_Store
 node_modules
 backup
-.docs/Screenshots
-
-packages/mailchimp
-packages/pnotify
