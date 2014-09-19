@@ -11,12 +11,28 @@ LoginButtonsController = RouteController.extend({
 
 });
 
+var signin = function(evt) {
+  evt.preventDefault();
+  
+  var $form    =  $('#accounts-password'),
+      $button  =  $(evt.currentTarget),
+      action   =  $button.attr('name'),
+      email    =  $form.find('[name="email"]').val(),
+      password =  $form.find('[name="password"]').val();
+  
+  switch (action) {
+    case 'login': Meteor.loginWithPassword(email, password, function(err,res){ console.log(err, res); }); break;
+    case 'signup': Accounts.createUser({email: email, password: password}, function(err,res){ console.log(err, res); }); break;
+  }
+}
+
 
 /* Templates */
 
 // bind the sign up buttons to the corresponding actions
 Template.loginButtons.events({
-  "click .signupService": Login.loginWithService
+  "click .signupService": Login.loginWithService,
+  'click #accounts-password button': signin
 });
 
 Template.loginButtons.rendered = function() {

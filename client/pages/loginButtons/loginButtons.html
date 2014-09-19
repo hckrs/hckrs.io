@@ -8,6 +8,17 @@
       <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
       <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
       <div class="join-us"></div>
+
+      {{!-- local development allows login with email and password --}}
+      {{#if equals environment "local"}}
+        <form id="accounts-password">
+          development-mode-only:
+          <input type="email" name="email" placeholder="email" /> 
+          <input type="password" name="password" placeholder="password" > 
+          <button name="login">login</button>
+          <button name="signup">register</button>
+        </form>
+      {{/if}}
     </div>
   </div>
 </template>
