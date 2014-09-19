@@ -29,7 +29,7 @@ var hackerId = function () { return Session.get('hackerId'); }
 var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
 var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
 
-UI.registerHelper('HackerProp', function(prop) {
+Template.registerHelper('HackerProp', function(prop) {
   return hackerProp(prop);
 });
 

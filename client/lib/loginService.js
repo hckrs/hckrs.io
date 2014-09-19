@@ -19,18 +19,18 @@ Login.init = function() {
 var observe = function() {
   var hasLoggedInBefore = false;
   
-  Deps.autorun(function() {
+  Tracker.autorun(function() {
     if (!Subscriptions.ready()) 
       return; // wait until subscriptions are ready
     
     if (Meteor.userId()) { // user logged in
       hasLoggedInBefore = true;
-      Deps.nonreactive(loggedIn);
+      Tracker.nonreactive(loggedIn);
     }
     
     if (!Meteor.userId() && hasLoggedInBefore) {  // user logged out
       hasLoggedInBefore = false;
-      Deps.nonreactive(loggedOut);
+      Tracker.nonreactive(loggedOut);
     }
   });
 }
@@ -101,22 +101,22 @@ Template.main.events({
     Session.set('requestMergeDuplicateAccount', false);
   }
 });
-UI.registerHelper('previousLoginSession', function() {
+Template.registerHelper('previousLoginSession', function() {
   return Session.get('previousLoginSession');
 });
-UI.registerHelper('invitationLimitReached', function() {
+Template.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
-UI.registerHelper('tellUsMore', function() {
+Template.registerHelper('tellUsMore', function() {
   return UserProp('isIncompleteProfile');
 });
-UI.registerHelper('isInvited', function() {
+Template.registerHelper('isInvited', function() {
   return checkInvited();
 });
-UI.registerHelper('isVerifiedEmail', function() {
+Template.registerHelper('isVerifiedEmail', function() {
   return verifiedEmail(); // user's profile email is verified
 });
-UI.registerHelper('isUnverifiedEmail', function() {
+Template.registerHelper('isUnverifiedEmail', function() {
   return isUnverifiedEmail(); // user's profile email is not verified
 });
 
@@ -274,7 +274,7 @@ var isUnverifiedEmail = function() {
 
 /* LOGIN functionality */
 
-UI.registerHelper('serviceLoginError', function() {
+Template.registerHelper('serviceLoginError', function() {
   return Session.get('serviceLoginError');
 });
 
@@ -342,7 +342,7 @@ var logout = function() {
   // active that making use of the user session information
   // this prevent from errors in the console
   Router.go('frontpage');
-  Deps.flush();
+  Tracker.flush();
   Meteor.setTimeout(function() {
     Meteor.logout(); 
   }, 200);

@@ -596,12 +596,14 @@ UserProps = function(fields, options) {
   return OtherUserProps(Meteor.userId(), fields, options)
 }
 
-UI.registerHelper('OtherUserProp', function(user, prop) {
-  return OtherUserProp(user, prop);
-});
-UI.registerHelper('UserProp', function(prop) {
-  return UserProp(prop);
-});
+if (Meteor.isClient) {
+  Template.registerHelper('OtherUserProp', function(user, prop) {
+    return OtherUserProp(user, prop);
+  });
+  Template.registerHelper('UserProp', function(prop) {
+    return UserProp(prop);
+  });
+}
 
 
 /* permission helpers */
@@ -656,12 +658,14 @@ checkAmbassadorPermission = function(user, city) {
     throw new Meteor.Error(500, 'No privilege');
 }
 
-UI.registerHelper('hasAmbassadorPermission', function() {
-  return hasAmbassadorPermission();
-})
-UI.registerHelper('hasAdminPermission', function() {
-  return hasAdminPermission();
-})
+if (Meteor.isClient) {
+  Template.registerHelper('hasAmbassadorPermission', function() {
+    return hasAmbassadorPermission();
+  });
+  Template.registerHelper('hasAdminPermission', function() {
+    return hasAdminPermission();
+  });
+}
 
 
 /* data helpers */
@@ -745,15 +749,14 @@ userSocialName = function(user, service) {
   return socialNameFromUrl(service, socialUrl);
 }
 
-UI.registerHelper('UserView', function(user) {
-  return userView(user);
-});
-
-
-UI.registerHelper('UserRank', function(user) {
-  return userRank(user);
-});
-
-UI.registerHelper('UserSocialName', function(user, service) {
-  return userSocialName(user, service);
-});
+if (Meteor.isClient) {
+  Template.registerHelper('UserView', function(user) {
+    return userView(user);
+  });
+  Template.registerHelper('UserRank', function(user) {
+    return userRank(user);
+  });
+  Template.registerHelper('UserSocialName', function(user, service) {
+    return userSocialName(user, service);
+  });
+}

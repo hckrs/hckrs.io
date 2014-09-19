@@ -114,7 +114,7 @@ Template.hackersToolbar.events({
   },
   'click [toggle="panel"]': function() {
     state.toggle('toolbarOpen');
-    Deps.flush();
+    Tracker.flush();
     setTemplate();
   },
   'click [action="submit"]': function(evt) {

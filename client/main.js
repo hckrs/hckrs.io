@@ -24,9 +24,9 @@ var getBackground = function() {
   return city.backgroundImage || "/img/backgrounds/default.jpg";
 }
 
-UI.body.rendered = function() {
+Template.body.rendered = function() {
   if (Router.current().route.name !== 'loginButtons') {
-    Deps.autorun(function() {
+    Tracker.autorun(function() {
       var bg = getBackground();
       $("body").css('background-image', 'url("' + bg + '")');
     });

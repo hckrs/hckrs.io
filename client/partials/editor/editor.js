@@ -68,7 +68,7 @@ Template.editorForm.events({
 Template.editorForm.rendered = function() {
   var self = this;
   var editor = self.data;
-  Deps.autorun(function(c) {
+  Tracker.autorun(function(c) {
     editor.show(); /* reactive depend */
     self.$("input:first").blur();
     setTimeout(function() {
