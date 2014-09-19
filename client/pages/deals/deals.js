@@ -22,10 +22,9 @@ var selector = function() {
 
 DealsSorted = function() {
   var city = Session.get('currentCity');
+  var deals = Deals.find(selector()).fetch();
   var sort = (DealsSort.findOne({city: city}) || {}).sort || [];
-  return _.sortBy(Deals.find(selector()).fetch(), function(deal) {
-    return _.indexOf(sort, deal._id);
-  });
+  return sortedDocs(deals, sort);
 }
 
 

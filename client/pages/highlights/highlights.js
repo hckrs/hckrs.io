@@ -7,10 +7,9 @@ var selector = function() {
 // get sorted highlights
 HighlightsSorted = function(options) {
   var city = Session.get('currentCity');
+  var highlights = Highlights.find(selector(), options).fetch();
   var sort = (HighlightsSort.findOne({city: city}) || {}).sort || [];
-  return _.sortBy(Highlights.find(selector(), options).fetch(), function(highlight) {
-    return _.indexOf(sort, highlight._id);
-  });
+  return sortedDocs(highlights, sort);
 }
 
 
