@@ -1,6 +1,20 @@
 <template name="admin_growth">
   <div id="admin_growth" class="page">
+    {{> admin_growthEmail}}
     {{> reactiveTable collection=collection settings=settings}}
     <div class="page-space"></div>
   </div>
 </template>
+
+<template name="admin_growthEmail">
+  <div id="admin_growthEmail">
+    
+    {{#autoForm id="adminGrowthEmailForm" schema=schema}}
+      {{> afQuickField name="subject" id="subject" class="input-xxlarge" value="Join *|city|*"}}
+      {{> afQuickField name="message" id="message" rows="10" class="input-xxlarge" value="Hi *|name|*, you are an inspiring hacker, so please join us in *|city|*."}}
+      <button action="submit" class="btn btn-primary">Send</button>
+    {{/autoForm}}
+    
+  </div>
+</template>
+

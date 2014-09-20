@@ -341,12 +341,107 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 }
 
 
+// mail containing fields 'githubUserIds', 'subject', 'message'
+Mailing.githubGrowthMail = function(githubUserIds, subject, message) {
+  checkAdminPermission();
+
+  var isTest = false;
+
+  var admin = Meteor.user();
+  var from_email = property(admin, 'staff.email');
+  var from_name = property(admin, 'profile.name') + " / hckrs.io";
+
+  if (!from_email)
+    throw new Meteor.Error(500, "no from email");
+
+  var html = Assets.getText('html-email.html')
+  html = html.replace(/{{subject}}/g, subject);
+  html = html.replace(/{{content}}/g, message);
+
+  var users = GithubDump.find({id: {$in: githubUserIds}}).fetch();
+
+  var to_list = _.map(users, function(user) {
+    var to = { email: user.email, name: user.name, type: 'to' };
+    console.log(to.email, to.name);
+    return to;
+  });
+
+  var merge_vars = _.map(users, function(user) {
+    var vars = [
+      {name: "name", content: user.name},
+      {name: "email", content: user.email},
+      {name: "city", content: CITYMAP[user.city].name},
+      {name: "company", content: user.company},
+      {name: "followers", content: user.followers},
+      {name: "following", content: user.following},
+    ];
+    console.log(user.email, vars);
+    return { rcpt: user.email, vars: vars };
+  });
+
+
+  var mail = {
+    "key": Settings['mandrill'][isTest ? 'apiTestKey' : 'apiKey'],
+    "message": {
+      "html": html,
+      "subject": subject,
+      "from_email": from_email,
+      "from_name": from_name,
+      "to": to_list,
+      "important": false,
+      "track_opens": true,
+      "track_clicks": true,
+      "auto_text": null,
+      "auto_html": null,
+      "inline_css": true,
+      "url_strip_qs": null,
+      "preserve_recipients": false,
+      "view_content_link": true,
+      "tracking_domain": null,
+      "signing_domain": null,
+      "return_path_domain": null,
+      "merge": true,
+      "merge_vars": merge_vars,
+      "tags": [],
+      "subaccount": null,
+      "google_analytics_domains": [],
+      "google_analytics_campaign": null,
+      "metadata": {},
+      "recipient_metadata": [],
+      "attachments": [],
+      "images": []
+    },
+    "async": true,
+    "ip_pool": null,
+    "send_at": null, // 'send_at' requires paid account
+  };
+
+  console.log(mail);
+
+  // first mark users as mailed
+
+  // send email
+  
+  try {
+    var url = 'https://mandrillapp.com/api/1.0/messages/send.json';
+    var res = HTTP.post(url, {data: mail});
+    
+    if (res.statusCode !== 200)
+      throw 'mailing failed with status code' + res.statusCode;
+
+    console.log('mailing succeed', res, res.data)
+  } catch(e) {
+    console.log(e);
+  }
+}
+
 
 
 Meteor.methods({
   'ambassadorMail': function(mail, isTest) {
     return Mailing.ambassadorMail(mail.subject, mail.message, mail.selector, isTest);
   },
+  'githubGrowthMail': Mailing.githubGrowthMail,
   // 'test-chimp': function() {
   //   var mailChimp = new MailChimp();
   //   mailChimp.call('lists', 'interest-groupings', {id: MailChimpOptions['listId']}, function(err, res) {

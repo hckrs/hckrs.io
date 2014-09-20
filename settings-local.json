@@ -39,14 +39,14 @@
 
   "smtp": {
     "username": "hckrs.io",
-    "password": "AjWJBFNGpFPpLHlv4CoLow",
+    "password": "KpLBV9m55LQ565xHLwjuBA",
     "server": "smtp.mandrillapp.com",
     "port": 587
   },
 
   "mandrill": {
-    "username": "hckrs.io",
-    "apiKey": "JG1BbpBOdPHLGBQv2RjFRQ"
+    "apiKey": "KpLBV9m55LQ565xHLwjuBA",
+    "apiTestKey": "JG1BbpBOdPHLGBQv2RjFRQ"
   },
 
   "newrelic": {
