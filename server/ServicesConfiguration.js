@@ -931,8 +931,7 @@ moveUserToCity = function(hackerId, city) { // called from Methods.js
   // update user's city
   Users.update(hackerId, {$set: {
     city: city,
-    currentCity: city,
-    accessAt: new Date()
+    currentCity: city
   }});
 
   // automatic invite the first n users, and give them more invites
