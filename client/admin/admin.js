@@ -11,20 +11,45 @@ Template.admin_header.helpers({
 })
 
 
-
-
-/* DATA FIELD */
-
-
 Field = {}
+
+
+/* DATA FIELD functions */
+
+Field.fn = {}
+
+Field.fn.email = function(val, obj) {
+  return val ? Safe.email(val, {text: '<span class="icon icon-envelope"></span>'}) : '';
+}
+
+Field.fn.url = function(urlField) {
+  return function(val, obj) {
+    return val ? Safe.url(obj[urlField], {text: val}) : '';
+  }
+}
+
+Field.fn.date = function(val, obj) {
+  return val ? moment(val).fromNow() : '';
+}
+
+Field.fn.bool = function(val) {
+  return val ? 'YES' : '';
+}
+
+Field.fn.avatar = function(val) {
+  return val ? Safe.string('<img src="'+val+'" width="50" />') : '';
+}
+
+
+
+
+/* DATA FIELD templates */
 
 Field.date = {
   key: 'createdAt',
   label: 'date',
   sortByValue: true,
-  fn: function(val, obj) {
-    return moment(val).fromNow();
-  }
+  fn: Field.fn.date
 }
 
 Field.city = {
@@ -53,15 +78,5 @@ Field.url = {
     return Safe.url(val, {text: text});
   }
 }
-
-
-/* functions */
-
-Field.fn = {}
-
-Field.fn.email = function(val, obj) {
-  return val ? Safe.email(val, {text: 'e-mail'}) : '';
-}
-
 
 

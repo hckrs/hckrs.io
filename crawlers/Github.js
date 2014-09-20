@@ -43,7 +43,6 @@ Crawler.fetchGithubUserData = function(cb) {
 
 if (Meteor.isServer) {
 
-  var GithubDump = new Meteor.Collection('githubDump');
 
   var forEachUsers = function(query, page, iterator, cb) {
     

@@ -9,6 +9,7 @@ var routes = [
   [ 'admin_hackers'      , '/admin/hackers'     ],
   [ 'admin_deals'        , '/admin/deals'       ],
   [ 'admin_places'       , '/admin/places'      ],
+  [ 'admin_growth'       , '/admin/growth'      ],
 
   // normal routes
   [ 'about'        , '/about'                ],
