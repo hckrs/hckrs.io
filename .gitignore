@@ -3,6 +3,7 @@
 .DS_Store
 node_modules
 backup
+.backup
 .docs/Screenshots
 
 packages/mailchimp
