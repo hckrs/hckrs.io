@@ -56,7 +56,7 @@ SendEmailsOnNewUser = function(userId) {
   var cityUrl = Url.replaceCity(city, url);
   var cityHost = Url.hostname(cityUrl);  
   var toAmbassadors = _.compact(Users.find({city: city, "isAmbassador": true}).map(function(u) { return property(u, 'staff.email'); }));
-  var toAdmin = _.difference(toAmbassadors, _.compact(Users.find({"isAdmin": true}).map(function(u) { return property(u, 'staff.email'); })));
+  var toAdmin = _.difference(_.compact(Users.find({"isAdmin": true}).map(function(u) { return property(u, 'staff.email'); })), toAmbassadors);
   var userEmail = user.profile.email;
 
   var status = [];
