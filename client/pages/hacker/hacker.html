@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    {{#if isAccessDenied}}
+    {{#unless accessAt}}
     <div class="control-group" id="register-city-move">
       <label class="control-label" for="inputCity">city</label>
       <div class="controls">
@@ -156,7 +156,7 @@
         <span class="description hover">— Choose your local city</span>
       </div>
     </div>
-    {{/if}}
+    {{/unless}}
 
     <div class="control-group {{classIf 'error' isDuplicateEmail}} {{classIf 'error' isNotValidEmail}}">
       <label class="control-label" for="inputEmail">email</label>
