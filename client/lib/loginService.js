@@ -56,7 +56,6 @@ var loggedIn = function() {
 
   // XXX maybe we can do this on the server side, because
   // meteor introduces a function called Accounts.validateLoginAttempt()
-  checkDuplicateIdentity();
   checkInvitation();
   checkAccess();
 
@@ -96,14 +95,6 @@ goToEntryPage = function() {
 
 /* ACCOUNT & ACCESS & INVITATIONS */
 
-Template.main.events({
-  "click #requestMergeDuplicateAccount .close": function() {
-    Session.set('requestMergeDuplicateAccount', false);
-  }
-});
-UI.registerHelper('previousLoginSession', function() {
-  return Session.get('previousLoginSession');
-});
 UI.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
@@ -121,35 +112,6 @@ UI.registerHelper('isUnverifiedEmail', function() {
 });
 
 
-
-// check if there is an other existing user account
-// that probably match the current user idenity
-// we check that by using the browser persistent storage
-checkDuplicateIdentity = function() {
-
-  var currentService = amplify.store('currentLoginService');
-  var previousSession = amplify.store('previousLoginSession');
-  
-  if (previousSession) {
-    // if there are previously login session with an other account with different service
-    // if so we notify the user that he has possible 2 account and we request to merge them
-    var isOtherService = currentService && previousSession.service != currentService;
-    var isOtherAccount = previousSession.userId != Meteor.userId();
-    var requestMerge = isOtherService && isOtherAccount;
-  }
-
-  Session.set('previousLoginSession', previousSession);
-  Session.set('requestMergeDuplicateAccount', requestMerge);
-  
-  // store the current login session in persistent browser storage, 
-  // so we can check for duplicate idenity next time
-  if (currentService) {
-    amplify.store("previousLoginSession", {
-      userId: Meteor.userId(),
-      service: currentService
-    });
-  }
-}
 
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
@@ -324,9 +286,6 @@ var loginWithService = function(event) {
 
   // log
   GAnalytics.event("LoginService", "login", service);
-
-  // set used service as cookie
-  amplify.store('currentLoginService', service);
 
   // login
   Meteor["loginWith"+Service](options, loginCallback);

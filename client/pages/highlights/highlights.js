@@ -85,11 +85,11 @@ Template.highlights.events({
 // RENDERING
 
 var indexToId = function(index) {
-  var data = HighlightsSorted({fields: {_id: 1}});
+  var data = HighlightsSorted({reactive: false});
   return data &&  index > 0 && data[index-1] && data[index-1]._id;
 }
 var idToIndex = function(id) {
-  var data = HighlightsSorted({fields: {_id: 1}}).map(_.property('_id'));
+  var data = HighlightsSorted({reactive: false}).map(_.property('_id'));
   return _.indexOf(data, id) + 1;
 }
 

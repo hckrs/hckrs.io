@@ -140,6 +140,13 @@ var pictureChanged = function(event) {
   });
 }
 
+var moveCity = function(evt) {
+  var city = $(evt.currentTarget).val();
+  Meteor.call('moveUserToCity', hackerId(), city, function(err) {
+    if (err) return;
+    Router.goToCity(city); // redirect to new city
+  }); 
+}
 
 
 // count the number of social services the user is connected to
@@ -185,8 +192,8 @@ Template.hackerEdit.events({
   "click .current-picture": showPictureChoser,
   "mouseleave .picture-choser": hidePictureChoser,
   "click input[name='picture']": pictureChanged,
-
   "click .toggleService": toggleService,
+  "change #citySelect select": moveCity,
 });
 
 
@@ -234,7 +241,7 @@ Template.hackerEdit.helpers({
   "serviceError": function(service) {
     var isServiceError = Session.equals('isAddServiceError_'+service, true);
     return isServiceError ? 'error' : "";
-  }
+  },
 });
 
 Template.hackerView.helpers({

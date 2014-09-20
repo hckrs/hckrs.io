@@ -18,7 +18,6 @@ var routes = [
   [ 'hackers'      , '/hackers'              ],
   [ 'highlights'   , '/highlights'           ],
   [ 'invitations'  , '/invitations'          ],
-  [ 'mergeAccount' , '/mergeAccount'         ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
@@ -81,17 +80,6 @@ var allowedAccess = function() {
   }
 }
 
-// check if there are duplicate accounts, if so request for merge
-var checkDuplicateAccounts = function() {
-  var request = Session.get('requestMergeDuplicateAccount');
-  var currentRoute = Router.current().route.name;
-  
-  if (request && currentRoute !== 'mergeAccount')
-    this.redirect('mergeAccount');
-  
-  if (!request && currentRoute === 'mergeAccount')
-    this.redirect('hacker', Meteor.userId());
-}
 
 
 
@@ -102,11 +90,8 @@ Router.onRun(setMetaData);
 Router.onRun(loginRequired, {except: noLoginRequired});
 Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 
-// check for duplicate accounts, if so request for merge
-Router.onBeforeAction(checkDuplicateAccounts, {except: noLoginRequired });
-
 // make sure that user is allowed to enter the site
-Router.onBeforeAction(allowedAccess, {except: ['mergeAccount'].concat(noLoginRequired) });
+Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
 
 // log pageview to Google Analytics
 Router.onRun(GAnalytics.pageview);
