@@ -34,6 +34,12 @@
     }
   }
 
+  #register-city-move {
+    #citySelect {
+      display: inline-block;
+    }
+  }
+
   #mapWrapper.edit {
     position: relative;
     width: 200px;
@@ -264,20 +270,21 @@
     line-height: 30px;
     color: #e2e2e2;
 
+    .description {
+      color:#E2E2E2;
+      font-style: italic;
+      font-weight: normal;
+    }
+                .description.hover { opacity: 0; }
+    &:hover     .description.hover { opacity: 1; }
+    label       .description.hover { opacity: 0 !important; }
+    label:hover .description.hover { opacity: 1 !important; }
+
     label{
       font-weight: bold;
 
       input[type=text]{
         margin-top: 6px;
-      }
-      .available-description,
-      .mailing-description{
-        font-weight: normal;
-        opacity: 0;
-      }
-      &:hover .available-description,
-      &:hover .mailing-description{
-        opacity: 1;
       }
     }
     label > .details{
@@ -285,11 +292,7 @@
     }
   }
 
-  .available-description,
-  .mailing-description, {
-    color:#E2E2E2;
-    font-style: italic;
-  }
+  
 
   /* VIEW hacker */
 
