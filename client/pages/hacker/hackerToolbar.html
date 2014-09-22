@@ -78,7 +78,7 @@
 
 <template name="hackerToolbarPanelMail">
   <div id="hackerMail" class="panel">
-    <div class="title">Mail {{profile.name}}</div>
+    <div class="title">{{profile.name}}</div>
     {{#autoForm id="hackerMailForm" schema=mailSchema}}
       <label for="template">Template</label>
       {{#afFieldSelect name="group" id="template"}}
