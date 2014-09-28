@@ -1,10 +1,21 @@
 <template name="admin_growth">
   <div id="admin_growth" class="page">
-    {{> admin_growthEmail}}
-    {{> reactiveTable collection=collection settings=settings}}
+    <p>
+      <a href="{{pathFor 'admin_growthTemplates'}}">edit templates</a>
+    </p>
+
+    <details>
+      <summary>Send email</summary>
+      {{> admin_growthEmail}}  
+    </details>
+
+    <h2>Github users</h2>
+    {{! reactiveTable collection=collection settings=settings}}
     <div class="page-space"></div>
   </div>
 </template>
+
+
 
 <template name="admin_growthEmail">
   <div id="admin_growthEmail">

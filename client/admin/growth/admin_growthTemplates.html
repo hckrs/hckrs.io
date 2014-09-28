@@ -1,0 +1,39 @@
+<template name="admin_growthTemplates">
+  <div id="admin_growthTemplates" class="page">
+   
+    <h2>Messages</h2>
+    {{#each messages}}
+      {{#if large}}
+        <details>
+          <summary>{{short}}</summary>
+          {{content}}
+        </details>
+      {{else}}
+        <div>{{content}}</div>
+      {{/if}}
+    {{/each}}
+    <form collection="growthMessages">
+      <textarea name="content" placeholder="message">
+        example message  
+      </textarea>
+      <button type="submit">Add</button>
+    </form>
+
+    <h2>Subjects</h2>
+    {{#each subjects}}
+      {{#if large}}
+        <details>
+          <summary>{{short}}</summary>
+          {{content}}
+        </details>
+      {{else}}
+        <div>{{content}}</div>
+      {{/if}}
+    {{/each}}
+    <form  collection="growthSubjects">
+      <input name="content" placeholder="subject">
+      <button type="submit">Add</button>
+    </form>
+    
+  </div>
+</template>

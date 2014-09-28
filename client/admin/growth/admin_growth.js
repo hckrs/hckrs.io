@@ -3,7 +3,9 @@
 AdminGrowthController = DefaultAdminController.extend({
   template: 'admin_growth',
   waitOn: function () {
-    return [ Meteor.subscribe('githubDump') ];
+    return [ 
+      // Meteor.subscribe('githubDump'),
+    ];
   }
 });
 
@@ -14,7 +16,7 @@ Template.admin_growth.helpers({
   },
   'settings': function() {
     return {
-      showFilter: false,
+      showFilter: true,
       rowsPerPage: 10,
       fields: [
         Field.city, 
@@ -41,7 +43,6 @@ Template.admin_growthEmail.helpers({
     });
   }
 })
-
 
 Template.admin_growthEmail.events({
   'click [action="submit"]': function(evt) {

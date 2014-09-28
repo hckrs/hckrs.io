@@ -3,13 +3,14 @@
 var routes = [
   
   // staff routes
-  [ 'admin'              , '/admin'             ],
-  [ 'admin_dashboard'    , '/admin/dashboard'   ],
-  [ 'admin_highlights'   , '/admin/highlights'  ],
-  [ 'admin_hackers'      , '/admin/hackers'     ],
-  [ 'admin_deals'        , '/admin/deals'       ],
-  [ 'admin_places'       , '/admin/places'      ],
-  [ 'admin_growth'       , '/admin/growth'      ],
+  [ 'admin'                 , '/admin'                  ],
+  [ 'admin_dashboard'       , '/admin/dashboard'        ],
+  [ 'admin_highlights'      , '/admin/highlights'       ],
+  [ 'admin_hackers'         , '/admin/hackers'          ],
+  [ 'admin_deals'           , '/admin/deals'            ],
+  [ 'admin_places'          , '/admin/places'           ],
+  [ 'admin_growth'          , '/admin/growth'           ],
+  [ 'admin_growthTemplates' , '/admin/growth/templates' ],
 
   // normal routes
   [ 'about'        , '/about'                ],
