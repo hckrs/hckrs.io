@@ -1,9 +1,4 @@
 
-// XXX temporary HACK
-// because meteor deal with keep-alive problems on large projects as this.
-process.argv = _.without(process.argv, '--keepalive');
-Meteor.startup(function () { console.log("LISTENING"); });
-
 
 // server startup
 Meteor.startup(function() {
