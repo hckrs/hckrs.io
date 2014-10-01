@@ -24,13 +24,12 @@ var getBackground = function() {
   return city.backgroundImage || "/img/backgrounds/default.jpg";
 }
 
-Template.body.rendered = function() {
-  if (Router.current().route.name !== 'loginButtons') {
-    Tracker.autorun(function() {
-      var bg = getBackground();
-      $("body").css('background-image', 'url("' + bg + '")');
-    });
-  }
+
+UI.body.rendered = function() {
+  Deps.autorun(function() {
+    var bg = getBackground();
+    $("body").css('background-image', 'url("' + bg + '")');
+  });
 }
 
 

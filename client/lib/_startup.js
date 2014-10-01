@@ -47,6 +47,13 @@ var checkCurrentCity = function() {
   
   // set current city in session
   Session.set('currentCity', city.key);
+    
+  // relaxing the same origin policy so that javascript
+  // can communicate between different city domains
+  // this is required to do OAuth request.
+  // In the oauth package this same line must be included too. 
+  if (document.domain && document.domain.indexOf(Url.root()) !== -1)
+    document.domain = Url.root(); 
 }
 
 

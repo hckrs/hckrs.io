@@ -18,7 +18,6 @@ var routes = [
   [ 'hackers'      , '/hackers'              ],
   [ 'highlights'   , '/highlights'           ],
   [ 'invitations'  , '/invitations'          ],
-  [ 'loginButtons' , '/login-buttons/:city'  ],
   [ 'mergeAccount' , '/mergeAccount'         ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
@@ -34,7 +33,6 @@ var routes = [
 var noLoginRequired = [
   'about',
   'frontpage', 
-  'loginButtons',
   'invite', 
   'verifyEmail',
 ];

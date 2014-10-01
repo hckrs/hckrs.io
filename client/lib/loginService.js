@@ -349,10 +349,6 @@ var logout = function() {
 }
 
 
-Login.loginWithService = loginWithService;
-Login.logout = logout;
-
-
 // bind the sign up buttons to the corresponding actions
 Template.main.events({
   "click .signupService": loginWithService

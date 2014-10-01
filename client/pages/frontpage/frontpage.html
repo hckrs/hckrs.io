@@ -13,12 +13,21 @@
 
     {{> citySelect}} {{!-- defined in main.js --}}
     
-    {{#unless CurrentUserId}}
+    {{#if CurrentUserId}}
+      <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
+    {{else}}
       {{#if CurrentCity}}
-        {{!-- login within iframe because of the subdomain cross origin policy --}}
-        <iframe src="{{urlFor 'loginButtons' city=CurrentCity.key}}" class="login-buttons-frame" scrolling="no"></iframe>
+        {{#if serviceLoginError}}
+          <div class="error">{{{serviceLoginError}}}</div>
+        {{/if}}
+        <div class="frontpage-login"> 
+          <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
+          <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
+          <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
+          <div class="frontpage-join-us"></div>
+        </div>
       {{/if}}
-    {{/unless}}
+    {{/if}}
 
     {{> ambassadors}}
 
