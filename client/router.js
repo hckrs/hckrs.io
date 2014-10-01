@@ -176,7 +176,7 @@ Router.scrollToTop = function() {
 Router.reload = function() {
   var path = Router.current().path;
   Router.go('/about');
-  Deps.flush();
+  Tracker.flush();
   Router.go(path);
 }
 

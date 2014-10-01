@@ -12,25 +12,23 @@ facebook
 github
 twitter
 oauth1
-oauth
 http
 email
 
 amplify
 jquery
-bootstrap
 underscore
 stylus
+mrt:collection-hooks
+iron:router
+mrt:iron-router-progress
+datariot:ganalytics
+aslagle:reactive-table
+mrt:mailchimp
+bootstrap
+kidovate:pnotify
+pauloborges:repl
+aldeed:autoform
+aldeed:collection2
+oauth
 
-newrelic
-node-dependencies
-
-autoform
-collection2
-collection-hooks
-iron-router
-iron-router-progress
-GAnalytics
-reactive-table
-mailchimp
-pnotify

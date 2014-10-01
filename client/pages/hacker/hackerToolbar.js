@@ -16,7 +16,7 @@ var state = new State('hacker', {
 Template.hackerToolbar.events({
   'click [panel]': function(evt) {
     state.toggle('activePanel', $(evt.currentTarget).attr('panel'));
-    Deps.flush();
+    Tracker.flush();
     fillTemplate();
   },
   "click [action='invite']": function(evt) {
@@ -214,7 +214,7 @@ var openMailTemplate = function(requestTmpl) {
       requestTmpl = 'personalWelcome10first';
 
     state.set('activePanel', 'mail');
-    Deps.flush();
+    Tracker.flush();
     setTemplate(requestTmpl);
   }, 800);
 }

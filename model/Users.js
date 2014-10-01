@@ -1,115 +1,99 @@
 
-// Meteor.users is a collection that is already defined by meteor.
-// But we attach a schema to validate content.
-
 // ATTENTION: when changing the model, make sure you also change
-// the publish, permissions and merging rules in  
-// Publish.js, Permissions.js and ServicesConfiguration.js respectively.
+// the publish, permissions and merging rules in  this file and
+// ServicesConfiguration.js
 
-var schema = {
- 
-  "profile": {          // user's public profile (visible for other users)
-    type: Object
-  },
+Schemas.User = new SimpleSchema([Schemas.default, {
 
-  "profile.name": {  // full name of the user    
-    type: String,
-    min: 1,
-    max: 30
-  },         
-  "profile.email": {  // e-mailadress (can be hidden if user want it)
-    type: String,
-    regEx: SimpleSchema.RegEx.Email
-  },    
-  "profile.skype": { // skype address
-    type: String,
+  /* profile properties */
+
+  "profile": { // user's public profile (visible for other users)
     optional: true,
-  },
-  "profile.phone": { // phone number
-    type: String,
-    optional: true,
-  },
-  "profile.picture": {  // url of an avatar for this user
-    type: String
-  },    
-  
-  "profile.location": {  // workplace (school / company)
     type: new SimpleSchema({
-      lat: {type: Number, decimal: true},
-      lng: {type: Number, decimal: true},
-    }),
-    optional: true
+      "name": {  // full name of the user    
+        type: String,
+        min: 1,
+        max: 30,
+      },         
+      "email": {  // e-mailadress (can be hidden if user want it)
+        type: String,
+        regEx: SimpleSchema.RegEx.Email
+      },    
+      "skype": { // skype address
+        type: String,
+        optional: true,
+      },
+      "phone": { // phone number
+        type: String,
+        optional: true,
+      },
+      "picture": {  // url of an avatar for this user
+        type: String
+      },    
+      
+      "location": {  // workplace (school / company)
+        type: new SimpleSchema({
+          lat: {type: Number, decimal: true},
+          lng: {type: Number, decimal: true},
+        }),
+        optional: true
+      },
+      "homepage": { // external website of user
+        type: String,
+        regEx: SimpleSchema.RegEx.Url,
+        optional: true,
+        autoValue: AutoValue.prefixUrlWithHTTP
+      },     
+      "company": { // name of company
+        type: String,
+        optional: true
+      },
+      "companyUrl": {  // the website of the company 
+        type: String,
+        regEx: SimpleSchema.RegEx.Url,
+        optional: true,
+        autoValue: AutoValue.prefixUrlWithHTTP
+      },
+      
+      "hacking": {    // array of types (web|apps|software|game|design|life|hardware|opensource|growth)*
+        type: [ String ],
+        allowedValues: HACKING,
+        optional: true
+      },
+      "available": {  // array with items where user is available for (drink|lunch|email)*
+        type: [ String ],
+        allowedValues: _.pluck(AVAILABLE_OPTIONS, 'value'),
+        optional: true
+      },
+      "skills": { // array of skill name
+        type: [ String ],
+        optional: true,
+        allowedValues: SKILL_NAMES
+      },           
+      "favoriteSkills": { // skills that are also marked as favorite
+        type: [ String ],
+        optional: true,
+        allowedValues: SKILL_NAMES
+      },    
+      
+      "social": { // urls to user's social service profiles
+        optional: true,
+        type: new SimpleSchema({
+          facebook: {type: String, optional: true},
+          twitter: {type: String, optional: true},
+          github: {type: String, optional: true},
+        }),
+      },
+      
+      "socialPicture": { // urls to user's social pictures
+        type: new SimpleSchema({
+          facebook: {type: String, optional: true},
+          twitter: {type: String, optional: true},
+          github: {type: String, optional: true},
+        }),
+      },
+    })
   },
-  "profile.homepage": { // external website of user
-    type: String,
-    regEx: SimpleSchema.RegEx.Url,
-    optional: true,
-    autoValue: AutoValue.prefixUrlWithHTTP
-  },     
-  "profile.company": { // name of company
-    type: String,
-    optional: true
-  },
-  "profile.companyUrl": {  // the website of the company 
-    type: String,
-    regEx: SimpleSchema.RegEx.Url,
-    optional: true,
-    autoValue: AutoValue.prefixUrlWithHTTP
-  },
-  
-  "profile.hacking": {    // array of types (web|apps|software|game|design|life|hardware|opensource|growth)*
-    type: [ String ],
-    allowedValues: HACKING,
-    optional: true
-  },
-  "profile.available": {  // array with items where user is available for (drink|lunch|email)*
-    type: [ String ],
-    allowedValues: AVAILABLE_VALUES,
-    optional: true
-  },
-  "profile.skills": { // array of skill name
-    type: [ String ],
-    optional: true,
-    allowedValues: SKILL_NAMES
-  },           
-  "profile.favoriteSkills": { // skills that are also marked as favorite
-    type: [ String ],
-    optional: true,
-    allowedValues: SKILL_NAMES
-  },    
-  
-  "profile.social": { // urls to user's social service profiles
-    type: Object
-  },
-  "profile.social.facebook": {
-    type: String,
-    optional: true
-  },
-  "profile.social.github": {
-    type: String,
-    optional: true
-  },
-  "profile.social.twitter": {
-    type: String,
-    optional: true
-  },
-  
-  "profile.socialPicture": { // urls to user's social pictures
-    type: Object
-  },
-  "profile.socialPicture.facebook": {
-    type: String,
-    optional: true
-  },
-  "profile.socialPicture.github": {
-    type: String,
-    optional: true
-  },
-  "profile.socialPicture.twitter": {
-    type: String,
-    optional: true
-  },
-
 
   /* user properties */
 
@@ -133,7 +117,8 @@ var schema = {
   },    
   
   "emails": {           // user can have multiple e-mailaddressen (internal use only)
-    type: [Object]
+    type: [Object],
+    optional: true
   },
   "emails.$.address": {
     type: String,
@@ -155,18 +140,18 @@ var schema = {
   /* administration details */
 
   "staff": {         // additional ambassador info
-    type: Object,
-    optional: true
+    optional: true,
+    type: new SimpleSchema({
+      "email": { // ambassador email address @hckrs.io
+        type: SimpleSchema.RegEx.Email,
+        optional: true         
+      },
+      "title": { // custom title of this ambassador     
+        type: String,
+        optional: true         
+      },
+    }), 
   },
-  "staff.email": { // ambassador email address @hckrs.io
-    type: SimpleSchema.RegEx.Email,
-    optional: true         
-  },
-  "staff.title": { // custom title of this ambassador     
-    type: String,
-    optional: true         
-  },
-
   "isAmbassador": {       // only when user is ambassador    
     type: Boolean,
     optional: true,
@@ -212,64 +197,16 @@ var schema = {
 
   "services": {           // meteor stores login information here...
     type: Object,
+    blackbox: true,
     optional: true,
-    blackbox: true
-  }
-
-}
-
-// We create a weak schema which we attach to the user collection
-// because new registered users don't have all the required properties filled in.
-// Therefore User collection will be weakly verified and must be manually strongly verified
-// at update actions from untrusted code
-var weakSchema = {};
-weakSchema['city'] = {optional: true};
-weakSchema['currentCity'] = {optional: true};
-weakSchema['globalId'] = {optional: true};
-weakSchema['invitationPhrase'] = {optional: true};
-weakSchema['invitations'] = {optional: true};
-weakSchema['profile.name'] = {optional: true};
-weakSchema['profile.email'] = {optional: true};
-
-
-// create SimpleSchema
-Schemas.User = new SimpleSchema([
-  Schemas.default,
-  schema
-]);
-
-// create weak SimpleSchema
-Schemas.WeakUser = new SimpleSchema([
-  Schemas.User,
-  weakSchema
-]);
-
-
-// NOTE: services schema (blackbox)
-var servicesSchema = {
-  resume: {  
-    loginTokens: [ { token: String, when: Date } ]
   },
-  email: {
-    verificationTokens: [ { token: String, address: String, when: Date } ]
-  },
-  facebook: { /* ... */ },
-  github: { /* ... */ },
-  twitter: { /* ... */ },
-}
+
+}]);
 
 
-
-/* Setup */
-
-// Users collection already created by meteor, make an alias
+// Meteor.users is a collection that is already defined by meteor.
+// But we attach a schema to validate content.
 Users = Meteor.users;
-
-
-// attach the weak schema to the user collection
-// later we have to verify the untrusted update actions
-// against the strong schema
-Users.attachSchema(Schemas.WeakUser)
 
 
 
@@ -295,6 +232,8 @@ Users.deny({
       'profile.picture',
       'profile.name',
       "profile.location",
+      "profile.location.lat",
+      "profile.location.lng",
       "profile.homepage",
       "profile.company",
       "profile.companyUrl",
@@ -344,10 +283,9 @@ Users.deny({
     if (!Match.test(modifier, modifierPattern))
       return true; /* DENY */
 
-    // test against strong user schema
+    // test against user schema
     if (!Schemas.User.newContext().validate(modifier, {modifier: true}))
       return true; /* DENY */
-  
   }
 });
 
@@ -658,12 +596,14 @@ UserProps = function(fields, options) {
   return OtherUserProps(Meteor.userId(), fields, options)
 }
 
-UI.registerHelper('OtherUserProp', function(user, prop) {
-  return OtherUserProp(user, prop);
-});
-UI.registerHelper('UserProp', function(prop) {
-  return UserProp(prop);
-});
+if (Meteor.isClient) {
+  Template.registerHelper('OtherUserProp', function(user, prop) {
+    return OtherUserProp(user, prop);
+  });
+  Template.registerHelper('UserProp', function(prop) {
+    return UserProp(prop);
+  });
+}
 
 
 /* permission helpers */
@@ -718,12 +658,14 @@ checkAmbassadorPermission = function(user, city) {
     throw new Meteor.Error(500, 'No privilege');
 }
 
-UI.registerHelper('hasAmbassadorPermission', function() {
-  return hasAmbassadorPermission();
-})
-UI.registerHelper('hasAdminPermission', function() {
-  return hasAdminPermission();
-})
+if (Meteor.isClient) {
+  Template.registerHelper('hasAmbassadorPermission', function() {
+    return hasAmbassadorPermission();
+  });
+  Template.registerHelper('hasAdminPermission', function() {
+    return hasAdminPermission();
+  });
+}
 
 
 /* data helpers */
@@ -807,15 +749,14 @@ userSocialName = function(user, service) {
   return socialNameFromUrl(service, socialUrl);
 }
 
-UI.registerHelper('UserView', function(user) {
-  return userView(user);
-});
-
-
-UI.registerHelper('UserRank', function(user) {
-  return userRank(user);
-});
-
-UI.registerHelper('UserSocialName', function(user, service) {
-  return userSocialName(user, service);
-});
+if (Meteor.isClient) {
+  Template.registerHelper('UserView', function(user) {
+    return userView(user);
+  });
+  Template.registerHelper('UserRank', function(user) {
+    return userRank(user);
+  });
+  Template.registerHelper('UserSocialName', function(user, service) {
+    return userSocialName(user, service);
+  });
+}

@@ -10,9 +10,9 @@ var subscriptions = [
 
 Subscriptions.init = function() {
   var handles = [];
-  Deps.autorun(function() {
+  Tracker.autorun(function() {
     Meteor.userId(); // trigger
-    Deps.nonreactive(function() {
+    Tracker.nonreactive(function() {
       Session.set('subscriptionsReady', false);
       _.invoke(handles, 'stop');
       handles = [];

@@ -31,9 +31,9 @@ Schemas.Highlight = new SimpleSchema([
   }
 ]);
 
-Highlights = new Meteor.Collection('highlights', {
-  schema: Schemas.Highlight
-});
+// collection
+Highlights = new Meteor.Collection('highlights');
+Highlights.attachSchema(Schemas.Highlight)
 
 
 /* sort */

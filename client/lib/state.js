@@ -46,10 +46,10 @@ State = function(namespace, defaults) {
 
   this.observe = function(field, func, skipFirstRun) {
     var prevVal, newVal;
-    return Deps.autorun(function() {
+    return Tracker.autorun(function() {
       newVal = self.get(field);
       if (!skipFirstRun || !c.firstRun) {
-        Deps.nonreactive(function() {
+        Tracker.nonreactive(function() {
           func(newVal, prevVal);
         });
       }

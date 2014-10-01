@@ -1,0 +1,51 @@
+{
+  "public": {
+    "environment": "staging",
+    "ga": { "account": null },
+    "simpleSchemeDebug": false,
+   
+    "mapbox": {
+      "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
+    },
+
+    "facebook": {
+      "appId": "1480183105553778"
+    },
+    "github": {
+      "clientId": "fb03b8307d87b8e45ab2"
+    },
+    "twitter": {
+      "consumerKey": "1lBHttY8tFAOqQJ35qKug"
+    }
+  },
+
+  "facebook": {
+    "secret": "50090f32188b263937a0bf8115598a9b"
+  },
+  "github": {
+    "secret": "bd6a24ca5de37349f120303b7379adaf248c2c70"
+  },
+  "twitter": {
+    "secret": "45Lj8VEJSXgtCTGBAyw8TLW3EG40msiz0dZKZhwZi0"
+  },
+
+  "MailChimpOptions": {
+    "apiKey": "679dfa600bd2cc5a684524d6c86ab6ff-us7",
+    "listId": "c60adcc2ce",
+    "group-available": "7977",
+    "group-hacking": "7973",
+    "group-mailings": "8229"
+  },
+
+  "smtp": {
+    "username": "hckrs.io",
+    "password": "",
+    "server": "smtp.mandrillapp.com",
+    "port": 587
+  },
+
+  "newrelic": {
+    "NEW_RELIC_LICENSE_KEY": "74c38a63cd258d4834daea40cb5509eed29bc3db",
+    "NEW_RELIC_APP_NAME": "hckrs-staging"
+  }
+}

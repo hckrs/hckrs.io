@@ -1,9 +1,0 @@
-Facebook:
-- set callback url to: http://hckrs.io/_oauth/facebook?close
-- disable sandbox mode in production environment
-
-Github:
-- set callback url to: http://hckrs.io/_oauth/github?close
-
-Twitter:
-- set callback url to: http://hckrs.io/_oauth/twitter?close

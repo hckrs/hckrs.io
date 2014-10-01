@@ -1,7 +1,7 @@
 
 /* GIFTS */
 
-Schemas.Deals = new SimpleSchema([
+Schemas.Deal = new SimpleSchema([
   Schemas.default,
   Schemas.city,
   Schemas.userId,
@@ -31,9 +31,10 @@ Schemas.Deals = new SimpleSchema([
   }
 ]);
 
-Deals = new Meteor.Collection('deals', {
-  schema: Schemas.Deals
-});
+
+// collection
+Deals = new Meteor.Collection('deals');
+Deals.attachSchema(Schemas.Deal)
 
 
 /* sort */

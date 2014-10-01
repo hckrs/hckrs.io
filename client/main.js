@@ -24,6 +24,7 @@ var getBackground = function() {
   return city.backgroundImage || "/img/backgrounds/default.jpg";
 }
 
+
 UI.body.rendered = function() {
   Deps.autorun(function() {
     var bg = getBackground();

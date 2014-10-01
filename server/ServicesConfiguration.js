@@ -405,9 +405,11 @@ Accounts.onCreateUser(function (options, user) {
   // determine which external service is used for account creation
   var serviceName = _.first(_.keys(_.omit(user.services, ['resume'])));
 
-  // fetch additional user information
-  // extend user object with additional fetched user information
-  user = extendUserByFetchingService(user, serviceName);
+  try {
+    // fetch additional user information
+    // extend user object with additional fetched user information
+    user = extendUserByFetchingService(user, serviceName);
+  } catch(e) {}
 
   // additional fields
   if (!user.emails)
@@ -931,8 +933,7 @@ moveUserToCity = function(hackerId, city) { // called from Methods.js
   // update user's city
   Users.update(hackerId, {$set: {
     city: city,
-    currentCity: city,
-    accessAt: new Date()
+    currentCity: city
   }});
 
   // automatic invite the first n users, and give them more invites
