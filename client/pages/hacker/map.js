@@ -9,6 +9,11 @@ var mouseTimer = null; // delay to increase map
 var increasedMode = false; // map is in increased mode
 
 
+// get the information of the hacker on the current page
+// this session variable 'hacker' is setted in the router
+var hackerId = function () { return Session.get('hackerId'); }
+
+
 /* 
   TODO XXX: this file need some restructering in the future.
   The functionality is too specific for the edit-profile-pahe.
@@ -188,11 +193,11 @@ var resetMapSize = function($map, init) {
 /* DATABASE operations */
 
 var saveLocation = function(location) {
-  Meteor.users.update(Meteor.userId(), {$set: {'profile.location': _.pick(location, 'lat', 'lng')}});
+  Meteor.users.update(hackerId(), {$set: {'profile.location': _.pick(location, 'lat', 'lng')}});
 }
 
 var removeLocation = function() {
-  Meteor.users.update(Meteor.userId(), {$unset: {'profile.location': true}});
+  Meteor.users.update(hackerId(), {$unset: {'profile.location': true}});
 }
 
 

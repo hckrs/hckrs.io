@@ -55,7 +55,7 @@
       possibility to edit his data.
     --}}
 
-    {{#if isCurrentUser}}
+    {{#if canEdit}}
       <div class="btn-group mode">
         <button action="switch-mode" mode="edit" class="btn btn-small {{activeMode 'edit'}}"><span class="icon icon-pencil"></span> edit</button>
         <button action="switch-mode" mode="preview" class="btn btn-small {{activeMode 'preview'}}"><span class="icon icon-eye-open"></span> preview</button>
@@ -148,12 +148,22 @@
       </div>
     </div>
 
+    {{#unless accessAt}}
+    <div class="control-group" id="register-city-move">
+      <label class="control-label" for="inputCity">city</label>
+      <div class="controls">
+        {{> citySelect}} 
+        <span class="description hover">— Choose your local city</span>
+      </div>
+    </div>
+    {{/unless}}
+
     <div class="control-group {{classIf 'error' isDuplicateEmail}} {{classIf 'error' isNotValidEmail}}">
       <label class="control-label" for="inputEmail">email</label>
       <div class="controls">
         <input type="email" name="profile.email" class="text save email {{required 'profile.email'}}" autosave value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
         {{#if required 'profile.email'}}
-          <span class="available-description">— email will be not visible by other users</span><br/>
+          <span class="description hover">— email will be not visible by other users</span><br/>
         {{/if}}
         {{#if isDuplicateEmail}}
           <span class="help-inline">Already used in another account!</span>
@@ -216,8 +226,8 @@
     <div class="control-group">
       <label class="control-label" for="inputCompany">company / school</label>
       <div class="controls">
-        <input type="text" name="profile.company" class="text save" value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
-        <input type="url" name="profile.companyUrl" class="text save" value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
+        <input type="text" name="profile.company" class="text save" autosave value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
+        <input type="url" name="profile.companyUrl" class="text save" autosave value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
         <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
           <div class="event-catch-overlay"></div>
           <div id="editMap" class="map"></div>
@@ -230,29 +240,29 @@
       <label class="control-label">open to</label>
       <div class="controls">
         <label for="inputAvailableDrink" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
-          have a drink <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
+          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
+          have a drink <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
         </label>
         
         <div class="clear"></div>
 
         <label for="inputAvailableLunch" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
-          have lunch <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to have lunch</span>
+          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
+          have lunch <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to have lunch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableEmail" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
-          e-mail <span class="available-description">— hackers in {{CurrentCity.name}} can see your email address to get in touch</span>
+          e-mail <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to get in touch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableCall" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
-          call <span class="available-description">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
+          call <span class="description hover">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
         </label>
         <div class="clear details {{#unless checked 'profile.available' 'call'}}hide{{/unless}}">
           <input type="text" name="profile.skype" class="text save" autosave value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
@@ -264,7 +274,7 @@
 
         <label for="inputAvailableCowork" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
-          coworking <span class="available-description">— hackers can see your email address to get in touch to come work at your place</span>
+          co-work <span class="description hover">— hackers can see your email address to get in touch to come work at your place</span>
           <div class="details"></div>
         </label>
 
@@ -272,7 +282,7 @@
 
         <label for="inputAvailableCouchsurf" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
-          couchsurfing <span class="available-description">— hackers traveling to {{CurrentCity.name}} can see your email address and/or phone number to get in touch to stay at your place</span>
+          couchsurfing <span class="description hover">— hackers traveling to {{CurrentCity.name}} can see your email address and/or phone number to get in touch to stay at your place</span>
           <div class="details"></div>
         </label>
       </div>
@@ -340,7 +350,7 @@
         {{#each Constant "MAILING_OPTIONS"}}
           <label for="inputMailing-{{value}}" class="checkbox">
             <input type="checkbox" name="mailings" class="save" autosave id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
-            {{label}} <span class="mailing-description">{{description}}</span>
+            {{label}} <span class="description hover">{{description}}</span>
           </label>
           <div class="clear"></div>
         {{/each}}
@@ -485,10 +495,10 @@
           {{/if}}
         {{/if}}
         {{#if contains profile.available "cowork"}}
-        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
+        <a href="mailto:{{profile.email}}?subject=Can I co-work at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
         {{/if}}
         {{#if contains profile.available "couchsurf"}}
-        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
+        <a href="mailto:{{profile.email}}?subject=Can I couchsurf at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
         {{/if}}
       </div>
       <div class="clear"></div>

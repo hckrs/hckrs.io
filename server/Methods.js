@@ -33,11 +33,11 @@ Meteor.methods({
     verifyInvitationOfUser(phrase, userId);
   },
 
+  // Users can move thereself to another city when they are not fullu registered.
+  // that means they have the flag 'isAccessDenied'. 
+  // Otherwise you must have ambassador persmissions.
   'moveUserToCity': function(hackerId, city) {
     var hacker = Users.findOne(hackerId);
-    
-    if (hackerId === Meteor.userId())
-      throw new Meteor.Error(500, "can't move yourself");  
     
     if (!hacker)
       throw new Meteor.Error(500, "no such user");  
@@ -45,7 +45,16 @@ Meteor.methods({
     if (!_.contains(CITYKEYS, city))
       throw new Meteor.Error(500, "no valid city");  
 
-    checkAmbassadorPermission(Meteor.user(), hacker.city);
+    // check permissions
+    var me = Meteor.userId() === hackerId;
+    var ambPerm = hasAmbassadorPermission(Meteor.user(), hacker.city);
+    
+    if (!me && !ambPerm)
+      throw new Meteor.Error(500, 'not allowed');
+    else if (me && ambPerm) 
+      throw new Meteor.Error(500, "can't move yourself");  
+    else if (me && !hacker.isAccessDenied) 
+      throw new Meteor.Error(500, "cite move not allowed", 'already registered at some city');  
 
     // move
     return moveUserToCity(hackerId, city);

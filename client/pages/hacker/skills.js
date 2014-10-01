@@ -44,7 +44,7 @@ var cleanFavorites = function() {
 // EVENTS
 
 Template.editSkills.events({
-  "click .toggle-favorite": function() { isFavoriteSkill(this) ? removeFavorite(this) : addFavorite(this); }
+  "click .toggle-favorite": function() { isFavoriteSkill(this) ? removeFavorite(this) : addFavorite(this); },
 });
 
 
@@ -70,10 +70,32 @@ Template.editSkills.helpers({
 
 
 Template.editSkills.rendered = function() {
-  $(".input-skills").chosen({search_contains:true}).change(function(event) {
+  initChosen(); 
+}
+
+
+// init chosen
+var initChosen = function() {
+
+  var $chosen = $("#skillSelector").chosen({ 
+    search_contains: true 
+  });
+  
+  $chosen.on('change', function(event) {
     var values = $(event.currentTarget).val();
     updateSkills(values);
   });
+
+
+  // make sure chosen stay opened.
+  var chosen = $chosen.data("chosen");
+  var _fn = chosen.result_select;
+  chosen.result_select = function(evt) {    
+      evt["metaKey"] = true;
+      evt["ctrlKey"] = true;
+      chosen.result_highlight.addClass("result-selected");
+      return _fn.call(chosen, evt);
+  };
 }
 
 

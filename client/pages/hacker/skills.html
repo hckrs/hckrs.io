@@ -21,7 +21,7 @@
 <template name="editSkills">
   <div id="skills">
 
-    <select class="chosen-select input-skills" multiple data-placeholder=" programming languages" >
+    <select class="chosen-select input-skills" id="skillSelector" multiple data-placeholder=" programming languages" >
       {{#each allSkills}}
         <option {{selected}}>{{name}}</option>
       {{/each}}

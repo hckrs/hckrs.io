@@ -133,6 +133,12 @@
     border-radius: 16px;
   }  
 
+  &[label="no access"] {
+    opacity: 0.3;
+    &:before {
+      background-color: red;
+    }
+  }
   &[label]:not([label=""]):before {
     content: attr(label);
   }

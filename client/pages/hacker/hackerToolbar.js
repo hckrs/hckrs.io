@@ -175,6 +175,10 @@ Template.hackerToolbar.helpers({
 });
 
 Template.hackerToolbarPanelMail.helpers({
+  'first': function() {
+    var city = Session.get('currentCity');
+    return Users.find({city: city}).count() <= 10 ? '10first' : '';
+  },
   'mailSchema': function() {
     return new SimpleSchema({
       "group": { type: String },
@@ -198,11 +202,16 @@ Template.hackerToolbar.rendered = function() {
 // after doing some actions, we directly open a mail template
 // so that the ambassador can notify the user about the changes.
 var openMailTemplate = function(requestTmpl) {
+  var city = Session.get('currentCity');
+
   setTimeout(function() {
     // if 'welcome' message requested, but user still haven't access
     // because of missing info, we should open the 'missingInfo' template.
     if (requestTmpl === 'personalWelcome' && hackerProp('isIncompleteProfile'))
       requestTmpl = 'personalMissingInfo';
+
+    if (requestTmpl === 'personalWelcome' && Users.find({city: city}).count() <= 10)
+      requestTmpl = 'personalWelcome10first';
 
     state.set('activePanel', 'mail');
     Tracker.flush();

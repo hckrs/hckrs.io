@@ -2,5 +2,6 @@
 .build*
 .DS_Store
 node_modules
-.backup
+.docs
 .tools
+.backup

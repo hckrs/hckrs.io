@@ -476,20 +476,8 @@ var attachUserToCity = function(userId, city) {
   if (user.city)
     throw new Meteor.Error(0, "already attached to a city!") 
   
-  // set the city where this user becomes registered
-  var userCityInfo = {};
-  userCityInfo.city = city;
-  userCityInfo.currentCity = city;
-
-  // update user with city information
-  Users.update(user._id, {$set: userCityInfo});
-
-  // automatic invite the first n users
-  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited'])
-    Users.update(user._id, {$unset: {isUninvited: true}});
-
-  // let ambassadors/admins know that a new user has registered the site
-  SendEmailsOnNewUser(user._id);
+  // move
+  moveUserToCity(user._id, city);
 }
 
 
@@ -945,9 +933,17 @@ moveUserToCity = function(hackerId, city) { // called from Methods.js
   // update user's city
   Users.update(hackerId, {$set: {
     city: city,
-    currentCity: city,
-    accessAt: new Date()
+    currentCity: city
   }});
+
+  // automatic invite the first n users, and give them more invites
+  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited']) {
+    Users.update(hackerId, {$set: {invitations: Settings['defaultNumberOfInvitesForAutoInvitedUsers']}});
+    try { forceInvitationOfUser(hackerId); } catch(e) {};
+  }
+
+  // let ambassadors/admins know that a new user has registered the site
+  SendEmailsOnNewUser(hackerId);
 }
 
 
