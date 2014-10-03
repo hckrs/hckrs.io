@@ -57,8 +57,8 @@
 
     {{#if canEdit}}
       <div class="btn-group mode">
-        <button action="switch-mode" mode="edit" class="btn btn-small {{activeMode 'edit'}}"><span class="icon icon-pencil"></span> edit</button>
-        <button action="switch-mode" mode="preview" class="btn btn-small {{activeMode 'preview'}}"><span class="icon icon-eye-open"></span> preview</button>
+        <button action="switch-mode" mode="edit" class="btn btn-default btn-small {{activeMode 'edit'}}"><span class="glyphicon glyphicon-pencil"></span> edit</button>
+        <button action="switch-mode" mode="preview" class="btn btn-default btn-small {{activeMode 'preview'}}"><span class="glyphicon glyphicon-eye-open"></span> preview</button>
       </div>
     {{/if}}
 
@@ -94,8 +94,8 @@
     
   <form class="form-horizontal">
 
-    <div class="control-group">
-      <div class="control-label">
+    <div class="form-group">
+      <div class="control-label col-sm-2">
 
         <div id="profilePicture">
           <div class="current-picture {{changePictureAllowed}}">
@@ -117,7 +117,7 @@
               {{/if}}
               {{#if twitter}}
                 <div class="choice-wrapper">
-                  <label for="inputPictureTwitter" class="radio">
+                  <label for="inputPictureTwitter" class="control-label radio">
                     <div style="background-image:url({{twitter}});" class="picture"></div>    
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{twitter}}" id="inputPictureTwitter" class="imputPictureRadio" {{selected twitter}} />
@@ -143,24 +143,24 @@
         </div>
 
       </div>
-      <div class="controls" style="padding-top:76px;">
-        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:36px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:16px;" required />
+      <div class="controls col-sm-8" style="padding-top:76px;">
+        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:16px;" required />
       </div>
     </div>
 
     {{#unless accessAt}}
-    <div class="control-group" id="register-city-move">
-      <label class="control-label" for="inputCity">city</label>
-      <div class="controls">
+    <div class="form-group" id="register-city-move">
+      <label class="control-label col-sm-2" for="inputCity">city</label>
+      <div class="controls col-sm-8">
         {{> citySelect}} 
         <span class="description hover">— Choose your local city</span>
       </div>
     </div>
     {{/unless}}
 
-    <div class="control-group {{classIf 'error' isDuplicateEmail}} {{classIf 'error' isNotValidEmail}}">
-      <label class="control-label" for="inputEmail">email</label>
-      <div class="controls">
+    <div class="form-group {{classIf 'error' isDuplicateEmail}} {{classIf 'error' isNotValidEmail}}">
+      <label class="control-label col-sm-2" for="inputEmail">email</label>
+      <div class="controls col-sm-8">
         <input type="email" name="profile.email" class="text save email {{required 'profile.email'}}" autosave value="{{profile.email}}" placeholder="e-mailaddress" id="inputEmail" required />
         {{#if required 'profile.email'}}
           <span class="description hover">— email will be not visible by other users</span><br/>
@@ -174,9 +174,9 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">hacking</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="control-label col-sm-2">hacking</label>
+      <div class="controls col-sm-8">
         <label for="inputHackingWeb" class="checkbox">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
           web
@@ -215,17 +215,17 @@
         </label>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="inputSkills">skillset</label>
-      <div class="controls">
+    <div class="form-group ">
+      <label class="control-label col-sm-2" for="inputSkills">skillset</label>
+      <div class="controls col-sm-8">
         {{> editSkills}}
       </div>
     </div>
 
 
-    <div class="control-group">
-      <label class="control-label" for="inputCompany">company / school</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="inputCompany">company / school</label>
+      <div class="controls col-sm-8">
         <input type="text" name="profile.company" class="text save" autosave value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
         <input type="url" name="profile.companyUrl" class="text save" autosave value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
         <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
@@ -236,9 +236,9 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">open to</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="control-label col-sm-2">open to</label>
+      <div class="controls col-sm-8">
         <label for="inputAvailableDrink" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
           have a drink <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
@@ -288,22 +288,22 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label" for="inputHomepage">homepage</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="inputHomepage">homepage</label>
+      <div class="controls col-sm-8">
         <input type="url" name="profile.homepage" class="text save" autosave value="{{profile.homepage}}" placeholder="http://" id="inputHomepage" />
       </div>
     </div>
 
-    <div class="control-group edit-social {{serviceError 'facebook'}}">
-      <label class="control-label">Facebook</label>
-      <div class="controls">
+    <div class="form-group edit-social {{serviceError 'facebook'}}">
+      <label class="control-label col-sm-2">Facebook</label>
+      <div class="controls col-sm-8">
         {{#if profile.social.facebook}}
           <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
-          <a href="#" class="toggle toggleService" data-service="facebook"><span class="icon icon-remove icon-white"></span></a>
+          <a href="#" class="toggle toggleService" data-service="facebook"><span class="glyphicon glyphicon-remove icon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
-          <a href="#" class="toggle toggleService" data-service="facebook"><i class="icon icon-plus icon-white"></i> add</a>
+          <a href="#" class="toggle toggleService" data-service="facebook"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'facebook'}}
           <span class="help-inline">already used by another hacker!</span>
@@ -311,15 +311,15 @@
       </div>
     </div>
 
-    <div class="control-group edit-social {{serviceError 'twitter'}}">
-      <label class="control-label">Twitter</label>
-      <div class="controls">
+    <div class="form-group edit-social {{serviceError 'twitter'}}">
+      <label class="control-label col-sm-2">Twitter</label>
+      <div class="controls col-sm-8">
         {{#if profile.social.twitter}}
           <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a> 
-          <a href="#" class="toggle toggleService" data-service="twitter"><span class="icon icon-remove icon-white"></span></a>
+          <a href="#" class="toggle toggleService" data-service="twitter"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
-          <a href="#" class="toggle toggleService" data-service="twitter"><i class="icon icon-plus icon-white"></i> add</a>
+          <a href="#" class="toggle toggleService" data-service="twitter"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'twitter'}}
           <span class="help-inline">already used by another hacker!</span>
@@ -327,15 +327,15 @@
       </div>
     </div>
 
-    <div class="control-group edit-social {{serviceError 'github'}}">
-      <label class="control-label">GitHub</label>
-      <div class="controls">
+    <div class="form-group edit-social {{serviceError 'github'}}">
+      <label class="control-label col-sm-2">GitHub</label>
+      <div class="controls col-sm-8">
         {{#if profile.social.github}}
           <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
-          <a href="#" class="toggle toggleService" data-service="github"><span class="icon icon-remove icon-white"></span></a>
+          <a href="#" class="toggle toggleService" data-service="github"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
-          <a href="#" class="toggle toggleService" data-service="github"><i class="icon icon-plus icon-white"></i> add</a>
+          <a href="#" class="toggle toggleService" data-service="github"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'github'}}
           <span class="help-inline">already used by another hacker!</span>
@@ -344,9 +344,9 @@
     </div>
 
     {{#unless isAccessDenied}}
-    <div class="control-group">
-      <label class="control-label">mailings</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="control-label col-sm-2">mailings</label>
+      <div class="controls col-sm-8">
         {{#each Constant "MAILING_OPTIONS"}}
           <label for="inputMailing-{{value}}" class="checkbox">
             <input type="checkbox" name="mailings" class="save" autosave id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
