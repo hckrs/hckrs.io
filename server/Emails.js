@@ -342,10 +342,10 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 
 
 // mail containing fields 'githubUserIds', 'subject', 'message'
-Mailing.githubGrowthMail = function(githubUserIds, subject, message) {
+Mailing.githubGrowthMail = function(userIds, subject, message, options) {
   checkAdminPermission();
-
-  var isTest = false;
+  console.log(userIds, subject, message, options)
+  var isTest = true;
 
   var admin = Meteor.user();
   var from_email = property(admin, 'staff.email');
@@ -358,7 +358,7 @@ Mailing.githubGrowthMail = function(githubUserIds, subject, message) {
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, message);
 
-  var users = GithubDump.find({id: {$in: githubUserIds}}).fetch();
+  var users = GithubDump.find({_id: {$in: userIds}}).fetch();
 
   var to_list = _.map(users, function(user) {
     var to = { email: user.email, name: user.name, type: 'to' };
@@ -367,14 +367,10 @@ Mailing.githubGrowthMail = function(githubUserIds, subject, message) {
   });
 
   var merge_vars = _.map(users, function(user) {
-    var vars = [
-      {name: "name", content: user.name},
-      {name: "email", content: user.email},
-      {name: "city", content: CITYMAP[user.city].name},
-      {name: "company", content: user.company},
-      {name: "followers", content: user.followers},
-      {name: "following", content: user.following},
-    ];
+    var vars = _.map(user, function(val, key){ 
+      if (key == 'city') val = CITYMAP[val].name; // use human readable city name
+      return {name: key, content: val}; 
+    });
     console.log(user.email, vars);
     return { rcpt: user.email, vars: vars };
   });
@@ -428,6 +424,9 @@ Mailing.githubGrowthMail = function(githubUserIds, subject, message) {
     
     if (res.statusCode !== 200)
       throw 'mailing failed with status code' + res.statusCode;
+
+    // mark users as inivted
+    GithubDump.update({_id: {$in: userIds}}, {$set: {invitedAt: new Date()}}, {multi: true});
 
     console.log('mailing succeed', res, res.data)
   } catch(e) {

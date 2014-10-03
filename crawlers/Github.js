@@ -1,5 +1,7 @@
 Crawler = {};
 
+Crawler.busy = false;
+
 // fetch usernames from github related to all cities from hckrs.io
 Crawler.fetchGithubUsersInAllCities = function(cb) {
 
@@ -16,25 +18,24 @@ Crawler.fetchGithubUsersInCity = function(city, cb) {
   
   if (Meteor.isClient)
     return call('crawlFetchGithubUsersInCity', city, cb);  
+
+  if (Crawler.busy)
+    throw new Meteor.Error(500, "already crawling");
   
   // query
   var cityName = CITYMAP[city].name;
   var query = "location:" + cityName.replace(' ', '+');
-  
+
+
+  var callback = function(err) {
+    Crawler.busy = false;
+    cb(err);
+  }
+
+  Crawler.busy = true;
+
   // fetch and store each user
-  forEachUsers(query, 1, _.partial(storeUser, city), cb);
-}
-
-
-// Fetch additional userdata for each username
-// obtained by the function Crawler.fetchGithubUsersInCity()
-Crawler.fetchGithubUserData = function(cb) {
-  
-  if (Meteor.isClient)
-    return call('crawlFetchGithubUserData', cb);  
-  
-  // fetch additional userdata for each user
-  fetchUserData(cb);
+  forEachQueriedUser(query, 1, _.partial(fetchSingleUser, city), callback);
 }
 
 
@@ -44,7 +45,7 @@ Crawler.fetchGithubUserData = function(cb) {
 if (Meteor.isServer) {
 
 
-  var forEachUsers = function(query, page, iterator, cb) {
+  var forEachQueriedUser = function(query, page, iterator, cb) {
     
     if (page > 10) 
       return cb && cb();
@@ -60,6 +61,7 @@ if (Meteor.isServer) {
     
     // make reruest
     var users = request('GET', "https://api.github.com/search/users", params).items || [];
+    users = _.pluck(users, 'login');
     
     // store users
     _.each(users, iterator);  
@@ -67,42 +69,60 @@ if (Meteor.isServer) {
     // recurse
     if (users.length) {
       setTimeout(Meteor.bindEnvironment(function(){
-        forEachUsers(query, page + 1, iterator, cb);
-      }), 3000);
+        forEachQueriedUser(query, page + 1, iterator, cb);
+      }), 60 * 1000); // 80s timeout because rate limit is fetching 5.000 users per hour
     }
     else 
       cb && cb();
   }
 
-  var storeUser = function(city, user) {
-    var doc = _.pick(user, 'id', 'login')
-    doc.city = city;
-    doc.email = doc.email ? doc.email : null;
-    GithubDump.upsert({id: user.id}, {$set: doc});
-  }
+  var fetchSingleUser = function(city, userLogin) {
+    console.log('fetch github user', userLogin);
 
-  var fetchUserData = function(cb) {
-    var docs = GithubDump.find({isFetched: {$ne: true}}).fetch();
-    async.forEachSeries(docs, Meteor.bindEnvironment(function(doc, cb) {
-      fetchSingleUserData(doc);
-      setTimeout(cb, 12);
-    }), cb);
-  }
+    if (GithubDump.findOne({username: userLogin}))
+      return; // already crawled
 
-  var fetchSingleUserData = function(doc) {
-    console.log('fetch github user', doc.id, doc.login);
+    try {
+      var user = request('GET', "https://api.github.com/users/"+userLogin) || {};
+      user = _.pickRename(user, {
+        "id": true,
+        "login": "username",
+        "email": true,
+        "avatar_url": "avatarUrl",
+        "bio": "biography",
+        "created_at": "createdAt",  
+        "updated_at": "updatedAt",  
+        "followers": true,
+        "following": true,
+        "public_repos": "repos",       
+        "public_gists": "gists",      
+        "hireable": true,
+        "name": true,
+        "blog": "website",
+        "company": true,
+        "location": true,
+      });
+      user.hireable = !!user.hireable;
+      user.createdAt = new Date(user.createdAt);
+      user.updatedAt = new Date(user.updatedAt);
+      user.city = city;
+      user = omitEmpty(user);
+      
+      if (!user.email)
+        return; // user don't have email
 
-    // make request
-    var user = request('GET', "https://api.github.com/users/"+doc.login);
-
-    // update doc
-    var fields = _.pick(user, 'created_at', 'updated_at', 'email', 'followers', 'following', 'location', 'name', 'company', 'avatar_url', 'url');
-    fields.isFetched = true;
-    GithubDump.update(doc._id, {$set: fields});
+      try {
+        GithubDump.insert(user);
+      } catch(e) { 
+        console.log("Invalid schema", user, e);   
+      }
+  
+    } catch(e) { 
+      console.log("failed crawling", userLogin, e); 
+    }
   }
 
   var request = function(method, url, params) {
-    
     var options = {
       headers: {"User-Agent": "Meteor/"+Meteor.release},
       params: _.extend(params || {}, {
@@ -110,8 +130,6 @@ if (Meteor.isServer) {
         client_secret: Settings['github']['secret'],
       })
     };  
-    
-    // make reruest
     return HTTP.call(method, url, options).data;
   }
 
@@ -121,8 +139,6 @@ if (Meteor.isServer) {
   Meteor.methods({
     'crawlFetchGithubUsersInAllCities': Crawler.fetchGithubUsersInAllCities,
     'crawlFetchGithubUsersInCity': Crawler.fetchGithubUsersInCity,
-    'crawlFetchGithubUserData': Crawler.fetchGithubUserData,
-
   });
 
 }

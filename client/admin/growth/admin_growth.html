@@ -1,16 +1,20 @@
 <template name="admin_growth">
   <div id="admin_growth" class="page">
-    <p>
-      <a href="{{pathFor 'admin_growthTemplates'}}">edit templates</a>
-    </p>
 
-    <details>
-      <summary>Send email</summary>
-      {{> admin_growthEmail}}  
-    </details>
+    {{#if composeActive}}
+      {{> admin_growthEmail}}
+    {{/if}}
 
-    <h2>Github users</h2>
-    {{! reactiveTable collection=collection settings=settings}}
+    <div class="pull-right">
+      <button class="btn" action="crawl">crawl "{{city.name}}"</button>
+      <button class="btn" action="compose">compose email</button>
+    </div>
+
+    <h2>Github users {{city.name}}</h2>
+    <div id="growthCityChooser">
+      {{> citySelect}}
+    </div>
+    {{> reactiveTable collection=collection settings=settings}}
     <div class="page-space"></div>
   </div>
 </template>
@@ -20,9 +24,18 @@
 <template name="admin_growthEmail">
   <div id="admin_growthEmail">
     
-    {{#autoForm id="adminGrowthEmailForm" schema=schema}}
-      {{> afQuickField name="subject" id="subject" class="input-xxlarge" value="Join *|city|*"}}
-      {{> afQuickField name="message" id="message" rows="10" class="input-xxlarge" value="Hi *|name|*, you are an inspiring hacker, so please join us in *|city|*."}}
+    <h2>Send Email</h2>
+    {{#autoForm id="adminGrowthEmailForm" schema=schema class="compose"}}
+
+      Send to <input type="number" name="number" class="input-mini" value="20"> uninvited people occuring at the top of the list. Click on a column to change the order.
+      
+      {{> afQuickField name="selectSubject" id="selectSubject" class="input-xxlarge" options=subjects firstOption="New subject template"}}
+      {{> afFieldInput name="subject" id="subject" class="input-xxlarge" value=subject.value readonly=subject.readonly}}
+      
+      {{> afQuickField name="selectMessage" id="selectMessage" rows="10" class="input-xxlarge" options=messages  firstOption="New message template"}}
+      {{> afFieldInput name="message" id="message" rows="10" class="input-xxlarge" value=message.value readonly=message.readonly}}
+      
+      <br/>
       <button action="submit" class="btn btn-primary">Send</button>
     {{/autoForm}}
     
