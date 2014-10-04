@@ -405,10 +405,11 @@
       {{#if profile.skills}}  
       <div class="form-group">
         <label class="control-label col-sm-2">skillset</label>
-        <div class="controls col-sm-8">
+        <div class="controls col-sm-8 skillset">
           {{> skills}}
         </div>
       </div>
+      <div class="spacer"></div>
       {{/if}}
 
       {{#if profile.homepage}}
@@ -469,10 +470,9 @@
         </div>
       </div>
       {{/if}}
-
-      <div class="spacer"></div>
       
       {{#if profile.available}}
+      <div class="spacer"></div>
       <div class="form-group">
         <label class="control-label col-sm-2">open to</label>
         <div class="controls col-sm-8">
