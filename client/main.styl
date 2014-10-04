@@ -86,10 +86,7 @@ body{
     border-radius: 0px;
     border: 0px;
     background-color: transparent;
-    margin: auto !important;
     color: #333;
-    padding-left: 32px;
-    padding-bottom: 20px;
   }
 
   .alert h1 {
@@ -106,8 +103,8 @@ body{
     width: 100%;
     background-color: rgba(255,255,255,0.3);
     .alert {
+      margin: 10px 0px;
       width: 550px;
-      margin-left: 200px;
     }
   }
 
@@ -348,7 +345,7 @@ body{
     border: 1px dashed transparent;
     box-shadow: none;
     border-radius: 15px;
-    padding: 3px 10px;
+    padding: 3px 12px;
     color: white;
     margin-left: -11px;
     margin-top: -5px;
@@ -377,14 +374,18 @@ body{
   input.text::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #bbb; }
   input.text:-ms-input-placeholder { /* Internet Explorer 10+ */ color: #bbb; }
 
-  label.checkbox{
+  label.checkbox.inline {
     float: left;
-    margin-right: 32px;
-    padding-top: 5px;
-    font-weight: 100;
-    color: white;
-    text-shadow: 1px 1px 1px #222;
+    margin-right: 15px;
   }
+  label.checkbox {
+    color: white;
+    text-shadow: 1px 1px 1px rgba(44,44,44,0.4);
+    font-weight: 100;
+    margin-left: 22px;
+  }
+
+  
 
   .change{
     line-height: 60px;

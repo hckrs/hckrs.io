@@ -5,44 +5,50 @@
     {{#if isCurrentUser}}
       {{#if HackerProp 'isAccessDenied'}}
 
-        {{#if invitationLimitReached}}
-          <div class="alert alert-error">
-            <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
-          </div>
-        {{/if}}
-        
-        {{#if isUnverifiedEmail}}
-          <div class="access-denied alert alert-info">
-            <h1>Check your e-mail :)</h1>
-            <p>We have sent you an email with a validation link</p>
-          </div>
-        {{else}}
-          {{#if tellUsMore}}
-            {{#if isInvited}} 
-              {{! XXX user must only complete his profile to enter website (already invited) }}
-              <div class="access-denied alert alert-info">
-                <h1>Tell us more</h1>
-                <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
-              </div>
-            {{else}}
-              {{! XXX user must complete his profile AND needs to be invited by someone }}
-              <div class="access-denied alert alert-info">
-                <h1>Tell us more</h1>
-                <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
-                <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
-              </div>
-            {{/if}}
-          {{else}}
-            {{#unless isInvited}}
-              {{! XXX profile is completely filled in but user needs to be invited by someone }}
-              <div class="access-denied alert alert-success">
-                <h1>Thank you</h1>
-                <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
-                <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
-              </div>
-            {{/unless}}
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+
+          {{#if invitationLimitReached}}
+            <div class="alert alert-error">
+              <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
+            </div>
           {{/if}}
-        {{/if}}
+          
+          {{#if isUnverifiedEmail}}
+            <div class="access-denied alert alert-info">
+              <h1>Check your e-mail :)</h1>
+              <p>We have sent you an email with a validation link</p>
+            </div>
+          {{else}}
+            {{#if tellUsMore}}
+              {{#if isInvited}} 
+                {{! XXX user must only complete his profile to enter website (already invited) }}
+                <div class="access-denied alert alert-info">
+                  <h1>Tell us more</h1>
+                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+                </div>
+              {{else}}
+                {{! XXX user must complete his profile AND needs to be invited by someone }}
+                <div class="access-denied alert alert-info">
+                  <h1>Tell us more</h1>
+                  <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
+                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
+                </div>
+              {{/if}}
+            {{else}}
+              {{#unless isInvited}}
+                {{! XXX profile is completely filled in but user needs to be invited by someone }}
+                <div class="access-denied alert alert-success">
+                  <h1>Thank you</h1>
+                  <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
+                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
+                </div>
+              {{/unless}}
+            {{/if}}
+          {{/if}}
+        
+        </div>
+        <div class="clear"></div>
 
       {{/if}}
     {{/if}}
@@ -74,8 +80,9 @@
     {{#if isCurrentUser}}
       {{#if tellUsMore}}
         <form class="form-horizontal">
-          <div class="control-group">
-            <div class="controls profile-ready">
+          <div class="form-group">
+            <label class="control-label col-sm-2"></label>
+            <div class="controls col-sm-8 profile-ready">
               Are you ready to enter the website? 
               <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
             </div>
@@ -144,7 +151,7 @@
 
       </div>
       <div class="controls col-sm-8" style="padding-top:76px;">
-        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:16px;" required />
+        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:-15px;" required />
       </div>
     </div>
 
@@ -177,47 +184,47 @@
     <div class="form-group">
       <label class="control-label col-sm-2">hacking</label>
       <div class="controls col-sm-8">
-        <label for="inputHackingWeb" class="checkbox">
+        <label for="inputHackingWeb" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
           web
         </label>
-        <label for="inputHackingApp" class="checkbox">
+        <label for="inputHackingApp" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
           apps
         </label>
-        <label for="inputHackingSoftware" class="checkbox">
+        <label for="inputHackingSoftware" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
           software
         </label>
-        <label for="inputHackingGame" class="checkbox">
+        <label for="inputHackingGame" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
           games
         </label>
-        <label for="inputHackingDesign" class="checkbox">
+        <label for="inputHackingDesign" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
           design
         </label>
-        <label for="inputHackingLife" class="checkbox">
+        <label for="inputHackingLife" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
           life
         </label>
-        <label for="inputHackingHardware" class="checkbox">
+        <label for="inputHackingHardware" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
           hardware
         </label>
-        <label for="inputHackingOpenSource" class="checkbox">
+        <label for="inputHackingOpenSource" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingOpenSource" value="opensource" {{checked "profile.hacking" "opensource"}} />
           open source
         </label>
-        <label for="inputHackingGrowth" class="checkbox">
+        <label for="inputHackingGrowth" class="checkbox inline">
           <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingGrowth" value="growth" {{checked "profile.hacking" "growth"}} />
           growth
         </label>
       </div>
     </div>
-    <div class="form-group ">
+    <div class="form-group">
       <label class="control-label col-sm-2" for="inputSkills">skillset</label>
-      <div class="controls col-sm-8">
+      <div class="controls col-sm-8 skillset-input">
         {{> editSkills}}
       </div>
     </div>
@@ -365,146 +372,139 @@
 
 
 <template name="hackerView">
-  {{#with UserView _id}}
-
-    <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{label}}"></div>
-    {{/with}}
-    <div class="headline">
-      <div class="name">{{profile.name}}</div>
-        <div class="hacking-container">
-          {{#each profile.hacking}}
-            <div class="hacking-tag">{{this}}</div>
-          {{/each}}
-        <div class="hacker-number">hacker #{{UserRank this}} in {{CurrentCity.name}}</div>
-      </div>
-    </div>
+  <div id="hackerView">
     
-    <div style="clear:both;margin-bottom: 50px;"></div>
 
-    {{#if profile.skills}}
-    <div class="line">
-      <div class="handle">
-        skillset
-      </div>
-      <div class="output">
-        {{> skills}}
-      </div>
-      <div class="clear"></div>
-    </div>
-    {{/if}}
-
-    <div class="spacer"></div>
-
-    {{#if profile.homepage}}
-    <div class="line">
-      <div class="handle">
-        homepage
-      </div>
-      <div class="output">
-        <a href="{{profile.homepage}}" target="_blank">{{ShowUrl profile.homepage}}</a>
-      </div>
-      <div class="clear"></div>
-    </div>
-    {{/if}}
-
-    {{#if profile.social.facebook}}
-    <div class="line">
-      <div class="handle">
-        Facebook
-      </div>
-      <div class="output">
-        <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
-        <div class="fb-follow" data-href="{{profile.social.facebook}}" data-colorscheme="light" data-layout="button" data-show-faces="true"></div>
-      </div>
-      <div class="clear"></div>
-    </div>
-    {{/if}}
-
-    {{#if profile.social.github}}
-    <div class="line">
-      <div class="handle">
-        GitHub
-      </div>
-      <div class="output">
-        <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
-        <iframe src="http://ghbtns.com/github-btn.html?user={{UserSocialName _id 'github'}}&type=follow" allowtransparency="true" frameborder="0" scrolling="0" width="132" height="20" class="github-follow"></iframe>
-      </div>
-      <div class="clear"></div>
-    </div>
-    {{/if}}
-
-    {{#if profile.social.twitter}}
-    <div class="line">
-      <div class="handle">
-        Twitter
-      </div>
-      <div class="output">
-        <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
-        <a href="{{profile.social.twitter}}" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @{{UserSocialName _id 'twitter'}}</a>
-      </div>
-      <div class="clear"></div>
-    </div>
-    {{/if}}
-
-    {{#if isCompanyOrLocation}}
-    <div class="line">
-      <div class="handle">
-        company / school
-      </div>
-      <div class="output">
-        {{#if profile.company}}
-          {{#if profile.companyUrl}}
-            <a href="{{profile.companyUrl}}" target="_blank">{{profile.company}}</a>
-          {{else}}
-            {{profile.company}}
-          {{/if}}
-        {{/if}}
-        {{#if profile.location}}    
-          <div id="mapWrapper" class="view">
-            <div id="viewMap" class="map"></div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">
+        {{#with UserView _id}}
+          <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{label}}"></div>
+        {{/with}}
+      </label>
+      <div class="controls col-sm-8">
+        <div class="headline">
+          <div class="name">{{profile.name}}</div>
+          <div class="hacking-container">
+            {{#each profile.hacking}}
+              <div class="hacking-tag">{{this}}</div>
+            {{/each}}
           </div>
-        {{/if}}
+          {{#if accessAt}}
+            <div class="hacker-number">
+              hacker #{{UserRank this}} in {{CurrentCity.name}}
+            </div>
+          {{/if}}
+        </div>
       </div>
-      <div class="clear"></div>
     </div>
-    {{/if}}
-
-    <div class="spacer"></div>
     
-    {{#if profile.available}}
-    <div class="line">
-      <div class="handle">
-        open to
+    <div style="clear:both;margin-bottom: 20px;"></div>
+
+    <form class="form-horizontal">
+    
+      {{#if profile.skills}}  
+      <div class="form-group">
+        <label class="control-label col-sm-2">skillset</label>
+        <div class="controls col-sm-8">
+          {{> skills}}
+        </div>
       </div>
-      <div class="output">
-        {{#if contains profile.available "drink"}}
-        <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have a drink</a>
-        {{/if}}
-        {{#if contains profile.available "lunch"}}
-        <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have lunch</a>
-        {{/if}}
-        {{#if contains profile.available "email"}}
-        <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
-        {{/if}}
-        {{#if contains profile.available "call"}}
-          {{#if profile.phone}}
-          <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
-          {{/if}}
-          {{#if profile.skype}}
-          <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
-          {{/if}}
-        {{/if}}
-        {{#if contains profile.available "cowork"}}
-        <a href="mailto:{{profile.email}}?subject=Can I co-work at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
-        {{/if}}
-        {{#if contains profile.available "couchsurf"}}
-        <a href="mailto:{{profile.email}}?subject=Can I couchsurf at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
-        {{/if}}
+      {{/if}}
+
+      {{#if profile.homepage}}
+      <div class="form-group">
+        <label class="control-label col-sm-2">homepage</label>
+        <div class="controls col-sm-8">
+          <a href="{{profile.homepage}}" target="_blank">{{ShowUrl profile.homepage}}</a>
+        </div>
       </div>
-      <div class="clear"></div>
-    </div>
-  
-  {{/if}}
+      {{/if}}
+
+      {{#if profile.social.facebook}}
+      <div class="form-group">
+        <label class="control-label col-sm-2">Facebook</label>
+        <div class="controls col-sm-8">
+          <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
+          <div class="fb-follow" data-href="{{profile.social.facebook}}" data-colorscheme="light" data-layout="button" data-show-faces="true"></div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.social.github}}
+      <div class="form-group">
+        <label class="control-label col-sm-2">Github</label>
+        <div class="controls col-sm-8">
+           <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
+          <iframe src="http://ghbtns.com/github-btn.html?user={{UserSocialName _id 'github'}}&type=follow" allowtransparency="true" frameborder="0" scrolling="0" width="132" height="20" class="github-follow"></iframe>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if profile.social.twitter}}
+      <div class="form-group">
+        <label class="control-label col-sm-2">Twitter</label>
+        <div class="controls col-sm-8">
+          <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
+          <a href="{{profile.social.twitter}}" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @{{UserSocialName _id 'twitter'}}</a>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if isCompanyOrLocation}}
+      <div class="form-group">
+        <label class="control-label col-sm-2">company / school</label>
+        <div class="controls col-sm-8">
+          {{#if profile.company}}
+            {{#if profile.companyUrl}}
+              <a href="{{profile.companyUrl}}" target="_blank">{{profile.company}}</a>
+            {{else}}
+              {{profile.company}}
+            {{/if}}
+          {{/if}}
+          {{#if profile.location}}    
+            <div id="mapWrapper" class="view">
+              <div id="viewMap" class="map"></div>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+      {{/if}}
+
+      <div class="spacer"></div>
+      
+      {{#if profile.available}}
+      <div class="form-group">
+        <label class="control-label col-sm-2">open to</label>
+        <div class="controls col-sm-8">
+          {{#if contains profile.available "drink"}}
+          <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have a drink</a>
+          {{/if}}
+          {{#if contains profile.available "lunch"}}
+          <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have lunch</a>
+          {{/if}}
+          {{#if contains profile.available "email"}}
+          <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
+          {{/if}}
+          {{#if contains profile.available "call"}}
+            {{#if profile.phone}}
+            <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
+            {{/if}}
+            {{#if profile.skype}}
+            <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
+            {{/if}}
+          {{/if}}
+          {{#if contains profile.available "cowork"}}
+          <a href="mailto:{{profile.email}}?subject=Can I co-work at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
+          {{/if}}
+          {{#if contains profile.available "couchsurf"}}
+          <a href="mailto:{{profile.email}}?subject=Can I couchsurf at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
+          {{/if}}
+        </div>
+      </div>
+      {{/if}}
+
+    </form>
+  </div>
 </template>
 
 
