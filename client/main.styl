@@ -86,10 +86,7 @@ body{
     border-radius: 0px;
     border: 0px;
     background-color: transparent;
-    margin: auto !important;
     color: #333;
-    padding-left: 32px;
-    padding-bottom: 20px;
   }
 
   .alert h1 {
@@ -106,8 +103,8 @@ body{
     width: 100%;
     background-color: rgba(255,255,255,0.3);
     .alert {
+      margin: 10px 0px;
       width: 550px;
-      margin-left: 200px;
     }
   }
 
@@ -245,7 +242,7 @@ body{
 
         .button {
           margin: 32px 5px;
-          height: 22px;
+          height: 32px;
           background-color: rgba(0,0,0,0.1);
           background-image: none;
           .icon {
@@ -348,11 +345,12 @@ body{
     border: 1px dashed transparent;
     box-shadow: none;
     border-radius: 15px;
-    padding: 3px 10px;
+    padding: 3px 12px;
     color: white;
     margin-left: -11px;
     margin-top: -5px;
     transition: none;
+    height:30px;
   }
   input.text:hover {
     border: 1px solid rgba(0,0,0,0);
@@ -376,14 +374,21 @@ body{
   input.text::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #bbb; }
   input.text:-ms-input-placeholder { /* Internet Explorer 10+ */ color: #bbb; }
 
-  label.checkbox{
-    float: left;
-    margin-right: 32px;
-    padding-top: 5px;
-    font-weight: 100;
-    color: white;
-    text-shadow: 1px 1px 1px #222;
+  label {
+    cursor: pointer;
   }
+  label.checkbox.inline {
+    float: left;
+    margin-right: 15px;
+  }
+  label.checkbox {
+    color: white;
+    text-shadow: 1px 1px 1px rgba(44,44,44,0.4);
+    font-weight: 100;
+    margin-left: 22px;
+  }
+
+  
 
   .change{
     line-height: 60px;
@@ -411,6 +416,7 @@ body{
         color: #fff;
         border-radius: 2px;
         border: 1px solid rgba(255,255,255,0.15);
+        min-width:40px;
       }
       textarea:focus, input[type="text"]:focus, input[type="password"]:focus,
       input[type="datetime"]:focus, input[type="datetime-local"]:focus,
@@ -477,9 +483,7 @@ body{
         background-image: none !important;
       }
     }
-
-
-
+    
     select:active, select:focus {
       outline-style: none; -moz-outline-style:none;
     }
@@ -496,7 +500,9 @@ body{
       padding-left: 12px;
     }
   }
-
-
-
+}
+/* Replacement for button-inverse of bootstrap 2 */
+a.btn.btn-inverse, button.btn.btn-inverse {
+    background-color:#444;
+    color:#fff;
 }

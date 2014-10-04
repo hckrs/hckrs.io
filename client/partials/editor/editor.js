@@ -15,7 +15,7 @@ Template.editorForm.helpers({
     var city = Session.get('currentCity');
     var doc = window[this.collection].findOne({_id: this.selectedId()});
     return {
-      icon: doc.private ? 'icon-home' : 'icon-globe',
+      icon: doc.private ? 'glyphicon-home' : 'glyphicon-globe',
       attr: {
         action: 'privacy',
         toggle: doc.private ? 'off' : 'on',  
@@ -28,7 +28,7 @@ Template.editorForm.helpers({
     var isHidden = !!window[this.collection].findOne({_id: this.selectedId(), hiddenIn: city});  
     var txt = isHidden ? 'SHOW' : 'HIDE';
     return {
-      icon: isHidden ? 'icon-eye-close' : 'icon-eye-open',
+      icon: isHidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open',
       attr: {
         action: 'visibility',
         toggle: isHidden ? 'on' : 'off',  

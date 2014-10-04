@@ -25,10 +25,9 @@ mrt:iron-router-progress
 datariot:ganalytics
 aslagle:reactive-table
 mrt:mailchimp
-bootstrap
 kidovate:pnotify
 pauloborges:repl
 aldeed:autoform
 aldeed:collection2
 oauth
-
+mizzao:bootstrap-3
