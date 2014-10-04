@@ -65,8 +65,8 @@ Field.private = {
   key: 'private',
   label: 'private',
   fn: function(val, obj) {
-    var icon = val ? 'icon-home' : 'icon-globe';
-    return Safe.string('<span class="icon '+icon+'"></span>');
+    var icon = val ? 'glyphicon-home' : 'glyphicon-globe';
+    return Safe.string('<span class="glyphicon '+icon+'"></span>');
   }
 }
 

@@ -36,4 +36,4 @@ Settings['defaultNumberOfInvitesForAutoInvitedUsers'] = 8;
 SimpleSchema.debug = Settings['simpleSchemeDebug']
 
 if (Meteor.isClient)
-	AutoForm.setDefaultTemplate('plain');
+	AutoForm.setDefaultTemplate('bootstrap3');
