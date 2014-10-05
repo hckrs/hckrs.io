@@ -1,35 +1,32 @@
 <template name="meetup">
     <div class="container meetup">
         <div class="row">
-            <div class="col-md-12">
-                <span class="h2">drones</span><span class="h4 meetup-topics">
+            <span class="h2">drones</span>
+            <span class="h4 meetup-topics">
                 {{#each topics}}
                     #{{this}}
                 {{/each}}
-                </span>
-            </div>
+            </span>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h2 class="h2">4 october at 19pm @Ninkasi Guillotière</h2>
+                <h2 class="h2">{{time}} @{{location}}</h2>
                 <button class="btn btn-default">going</button>
                 <button class="btn btn-default">maybe</button>
                 <button class="btn btn-default">not going</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-
-            </div>
-        </div>
+        
         <div class="row">
             <div class="col-md-12">
                 <h5>{{going.length}} going</h5>
             </div>
-            <div class="well col-md-6">
+            <div class="col-md-6">
+                <div class="well">
                 {{#each going}}
                     <div class="img-circle picture" style="background-image:url({{imageSrc}});"></div>
                 {{/each}}
+                </div>
             </div>
         </div>
 
@@ -37,10 +34,12 @@
             <div class="col-md-12">
                 <h5>{{maybe.length}} maybe going</h5>
             </div>
-            <div class="well col-md-6">
+            <div class="col-md-6">
+                <div class="well">
                 {{#each maybe}}
                     <div class="img-circle picture" style="background-image:url({{imageSrc}});"></div>
                 {{/each}}
+                </div>
             </div>
         </div>
         
@@ -48,10 +47,12 @@
             <div class="col-md-12">
                 <h5>{{invited.length}} invited</h5>
             </div>
-            <div class="well col-md-6">
+            <div class="col-md-6">
+                <div class="well">
                 {{#each invited}}
                     <div class="img-circle picture" style="background-image:url({{imageSrc}});"></div>
                 {{/each}}
+                </div>
             </div>
         </div>
     </div>
