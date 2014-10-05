@@ -21,6 +21,7 @@ var routes = [
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
+  [ 'meetup'       , '/meetup/:id'           ],
   
   // special routes
   [ 'hacker'       , '/:bitHash'             ],
