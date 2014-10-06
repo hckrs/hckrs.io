@@ -1,59 +1,39 @@
 <template name="meetup">
-    <div class="container meetup">
+    <div id="meetup" class="container">
+
         <div class="row">
-            <span class="h2">drones</span>
+            <span class="h1">drones</span>
+            &nbsp;&nbsp;
             <span class="h4 meetup-topics">
                 {{#each topics}}
                     #{{this}}
                 {{/each}}
             </span>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="h2">{{time}} @{{location}}</h2>
-                <button class="btn btn-default">going</button>
-                <button class="btn btn-default">maybe</button>
-                <button class="btn btn-default">not going</button>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <h5>{{going.length}} going</h5>
-            </div>
-            <div class="col-md-6">
-                <div class="well">
-                {{#each going}}
-                    <div class="img-circle picture" style="background-image:url({{imageSrc}});"></div>
-                {{/each}}
-                </div>
-            </div>
-        </div>
 
-        <div class="row meetup-maybe-going">
+        <div class="row">
             <div class="col-md-12">
-                <h5>{{maybe.length}} maybe going</h5>
-            </div>
-            <div class="col-md-6">
-                <div class="well">
-                {{#each maybe}}
-                    <div class="img-circle picture" style="background-image:url({{imageSrc}});"></div>
-                {{/each}}
-                </div>
+                <h3>{{time}} @{{location}}</h3>
+                <button class="btn btn-going">going</button>
+                <button class="btn btn-maybe">maybe</button>
+                <button class="btn btn-decline">not going</button>
             </div>
         </div>
         
-        <div class="row meetup-maybe-going">
+        {{#each presence}}
+        <div class="row">
             <div class="col-md-12">
-                <h5>{{invited.length}} invited</h5>
+                <h5>{{users.length}} {{status}}</h5>
             </div>
             <div class="col-md-6">
                 <div class="well">
-                {{#each invited}}
-                    <div class="img-circle picture" style="background-image:url({{imageSrc}});"></div>
-                {{/each}}
+                    {{#each users}}
+                    <div class="pictureView small" style="background-image:url({{imageSrc}});"></div>
+                    {{/each}}
                 </div>
             </div>
         </div>
+        {{/each}}
+
     </div>
 </template>

@@ -21,7 +21,8 @@ var routes = [
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
-  [ 'meetup'       , '/meetup/:id'           ],
+  [ 'meetup'       , '/meetup/:name/:nr'     ],
+  [ 'addMeetup'    , 'meetup/new'            ],
   
   // special routes
   [ 'hacker'       , '/:bitHash'             ],
@@ -34,7 +35,7 @@ var noLoginRequired = [
   'about',
   'frontpage', 
   'invite', 
-  'verifyEmail',
+  'verifyEmail'
 ];
 
 

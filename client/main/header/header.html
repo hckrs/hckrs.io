@@ -1,0 +1,69 @@
+<template name="header">
+  <div id="header" class="{{headerStyle}} {{hidden}} {{active}}">
+    <div class="floating">
+      <div class="background" style="background-image:url('{{backgroundImage}}');"></div>
+      <div class="content">
+
+        <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
+
+
+          <!-- right menu -->
+          <div class="session">
+
+            {{#if hasAdminPermission}}
+              {{> citySelect}}
+              <a href="{{pathFor 'admin'}}" action="admin" class="button btn btn-inverse light"><i class="glyphicon glyphicon-white glyphicon-wrench"></i></a>
+            {{/if}}
+
+            <div class="account">
+              <div class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <div style="background-image:url({{UserProp 'profile.picture'}});" class="pictureView small clickable"></div>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{pathFor 'hacker' _id=CurrentUserId redirect=true}}"><i class="glyphicon glyphicon-user"></i> {{UserProp 'profile.name'}}</a></li>
+                  {{#unless UserProp 'isAccessDenied'}}
+                    <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite hackers ({{UserProp 'invitations'}})</a></li>
+                    <li><a href="{{pathFor 'addMeetup'}}"><i class="glyphicon glyphicon-calendar"></i> Add meetup</a></li>
+                  {{/unless}}
+                  <li class="divider"></li>
+                  <li><a href="" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="menu">
+            {{#unless UserProp 'isAccessDenied'}}
+
+              <div class="menu-item">
+                <a href="{{pathFor 'hackers'}}">hackers</a>
+              </div>
+
+              {{#if CurrentCity.agenda}}
+              <div class="menu-item">
+                <a href="{{pathFor 'agenda'}}">agenda</a>
+              </div>
+              {{/if}}
+
+              <div class="menu-item">
+                <a href="{{pathFor 'map'}}">map</a>
+              </div>
+
+              <div class="menu-item">
+                <a href="{{pathFor 'deals'}}">deals</a>
+              </div>
+
+              <div class="menu-item">
+                <a href="{{pathFor 'books'}}">books</a>
+              </div>
+
+            {{/unless}}
+          </div>
+
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+</template>
