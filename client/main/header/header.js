@@ -2,7 +2,7 @@
 
 Template.header.helpers({
   'backgroundImage': function() {
-    return getBackground();
+    return Url.cityBackground();
   },
   'headerStyle': function() {
     return Interface.getHeaderStyle();
