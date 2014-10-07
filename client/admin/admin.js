@@ -19,7 +19,7 @@ Field = {}
 Field.fn = {}
 
 Field.fn.email = function(val, obj) {
-  return val ? Safe.email(val, {text: '<span class="icon icon-envelope"></span>'}) : '';
+  return val ? Safe.email(val, {text: '<span class="glyphicon glyphicon-envelope"></span>'}) : '';
 }
 
 Field.fn.url = function(urlField) {
