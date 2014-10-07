@@ -46,6 +46,8 @@ var fields = function() {
     { key: 'website', label: 'site', sortByValue: true, fn: function(url) { return url ? Safe.url(url, {text: '<span class="glyphicon glyphicon-globe"></span>'}) : ''; }},
     { key: 'email', label: 'email', sortByValue: true, fn: Field.fn.email },
     { key: 'invitedAt', label: 'invited', sortByValue: true, fn: Field.fn.date},
+    { key: 'open', label: 'open', sortByValue: true, fn: Field.fn.bool},
+    { key: 'clicks', label: 'clicks', sortByValue: true},
     { key: 'signupAt', label: 'singup', sortByValue: true, fn: Field.fn.date},
   ];
 };
@@ -186,7 +188,10 @@ var getUsersFromTop = function(number) {
     , city  = state.get('city');
 
   // get userIds for X number of (uninvited) hackers from top of table
-  var selector = {city: city};
+  var selector = {
+    city: city, 
+    invitedAt: {$exists: false}
+  };
   var options = {
     sort: _.object([table.sortKey], [table.sortDir]), 
     limit: number

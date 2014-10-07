@@ -9,6 +9,20 @@ EmailsOutbound = new Meteor.Collection('emailsOutbound');
 
 // schemas
 
+var eventSchema =new SimpleSchema({ /* events from mandrill (webhook) */
+  "event": { type: String }, /* send, deferral, hard-bounce, soft-bounce, open, click, spam, unsub, reject */
+  "url": { type: String, optional: true}, /* url clicked in the message */
+  "agent": { 
+    type: new SimpleSchema({
+      "mobile": { type: Boolean }, 
+      "os": { type: String }, /* linux, mac, windows */
+      "client": { type: String }, /* Firefox, Chrome, Safari */
+      "version": { type: String }, 
+    }),
+    optional: true
+  },
+})
+
 Schemas.EmailsOutbound = new SimpleSchema([
   Schemas.default,
   {
@@ -29,6 +43,7 @@ Schemas.EmailsOutbound = new SimpleSchema([
         "type"        : { type: String, optional: true, allowedValues: ['to','cc','bcc'], defaultValue: 'to' },
         "userId"      : { type: String, optional: true },
         "messageId"   : { type: String, optional: true }, /* ref: Mandrill's message '_id' */
+        "events"      : { type: [eventSchema], optional: true } /* events from mandrill (webhook) */
       })]
     },
     "subjectTemplate" : { type: String, optional: true }, /* ref: identifier */

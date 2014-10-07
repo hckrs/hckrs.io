@@ -356,6 +356,7 @@ Mailing.githubGrowthMail = function(city, userIds, options) {
   checkAdminPermission();
   console.log(city, userIds, subject, message, options)
   var isTest = true;
+  // userIds = ['YfPrHacpMwTQyP4SN']
 
   var subject = options.subject;
   var message = options.body;
@@ -408,29 +409,29 @@ Mailing.githubGrowthMail = function(city, userIds, options) {
       "important": false,
       "track_opens": true,
       "track_clicks": true,
-      "auto_text": null,
-      "auto_html": null,
+      // "auto_text": null,
+      // "auto_html": null,
       "inline_css": true,
-      "url_strip_qs": null,
+      // "url_strip_qs": null,
       "preserve_recipients": false,
       "view_content_link": true,
-      "tracking_domain": null,
-      "signing_domain": null,
-      "return_path_domain": null,
+      // "tracking_domain": null,
+      // "signing_domain": null,
+      // "return_path_domain": null,
       "merge": true,
       "merge_vars": merge_vars,
       "tags": ['growth', 'github'],
-      "subaccount": null,
-      "google_analytics_domains": [],
-      "google_analytics_campaign": null,
-      "metadata": {},
-      "recipient_metadata": [],
-      "attachments": [],
-      "images": []
+      // "subaccount": null,
+      // "google_analytics_domains": [],
+      // "google_analytics_campaign": null,
+      // "metadata": {},
+      // "recipient_metadata": [],
+      // "attachments": [],
+      // "images": []
     },
     "async": true,
-    "ip_pool": null,
-    "send_at": null, // 'send_at' requires paid account
+    // "ip_pool": null,
+    // "send_at": null, // 'send_at' requires paid account
   };
 
   var mail_internal = {
@@ -464,11 +465,20 @@ Mailing.githubGrowthMail = function(city, userIds, options) {
     if (res.statusCode !== 200)
       throw 'mailing failed with status code' + res.statusCode;
 
-    // mark users as inivted
-    GrowthGithub.update({_id: {$in: userIds}}, {$set: {invitedAt: new Date()}}, {multi: true});
+    // link mandrill's message IDs
+    _.each(to_list, function(mail) {
+      mail.messageId = property(_.findWhere(res.data, {email: mail.email}), '_id');
+    });
 
     // save email
     EmailsOutbound.insert(mail_internal);
+
+    // update Growth Users, saving messageId an Invitation Date
+    _.each(to_list, function(mail) {
+      GrowthGithub.update(mail.userId, {
+        $set: { invitedAt: new Date(), messageId: mail.messageId }
+      });
+    });
 
     console.log('mailing succeed', res, res.data)
   } catch(e) {

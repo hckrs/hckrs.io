@@ -13,9 +13,12 @@ Schemas.GrowthGithub = new SimpleSchema({
 
   /* additional fields */
   "city"        :  { type: String },
-  "emailId"     :  { type: String, optional: true }, /* ref: EmailsOutbound */
+  "messageId"   :  { type: String, optional: true }, /* ref: Mandrill's message ID (also defined in EmailsOutbound) */
   "invitedAt"   :  { type: Date, optional: true },
   "signupAt"    :  { type: Date, optional: true },
+  "open"        :  { type: Boolean, optional: true },
+  "clicks"      :  { type: Number, optional: true },
+
   
   /* original github fields */
   "id"          :  { type: Number },

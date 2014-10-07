@@ -5,6 +5,55 @@ var URL = Npm.require('url');
 // SERVER SIDE routes
 
 Router.map(function () {
+
+  this.route('mandrillWebhook', {
+    where: 'server',
+    path: '/mandrill-webhook',
+    action: function() {
+      var data = this.request.body;
+      var events = EJSON.parse(data.mandrill_events);
+
+      var addEvent = function(event) {
+        // see for event format
+        // http://help.mandrill.com/entries/24466132-Webhook-Format 
+        
+        if (!event.event) 
+          return; /* not a message event */
+
+        console.log('Email webhook event:', event.event);
+
+        var messageId = event._id;
+        var userAgent = event.user_agent_parsed && {
+          mobile: event.user_agent_parsed.mobile,
+          os: event.user_agent_parsed.os_family,
+          client: event.user_agent_parsed.ua_family,
+          version: event.user_agent_parsed.ua_version,
+        };
+        
+        // link event to original message
+        EmailsOutbound.update({'to.messageId': messageId}, {
+          $push: { 'to.$.events': {
+            event: event.event,
+            url: event.url ? event.url : undefined,
+            agent: userAgent ? userAgent : undefined,
+          }}
+        });
+
+        // when it is a github growth mail, also register in growth collection
+        switch(event.event) {
+          case 'open': GrowthGithub.update({messageId: messageId}, {$set: {open: true}}); break;
+          case 'click': GrowthGithub.update({messageId: messageId}, {$inc: {clicks: 1}}); break;
+        }
+      }
+
+      // store events
+      _.each(events, addEvent);
+
+      // end incoming request
+      this.response.end();
+    }
+  })
+
   this.route('any', {
     where: 'server',
     path: '/*',
