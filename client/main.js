@@ -129,8 +129,8 @@ Template.citySelect.helpers({
 
     return _.sortBy(_.map(COUNTRYMAP, createCountryEntry), 'name');
   },
-  "selected": function(city) {
-    return Session.equals('currentCity', city) ? 'selected' : '';
+  "selected": function(city, current) {
+    return (current && current == city) || Session.equals('currentCity', city) ? 'selected' : '';
   }
 });
 

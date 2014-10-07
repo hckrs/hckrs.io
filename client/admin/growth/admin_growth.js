@@ -5,7 +5,7 @@ var state = new State('adminGrowth', {
   'city': null,
   'composeActive': false,
   'composeSubject': "",
-  'composeMessage': "",
+  'composeBody': "",
 });
 
 
@@ -19,9 +19,8 @@ AdminGrowthController = DefaultAdminController.extend({
   waitOn: function () {
     return [ 
       // load all github users from the selected city
-      Meteor.subscribe('githubDump', state.get('city')),
-      Meteor.subscribe('growthMessages'), 
-      Meteor.subscribe('growthSubjects'),
+      Meteor.subscribe('growthGithub', state.get('city')),
+      Meteor.subscribe('emailTemplates'), 
     ];
   }
 });
@@ -62,7 +61,7 @@ Template.admin_growth.helpers({
     return CITYMAP[state.get('city')];
   },
   'collection': function() {
-    return GithubDump.find({city: state.get('city')});
+    return GrowthGithub.find({city: state.get('city')});
   },
   'settings': function() {
     return {
@@ -77,37 +76,37 @@ Template.admin_growth.helpers({
 
 Template.admin_growthEmail.helpers({
   'subjects': function() {
-    return GrowthSubjects.find({content: {$exists: true}}).map(function(subject) {
+    return EmailTemplates.find({usedIn: 'growthGithub', subject: {$exists: true}}).map(function(message) {
       return {
-        value: subject._id, 
-        label: subject.content.substring(0,70) + (subject.content.length > 70 ? "..." : "")
+        value: message.identifier, 
+        label: message.subject.substring(0,70) + (message.subject.length > 70 ? "..." : "")
       };
     });
   },
-  'messages': function() {
-    return GrowthMessages.find({content: {$exists: true}}).map(function(message) {
+  'bodies': function() {
+    return EmailTemplates.find({usedIn: 'growthGithub', body: {$exists: true}}).map(function(message) {
       return {
-        value: message._id, 
-        label: message.content.substring(0,70) + (message.content.length > 70 ? "..." : "")
+        value: message.identifier, 
+        label: message.body.substring(0,70) + (message.body.length > 70 ? "..." : "")
       };
     });
   },
   'subject': function() {
-    var subjectId = state.get('composeSubject');
-    var subject = property(GrowthSubjects.findOne(subjectId), 'content');
+    var identifier = state.get('composeSubject');
+    var subject = property(EmailTemplates.findOne({identifier: identifier}), 'subject');
     if (subject) return {value: subject, readonly: true};
   },
-  'message': function() {
-    var messageId = state.get('composeMessage');
-    var message = property(GrowthMessages.findOne(messageId), 'content');
-    if (message) return {value: message, readonly: true};
+  'body': function() {
+    var identifier = state.get('composeBody');
+    var body = property(EmailTemplates.findOne({identifier: identifier}), 'body');
+    if (body) return {value: body, readonly: true};
   },
   'schema': function() {
     return new SimpleSchema({
       "selectSubject": { type: String, optional: true, label: "subject" },
-      "selectMessage": { type: String, optional: true, label: "message" },
+      "selectBody": { type: String, optional: true, label: "body" },
       "subject": { type: String },
-      "message": { type: String },
+      "body": { type: String },
     });
   }
 })
@@ -130,27 +129,28 @@ Template.admin_growth.events({
 Template.admin_growthEmail.events({
   'change select#selectSubject': function(evt) {
     var val = $(evt.currentTarget).val();
-    state.set('composeSubject', val == "New subject template" ? "" : val);
+    state.set('composeSubject', val);
   },
-  'change select#selectMessage': function(evt) {
+  'change select#selectBody': function(evt) {
     var val = $(evt.currentTarget).val();
-    state.set('composeMessage', val == "New message template" ? "" : val);
+    state.set('composeBody', val);
   },
   'click [action="submit"]': function(evt) {
     evt.preventDefault();
 
+
     var $button = $(evt.currentTarget);
     var $form = $("#adminGrowthEmailForm");
     var formData = $form.serializeObject(),
-        subject = formData.subject,
-        message = formData.message,
         number  = parseInt(formData.number),
         userIds = getUsersFromTop(number),
         options = {
-          isNewSubject: formData.selectSubject == "New subject template"
-        , isNewMessage: formData.selectMessage == "New message template" 
-        , tmplSubject: formData.selectSubject
-        , tmplMessage: formData.selectMessage
+          subject: formData.subject
+        , body: formData.body
+        , subjectTemplate: formData.selectSubject
+        , bodyTemplate: formData.selectBody
+        , isNewSubject: !formData.selectSubject
+        , isNewBody: !formData.selectBody 
         };
 
     // validate email
@@ -166,7 +166,7 @@ Template.admin_growthEmail.events({
     }
     
     // send mail
-    sendGrowthMailing(userIds, subject, message, options, cb);
+    sendGrowthMailing(userIds, options, cb);
   }
 })
 
@@ -191,18 +191,20 @@ var getUsersFromTop = function(number) {
     sort: _.object([table.sortKey], [table.sortDir]), 
     limit: number
   };
-  return GithubDump.find(selector, options).map(_.property('_id'));;
+  console.log(options, GrowthGithub.find(selector, options).fetch())
+  return GrowthGithub.find(selector, options).map(_.property('_id'));;
 }
 
-var sendGrowthMailing = function(githubUserIds, subject, message, options, cb) {
+var sendGrowthMailing = function(githubUserIds, options, cb) {
 
   var users = githubUserIds.length;
+  var city = state.get('city');
 
-  // preserve line breaks in message
-  message = message.replace(/\n/g, '<br/>');
+  // preserve line breaks in body
+  options.body = options.body.replace(/\n/g, '<br/>');
 
   // send mail from server
-  Meteor.call('githubGrowthMail', githubUserIds, subject, message, options, function(err, res) {
+  Meteor.call('githubGrowthMail', city, githubUserIds, options, function(err, res) {
     
     // error handling
     if (err) {

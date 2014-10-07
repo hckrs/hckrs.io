@@ -304,6 +304,7 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
   var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
+  html = html.replace(/{{unsubscribe}}/g, 'if you don\'t want receive this kind of email, change your email settings at <a href="http://hckrs.io">hckrs.io</a>');
 
   // segments
   // e.g. {match: 'all', conditions: [{field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" }]}
@@ -341,27 +342,47 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 }
 
 
-// mail containing fields 'githubUserIds', 'subject', 'message'
-Mailing.githubGrowthMail = function(userIds, subject, message, options) {
+// github growth mailing
+/* options = {
+    subject: String
+    body: String
+    subjectTemplate: String (identifier)
+    bodyTemplate: String (identifier)
+    isNewSubject: Bool
+    isNewBody: Bool
+  }
+*/
+Mailing.githubGrowthMail = function(city, userIds, options) {
   checkAdminPermission();
-  console.log(userIds, subject, message, options)
+  console.log(city, userIds, subject, message, options)
   var isTest = true;
 
-  var admin = Meteor.user();
-  var from_email = property(admin, 'staff.email');
-  var from_name = property(admin, 'profile.name') + " / hckrs.io";
+  var subject = options.subject;
+  var message = options.body;
+  var subjectTemplate = options.subjectTemplate;
+  var messageTemplate = options.bodyTemplate;
+  console.log(options)
+  if (options.isNewSubject) {
+    subjectTemplate = Random.id();
+    EmailTemplates.insert({ subject: subject, usedIn: ['growthGithub'], identifier: subjectTemplate });
+  }
+  if (options.isNewBody) {
+    messageTemplate = Random.id();
+    EmailTemplates.insert({ body: message, usedIn: ['growthGithub'], identifier: messageTemplate });
+  }
 
-  if (!from_email)
-    throw new Meteor.Error(500, "no from email");
+  var adminId = Meteor.userId();
+  var from_email = city + "@hckrs.io";
 
   var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, message);
+  html = html.replace(/{{unsubscribe}}/g, '');
 
-  var users = GithubDump.find({_id: {$in: userIds}}).fetch();
+  var users = GrowthGithub.find({_id: {$in: userIds}}).fetch();
 
   var to_list = _.map(users, function(user) {
-    var to = { email: user.email, name: user.name, type: 'to' };
+    var to = { email: user.email, name: user.name, type: 'to', userId: user._id };
     console.log(to.email, to.name);
     return to;
   });
@@ -382,7 +403,7 @@ Mailing.githubGrowthMail = function(userIds, subject, message, options) {
       "html": html,
       "subject": subject,
       "from_email": from_email,
-      "from_name": from_name,
+      // "from_name": "",
       "to": to_list,
       "important": false,
       "track_opens": true,
@@ -398,7 +419,7 @@ Mailing.githubGrowthMail = function(userIds, subject, message, options) {
       "return_path_domain": null,
       "merge": true,
       "merge_vars": merge_vars,
-      "tags": [],
+      "tags": ['growth', 'github'],
       "subaccount": null,
       "google_analytics_domains": [],
       "google_analytics_campaign": null,
@@ -412,7 +433,25 @@ Mailing.githubGrowthMail = function(userIds, subject, message, options) {
     "send_at": null, // 'send_at' requires paid account
   };
 
+  var mail_internal = {
+    kind: "growth",
+    type: "growthGithub",
+    city: city,
+    from: {
+      email: from_email, 
+      userId: adminId
+    },
+    to: to_list,
+    subjectTemplate: subjectTemplate,
+    bodyTemplate: messageTemplate,
+    subject: subject,
+    body: message,
+    tags: ['growth', 'github'],
+    mergeVars: merge_vars,
+  }
+
   console.log(mail);
+  console.log("internal", mail_internal);
 
   // first mark users as mailed
 
@@ -426,7 +465,10 @@ Mailing.githubGrowthMail = function(userIds, subject, message, options) {
       throw 'mailing failed with status code' + res.statusCode;
 
     // mark users as inivted
-    GithubDump.update({_id: {$in: userIds}}, {$set: {invitedAt: new Date()}}, {multi: true});
+    GrowthGithub.update({_id: {$in: userIds}}, {$set: {invitedAt: new Date()}}, {multi: true});
+
+    // save email
+    EmailsOutbound.insert(mail_internal);
 
     console.log('mailing succeed', res, res.data)
   } catch(e) {

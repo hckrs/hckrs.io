@@ -4,18 +4,16 @@
 
 // collections
 
-GithubDump = new Meteor.Collection('githubDump');
-GrowthMessages = new Meteor.Collection('growthMessages');
-GrowthSubjects = new Meteor.Collection('growthSubjects');
+GrowthGithub = new Meteor.Collection('growthGithub');
 
 
 // schemas
 
-Schemas.GithubDump = new SimpleSchema({
+Schemas.GrowthGithub = new SimpleSchema({
 
   /* additional fields */
   "city"        :  { type: String },
-  "batchId"     :  { type: String, optional: true },
+  "emailId"     :  { type: String, optional: true }, /* ref: EmailsOutbound */
   "invitedAt"   :  { type: Date, optional: true },
   "signupAt"    :  { type: Date, optional: true },
   
@@ -39,22 +37,17 @@ Schemas.GithubDump = new SimpleSchema({
 
 });
 
-Schemas.GrowthMessages = new SimpleSchema([ /* to do */ ]);
-Schemas.GrowthSubjects = new SimpleSchema([ /* to do */ ]);
-
 
 // add schema
 
-GithubDump.attachSchema(Schemas.GithubDump);
+GrowthGithub.attachSchema(Schemas.GrowthGithub);
 
 
 /* Permissions */
 
 // Only admins are allowed to insert/update/remove these collections.
 
-GithubDump.allow(ADMIN);
-GrowthMessages.allow(ADMIN);
-GrowthSubjects.allow(ADMIN);
+GrowthGithub.allow(ADMIN);
 
 
 
@@ -64,39 +57,19 @@ GrowthSubjects.allow(ADMIN);
 
 if (Meteor.isServer) {
 
-  // publish GithubDump
-  Meteor.publish("githubDump", function (city) {
+  // publish GrowthGithub
+  Meteor.publish("growthGithub", function (city) {
     var user = Users.findOne(this.userId);
 
     if(!user || !isAdmin(user) || !city)
       return [];  
 
-    return GithubDump.find({city: city,
+    return GrowthGithub.find({city: city,
                             $and: [ {email: {$exists: true}}
                                   , {email: {$ne: null}}
                                   , {email: {$ne: ""}}
                                   ]
                            });
-  });
-
-  // publish GrowthMessages
-  Meteor.publish("growthMessages", function () {
-    var user = Users.findOne(this.userId);
-
-    if(!user || !isAdmin(user))
-      return [];  
-
-    return GrowthMessages.find();
-  });
-
-  // publish GrowthSubjects
-  Meteor.publish("growthSubjects", function () {
-    var user = Users.findOne(this.userId);
-
-    if(!user || !isAdmin(user))
-      return [];  
-
-    return GrowthSubjects.find();
   });
 
 }

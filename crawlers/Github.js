@@ -79,7 +79,7 @@ if (Meteor.isServer) {
   var fetchSingleUser = function(city, userLogin) {
     console.log('fetch github user', userLogin);
 
-    if (GithubDump.findOne({username: userLogin}))
+    if (GrowthGithub.findOne({username: userLogin}))
       return; // already crawled
 
     try {
@@ -112,7 +112,7 @@ if (Meteor.isServer) {
         return; // user don't have email
 
       try {
-        GithubDump.insert(user);
+        GrowthGithub.insert(user);
       } catch(e) { 
         console.log("Invalid schema", user, e);   
       }
