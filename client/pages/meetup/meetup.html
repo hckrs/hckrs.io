@@ -2,7 +2,7 @@
     <div id="meetup" class="container">
 
         <div class="row">
-            <span class="h1">drones</span>
+            <span class="h1">{{subculture}}</span>
             &nbsp;&nbsp;
             <span class="h4 meetup-topics">
                 {{#each topics}}
@@ -13,13 +13,21 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h3>{{time}} @{{location}}</h3>
+                <h3>{{Calendar date}} @{{location}}</h3>
                 <button class="btn btn-going">going</button>
                 <button class="btn btn-maybe">maybe</button>
                 <button class="btn btn-decline">not going</button>
             </div>
         </div>
         
+        {{#if description}}
+        <div class="row">
+            <div class="col-md-6">
+                <i>{{description}}</i>
+            </div>
+        </div>
+        {{/if}}
+
         {{#each presence}}
         <div class="row">
             <div class="col-md-12">

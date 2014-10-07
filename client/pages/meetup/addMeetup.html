@@ -1,6 +1,25 @@
 <template name="addMeetup">
     <div class="container">
-        <h3>New meetup</h3>
-    </div>
+        <div class="row">
+         <div class="col-md-6">
+             <div class="col-sm-3">
+             </div>
+             <div class="col-sm-9"><h2>New meetup</h2></div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                {{> quickForm
+                    id="newMeetupForm"
+                    schema="Schemas.Meetup"
+                    template="bootstrap3-horizontal"
+                    fields=formFields
+                    label-class="col-sm-3"
+                    input-col-class="col-sm-9"
+                }}
+            </div>
+        </div>
+
+    </div>
 </template>
