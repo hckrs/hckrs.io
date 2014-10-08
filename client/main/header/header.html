@@ -24,7 +24,7 @@
                   <li><a href="{{pathFor 'hacker' _id=CurrentUserId redirect=true}}"><i class="glyphicon glyphicon-user"></i> {{UserProp 'profile.name'}}</a></li>
                   {{#unless UserProp 'isAccessDenied'}}
                     <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite hackers ({{UserProp 'invitations'}})</a></li>
-                    <li><a href="{{pathFor 'addMeetup'}}"><i class="glyphicon glyphicon-calendar"></i> Add meetup</a></li>
+                    <li><a href="{{pathFor 'addSubculture'}}"><i class="glyphicon glyphicon-pushpin"></i> add subculture</a></li>
                   {{/unless}}
                   <li class="divider"></li>
                   <li><a href="" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>

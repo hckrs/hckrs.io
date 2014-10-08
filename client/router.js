@@ -21,12 +21,16 @@ var routes = [
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
-  [ 'addMeetup'    , '/meetup'               ],
+  [ 'addMeetup'    , '/meetup/:subculture'   ],
   [ 'meetup'       , '/meetup/:_id'          ],
-  
+  [ 'addSubculture', '/subculture'           ],
+  [ 'subculture'   , '/s/:subculture'        ],
+
+
   // special routes
   [ 'hacker'       , '/:bitHash'             ],
   [ 'invite'       , /^\/\+\/(.*)/           ],
+
 
 ];
 

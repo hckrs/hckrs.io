@@ -1,18 +1,18 @@
-Schemas.Meetup = new SimpleSchema([
+Schemas.Subculture = new SimpleSchema([
     Schemas.default,
     Schemas.userId,
+    Schemas.currentCity,
     {
-        "subculture": {
+        "name": {
             type: String,
-            optional: true
+            label: "Name",
+            index: true,
+            unique: true,
+            min:3
         },
-        "date": {
-            type: Date,
-            label: "Date"
-        },
-        "location": {
-            type: String,
-            label: "Location"
+        "topics": {
+            type: [String],
+            label: "Topics"
         },
         "description": {
             type: String,
@@ -22,10 +22,10 @@ Schemas.Meetup = new SimpleSchema([
     }
 ]);
 
-Meetups = new Meteor.Collection('meetups');
-Meetups.attachSchema(Schemas.Meetup)
+Subcultures = new Meteor.Collection('subcultures');
+Subcultures.attachSchema(Schemas.Subculture)
 
-Meetups.allow({
+Subcultures.allow({
     insert: function (userId, doc) {
         return hasAmbassadorPermission(userId, doc.city);
     },
@@ -38,8 +38,7 @@ Meetups.allow({
 });
 
 if (Meteor.isServer) {
-    Meteor.publish("meetup", function(name) {
-        return Meetups.find({subculture:name});
+    Meteor.publish("subculture", function(name) {
+        return Subcultures.find({name:name});
     });
 }
-

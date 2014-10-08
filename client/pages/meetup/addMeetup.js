@@ -1,14 +1,15 @@
 AddMeetupController = DefaultController.extend({
     template: 'addMeetup',
     data : {
-        formFields : ["subculture", "date", "location", "topics", "description", "invites"]
+        formFields : ["date", "location", "description"]
     }
 });
 
 AutoForm.addHooks('newMeetupForm', {
     onSubmit: function(doc) {
+        doc.subculture = Router.current().params.subculture;
         var id = Meetups.insert(doc);
-        Router.go("/meetup/" + id);
+        Router.go("/s/" + Router.current().params.subculture);
         return false;
     }
 });
