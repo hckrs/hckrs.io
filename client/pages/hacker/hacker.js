@@ -8,7 +8,6 @@ HackerController = DefaultController.extend({
   onRun: function() {
     Meteor.autorun(function(c) {
       if (Subscriptions.ready()) {
-        console.log(Url.userIdFromUrl(), UserProp('isAccessDenied'))
         Session.set('hackerId', Url.userIdFromUrl());
         Session.set('hackerEditMode', UserProp('isAccessDenied'));  
         c.stop();    
