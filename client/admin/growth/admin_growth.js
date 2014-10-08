@@ -76,6 +76,27 @@ Template.admin_growth.helpers({
 });
 
 
+/* Compose Email */
+
+Template.admin_growthEmail.rendered = function() {
+  $('#body').summernote({
+    toolbar: [  
+      ['para', ['ul']],
+      ['style', ['bold', 'italic', 'underline', 'strikethrough']],
+      ['fontsize', ['fontsize']],
+      ['color', ['color']],
+      ['insert', ['link', 'picture']],
+      ['code', ['codeview']],
+    ],
+    codemirror: { 
+      mode: 'text/html',
+      htmlMode: true,
+      lineNumbers: true,
+      theme: 'monokai' 
+    },
+  });
+}
+
 Template.admin_growthEmail.helpers({
   'subjects': function() {
     return EmailTemplates.find({usedIn: 'growthGithub', subject: {$exists: true}}).map(function(message) {
@@ -145,20 +166,27 @@ Template.admin_growthEmail.events({
   'click [action="submit"]': function(evt) {
     evt.preventDefault();
 
-    var $button = $(evt.currentTarget);
-    var $form = $("#adminGrowthEmailForm");
-    var formData = $form.serializeObject(),
-        number  = parseInt(formData.number),
-        userIds = getUsersFromTop(number),
-        options = {
-          subject: formData.subject
-        , body: formData.body
-        , subjectTemplate: formData.selectSubject
-        , bodyTemplate: formData.selectBody
-        , isNewSubject: !formData.selectSubject
-        , isNewBody: !formData.selectBody 
-        };
+    var tmpl = Template.instance();
+    var $button = tmpl.$(evt.currentTarget);
+    var $form   = tmpl.$("#adminGrowthEmailForm");
+    var $body   = tmpl.$("#body")
 
+    // set wysiwyg content to original texterea
+    $body.val($body.code());
+
+    var formData = $form.serializeObject()
+      , number   = parseInt(formData.number)
+      , userIds  = getUsersFromTop(number)
+
+    var options = {
+      subject: formData.subject
+    , body: formData.body
+    , subjectTemplate: formData.selectSubject
+    , bodyTemplate: formData.selectBody
+    , isNewSubject: !formData.selectSubject
+    , isNewBody: !formData.selectBody 
+    }
+    
     // validate email
     if (!AutoForm.validateForm("adminGrowthEmailForm"))
       return;

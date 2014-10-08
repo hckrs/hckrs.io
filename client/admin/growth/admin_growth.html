@@ -2,7 +2,11 @@
   <div id="admin_growth" class="page">
 
     {{#if composeActive}}
-      {{> admin_growthEmail city=city}}
+      <div class="row">
+        <div class="col-lg-7">
+          {{> admin_growthEmail city=city}}
+        </div>
+      </div>
     {{/if}}
 
     <div class="pull-right" style="text-align:right;">
