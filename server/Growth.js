@@ -6,14 +6,22 @@
 
 var checkGrowthEmailAddress = function(userId, email) {
 
-  var callback = function(err, success) {
-    if (success) 
-      console.log('New user signs up after growth mail.')
-  }
+  // find related growth user
+  var growthUser = GrowthGithub.findOne({ email: email, signupAt: {$exists: false} });
 
-  GrowthGithub.update({ email: email, signupAt: {$exists: false} }, {
-    $set: { signupAt: new Date(), userId: userId }
-  }, callback);
+  // user not related to growth mailing
+  if (!growthUser)
+    return; 
+
+  // user not related, beacause invitation isn't sent yet
+  if (!growthUser.invitedAt)
+    return GrowthGithub.remove(growthUser._id) // remove user from growth list
+
+  // mark growth user as signed up
+  var modifier = {$set: { signupAt: new Date(), userId: userId }};
+  GrowthGithub.update(growthUser._id, modifier);
+
+  console.log('New user signs up after growth mail.')
 }
 
 var observeCallback = function(id, fields) {

@@ -120,7 +120,12 @@ Template.admin_growth.events({
   },
   'click [action="crawl"]': function(evt) {
     var city = state.get('city');
-    Crawler.fetchGithubUsersInCity(city, debug);
+    Crawler.fetchGithubUsersInCity(city, function(err) {
+      if (err && err.reason === 'busy')
+        alert('Crawler already busy with crawling some city.')
+      else if (err)
+        debug(err);
+    });
   },
   'click [action="compose"]': function(evt) {
     state.set('composeActive', true);
@@ -139,7 +144,6 @@ Template.admin_growthEmail.events({
   },
   'click [action="submit"]': function(evt) {
     evt.preventDefault();
-
 
     var $button = $(evt.currentTarget);
     var $form = $("#adminGrowthEmailForm");

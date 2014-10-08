@@ -20,7 +20,10 @@ Crawler.fetchGithubUsersInCity = function(city, cb) {
     return call('crawlFetchGithubUsersInCity', city, cb);  
 
   if (Crawler.busy)
-    throw new Meteor.Error(500, "already crawling");
+    throw new Meteor.Error(500, "busy");
+
+  // don't wait on response
+  this.unblock();
   
   // query
   var cityName = CITYMAP[city].name;
@@ -110,6 +113,9 @@ if (Meteor.isServer) {
       
       if (!user.email)
         return; // user don't have email
+
+      if (Users.findOne({'emails.address': user.email}, {fields: {'_id': true}}))
+        return; // user already signed up at hckrs.io
 
       try {
         GrowthGithub.insert(user);
