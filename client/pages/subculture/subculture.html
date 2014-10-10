@@ -1,20 +1,24 @@
 <template name="subculture">
-    <div class="container">
+    <div id="subculture">
+        <div class="container">
 
-        <div class="row">
-            <span class="h1">{{subculture.name}}</span>
-            &nbsp;&nbsp;
-            <span class="h4 meetup-topics">
+            <div class="row">
+                <span class="h1">{{subculture.name}}</span>
+                &nbsp;&nbsp;
+                <span class="h4 meetup-topics">
                 {{#each subculture.topics}}
                     #{{this}}
                 {{/each}}
             </span>
-            {{subculture.description}}
-            <div><a href="/meetup/{{subculture.name}}"><button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Add meetup</button></a></div>
-        </div>
+                {{subculture.description}}
+                <div>
+                    <a href="/meetup/{{subculture.name}}">
+                        <button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Add meetup</button>
+                    </a>
+                </div>
+            </div>
 
-        {{#each meetups}}
-        {{>meetup}}
-        {{/each}}
+            {{#each meetups}} {{>meetup}} {{/each}}
+        </div>
     </div>
 </template>
