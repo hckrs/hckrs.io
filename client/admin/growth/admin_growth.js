@@ -3,9 +3,6 @@
 
 var state = new State('adminGrowth', {
   'city': null,
-  'composeActive': false,
-  'composeSubject': "",
-  'composeBody': "",
 });
 
 
@@ -56,9 +53,6 @@ var fields = function() {
 // Template helpers
 
 Template.admin_growth.helpers({
-  'composeActive': function() {
-    return state.get('composeActive');
-  },
   'city': function() {
     return CITYMAP[state.get('city')];
   },
@@ -78,56 +72,19 @@ Template.admin_growth.helpers({
 
 /* Compose Email */
 
-Template.admin_growthEmail.rendered = function() {
-  $('#body').summernote({
-    toolbar: [  
-      ['para', ['ul']],
-      ['style', ['bold', 'italic', 'underline', 'strikethrough']],
-      ['fontsize', ['fontsize']],
-      ['color', ['color']],
-      ['insert', ['link', 'picture']],
-      ['code', ['codeview']],
-    ],
-    codemirror: { 
-      mode: 'text/html',
-      htmlMode: true,
-      lineNumbers: true,
-      theme: 'monokai' 
-    },
-  });
-}
-
 Template.admin_growthEmail.helpers({
   'subjects': function() {
     return EmailTemplates.find({usedIn: 'growthGithub', subject: {$exists: true}}).map(function(message) {
-      return {
-        value: message.identifier, 
-        label: message.subject.substring(0,70) + (message.subject.length > 70 ? "..." : "")
-      };
+      return { value: message.identifier, label: message.identifier };
     });
   },
   'bodies': function() {
     return EmailTemplates.find({usedIn: 'growthGithub', body: {$exists: true}}).map(function(message) {
-      return {
-        value: message.identifier, 
-        label: message.body.substring(0,70) + (message.body.length > 70 ? "..." : "")
-      };
+      return { value: message.identifier, label: message.identifier };
     });
-  },
-  'subject': function() {
-    var identifier = state.get('composeSubject');
-    var subject = property(EmailTemplates.findOne({identifier: identifier}), 'subject');
-    if (subject) return {value: subject, readonly: true};
-  },
-  'body': function() {
-    var identifier = state.get('composeBody');
-    var body = property(EmailTemplates.findOne({identifier: identifier}), 'body');
-    if (body) return {value: body, readonly: true};
   },
   'schema': function() {
     return new SimpleSchema({
-      "selectSubject": { type: String, optional: true, label: "subject" },
-      "selectBody": { type: String, optional: true, label: "body" },
       "subject": { type: String },
       "body": { type: String },
     });
@@ -148,44 +105,21 @@ Template.admin_growth.events({
         debug(err);
     });
   },
-  'click [action="compose"]': function(evt) {
-    state.set('composeActive', true);
-    $(window).scrollTop(0);
-  }
 })
 
 Template.admin_growthEmail.events({
-  'change select#selectSubject': function(evt) {
-    var val = $(evt.currentTarget).val();
-    state.set('composeSubject', val);
-  },
-  'change select#selectBody': function(evt) {
-    var val = $(evt.currentTarget).val();
-    state.set('composeBody', val);
-  },
   'click [action="submit"]': function(evt) {
     evt.preventDefault();
 
     var tmpl = Template.instance();
     var $button = tmpl.$(evt.currentTarget);
     var $form   = tmpl.$("#adminGrowthEmailForm");
-    var $body   = tmpl.$("#body")
-
-    // set wysiwyg content to original texterea
-    $body.val($body.code());
 
     var formData = $form.serializeObject()
       , number   = parseInt(formData.number)
       , userIds  = getUsersFromTop(number)
-
-    var options = {
-      subject: formData.subject
-    , body: formData.body
-    , subjectTemplate: formData.selectSubject
-    , bodyTemplate: formData.selectBody
-    , isNewSubject: !formData.selectSubject
-    , isNewBody: !formData.selectBody 
-    }
+      , subjectIdentifier  = formData.subject
+      , bodyIdentifier     = formData.body;
     
     // validate email
     if (!AutoForm.validateForm("adminGrowthEmailForm"))
@@ -196,11 +130,10 @@ Template.admin_growthEmail.events({
     $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');
     var cb = function() {
       $button.removeAttr('disabled').removeClass('disabled').text(text);
-      state.set('composeActive', false);
     }
     
     // send mail
-    sendGrowthMailing(userIds, options, cb);
+    sendGrowthMailing(userIds, subjectIdentifier, bodyIdentifier, cb);
   }
 })
 
@@ -228,20 +161,16 @@ var getUsersFromTop = function(number) {
     sort: _.object([table.sortKey], [table.sortDir]), 
     limit: number
   };
-  console.log(options, GrowthGithub.find(selector, options).fetch())
+
   return GrowthGithub.find(selector, options).map(_.property('_id'));;
 }
 
-var sendGrowthMailing = function(githubUserIds, options, cb) {
-
+var sendGrowthMailing = function(githubUserIds, subjectIdentifier, bodyIdentifier, cb) {
   var users = githubUserIds.length;
   var city = state.get('city');
 
-  // preserve line breaks in body
-  options.body = options.body.replace(/\n/g, '<br/>');
-
   // send mail from server
-  Meteor.call('githubGrowthMail', city, githubUserIds, options, function(err, res) {
+  Meteor.call('githubGrowthMail', city, githubUserIds, subjectIdentifier, bodyIdentifier, function(err, res) {
     
     // error handling
     if (err) {

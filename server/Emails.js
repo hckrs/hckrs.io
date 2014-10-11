@@ -343,41 +343,29 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 
 
 // github growth mailing
-/* options = {
-    subject: String
-    body: String
-    subjectTemplate: String (identifier)
-    bodyTemplate: String (identifier)
-    isNewSubject: Bool
-    isNewBody: Bool
+/* {
+    subjectId: String
+    bodyId: String
   }
 */
-Mailing.githubGrowthMail = function(city, userIds, options) {
+Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier) {
   checkAdminPermission();
-  console.log(city, userIds, subject, message, options)
-  var isTest = true;
-  // userIds = ['YfPrHacpMwTQyP4SN']
 
-  var subject = options.subject;
-  var message = options.body;
-  var subjectTemplate = options.subjectTemplate;
-  var messageTemplate = options.bodyTemplate;
-  console.log(options)
-  if (options.isNewSubject) {
-    subjectTemplate = Random.id();
-    EmailTemplates.insert({ subject: subject, usedIn: ['growthGithub'], identifier: subjectTemplate });
-  }
-  if (options.isNewBody) {
-    messageTemplate = Random.id();
-    EmailTemplates.insert({ body: message, usedIn: ['growthGithub'], identifier: messageTemplate });
-  }
+  var isTest = true;
+  // userIds = ['av5GT2BbqGmtsL2qA']
+
+  var subject = property(EmailTemplates.findOne({identifier: subjectIdentifier}), 'subject');
+  var body = property(EmailTemplates.findOne({identifier: bodyIdentifier}), 'body');
+
+  if (!subject || !body)
+    throw new Meteor.Error(500, "incomplete message", "No subject or body provided.");
 
   var adminId = Meteor.userId();
   var from_email = city + "@hckrs.io";
 
   var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
-  html = html.replace(/{{content}}/g, message);
+  html = html.replace(/{{content}}/g, body);
   html = html.replace(/{{unsubscribe}}/g, '');
 
   var users = GrowthGithub.find({_id: {$in: userIds}}).fetch();
@@ -443,10 +431,10 @@ Mailing.githubGrowthMail = function(city, userIds, options) {
       userId: adminId
     },
     to: to_list,
-    subjectTemplate: subjectTemplate,
-    bodyTemplate: messageTemplate,
+    subjectTemplate: subjectIdentifier,
+    bodyTemplate: bodyIdentifier,
     subject: subject,
-    body: message,
+    body: body,
     tags: ['growth', 'github'],
     mergeVars: merge_vars,
   }
