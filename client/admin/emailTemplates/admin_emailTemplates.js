@@ -20,10 +20,10 @@ Template.admin_emailTemplates.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        Field.edit,
-        'identifier', 
-        'subject',
         'usedIn', 
+        'subject',
+        'identifier', 
+        Field.edit,
       ],
     }
   },
@@ -100,10 +100,10 @@ Template.admin_emailTemplates.rendered = function() {
   var init = function(content) {
     $('#body').destroy().summernote({
       toolbar: [  
-        ['para', ['ul']],
-        ['style', ['bold', 'italic', 'underline', 'strikethrough']],
-        ['fontsize', ['fontsize']],
+        ['style', ['bold', 'italic', 'underline', 'strikethrough', 'fontsize']],
         ['color', ['color']],
+        ['clear', ['clear']],
+        ['para', ['ul']],
         ['insert', ['link', 'picture']],
         ['code', ['codeview']],
       ],
