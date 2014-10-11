@@ -44,7 +44,7 @@ Template.admin_emailTemplates.helpers({
     var vars = _.chain(EMAIL_TEMPLATE_USAGE_OPTIONS)
       .filter(function(o) { return _.contains(usedIn, o.value); })
       .pluck('vars').map(function(vars) { return vars ? vars : []; })
-      .func(function(a){ console.log(a);return a.length > 1 ? _.reduce(a, _.intersection) : _.first(a) || []; })
+      .func(function(a){ return a.length > 1 ? _.reduce(a, _.intersection) : _.first(a) || []; })
       .map(function(v) { return {name: v.toUpperCase()}; })
       .value();
     return vars;

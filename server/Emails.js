@@ -368,18 +368,52 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
   html = html.replace(/{{unsubscribe}}/g, '');
 
   var users = GrowthGithub.find({_id: {$in: userIds}}).fetch();
-
+  var allVars = _.findWhere(EMAIL_TEMPLATE_USAGE_OPTIONS, {value: 'growthGithub'}).vars;
+  var usedVars = _.filter(allVars, function(v){ return html.indexOf('*|'+v.toUpperCase()+'|*') > -1; });
+ 
   var to_list = _.map(users, function(user) {
-    var to = { email: user.email, name: user.name, type: 'to', userId: user._id };
-    return to;
+    return { email: user.email, name: user.name || user.username, type: 'to', userId: user._id };
   });
 
+  var globalVars = {
+    "cityKey": city,
+    "cityName": CITYMAP[city].name,
+  }
+ 
   var merge_vars = _.map(users, function(user) {
-    var vars = _.map(user, function(val, key){ 
-      if (key == 'city') val = CITYMAP[val].name; // use human readable city name
-      return {name: key, content: val}; 
-    });
-    return { rcpt: user.email, vars: vars };
+   
+    var vars = _.extend(
+      _.pick(user, [
+        'username',
+        'email',
+        'avatarUrl',
+        'followers',
+        'following',
+        'repos',
+        'gists',
+        'name',
+        'website',
+        'company',
+      ]) 
+    , {
+        'signupUrl': 'http://'+city+'.hckrs.io/?gh='+user.id,
+        'name': user.name || user.username,
+        'firstname': (user.name || "").split(' ')[0] || user.username,
+      }
+    );
+
+    // include used vars in mandrill's format
+    return { 
+      rcpt: user.email, 
+      vars: _.map(_.pick(vars, usedVars), function(val, key) { 
+        return { name: key, content: val }; 
+      }) 
+    };
+  });
+
+  // include used vars in mandrill's format
+  var global_merge_vars = _.map(_.pick(globalVars, usedVars), function(val, key) {
+    return { name: key, content: val };
   });
 
   // on development/test environment, never send mail to the users
@@ -409,6 +443,7 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
       // "signing_domain": null,
       // "return_path_domain": null,
       "merge": true,
+      "global_merge_vars": global_merge_vars,
       "merge_vars": merge_vars,
       "tags": ['growth', 'github'],
       // "subaccount": null,
@@ -439,6 +474,7 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
     body: body,
     tags: ['growth', 'github'],
     mergeVars: merge_vars,
+    mergeVarsGlobal: global_merge_vars,
   }
 
   // on development/test environment, send preview to staffmember only
