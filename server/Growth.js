@@ -1,4 +1,177 @@
 
+/* GROWTH MAILING */
+
+// github growth mailing
+var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier) {
+  checkAdminPermission();
+
+  var subject = property(EmailTemplates.findOne({identifier: subjectIdentifier}), 'subject');
+  var body = property(EmailTemplates.findOne({identifier: bodyIdentifier}), 'body');
+
+  if (!subject || !body)
+    throw new Meteor.Error(500, "incomplete message", "No subject or body provided.");
+
+  var adminId = Meteor.userId();
+  var admin = Meteor.user();
+  var from_email = city + "@hckrs.io";
+
+  var html = Assets.getText('html-email.html')
+  html = html.replace(/{{subject}}/g, subject);
+  html = html.replace(/{{content}}/g, body);
+  html = html.replace(/{{unsubscribe}}/g, '');
+
+  var users = GrowthGithub.find({_id: {$in: userIds}}).fetch();
+  var allVars = _.findWhere(EMAIL_TEMPLATE_USAGE_OPTIONS, {value: 'growthGithub'}).vars;
+  var usedVars = _.filter(allVars, function(v){ return html.indexOf('*|'+v.toUpperCase()+'|*') > -1; });
+ 
+  var to_list = _.map(users, function(user) {
+    return { email: user.email, name: user.name || user.username, type: 'to', userId: user._id };
+  });
+
+  var globalVars = {
+    "CITY_KEY": city,
+    "CITY_NAME": CITYMAP[city].name,
+    "ADMIN_NAME": property(admin, 'profile.name'),
+    "ADMIN_FIRSTNAME": (property(admin, 'profile.name') || "").split(' ')[0],
+    "ADMIN_EMAIL": property(admin, 'staff.email'),
+    "ADMIN_TITLE": property(admin, 'staff.title'),
+  }
+ 
+  var merge_vars = _.map(users, function(user) {
+   
+    var vars = _.extend(
+      _.pick(user, [
+        'USERNAME',
+        'EMAIL',
+        'AVATAR_URL',
+        'FOLLOWERS',
+        'FOLLOWING',
+        'REPOS',
+        'GISTS',
+        'NAME',
+        'WEBSITE',
+        'COMPANY',
+      ]) 
+    , {
+        'SIGNUP_URL': Url.replaceCity(city, Meteor.absoluteUrl('gh/'+user._id)),
+        'NAME': user.name || user.username,
+        'FIRSTNAME': (user.name || "").split(' ')[0] || user.username,
+      }
+    );
+
+    // include used vars in mandrill's format
+    return { 
+      rcpt: user.email, 
+      vars: _.map(_.pick(vars, usedVars), function(val, key) { 
+        return { name: key, content: val }; 
+      }) 
+    };
+  });
+
+  // include used vars in mandrill's format
+  var global_merge_vars = _.map(_.pick(globalVars, usedVars), function(val, key) {
+    return { name: key, content: val };
+  });
+
+  // on development/test environment, never send mail to the users
+  var isTest;
+  if (Settings['environment'] !== 'production') {
+    isTest = true;
+  }
+
+  var mail = {
+    "key": Settings['mandrill'][isTest ? 'apiTestKey' : 'apiKey'],
+    "message": {
+      "html": html,
+      "subject": subject,
+      "from_email": from_email,
+      // "from_name": "",
+      "to": to_list,
+      "important": false,
+      "track_opens": true,
+      "track_clicks": true,
+      "inline_css": true,
+      "preserve_recipients": false,
+      "view_content_link": true,
+      "merge": true,
+      "global_merge_vars": global_merge_vars,
+      "merge_vars": merge_vars,
+      "tags": ['growth', 'github'],
+    },
+    "async": true,
+  };
+
+  var mail_internal = {
+    kind: "growth",
+    type: "growthGithub",
+    city: city,
+    from: {
+      email: from_email, 
+      userId: adminId
+    },
+    to: to_list,
+    subjectTemplate: subjectIdentifier,
+    bodyTemplate: bodyIdentifier,
+    subject: subject,
+    body: body,
+    tags: ['growth', 'github'],
+    mergeVars: merge_vars,
+    mergeVarsGlobal: global_merge_vars,
+  }
+
+  // on development/test environment, send preview to staffmember only
+  if (Settings['environment'] !== 'production') {
+    console.log('TO', _.pluck(to_list, 'name'));
+    console.log('EMAIL', mail);
+    console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
+
+    // send preview to staff member
+    Email.send({
+      to: property(Meteor.user(), 'staff.email'),
+      from: from_email,
+      subject: subject,
+      html: body,
+    });
+  }
+
+  // send email
+  try {
+    var url = 'https://mandrillapp.com/api/1.0/messages/send.json';
+    var res = HTTP.post(url, {data: mail});
+    
+    if (res.statusCode !== 200)
+      throw 'mailing failed with status code' + res.statusCode;
+
+    // link mandrill's message IDs
+    _.each(to_list, function(mail) {
+      mail.messageId = property(_.findWhere(res.data, {email: mail.email}), '_id');
+    });
+
+    // save email
+    EmailsOutbound.insert(mail_internal);
+
+    // update Growth Users, saving messageId an Invitation Date
+    _.each(to_list, function(mail) {
+      GrowthGithub.update(mail.userId, {
+        $set: { invitedAt: new Date(), messageId: mail.messageId }
+      });
+    });
+
+    console.log('mailing succeed!')
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+Meteor.methods({
+  'githubGrowthMail': githubGrowthMail,
+});
+
+
+
+/* SIGNUPS */
+
+
 // observe new registered users
 // if some new user signs up (or changes his email address)
 // we will check this address is on the growth list

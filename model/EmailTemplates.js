@@ -4,7 +4,7 @@
 
 // places where email templates can be used
 EMAIL_TEMPLATE_USAGE_OPTIONS = [
-  {value: "growthGithub", label: "Growth Github", vars: ['signupUrl','cityKey','cityName','username','email','avatarUrl','followers','following','repos','gists','name','firstname','website','company']},
+  {value: "growthGithub", label: "Growth Github", vars: ['SIGNUP_URL','CITY_KEY','CITY_NAME','USERNAME','EMAIL','AVATAR_URL','FOLLOWERS','FOLLOWING','REPOS','GISTS','NAME','FIRSTNAME','WEBSITE','COMPANY','ADMIN_NAME','ADMIN_FIRSTNAME', 'ADMIN_EMAIL','ADMIN_TITLE']},
   // {value: "cityMailing", label: "City Mailing", vars: []},
   // {value: "userMailing", label: "User Mailing", vars: []},
 ];

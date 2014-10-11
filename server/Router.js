@@ -10,12 +10,10 @@ Router.map(function () {
     where: 'server',
     path: '/mandrill-webhook',
     action: function() {
-      var data = this.request.body;
-      var events = EJSON.parse(data.mandrill_events);
+      var events = EJSON.parse(property(this.request.body, 'mandrill_events') || "[]");
 
       var addEvent = function(event) {
-        // see for event format
-        // http://help.mandrill.com/entries/24466132-Webhook-Format 
+        // event format: http://help.mandrill.com/entries/24466132-Webhook-Format 
         
         if (!event.event) 
           return; /* not a message event */
