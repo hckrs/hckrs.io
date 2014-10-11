@@ -45,6 +45,12 @@ Field.fn.avatar = function(val) {
 
 /* DATA FIELD templates */
 
+Field.edit = {
+  key: 'id',
+  label: 'edit',
+  tmpl: Template.reactiveTable_editButton
+}
+
 Field.date = {
   key: 'createdAt',
   label: 'date',

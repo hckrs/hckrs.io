@@ -10,7 +10,7 @@ var routes = [
   [ 'admin_deals'           , '/admin/deals'            ],
   [ 'admin_places'          , '/admin/places'           ],
   [ 'admin_growth'          , '/admin/growth'           ],
-  [ 'admin_growthTemplates' , '/admin/growth/templates' ],
+  [ 'admin_emailTemplates'  , '/admin/emailTemplates'   ],
 
   // normal routes
   [ 'about'        , '/about'                ],

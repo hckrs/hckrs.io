@@ -1,0 +1,35 @@
+<template name="admin_emailTemplates">
+  <div id="admin_emailTemplates" class="page">
+   
+    {{> reactiveTable collection=collection settings=settings}}
+    
+    <div class="page-space"></div>
+    
+    {{#autoForm collection="EmailTemplates" id="adminEmailTemplatesForm" doc=doc type=type}}
+      {{#if equals type "insert"}}
+        <h2>Add new Templates</h2>
+      {{else}}
+        <h2>
+          Update Template / 
+          <button action="new-template" class="btn">New Template</button>
+        </h2>
+      {{/if}}
+      <div class="row">
+        <div class="col-lg-4">  
+          {{> afQuickField name="usedIn" id="usedIn" options=usedInOptions}}
+          {{#if equals type "insert"}}
+            {{> afQuickField name="identifier" id="identifier"}}
+          {{/if}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-7">
+          {{> afQuickField name="subject" id="subject"}}
+          {{> afQuickField name="body" id="body" rows="6"}}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    {{/autoForm}}
+  </div>
+</template>
+
