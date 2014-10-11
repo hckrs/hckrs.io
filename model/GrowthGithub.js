@@ -73,6 +73,9 @@ if (Meteor.isServer) {
                             $and: [ {email: {$exists: true}}
                                   , {email: {$ne: null}}
                                   , {email: {$ne: ""}}
+                                  , {$or: [ { signupAt: {$exists: false} }
+                                          , { signupAt: {$exists: true}, invitedAt: {$exists: true}} 
+                                          ]}
                                   ]
                            });
   });

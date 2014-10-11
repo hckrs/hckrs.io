@@ -114,8 +114,12 @@ if (Meteor.isServer) {
       if (!user.email)
         return; // user don't have email
 
-      if (Users.findOne({'emails.address': user.email}, {fields: {'_id': true}}))
-        return; // user already signed up at hckrs.io
+      // check if user already signed up at hckrs.io
+      var userDoc;
+      if (userDoc = Users.findOne({'emails.address': user.email}, {fields: {'_id': true, 'createdAt': true}})) {
+        user.signupAt = userDoc.createdAt; 
+        user.userId = userDoc._id;
+      }
 
       try {
         GrowthGithub.insert(user);

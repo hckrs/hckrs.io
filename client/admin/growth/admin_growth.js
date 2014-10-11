@@ -155,7 +155,8 @@ var getUsersFromTop = function(number) {
   // get userIds for X number of (uninvited) hackers from top of table
   var selector = {
     city: city, 
-    invitedAt: {$exists: false}
+    invitedAt: {$exists: false},
+    signupAt: {$exists: false},
   };
   var options = {
     sort: _.object([table.sortKey], [table.sortDir]), 

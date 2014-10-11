@@ -13,10 +13,6 @@ var checkGrowthEmailAddress = function(userId, email) {
   if (!growthUser)
     return; 
 
-  // user not related, beacause invitation isn't sent yet
-  if (!growthUser.invitedAt)
-    return GrowthGithub.remove(growthUser._id) // remove user from growth list
-
   // mark growth user as signed up
   markGithubSignup(growthUser._id, userId);
 }
@@ -36,7 +32,6 @@ Users.find({}, {fields: {'emails': true}}).observeChanges({
 var markGithubSignup = function(docId, userId) {
   var modifier = {$set: { signupAt: new Date(), userId: userId }};
   GrowthGithub.update({_id: docId, userId: {$exists: false}}, modifier);
-  console.log('New user signs up after growth mail.')
 }
 
 
