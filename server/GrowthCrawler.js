@@ -4,10 +4,6 @@ Crawler.busy = false;
 
 // fetch usernames from github related to all cities from hckrs.io
 Crawler.fetchGithubUsersInAllCities = function(cb) {
-
-  if (Meteor.isClient)
-    return call('crawlFetchGithubUsersInAllCities', cb);  
-
   async.forEachSeries(CITYKEYS, Meteor.bindEnvironment(Crawler.fetchGithubUsersInCity), cb || function(){});
 }
 
@@ -16,9 +12,6 @@ Crawler.fetchGithubUsersInAllCities = function(cb) {
 Crawler.fetchGithubUsersInCity = function(city, cb) {
   check(city, Match.In(CITYKEYS));
   
-  if (Meteor.isClient)
-    return call('crawlFetchGithubUsersInCity', city, cb);  
-
   if (Crawler.busy)
     throw new Meteor.Error(500, "busy");
 
