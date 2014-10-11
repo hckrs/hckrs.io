@@ -4,9 +4,9 @@
 
 // places where email templates can be used
 EMAIL_TEMPLATE_USAGE_OPTIONS = [
-  {value: "growthGithub", label: "Growth Github"},
-  {value: "cityMailing", label: "City Mailing"},
-  {value: "userMailing", label: "User Mailing"},
+  {value: "growthGithub", label: "Growth Github", vars: ['signupUrl','cityKey','cityName','username','email','avatarUrl','followers','following','repos','gists','name','firstname','website','company']},
+  {value: "cityMailing", label: "City Mailing", vars: []},
+  {value: "userMailing", label: "User Mailing", vars: []},
 ];
 EMAIL_TEMPLATE_USAGE_VALUES = _.pluck(EMAIL_TEMPLATE_USAGE_OPTIONS, 'value');
 

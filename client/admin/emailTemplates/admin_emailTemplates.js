@@ -1,6 +1,7 @@
 
 var state = new State('adminEmailTemplates', {
-  'docId': null
+  'docId': null,
+  'usedIn': [],
 });
 
 AdminEmailTemplatesController = DefaultAdminController.extend({
@@ -37,10 +38,23 @@ Template.admin_emailTemplates.helpers({
   },
   'usedInOptions': function() {
     return EMAIL_TEMPLATE_USAGE_OPTIONS;
+  },
+  'vars': function() {
+    var usedIn = state.get('usedIn') || [];
+    var vars = _.chain(EMAIL_TEMPLATE_USAGE_OPTIONS)
+      .filter(function(o) { return _.contains(usedIn, o.value); })
+      .pluck('vars').map(function(vars) { return vars ? vars : []; })
+      .func(function(a){ console.log(a);return a.length > 1 ? _.reduce(a, _.intersection) : _.first(a) || []; })
+      .map(function(v) { return {name: v.toUpperCase()}; })
+      .value();
+    return vars;
   }
 });
 
 Template.admin_emailTemplates.events({
+  'change select#usedIn': function(evt) {
+    state.set('usedIn', $(evt.currentTarget).val());
+  },
   'click [action="new-template"]': function() {
     state.set('docId', null);
   },
@@ -78,6 +92,12 @@ Template.admin_emailTemplates.rendered = function() {
     var doc = EmailTemplates.findOne(state.get('docId'));
     var body = property(doc, 'body');
     init(body);
+  });
+
+  // save state about the current selection within usedIn
+  this.autorun(function() {
+    var doc = EmailTemplates.findOne(state.get('docId'));
+    state.set('usedIn', property(doc, 'usedIn') || []);
   });
 }
 

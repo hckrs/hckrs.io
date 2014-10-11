@@ -21,6 +21,16 @@
             {{> afQuickField name="identifier" id="identifier"}}
           {{/if}}
         </div>
+        <div class="col-lg-8">
+          {{#if vars}}
+            <strong>variables</strong>
+            <p>
+              {{#each vars}}
+                *|{{name}}|* &nbsp;&nbsp;
+              {{/each}}
+            </p>
+          {{/if}}
+        </div>
       </div>
       <div class="row">
         <div class="col-lg-7">
