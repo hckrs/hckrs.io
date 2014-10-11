@@ -61,6 +61,35 @@ Template.admin_emailTemplates.events({
   'click [action="edit"]': function() {
     state.set('docId', this._id);
     $(window).scrollTo($("#adminEmailTemplatesForm")) // scroll down
+  },
+  'click [action="preview"]': function(evt) {
+    var city = Session.get('currentCity');
+    var tmpl = Template.instance();
+    var subject = tmpl.$('#subject').val();
+    var body = tmpl.$('#body').code();
+    var $button = $(evt.currentTarget)
+
+    // disable button for a few seconds
+    var text = $button.text();
+    $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');
+    var cb = function(err) {
+      $button.removeAttr('disabled').removeClass('disabled').text(text);
+      new PNotify({
+        title: err ? 'Send preview failed' : 'Send preview',
+        type: err ? 'error' : 'success',
+        icon: false
+      });
+    }
+
+    // send preview to staff member
+    Email.send({
+      to: property(Meteor.user(), 'staff.email'),
+      from: Settings["siteEmail"],
+      subject: subject,
+      html: body,
+    }, true, cb);
+
+
   }
 })
 
