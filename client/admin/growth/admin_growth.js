@@ -85,8 +85,8 @@ Template.admin_growthEmail.helpers({
   },
   'schema': function() {
     return new SimpleSchema({
-      "subject": { type: String },
-      "body": { type: String },
+      "subject": { type: String, label: "Subject Template" },
+      "body": { type: String, label: "Body Template" },
     });
   }
 })

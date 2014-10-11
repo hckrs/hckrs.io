@@ -350,8 +350,6 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 */
 Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier) {
   checkAdminPermission();
-
-  var isTest = true;
   // userIds = ['av5GT2BbqGmtsL2qA']
 
   var subject = property(EmailTemplates.findOne({identifier: subjectIdentifier}), 'subject');
@@ -361,6 +359,7 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
     throw new Meteor.Error(500, "incomplete message", "No subject or body provided.");
 
   var adminId = Meteor.userId();
+  var admin = Meteor.user();
   var from_email = city + "@hckrs.io";
 
   var html = Assets.getText('html-email.html')
@@ -372,7 +371,6 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
 
   var to_list = _.map(users, function(user) {
     var to = { email: user.email, name: user.name, type: 'to', userId: user._id };
-    console.log(to.email, to.name);
     return to;
   });
 
@@ -381,10 +379,14 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
       if (key == 'city') val = CITYMAP[val].name; // use human readable city name
       return {name: key, content: val}; 
     });
-    console.log(user.email, vars);
     return { rcpt: user.email, vars: vars };
   });
 
+  // on development/test environment, never send mail to the users
+  var isTest;
+  if (Settings['environment'] !== 'production') {
+    isTest = true;
+  }
 
   var mail = {
     "key": Settings['mandrill'][isTest ? 'apiTestKey' : 'apiKey'],
@@ -439,13 +441,22 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
     mergeVars: merge_vars,
   }
 
-  console.log(mail);
-  console.log("internal", mail_internal);
+  // on development/test environment, send preview to staffmember only
+  if (Settings['environment'] !== 'production') {
+    console.log('TO', _.pluck(to_list, 'name'));
+    console.log('EMAIL', mail);
+    console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
 
-  // first mark users as mailed
+    // send preview to staff member
+    Email.send({
+      to: property(Meteor.user(), 'staff.email'),
+      from: from_email,
+      subject: subject,
+      html: body,
+    });
+  }
 
   // send email
-  
   try {
     var url = 'https://mandrillapp.com/api/1.0/messages/send.json';
     var res = HTTP.post(url, {data: mail});
@@ -468,7 +479,7 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
       });
     });
 
-    console.log('mailing succeed', res, res.data)
+    console.log('mailing succeed!')
   } catch(e) {
     console.log(e);
   }
