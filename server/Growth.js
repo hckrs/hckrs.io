@@ -18,10 +18,7 @@ var checkGrowthEmailAddress = function(userId, email) {
     return GrowthGithub.remove(growthUser._id) // remove user from growth list
 
   // mark growth user as signed up
-  var modifier = {$set: { signupAt: new Date(), userId: userId }};
-  GrowthGithub.update(growthUser._id, modifier);
-
-  console.log('New user signs up after growth mail.')
+  markGithubSignup(growthUser._id, userId);
 }
 
 var observeCallback = function(id, fields) {
@@ -35,4 +32,22 @@ Users.find({}, {fields: {'emails': true}}).observeChanges({
 });
 
 
+// mark growth user as signed up
+var markGithubSignup = function(docId, userId) {
+  var modifier = {$set: { signupAt: new Date(), userId: userId }};
+  GrowthGithub.update({_id: docId, userId: {$exists: false}}, modifier);
+  console.log('New user signs up after growth mail.')
+}
 
+
+// when new user signed up with a growth phrase
+// we will mark the growth entry
+var verifyGrowthPhrase = function(type, phrase) {
+  switch(type) {
+    case 'github': markGithubSignup(phrase, Meteor.userId()); break;
+  }
+}
+
+Meteor.methods({
+  "verifyGrowthPhrase": verifyGrowthPhrase,
+});

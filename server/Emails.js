@@ -396,7 +396,7 @@ Mailing.githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdenti
         'company',
       ]) 
     , {
-        'signupUrl': 'http://'+city+'.hckrs.io/?gh='+user.id,
+        'signupUrl': Url.replaceCity(city, Meteor.absoluteUrl('gh/'+user._id)),
         'name': user.name || user.username,
         'firstname': (user.name || "").split(' ')[0] || user.username,
       }
