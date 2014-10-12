@@ -35,29 +35,25 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
     "ADMIN_FIRSTNAME": (property(admin, 'profile.name') || "").split(' ')[0],
     "ADMIN_EMAIL": property(admin, 'staff.email'),
     "ADMIN_TITLE": property(admin, 'staff.title'),
+    "ADMIN_IMAGE_URL": property(admin, 'profile.picture'),
   }
  
   var merge_vars = _.map(users, function(user) {
    
-    var vars = _.extend(
-      _.pick(user, [
-        'USERNAME',
-        'EMAIL',
-        'AVATAR_URL',
-        'FOLLOWERS',
-        'FOLLOWING',
-        'REPOS',
-        'GISTS',
-        'NAME',
-        'WEBSITE',
-        'COMPANY',
-      ]) 
-    , {
-        'SIGNUP_URL': Url.replaceCity(city, Meteor.absoluteUrl('gh/'+user._id)),
-        'NAME': user.name || user.username,
-        'FIRSTNAME': (user.name || "").split(' ')[0] || user.username,
-      }
-    );
+    var vars = {
+      'USERNAME': user.username,
+      'EMAIL': user.email,
+      'AVATAR_URL': user.avatarUrl,
+      'FOLLOWERS': user.followers,
+      'FOLLOWING': user.following,
+      'REPOS': user.repos,
+      'GISTS': user.gists,
+      'WEBSITE': user.website,
+      'COMPANY': user.company,
+      'SIGNUP_URL': Url.replaceCity(city, Meteor.absoluteUrl('gh/'+user._id)),
+      'NAME': user.name || user.username,
+      'FIRSTNAME': (user.name || "").split(' ')[0] || user.username,
+    };
 
     // include used vars in mandrill's format
     return { 
