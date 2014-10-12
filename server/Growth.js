@@ -124,14 +124,6 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
     console.log('TO', _.pluck(to_list, 'name'));
     console.log('EMAIL', mail);
     console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
-
-    // send preview to staff member
-    Email.send({
-      to: property(Meteor.user(), 'staff.email'),
-      from: from_email,
-      subject: subject,
-      html: body,
-    });
   }
 
   // send email
