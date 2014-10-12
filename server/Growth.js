@@ -1,7 +1,11 @@
 
 /* GROWTH MAILING */
 
-// github growth mailing
+// Sending a github growth mail
+// @param {String} city - city identifier
+// @param {Array} userIds - document ID's from github users as stored in GrowthGithub collection
+// @param {String} subjectIdentifier -  refer to some mail template by identifier
+// @param {String} bodyIdentifier -  refer to some mail template by identifier
 var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier) {
   checkAdminPermission();
 
@@ -21,7 +25,7 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
   html = html.replace(/{{unsubscribe}}/g, '');
 
   var users = GrowthGithub.find({_id: {$in: userIds}}).fetch();
-  var allVars = _.findWhere(EMAIL_TEMPLATE_USAGE_OPTIONS, {value: 'growthGithub'}).vars;
+  var allVars = _.findWhere(EMAIL_TEMPLATE_GROUPS_OPTIONS, {value: 'growthGithub'}).vars;
   var usedVars = _.filter(allVars, function(v){ return html.indexOf('*|'+v.toUpperCase()+'|*') > -1; });
  
   var to_list = _.map(users, function(user) {

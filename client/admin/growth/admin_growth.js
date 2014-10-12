@@ -59,7 +59,7 @@ Template.admin_growth.helpers({
   'collection': function() {
     return GrowthGithub.find({city: state.get('city')});
   },
-  'settings': function() {
+  'tableFormat': function() {
     return {
       showFilter: false,
       showColumnToggles: true,
@@ -74,12 +74,12 @@ Template.admin_growth.helpers({
 
 Template.admin_growthEmail.helpers({
   'subjects': function() {
-    return EmailTemplates.find({usedIn: 'growthGithub', subject: {$exists: true}}).map(function(message) {
+    return EmailTemplates.find({groups: 'growthGithub', subject: {$exists: true}}).map(function(message) {
       return { value: message.identifier, label: message.identifier };
     });
   },
   'bodies': function() {
-    return EmailTemplates.find({usedIn: 'growthGithub', body: {$exists: true}}).map(function(message) {
+    return EmailTemplates.find({groups: 'growthGithub', body: {$exists: true}}).map(function(message) {
       return { value: message.identifier, label: message.identifier };
     });
   },
@@ -137,8 +137,10 @@ Template.admin_growthEmail.events({
   }
 })
 
+// extract internal information from the reactiveTable package
+// such as current column sorting.
+// XXX THIS HACKS INTO THE PRIVATE LIB
 var getTableInfo = function(fields) {
-  // XXX THIS HACKS INTO THE PRIVATE LIB
 
   // get sorting property from reactive table
   var sortDir = Session.get('reactive-table-reactive-table-sort-direction');
@@ -148,16 +150,19 @@ var getTableInfo = function(fields) {
   return {sortDir: sortDir, sortKey: sortKey};
 }
 
+// get x number of users from top of the table
+// based on current sorting and skip users that 
+// are already invited/signedup
 var getUsersFromTop = function(number) {
   var table = getTableInfo(fields())
     , city  = state.get('city');
 
-  // get userIds for X number of (uninvited) hackers from top of table
   var selector = {
     city: city, 
     invitedAt: {$exists: false},
     signupAt: {$exists: false},
   };
+
   var options = {
     sort: _.object([table.sortKey], [table.sortDir]), 
     limit: number
@@ -166,6 +171,7 @@ var getUsersFromTop = function(number) {
   return GrowthGithub.find(selector, options).map(_.property('_id'));;
 }
 
+// let the server send the actual growth mail
 var sendGrowthMailing = function(githubUserIds, subjectIdentifier, bodyIdentifier, cb) {
   var users = githubUserIds.length;
   var city = state.get('city');

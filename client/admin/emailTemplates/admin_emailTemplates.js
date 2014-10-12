@@ -1,7 +1,7 @@
 
 var state = new State('adminEmailTemplates', {
   'docId': null,
-  'usedIn': [],
+  'groups': [],
   'previewContent': "",
 });
 
@@ -16,50 +16,58 @@ AdminEmailTemplatesController = DefaultAdminController.extend({
 
 
 Template.admin_emailTemplates.helpers({
-  'settings': function() {
+  'tableFormat': function() {
     return {
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        'usedIn', 
+        'groups', 
         'subject',
         'identifier', 
         Field.edit,
       ],
     }
   },
-   'collection': function() {
+  'collection': function() {
     return EmailTemplates.find();
   },
   'doc': function() {
+    // Current selected email template, if we try to edit one.
     return EmailTemplates.findOne(state.get('docId'));
   },
   'type': function() {
+    // Determine if we modifing an existing item or add a new one.
     return state.get('docId') ? 'update' : 'insert';
   },
-  'usedInOptions': function() {
-    return EMAIL_TEMPLATE_USAGE_OPTIONS;
+  'groupOptions': function() {
+    // groups determine at which locations this template can be used
+    return EMAIL_TEMPLATE_GROUPS_OPTIONS;
   },
-  'vars': function() {
-    var usedIn = state.get('usedIn') || [];
-    var vars = _.chain(EMAIL_TEMPLATE_USAGE_OPTIONS)
-      .filter(function(o) { return _.contains(usedIn, o.value); })
+  'mergeVars': function() {
+    var groups = state.get('groups') || [];
+
+    // Determine which merge vars can be used. This depends on your
+    // selection of groups. Only allow merge vars that can be used
+    // in all selected groups.
+    var mergeVars = _.chain(EMAIL_TEMPLATE_GROUPS_OPTIONS)
+      .filter(function(o) { return _.contains(groups, o.value); })
       .pluck('vars').map(function(vars) { return vars ? vars : []; })
       .func(function(a){ return a.length > 1 ? _.reduce(a, _.intersection) : _.first(a) || []; })
-      .map(function(v) { return {name: v.toUpperCase()}; })
-      .value();
-    return vars;
+      .map(function(v) { return {name: v}; }).value();
+
+    return mergeVars;
   },
   'previewContent': function() {
-    var tmpl = _.first(state.get('usedIn') || []);
+    // Render wysiwyg content with filling in example data.
+    var tmpl = _.first(state.get('groups') || []);
     var content = state.get('previewContent');
     return Safe.string(renderWithExampleData(content, tmpl));
   }
 });
 
 Template.admin_emailTemplates.events({
-  'change select#usedIn': function(evt) {
-    state.set('usedIn', $(evt.currentTarget).val());
+  'change select#groups': function(evt) {
+    state.set('groups', $(evt.currentTarget).val());
   },
   'click [action="new-template"]': function() {
     state.set('docId', null);
@@ -69,15 +77,18 @@ Template.admin_emailTemplates.events({
     $(window).scrollTo($("#adminEmailTemplatesForm")) // scroll down
   },
   'click [action="preview"]': function(evt) {
+    // Send preview of this template to the staff member 
+    // (XXX not used right now)
+
     var city = Session.get('currentCity');
     var tmpl = Template.instance();
-    var usedIn = _.first(state.get('usedIn') || []);
+    var groups = _.first(state.get('groups') || []);
     var subject = tmpl.$('#subject').val();
     var body = tmpl.$('#body').code();
     var $button = $(evt.currentTarget);
 
     // replace example data
-    body = renderWithExampleData(body, usedIn);
+    body = renderWithExampleData(body, groups);
 
     // disable button for a few seconds
     var text = $button.text();
@@ -107,6 +118,7 @@ Template.admin_emailTemplates.rendered = function() {
   var $body = $('#body');
 
   // wysiwyg content changed
+  // update live preview
   var contentChanged = function() {
     state.set('previewContent', $body.code());
   }
@@ -144,24 +156,25 @@ Template.admin_emailTemplates.rendered = function() {
     init(body);
   });
 
-  // save state about the current selection within usedIn
+  // save current selected groups
   this.autorun(function() {
     var doc = EmailTemplates.findOne(state.get('docId'));
-    state.set('usedIn', property(doc, 'usedIn') || []);
+    state.set('groups', property(doc, 'groups') || []);
   });
 }
 
-// form hooks
 
+/* form hooks */
 AutoForm.hooks({
-  "adminEmailTemplatesForm": {
+  // need to extract wysiwyg content
+  "adminEmailTemplatesForm": { 
     before: {
       insert: function(doc, tmpl) { 
-        doc.body = tmpl.$('#body').code() // get wysiwyg content
+        doc.body = tmpl.$('#body').code();
         return doc;
       },
       update: function(docId, modifier, tmpl) { 
-        modifier.$set.body = tmpl.$('#body').code(); // get wysiwyg content
+        modifier.$set.body = tmpl.$('#body').code();
         return modifier;
       },
     },
@@ -186,7 +199,7 @@ var renderWithData = function(content, data) {
 
 // fill in the example merge variables
 var renderWithExampleData = function(content, template) {
-  var tmpl = _.findWhere(EMAIL_TEMPLATE_USAGE_OPTIONS, {value: template});
+  var tmpl = _.findWhere(EMAIL_TEMPLATE_GROUPS_OPTIONS, {value: template});
   var example = property(tmpl || {}, 'example');
   return renderWithData(content, example);
 }

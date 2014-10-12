@@ -1,7 +1,7 @@
 <template name="admin_emailTemplates">
   <div id="admin_emailTemplates" class="page">
    
-    {{> reactiveTable collection=collection settings=settings}}
+    {{> reactiveTable collection=collection settings=tableFormat}}
     
     <div class="page-space"></div>
     
@@ -16,16 +16,16 @@
       {{/if}}
       <div class="row">
         <div class="col-lg-4">  
-          {{> afQuickField name="usedIn" id="usedIn" options=usedInOptions}}
+          {{> afQuickField name="groups" id="groups" options=groupOptions}}
           {{#if equals type "insert"}}
             {{> afQuickField name="identifier" id="identifier"}}
           {{/if}}
         </div>
         <div class="col-lg-8">
-          {{#if vars}}
+          {{#if mergeVars}}
             <strong>variables</strong>
             <p>
-              {{#each vars}}
+              {{#each mergeVars}}
                 *|{{name}}|* &nbsp;&nbsp;
               {{/each}}
             </p>

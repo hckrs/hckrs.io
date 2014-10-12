@@ -1,13 +1,5 @@
 
-/* Emails Outbound */
-
-
-// collections
-
-EmailsOutbound = new Meteor.Collection('emailsOutbound');
-
-
-// schemas
+/* Schema */
 
 var eventSchema =new SimpleSchema({ /* events from mandrill (webhook) */
   "event": { type: String }, /* send, deferral, hard-bounce, soft-bounce, open, click, spam, unsub, reject */
@@ -63,8 +55,9 @@ Schemas.EmailsOutbound = new SimpleSchema([
 
 
 
-// add schema
+/* Collection */
 
+EmailsOutbound = new Meteor.Collection('emailsOutbound');
 EmailsOutbound.attachSchema(Schemas.EmailsOutbound);
 
 
