@@ -2,6 +2,7 @@
 var state = new State('adminEmailTemplates', {
   'docId': null,
   'usedIn': [],
+  'previewContent': "",
 });
 
 AdminEmailTemplatesController = DefaultAdminController.extend({
@@ -48,6 +49,11 @@ Template.admin_emailTemplates.helpers({
       .map(function(v) { return {name: v.toUpperCase()}; })
       .value();
     return vars;
+  },
+  'previewContent': function() {
+    var tmpl = _.first(state.get('usedIn') || []);
+    var content = state.get('previewContent');
+    return Safe.string(renderWithExampleData(content, tmpl));
   }
 });
 
@@ -65,9 +71,13 @@ Template.admin_emailTemplates.events({
   'click [action="preview"]': function(evt) {
     var city = Session.get('currentCity');
     var tmpl = Template.instance();
+    var usedIn = _.first(state.get('usedIn') || []);
     var subject = tmpl.$('#subject').val();
     var body = tmpl.$('#body').code();
-    var $button = $(evt.currentTarget)
+    var $button = $(evt.currentTarget);
+
+    // replace example data
+    body = renderWithExampleData(body, usedIn);
 
     // disable button for a few seconds
     var text = $button.text();
@@ -88,17 +98,24 @@ Template.admin_emailTemplates.events({
       subject: subject,
       html: body,
     }, true, cb);
-
-
   }
 })
 
 
 Template.admin_emailTemplates.rendered = function() {
+  var tmpl = this;
+  var $body = $('#body');
+
+  // wysiwyg content changed
+  var contentChanged = function() {
+    state.set('previewContent', $body.code());
+  }
   
   // init wysiwyg
   var init = function(content) {
-    $('#body').destroy().summernote({
+    var $body = $('#body');
+    $body.destroy();
+    $body.summernote({
       toolbar: [  
         ['style', ['bold', 'italic', 'underline', 'strikethrough', 'fontsize']],
         ['color', ['color']],
@@ -113,7 +130,11 @@ Template.admin_emailTemplates.rendered = function() {
         lineNumbers: true,
         theme: 'monokai' 
       },
-    }).code(content || '');
+      onfocus: contentChanged,
+      onChange: contentChanged,
+    });
+    $body.code(content || '');
+    contentChanged();
   }
 
   // make sure wysiwyg content is reactive
@@ -150,3 +171,22 @@ AutoForm.hooks({
     }
   }
 });
+
+
+/* helpers */
+
+// fill in merge variables
+var renderWithData = function(content, data) {
+  _.each(data || {}, function(val, key) {
+    var regex = new RegExp('\\*\\|'+key+'\\|\\*', 'g');
+    content = content.replace(regex, val);
+  });
+  return content;
+}
+
+// fill in the example merge variables
+var renderWithExampleData = function(content, template) {
+  var tmpl = _.findWhere(EMAIL_TEMPLATE_USAGE_OPTIONS, {value: template});
+  var example = property(tmpl || {}, 'example');
+  return renderWithData(content, example);
+}
