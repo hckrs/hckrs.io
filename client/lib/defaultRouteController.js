@@ -23,5 +23,14 @@ DefaultController = RouteController.extend({
 });
 
 DefaultAdminController = DefaultController.extend({
-  layoutTemplate: "admin_layout"
+  layoutTemplate: "admin_layout",
+  onBeforeAction: function() {
+
+    if (!this.ready())
+      return; // wait for subscriptions
+
+    // check permissions to view admin panel
+    if (!hasAmbassadorPermission())
+      Router.go('frontpage');
+  }
 });

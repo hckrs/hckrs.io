@@ -3,8 +3,10 @@
 AdminPlacesController = DefaultAdminController.extend({
   template: 'admin_places',
   waitOn: function () {
+    var city = Session.get('currentCity');
+    var isAdmin = hasAdminPermission();
     return [ 
-      Meteor.subscribe('places', 'all'),
+      Meteor.subscribe('places', isAdmin ? 'all' : city),
     ];
   }
 });

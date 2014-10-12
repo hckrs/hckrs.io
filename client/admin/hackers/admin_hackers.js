@@ -10,7 +10,10 @@ AdminHackersController = DefaultAdminController.extend({
 
 Template.admin_hackers.helpers({
   'collection': function() {
-    return Users.find().fetch();
+    if (hasAdminPermission())
+      return Users.find().fetch();
+    else
+      return Users.find({city: Session.get('currentCity')}).fetch();
   },
   'settings': function() {
     return {
