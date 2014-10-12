@@ -78,8 +78,11 @@
             
             {{#if hasAdminPermission}}
               {{> citySelect}}
+            {{/if}}
+            {{#if hasAmbassadorPermission}}
               <a href="{{pathFor 'admin'}}" action="admin" class="button btn btn-inverse light"><i class="glyphicon glyphicon-white glyphicon-wrench"></i></a>
             {{/if}}
+            
           
             <div class="account">
               <div class="dropdown">

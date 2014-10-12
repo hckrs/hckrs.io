@@ -3,8 +3,10 @@
 AdminDealsController = DefaultAdminController.extend({
   template: 'admin_deals',
   waitOn: function () {
+    var city = Session.get('currentCity');
+    var isAdmin = hasAdminPermission();
     return [ 
-      Meteor.subscribe('deals', 'all'),
+      Meteor.subscribe('deals', isAdmin ? 'all' : city),
     ];
   }
 });

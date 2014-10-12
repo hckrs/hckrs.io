@@ -1,6 +1,6 @@
 AdminController = DefaultAdminController.extend({
   onBeforeAction: function() {
-    Router.go('admin_highlights');
+    Router.go('admin_hackers');
   }
 });
 
@@ -55,6 +55,7 @@ Field.date = {
   key: 'createdAt',
   label: 'date',
   sortByValue: true,
+  sort: -1,
   fn: Field.fn.date
 }
 
