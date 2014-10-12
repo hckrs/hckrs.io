@@ -147,9 +147,12 @@
           {{#each cities}}
             <option value="{{key}}" {{selected key}}>
               {{name}}
-              {{#if usersCount}}
-                 ({{visibleUsersCount}} / {{usersCount}}) 
+              {{#if visibleUsers}}
+                ({{visibleUsers}})
               {{/if}}
+              {{#if invisibleUsers}}
+                ~ {{invisibleUsers}}
+              {{/if}} 
             </option>
           {{/each}}
         </optgroup>

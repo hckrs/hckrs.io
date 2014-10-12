@@ -85,23 +85,25 @@ Template.main.rendered = function() {
 
 
 // precalculate city user-counters
-var _cityCount, _cityVisibleCount; 
+// wait until all users are loaded, then calculate
 
-var _calculateCount = function() {
-  var users = Users.find({}, {fields: {city: true}, reactive: false}).fetch();
+var cityInvisibleUsers = new ReactiveVar({});
+var cityVisibleUsers = new ReactiveVar({});
+
+var calculateUsersCount = function() {
+  var invisibleUsers = Users.find({isHidden: true}, {fields: {city: true}, reactive: false}).fetch();
   var visibleUsers = Users.find({isHidden: {$ne: true}}, {fields: {city: true}, reactive: false}).fetch();
-  _cityCount = _.countBy(users, 'city');
-  _cityVisibleCount = _.countBy(visibleUsers, 'city');
+  cityInvisibleUsers.set(_.countBy(invisibleUsers, 'city'));
+  cityVisibleUsers.set(_.countBy(visibleUsers, 'city'));
 }
 
-var getCityCount = function() {
-  if (!_cityCount) _calculateCount();
-  return _cityCount;
-}
-var getCityVisibleCount = function() {
-  if (!_cityVisibleCount) _calculateCount();
-  return _cityVisibleCount;
-}
+Meteor.startup(function() {
+  Tracker.autorun(function(tracker) {
+    if (!Subscriptions.ready()) return; 
+    calculateUsersCount();
+    tracker.stop();
+  });
+});
 
 
 
@@ -114,8 +116,8 @@ Template.citySelect.helpers({
 
     if (hasAdminPermission()) {
       createCityEntry = function(city) {
-        city.usersCount = getCityCount()[city.key];
-        city.visibleUsersCount = getCityVisibleCount()[city.key];
+        city.invisibleUsers = cityInvisibleUsers.get()[city.key];
+        city.visibleUsers = cityVisibleUsers.get()[city.key];
         return city;
       }
     }
