@@ -80,7 +80,7 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
   }
 
   var mail = {
-    "key": Settings['mandrill'][isTest ? 'apiTestKey' : 'apiKey'],
+    "key": Settings['mandrill'] && Settings['mandrill'][isTest ? 'apiTestKey' : 'apiKey'],
     "message": {
       "html": html,
       "subject": subject,
@@ -125,6 +125,10 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
     console.log('EMAIL', mail);
     console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
   }
+
+  // don't proceed on development machines
+  if (Settings['environment'] === 'dev')
+    return;
 
   // send email
   try {

@@ -1,4 +1,4 @@
-var MailChimpOptions = Settings['MailChimpOptions'];
+var MailChimpOptions = Settings['MailChimpOptions'] || {};
 
 // Wrapper around meteor's Email.send funnction
 // to specify additional options that allows us to force
@@ -10,7 +10,7 @@ Email.send = function(options, forceSendingInDevelopMode) {
 
   // In development mode emails will be outputed to console
   // as long the user don't specify the flag forceSendingInDevelopMode
-  if (Settings['environment'] !== 'production' && !forceSendingInDevelopMode)
+  if (Settings['environment'] === 'dev' || (Settings['environment'] !== 'production' && !forceSendingInDevelopMode))
     console.log("SEND EMAIL:\n", options); // output in console
   else
     _EmailSend(options); // sending email over smtp
@@ -167,7 +167,9 @@ var _subscribe = function(options, cb) {
     send_welcome: false,
   };
 
-  // console.log('subscribe', params)
+  // don't proceed on development machines
+  if (Settings['environment'] === 'dev')
+    return;
 
   new MailChimp().call('lists', 'subscribe', params, cb);
 }
@@ -180,11 +182,19 @@ Mailing.subscribe = function(user, options, cb) {
   options = options || {};
   options.user = user;
 
+  // don't proceed on development machines
+  if (Settings['environment'] === 'dev')
+    return;
+
   // queue subscribe task
   _queue.push(options, cb || function(){});
 }
 
 Mailing.unsubscribe = function(emailToDelete, keepInList, cb) {
+
+  // don't proceed on development machines
+  if (Settings['environment'] === 'dev')
+    return;
   
   var params = {
     id: MailChimpOptions['listId'],
@@ -262,8 +272,13 @@ Mailing.send = function(options) {
     segment_opts: options.segments
   }
 
+  console.log('Email:', options.html);
   console.log('Send mailing:', params.options);
   console.log('To users:', options.segments);
+
+  // don't proceed on development machines
+  if (Settings['environment'] === 'dev')
+    return;
 
   // on test environments, send always test e-mails. Never mail the users
   if (Settings['environment'] !== 'production') {
