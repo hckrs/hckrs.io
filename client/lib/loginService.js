@@ -57,6 +57,7 @@ var loggedIn = function() {
   // XXX maybe we can do this on the server side, because
   // meteor introduces a function called Accounts.validateLoginAttempt()
   checkInvitation();
+  checkGrowthPhrase();
   checkAccess();
 
   // if a redirectUrl is present, redirect to that url
@@ -111,7 +112,16 @@ Template.registerHelper('isUnverifiedEmail', function() {
   return isUnverifiedEmail(); // user's profile email is not verified
 });
 
+// when user signup with a growth phrase
+// we will mark the growth entry
+checkGrowthPhrase = function() {
+  var type = Session.get('growthType');
+  var phrase = Session.get('growthPhrase');
 
+  // register growth phrase
+  if (type && phrase)  
+    Meteor.call('verifyGrowthPhrase', type, phrase);
+}
 
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code

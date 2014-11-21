@@ -13,8 +13,15 @@
     <a href="{{pathFor 'admin_hackers'}}" {{active 'admin_hackers'}}>hackers</a>
     <a href="{{pathFor 'admin_places'}}" {{active 'admin_places'}}>places</a>
     <a href="{{pathFor 'admin_deals'}}" {{active 'admin_deals'}}>deals</a>
+    {{#if hasAdminPermission}}
+      <a href="{{pathFor 'admin_growth'}}" {{active 'admin_growth'}}>growth</a>
+      <a href="{{pathFor 'admin_emailTemplates'}}" {{active 'admin_emailTemplates'}}>email templates</a>
+    {{/if}}
   </div>
 </template>
 
 
 
+<template name="reactiveTable_editButton">
+  <button class="btn" action="edit" docId="{{_id}}"><span class="glyphicon glyphicon-pencil"></span></button>
+</template>

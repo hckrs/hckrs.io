@@ -1,0 +1,91 @@
+<template name="admin_emailTemplates">
+  <div id="admin_emailTemplates" class="page">
+   
+    {{> reactiveTable collection=collection settings=tableFormat}}
+    
+    <div class="page-space"></div>
+    
+    {{#autoForm collection="EmailTemplates" id="adminEmailTemplatesForm" doc=doc type=type}}
+      {{#if equals type "insert"}}
+        <h2>Add new Templates</h2>
+      {{else}}
+        <h2>
+          Update Template / 
+          <button action="new-template" class="btn">New Template</button>
+        </h2>
+      {{/if}}
+      <div class="row">
+        <div class="col-lg-4">  
+          {{> afQuickField name="groups" id="groups" options=groupOptions}}
+          {{#if equals type "insert"}}
+            {{> afQuickField name="identifier" id="identifier"}}
+          {{/if}}
+        </div>
+        <div class="col-lg-8">
+          {{#if mergeVars}}
+            <strong>variables</strong>
+            <p>
+              {{#each mergeVars}}
+                *|{{name}}|* &nbsp;&nbsp;
+              {{/each}}
+            </p>
+            <ul>
+              <li>How to use variable <a href="http://help.mandrill.com/entries/28427818-Can-I-use-dynamic-or-conditional-merge-tags-" target="_blank">if-then-else</a> construction?</li>
+              <li>Don't insert plain URLs or URL variables directly, use <i class="fa fa-link"></i> button to add display text.</li>
+            </ul>
+          {{/if}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          {{> afQuickField name="subject" id="subject"}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          {{> afQuickField name="body" id="body" rows="6"}}          
+          <em>Use ctrl+enter for normal line break.</em>
+        </div>
+        <div class="col-lg-6">
+          <strong>Preview</strong> <em>(with example data)</em>
+          {{> htmlEmailTemplatePreview content=previewContent}}
+          <!-- <button type="button" action="preview" class="btn">Send preview to me</button> -->
+        </div>
+      </div>
+      <br/>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    {{/autoForm}}
+  </div>
+</template>
+
+<template name="htmlEmailTemplatePreview">
+  <div id="htmlEmailTemplatePreview">
+    <table class="body-wrap">
+      <tr>
+        <td></td>
+        <td class="container" width="600">
+          <div class="content">
+            <table class="main" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="content-wrap">
+                  
+                  {{content}}
+                  
+                </td>
+              </tr>
+            </table>
+            <div class="footer">
+              <table width="100%">
+                <tr>
+                  <td class="aligncenter content-block">
+                    
+                  </td>
+                </tr>
+              </table>
+            </div></div>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</template>

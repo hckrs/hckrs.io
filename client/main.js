@@ -131,8 +131,11 @@ Template.citySelect.helpers({
 
     return _.sortBy(_.map(COUNTRYMAP, createCountryEntry), 'name');
   },
-  "selected": function(city) {
-    return Session.equals('currentCity', city) ? 'selected' : '';
+  "selected": function(city, current) {
+    if (_.isString(current) && CITYMAP[current])
+      return current == city ? 'selected' : '';
+    else
+      return Session.equals('currentCity', city) ? 'selected' : '';
   }
 });
 

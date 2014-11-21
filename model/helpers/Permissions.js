@@ -6,8 +6,11 @@
 
 TRUE = function() { return true; }
 FALSE = function() { return false; }
+var admin = function(userId) { return hasAdminPermission(userId); }
+
 ALL = { insert: TRUE, update: TRUE, remove: TRUE };
 NONE = { insert: FALSE, update: FALSE, remove: FALSE };
+ADMIN = { insert: admin, update: admin, remove: admin };
 
 
 // helper functions

@@ -3,12 +3,14 @@
 var routes = [
   
   // staff routes
-  [ 'admin'              , '/admin'             ],
-  [ 'admin_dashboard'    , '/admin/dashboard'   ],
-  [ 'admin_highlights'   , '/admin/highlights'  ],
-  [ 'admin_hackers'      , '/admin/hackers'     ],
-  [ 'admin_deals'        , '/admin/deals'       ],
-  [ 'admin_places'       , '/admin/places'      ],
+  [ 'admin'                 , '/admin'                  ],
+  [ 'admin_dashboard'       , '/admin/dashboard'        ],
+  [ 'admin_highlights'      , '/admin/highlights'       ],
+  [ 'admin_hackers'         , '/admin/hackers'          ],
+  [ 'admin_deals'           , '/admin/deals'            ],
+  [ 'admin_places'          , '/admin/places'           ],
+  [ 'admin_growth'          , '/admin/growth'           ],
+  [ 'admin_emailTemplates'  , '/admin/emailTemplates'   ],
 
   // normal routes
   [ 'about'        , '/about'                ],
@@ -23,8 +25,9 @@ var routes = [
   [ 'verifyEmail'  , '/verify-email/:token'  ],
   
   // special routes
-  [ 'hacker'       , '/:bitHash'             ],
-  [ 'invite'       , /^\/\+\/(.*)/           ],
+  [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
+  [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
+  [ 'invite'       , /^\/\+\/(.*)/           ], // e.g. /+/---_--
 
 ];
 
@@ -35,6 +38,34 @@ var noLoginRequired = [
   'invite', 
   'verifyEmail',
 ];
+
+
+
+/* 
+  special entry routes 
+  includes refer information 
+*/
+
+InviteController = DefaultController.extend({
+  template: 'frontpage',
+  onBeforeAction: function() { 
+    // set some session variables and then redirects to the frontpage
+    // the frontpage is now showing a picture of the user that has invited this visitor
+    var phrase = Url.bitHashInv(this.params[0]);        
+    Session.set('invitationPhrase', phrase);
+    this.redirect('frontpage');
+  }
+});
+
+GrowthGithubController = DefaultController.extend({
+  template: 'frontpage',
+  onBeforeAction: function() { 
+    Session.set('growthType', 'github');
+    Session.set('growthPhrase', this.params.phrase);
+    this.redirect('frontpage');
+  }
+});
+
 
 
 

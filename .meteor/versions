@@ -19,12 +19,14 @@ blaze@2.0.1
 boilerplate-generator@1.0.0
 callback-hook@1.0.0
 check@1.0.1
+chrismbeckett:fontawesome4@4.2.2
 coffeescript@1.0.3
 ctl-helper@1.0.3
 ctl@1.0.1
 datariot:ganalytics@0.2.0
 ddp@1.0.9
 deps@1.0.4
+digioak:codemirror@0.0.2
 ejson@1.0.3
 email@1.0.3
 facebook@1.1.0
@@ -32,6 +34,7 @@ fastclick@1.0.0
 follower-livedata@1.0.1
 geojson-utils@1.0.0
 github@1.1.0
+hckrs:summernote@0.1.0
 html-tools@1.0.1
 htmljs@1.0.1
 http@1.0.6

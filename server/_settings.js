@@ -1,6 +1,12 @@
 
 // ENVIRONMENT variables
 
-// set e-mail server only at staging and production servers.
-if (Meteor.settings.public.environment !== 'local')
-  process.env["MAIL_URL"] = "smtp://machine@hckrs.io:IN2MR8K1RmnOxjGoSIIIQYMNHVSUIevNQqasdaW@mail.gandi.net:587";
+// set default smtp server for emails sent using meteor's SMTP methods
+// on local development machines the messages will be outputed to the console
+
+var smtp = Settings['smtp'];
+
+if (!smtp || !smtp.username || !smtp.password)
+  console.log(500, "No smtp server configured");
+else
+  process.env["MAIL_URL"] = "smtp://"+smtp.username+":"+smtp.password+"@"+smtp.server+":"+smtp.port;

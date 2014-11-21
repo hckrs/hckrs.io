@@ -1,5 +1,22 @@
 var MailChimpOptions = Settings['MailChimpOptions'];
 
+// Wrapper around meteor's Email.send funnction
+// to specify additional options that allows us to force
+// email sending, even when we are in development mode.
+var _EmailSend = Email.send;
+Email.send = function(options, forceSendingInDevelopMode) {
+  if (!_.isBoolean(forceSendingInDevelopMode))
+    forceSendingInDevelopMode = false; // prevent from programming errors
+
+  // In development mode emails will be outputed to console
+  // as long the user don't specify the flag forceSendingInDevelopMode
+  if (Settings['environment'] !== 'production' && !forceSendingInDevelopMode)
+    console.log("SEND EMAIL:\n", options); // output in console
+  else
+    _EmailSend(options); // sending email over smtp
+}
+
+
 
 /* MAIL TEMPLATES */
 
@@ -304,6 +321,7 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
   var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
+  html = html.replace(/{{unsubscribe}}/g, 'if you don\'t want receive this kind of email, change your email settings at <a href="http://hckrs.io">hckrs.io</a>');
 
   // segments
   // e.g. {match: 'all', conditions: [{field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" }]}
@@ -343,16 +361,11 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
 
 
 
+
 Meteor.methods({
   'ambassadorMail': function(mail, isTest) {
     return Mailing.ambassadorMail(mail.subject, mail.message, mail.selector, isTest);
   },
-  // 'test-chimp': function() {
-  //   var mailChimp = new MailChimp();
-  //   mailChimp.call('lists', 'interest-groupings', {id: MailChimpOptions['listId']}, function(err, res) {
-  //     console.log(err, res);
-  //   });
-  // }
 });
 
 
