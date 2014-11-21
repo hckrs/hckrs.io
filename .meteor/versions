@@ -34,7 +34,7 @@ fastclick@1.0.0
 follower-livedata@1.0.1
 geojson-utils@1.0.0
 github@1.1.0
-hckrs:summernote@0.0.1
+hckrs:summernote@0.1.0
 html-tools@1.0.1
 htmljs@1.0.1
 http@1.0.6

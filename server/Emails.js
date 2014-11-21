@@ -10,7 +10,7 @@ Email.send = function(options, forceSendingInDevelopMode) {
 
   // In development mode emails will be outputed to console
   // as long the user don't specify the flag forceSendingInDevelopMode
-  if (Settings['environment'] === 'local' && !forceSendingInDevelopMode)
+  if (Settings['environment'] !== 'production' && !forceSendingInDevelopMode)
     console.log("SEND EMAIL:\n", options); // output in console
   else
     _EmailSend(options); // sending email over smtp

@@ -18,7 +18,7 @@ var fetchGithubUsersInCity = function(city) {
   
   // query
   var cityName = CITYMAP[city].name;
-  var query = "location:" + cityName.replace(' ', '+');
+  var query = "type:user location:" + cityName.replace(' ', '+');
 
 
   var callback = function(err) {
@@ -43,7 +43,6 @@ var forEachQueriedUser = function(query, page, iterator, cb) {
   var params = {
     per_page: 100,
     page: page,
-    type: 'user',
     q: query,
   }
   

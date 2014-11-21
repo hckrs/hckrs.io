@@ -27,7 +27,7 @@ AdminGrowthController = DefaultAdminController.extend({
 var fields = function() {
   return [
     Field.city, 
-    { key: 'createdAt', label: 'since', sortByValue: true, fn: Field.fn.date},
+    { key: 'createdAt', label: 'since', sortByValue: true, fn: Field.fn.date },
     { key: 'avatarUrl', label: '#', fn: function(avatarUrl, obj) { return Safe.string('<a href="https://github.com/'+obj['username']+'" target="_blank"><img src="'+avatarUrl+'" width="50" /></a>'); }},
     // 'name',
     'followers',
@@ -49,6 +49,13 @@ var fields = function() {
   ];
 };
 
+// Determine row color based on invited/signedup
+var rowClass = function(doc) {
+  if (doc.signupAt) return 'success'
+  else if (doc.invitedAt) return 'warning'
+  return ''
+}
+
 
 // Template helpers
 
@@ -65,9 +72,19 @@ Template.admin_growth.helpers({
       showColumnToggles: true,
       rowsPerPage: 50,
       fields: fields(),
+      rowClass: rowClass,
     }
   }
 });
+
+// Template rendered
+
+Template.admin_growth.rendered = function() {
+  // default sorting 
+  // XXX can be implemented using a 'sort' attribute in later package versions of reactive-table
+  Session.set('reactive-table-reactive-table-sort', 1); // signup date github
+  Session.set('reactive-table-reactive-table-sort-direction', -1); // desc
+}
 
 
 /* Compose Email */

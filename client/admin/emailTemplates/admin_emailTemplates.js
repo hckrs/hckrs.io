@@ -170,11 +170,15 @@ AutoForm.hooks({
   "adminEmailTemplatesForm": { 
     before: {
       insert: function(doc, tmpl) { 
-        doc.body = tmpl.$('#body').code();
+        var emailTmpl = _.first(state.get('groups') || []);
+        var content = tmpl.$('#body').code()
+        doc.body = removeUrlPrefix(content, emailTmpl);
         return doc;
       },
       update: function(docId, modifier, tmpl) { 
-        modifier.$set.body = tmpl.$('#body').code();
+        var emailTmpl = _.first(state.get('groups') || []);
+        var content = tmpl.$('#body').code()
+        modifier.$set.body = removeUrlPrefix(content, emailTmpl);
         return modifier;
       },
     },
@@ -187,6 +191,25 @@ AutoForm.hooks({
 
 
 /* helpers */
+
+// The link-dialog will automatically prefix urls with 'http://''
+// this is not what we want in the case of *|URL|* variables
+// remove the prefix
+var removeUrlPrefix = function(content, template) {
+  var tmpl = _.findWhere(EMAIL_TEMPLATE_GROUPS_OPTIONS, {value: template});
+  var data = property(tmpl || {}, 'example');
+
+  // check if variables is an URL based on the example data
+  // if so, we remove possible duplicate http:// prefixes
+  _.each(data || {}, function(val, key) {
+    if (_.isString(val) && (val.indexOf('http://') === 0 || val.indexOf('https://') === 0)) {
+      var regex = new RegExp('http(s?)://\\*\\|'+key+'\\|\\*', 'g');
+      content = content.replace(regex, "*|"+key+"|*");  
+    }
+  });
+
+  return content;
+}
 
 // fill in merge variables
 var renderWithData = function(content, data) {
