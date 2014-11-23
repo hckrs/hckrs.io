@@ -1,6 +1,7 @@
 AdminController = DefaultAdminController.extend({
   onBeforeAction: function() {
     Router.go('admin_hackers');
+    this.next();
   }
 });
 
@@ -85,5 +86,3 @@ Field.url = {
     return Safe.url(val, {text: text});
   }
 }
-
-

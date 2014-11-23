@@ -21,7 +21,6 @@ underscore
 stylus
 mrt:collection-hooks
 iron:router
-mrt:iron-router-progress
 datariot:ganalytics
 aslagle:reactive-table
 mrt:mailchimp

@@ -1,7 +1,7 @@
-// ROUTES 
+// ROUTES
 
 var routes = [
-  
+
   // staff routes
   [ 'admin'                 , '/admin'                  ],
   [ 'admin_dashboard'       , '/admin/dashboard'        ],
@@ -13,17 +13,17 @@ var routes = [
   [ 'admin_emailTemplates'  , '/admin/emailTemplates'   ],
 
   // normal routes
+  [ 'frontpage'    , '/'                     ],
   [ 'about'        , '/about'                ],
   [ 'agenda'       , '/agenda'               ],
   [ 'books'        , '/books'                ],
-  [ 'frontpage'    , '/'                     ],
   [ 'hackers'      , '/hackers'              ],
   [ 'highlights'   , '/highlights'           ],
   [ 'invitations'  , '/invitations'          ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
-  
+
   // special routes
   [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
   [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
@@ -34,24 +34,24 @@ var routes = [
 // the routes that DON'T require login
 var noLoginRequired = [
   'about',
-  'frontpage', 
-  'invite', 
+  'frontpage',
+  'invite',
   'verifyEmail',
 ];
 
 
 
-/* 
-  special entry routes 
-  includes refer information 
+/*
+  special entry routes
+  includes refer information
 */
 
 InviteController = DefaultController.extend({
   template: 'frontpage',
-  onBeforeAction: function() { 
+  onBeforeAction: function() {
     // set some session variables and then redirects to the frontpage
     // the frontpage is now showing a picture of the user that has invited this visitor
-    var phrase = Url.bitHashInv(this.params[0]);        
+    var phrase = Url.bitHashInv(this.params[0]);
     Session.set('invitationPhrase', phrase);
     this.redirect('frontpage');
   }
@@ -59,16 +59,12 @@ InviteController = DefaultController.extend({
 
 GrowthGithubController = DefaultController.extend({
   template: 'frontpage',
-  onBeforeAction: function() { 
+  onBeforeAction: function() {
     Session.set('growthType', 'github');
     Session.set('growthPhrase', this.params.phrase);
     this.redirect('frontpage');
   }
 });
-
-
-
-
 
 /* hooks */
 
@@ -98,17 +94,20 @@ var setMetaData = function() {
 var loginRequired = function() {
   if (!Meteor.userId()) {
     Session.set('redirectUrl', location.pathname + location.search + location.hash);
-    this.redirect('frontpage');  
+    this.redirect('frontpage');
   }
+  else this.next();
 }
 
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
   if(UserProp('isAccessDenied')) {
     if (Meteor.userId() !== Url.userIdFromUrl(window.location.href)) {
-      this.redirect('hacker', Meteor.userId()); 
+      this.redirect('hacker', Meteor.userId());
     }
+    else this.next();
   }
+  else this.next();
 }
 
 
@@ -141,9 +140,9 @@ Router.restoreScrollState = function() {
   var top = scrollState.get(route);
 
   if (top === 0 && params.hash)
-    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});  
+    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});
   else
-    $(window).scrollTop(top || 0);  
+    $(window).scrollTop(top || 0);
 }
 
 var scrollHandler = function(event) {
@@ -159,7 +158,7 @@ Meteor.startup(function() {
     if (_.contains(routes, templateName)) { // is route template
       var prevRenderFunc = template.rendered;
       template.rendered = function() {
-        if (prevRenderFunc) prevRenderFunc.call(this);  
+        if (prevRenderFunc) prevRenderFunc.call(this);
         Router.restoreScrollState(); // restore scroll state
       }
     }
@@ -175,22 +174,15 @@ Meteor.startup(function() {
 /* global router configuration */
 
 Router.configure({
-  autoRender: true
+  autoRender: true,
 });
-
-IronRouterProgress.configure({
-  enabled: false,
-  spinner: false
-});
-
-
 
 // internals
 
-Router.map(function () {
-  _.each(routes, function(route) {
-    this.route(route[0], {path: route[1]});
-  }, this);
+_.each(routes, function(route) {
+    Router.route(route[1], function () {
+        this.render(route[0])
+    }, {name:route[0]});
 });
 
 
@@ -198,7 +190,7 @@ Router.map(function () {
 /* router plugins */
 
 Router.scrollToTop = function() {
-  $(window).scrollTop(0); 
+  $(window).scrollTop(0);
 }
 
 // reload current route (hack)
@@ -219,11 +211,11 @@ Router.refresh = function(path) {
 // browser refresh location to new city
 Router.goToCity = function(city) {
   var url;
-  
+
   var phrase = Session.get('invitationPhrase');
   if (phrase)
     url = Router.routes['invite'].url({invitationPhrase: phrase});
-  
+
   url = Url.replaceCity(city, url);
 
   Router.refresh(url);
@@ -233,7 +225,7 @@ Router.goToCity = function(city) {
 
 Router.routes['hacker'].path = function(user) {
   var redirect = (_.isObject(user) && user.redirect) || false;
-  
+
   user = OtherUserProps(user, ['globalId']);
 
   if (!user || !user.globalId)
@@ -278,5 +270,3 @@ var clear = function() {
   setMeta("description", "");
   clearProperties();
 }
-
-

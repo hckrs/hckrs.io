@@ -1,27 +1,18 @@
 
 // Route Controller
-
 FrontpageController = DefaultController.extend({
   template: 'frontpage',
-  waitOn: function () {
-    return [];
-  }
-
 });
-
-
-
-
 
 /* FRONTPAGE */
 
 // bind total number of hackers to template
 Template.frontpage.helpers({
-  "totalHackers": function() { 
+  "totalHackers": function() {
     var city = Session.get('currentCity');
     var total = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
     var minimum = Settings['minimumUserCountToShow'];
-    return (total >= minimum) ? total : ''; 
+    return (total >= minimum) ? total : '';
   },
   "invitationBroadcastUser": function() {
     var phrase = Session.get('invitationPhrase');
@@ -52,7 +43,7 @@ Template.frontpage.events({
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
     exec(function() {
-      Router.goToCity(city);  
+      Router.goToCity(city);
     });
   }
 });
@@ -75,10 +66,10 @@ Template.frontpage.rendered = function() {
             elem.css('visibility', 'visible');
         } else {
             elem.css('visibility', 'hidden');
-        }    
+        }
     }, 500);
   });
   var texts = ['web','app','software','game','design','life','hardware','life','open source','growth'];
-  tmpl.$('#target').teletype({ text: texts }); 
+  tmpl.$('#target').teletype({ text: texts });
   tmpl.$('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
 }
