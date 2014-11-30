@@ -12,7 +12,7 @@ Run
 ---
 OS X users can simply run the shell script named ``start-local-server.command`` located in the `/tools` folder by simply double-click the file. It will locally start a server and opens the hckrs website in your browser.
 
-If you prefer to start the server manually you can run ``meteor --settings settings/local.json``. Make sure you have exported the following environment variable `ROOT_URL=http://10.0.0.2.xip.io:3000`. Replace `10.0.0.2` with your local IP.
+If you prefer to start the server manually you can run ``meteor --settings settings/dev.json``. Make sure you have exported the following environment variable `ROOT_URL=http://10.0.0.2.xip.io:3000`. Replace `10.0.0.2` with your local IP.
 
 Only Twitter can be used by default to login on your hckrs account. If you like to login through Facebook or Github you must make sure your local IP is 10.0.0.2, because they recognize http://10.0.0.2.xip.io:3000 as the only valid URL.
 
