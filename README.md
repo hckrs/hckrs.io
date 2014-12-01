@@ -1,67 +1,102 @@
 hckrs.io
-============
+=========
 
-[hckrs.io](http://hckrs.io) is a online platform for hackers, or in other words, a platform for people who like to build things. [Singup](http://hckrs.io) if you not already be a member of your city's community.
+[hckrs.io](http://hckrs.io) is an invite only platform for hackers; for basicly anyone who has to make stuff, somehow related to technology. #web #design #growth #hardware #life...
+[Join your local city](http://hckrs.io) to see it in action. (Europe only for now)
 
 <a href="http://hckrs.io"><img src="https://s3.amazonaws.com/hckrs.io/static/preview/preview1.jpg" width="400" alt="Screenshot hckrs.io" ></a>
 
 [ [Live Demo](http://hckrs.io) ]
 
+The project is completely **open source**, meaning that you will have full insight on the development progress and are very welcome to contribute. Together we can build better **tools for local ecosystems**, for hackers at least ;)
 
-Help Us
-=======
 
-Would you like to **help build [hckrs.io](http://hckrs.io)**? Luckily you can! We are completely **open source**, which means you will have full insights in the development and you are allowed to make improvements. Feel free to contribute, together we can make the **best platform ever**.
+
+Get you hacking
+================
+
+######1. [Download](archive/development.zip) / clone this repo.
+######2. Go to the project folder in your terminal.
+######3. Install depenencies `source install.sh`
+######4. Start up a local server `hckrs start`
+
+
+*Support for* ***OS X*** *and* ***Linux*** *right now.*
+*Meteor has no solid support for windows yet.*
+
+
+
+
+Roadmap 
+--------
+
+* go open source
+* subcultures with meetups
+* gather interests — based on the stackoverflow tags
+* go mobile — a hybrid application
+
+
+**parallel things we need help with**
+
+* build a CalDAV / CardDAV server per city
+* agreagation of different agenda feeds into a single one
+* building a social invite plugin
+* integrating http://telescope.meteor.com/
+* finding parners that want to give discounts to hackers.
+
+
+
+
+Documentation
+--------------
+
+Read the [wiki](wiki) to get understanding of the project structure.  
+Techniqual documentation is located at http://docs.hckrs.io.
+
 
 ![Logo](https://s3.amazonaws.com/hckrs.io/static/logo/logo1.jpg)
 
 
 
 
+Partners in crime
+==================
 
-Quick Start
-============
-*Support for* ***OS X*** *and* ***Linux*** *right now.*
-######1. [Download](archive/development.zip) or clone this repository.
-######2. Open your terminal and navigate to the project.
-######3. Install by entering the command `source install.sh`
-######4. Start up a local server by entering `hckrs start`
+The [hckrs.io](http://hckrs.io) core team is open.
 
-
-
-
-Documentation
-=============
-
-Read the [wiki](wiki) to get understanding of the project structure.  
-Techniqual documentation is located at http://docs.hckrs.io.
+Toon | Jarno | Daan | Daniël | Steven
+:---:|:-----:|:----:|:------:|:------: 
+<a href="https://github.com/ramshorst"><img src="https://avatars0.githubusercontent.com/u/5200239?v=3&s=80" width="80" alt="Toon van Ramshorst" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Jarnoleconte"><img src="https://avatars0.githubusercontent.com/u/279767?v=3&s=80" alt="Jarno Le Conté" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/daanvr"><img src="https://avatars0.githubusercontent.com/u/4609765?v=3&s=80" alt="Daan van Ramshorst" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Dandandan"><img src="https://avatars0.githubusercontent.com/u/163737?v=3&s=80" alt="Daniël Heres" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Mellowlicious"><img src="https://avatars0.githubusercontent.com/u/8102336?v=3&s=80" alt="Steven den Hartog" width="80" style="width:80px;height:80px;border-radius: 40px;"></a>
+co-founder | lead-dev | growth | core-dev | core-dev
 
 
+Getting involved?
+------------------
 
-Roadmap 
-========
+No need to be a developer to contribute. We have ambitous plans that require all kinds of skills, you may be good in ***video, story telling, copywriting, blogging, interviewing/podcasting, mobile apps, events, curation, hackatons, recruitment***. 
 
-* go open source
-* organize meetups
-* gather skills / interests
-* go mobile
+We are looking for people that make things happen. (**BAM!**)
 
+It's also okay to just start developing (making changes to this repo). Feel free to work on issues or add your own. Do a pull request when you are done. 
 
+**GO!**
 
-
-Contribute
-==========
-
-The core team of [hckrs.io](http://hckrs.io) is waiting for you.
-
-Toon | Daan | Jarno | Daniël | Steven
-:---:|:----:|:-----:|:------:|:------: 
-<a href="https://github.com/ramshorst"><img src="https://avatars0.githubusercontent.com/u/5200239?v=3&s=80" width="80" alt="Toon van Ramshorst" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/daanvr"><img src="https://avatars0.githubusercontent.com/u/4609765?v=3&s=80" alt="Daan van Ramshorst" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Jarnoleconte"><img src="https://avatars0.githubusercontent.com/u/279767?v=3&s=80" alt="Jarno Le Conté" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Dandandan"><img src="https://avatars0.githubusercontent.com/u/163737?v=3&s=80" alt="Daniël Heres" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Mellowlicious"><img src="https://avatars0.githubusercontent.com/u/8102336?v=3&s=80" alt="Steven den Hartog" width="80" style="width:80px;height:80px;border-radius: 40px;"></a>
-co-founder | idea-man | lead-dev | core-dev | core-dev
-
-No need to be a developer to contribute. Different skills will come in handy, maybe you are good in ***design, brainstorm, being social, hack, game, interaction or sales***.  
-It's also okay to just start developing (making changes to this repo). Feel free to work on issues or add your own. Do a pull request at the end to integrate your improvements. 
-
-Would you like to be involved, please contact toon@hckrs.io.
+You can also contact toon@hckrs.io, or take a look in the *parallel things we need help with* section above.
 
 
+City Admins
+------------
+
+**City admins need to :**
+
+* activate signups with a hacker profile
+* reply to local email
+
+**and sometimes go the extra mile :**
+
+* organise the local hckrs meetups monthly
+* manage local Twitter account
+
+**Want to be a local admin?**
+
+Wow, that's awesome, lets kickstart your city, get in touch with toon@hckrs.io
