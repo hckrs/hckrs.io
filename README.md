@@ -84,19 +84,21 @@ It's also okay to just start developing (making changes to this repo). Feel free
 You can also contact toon@hckrs.io, or take a look in the *parallel things we need help with* section above.
 
 
-City Admins
+Local Admins
 ------------
 
-**City admins need to :**
+Because each city has it's own identity, they are led by local admins.
+
+**These local admins need to :**
 
 * activate signups with a hacker profile
 * reply to local email
 
 **and sometimes go the extra mile :**
 
-* organise the local hckrs meetups monthly
+* plan the monthly hckrs meetup (BEER + GEEKS = ♥ MEETUP)
 * manage local Twitter account
 
-**Want to be a local admin?**
+**Want to found your city?**
 
 Wow, that's awesome, lets kickstart your city, get in touch with toon@hckrs.io
