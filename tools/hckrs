@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# OS Check. Put here because here is where we download the precompiled
+# bundles that are arch specific.
+UNAME=$(uname)
+if [ "$UNAME" != "Linux" -a "$UNAME" != "Darwin" ] ; then
+    echo "Sorry, this OS is not supported."
+    exit 1
+fi
+
+if [ "$UNAME" = "Darwin" ] ; then
+    if [ "i386" != "$(uname -p)" -o "1" != "$(sysctl -n hw.cpu64bit_capable 2>/dev/null || echo 0)" ] ; then
+
+        # Can't just test uname -m = x86_64, because Snow Leopard can
+        # return other values.
+        echo "Only 64-bit Intel processors are supported at this time."
+        exit 1
+    fi
+    ARCH="x86_64"
+elif [ "$UNAME" = "Linux" ] ; then
+    ARCH="$(uname -m)"
+    if [ "$ARCH" != "i686" -a "$ARCH" != "x86_64" ] ; then
+        echo "Unsupported architecture: $ARCH"
+        echo "Meteor only supports i686 and x86_64 for now."
+        exit 1
+    fi
+fi
+PLATFORM="${UNAME}_${ARCH}"
+
+
+
+# hckrs project directory
+SCRIPT="$0"
+while true; do
+  # The symlink might be relative, so we have to actually cd to the right place
+  # each time in order to resolve it.
+  cd "$(dirname "$SCRIPT")"
+  if [ ! -L "$(basename "$SCRIPT")" ]; then
+    SCRIPT_DIR="$(pwd -P)"
+    break
+  fi
+  SCRIPT="$(readlink "$(basename "$SCRIPT")")"
+done
+cd "$ORIG_DIR"
+
+
+
+# MAIN CLI
+
+if [ "$1" = "" ] || [ "$1" = "start" ]; then
+  
+  # Start local development server
+  sh "$SCRIPT_DIR/start.sh"
+
+elif [ "$1" = "hello" ]; then
+  echo "Hi!"
+else
+  echo "Unrecognized command!"
+fi
+

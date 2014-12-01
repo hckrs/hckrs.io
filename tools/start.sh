@@ -8,5 +8,4 @@ SETTINGS=settings/dev.json
 cd $ROOT
 export ROOT_URL=$URL
 
-sleep 5 && open $URL & 
 meteor run --settings $SETTINGS
