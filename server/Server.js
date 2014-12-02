@@ -24,6 +24,10 @@ Meteor.startup(function() {
   // info about development mode
   if (Settings['environment'] === 'dev')
     console.info("Mailservers aren't configured in development mode. You can ignore the warnings.")
+
+  // initial fill database
+  if (Settings['environment'] === 'dev' && Users.find().count() === 0)
+    ResetDB();
 });
 
 

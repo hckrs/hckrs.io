@@ -52,6 +52,19 @@ Router.map(function () {
     }
   })
 
+  this.route('resetDB', {
+    where: 'server',
+    path: '/tools/reset-db',
+    action: function() {
+
+      // Resetting the datbase is only allowed on development machines.
+      if (Settings['environment'] !== 'production')
+        ResetDB();
+      
+      this.next();
+    }
+  });
+
   this.route('any', {
     where: 'server',
     path: '/*',

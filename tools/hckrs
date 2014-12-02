@@ -48,12 +48,25 @@ cd "$ORIG_DIR"
 # MAIN CLI
 
 if [ "$1" = "" ] || [ "$1" = "start" ]; then
-  
   # Start local development server
   sh "$SCRIPT_DIR/start.sh"
 
 elif [ "$1" = "hello" ]; then
+  # Echo
   echo "Hi!"
+
+elif [ "$1" = "alive" ]; then
+  # Verify if meteor is alive
+  sh "$SCRIPT_DIR/alive.sh"
+
+elif [ "$1" = "wait" ]; then
+  # Wait for meteor to be alive
+  sh "$SCRIPT_DIR/wait.sh"
+  
+elif [ "$1" = "reset" ]; then
+  # Reset project/database
+  sh "$SCRIPT_DIR/reset.sh"
+
 else
   echo "Unrecognized command!"
 fi
