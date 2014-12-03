@@ -21,6 +21,17 @@ ResetDB = function() {
   console.info("Done.")
 }
 
+// Initial reset database on first run of meteor
+Meteor.startup(function() {
+  Meteor.setTimeout(function(){
+    if (Settings['environment'] === 'dev' && Users.find().count() === 0)
+      ResetDB();
+  }, 2000);
+});
+  
+
+
+// PRIVATE
 
 // Remove all documents from the specified meteor collection
 var clearCollection = function(collection) {
@@ -49,8 +60,7 @@ var fillCollection = function(collection) {
     };
   } catch(e) {
 
-  }
-     
+  } 
 }
 
 // Get all collections from the global namespace
