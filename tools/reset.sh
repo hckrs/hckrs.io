@@ -5,7 +5,7 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ".." && pwd )"
 # Start up meteor if not already running
 if ! hckrs alive ; then
   echo "startup meteor"
-  hckrs start & hckrs wait
+  hckrs run & hckrs wait
 fi
 
 # Reset database and initialize with dummy documents

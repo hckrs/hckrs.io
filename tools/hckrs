@@ -47,9 +47,9 @@ cd "$ORIG_DIR"
 
 # MAIN CLI
 
-if [ "$1" = "" ] || [ "$1" = "start" ]; then
+if [ "$1" = "" ] || [ "$1" = "run" ]; then
   # Start local development server
-  sh "$SCRIPT_DIR/start.sh"
+  sh "$SCRIPT_DIR/run.sh"
 
 elif [ "$1" = "hello" ]; then
   # Echo
