@@ -50,11 +50,11 @@ var fillCollection = function(collection) {
   try {
     var docs = Assets.getText("DummyDB/" + collection + ".js")
 
-    // insert them into the database
-    try {     
+    // evaluate documents and insert them into the database
+    try {    
+      docs = eval(docs); 
       console.log("Insert " + collection + "...");
-      // console.log(eval(docs))
-      _.each(eval(docs), insertDoc);
+      _.each(docs, insertDoc);
     } catch(err) {
       console.error(err);
     };

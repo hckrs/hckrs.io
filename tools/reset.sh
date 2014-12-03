@@ -2,15 +2,28 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ".." && pwd )"
 
-# Start up meteor if not already running
-if ! hckrs alive ; then
-  echo "startup meteor"
-  hckrs run & hckrs wait
-fi
 
 # Reset database and initialize with dummy documents
-echo "Reset database..."
-echo "Insert dummy documents..."
-curl -s http://localhost:3000/tools/reset-db > /dev/null
-echo "Done!"
+function reset {
+  echo "Reset database..."
+  echo "Insert dummy documents... (wait a few seconds)"
+  curl -s http://localhost:3000/tools/reset-db > /dev/null
+  echo "Done!"
+}
+
+# Make sure meteor is stopped before calling reset
+# otherwise show meteor's default error message
+if hckrs alive ; then
+  meteor reset
+else
+  meteor reset
+  hckrs wait && reset && echo "Meteor stays running. Open your browser."  &  
+  exec "hckrs" "run"
+fi
+
+
+
+
+
+
 
