@@ -1,9 +1,6 @@
-\#private#*
+\#private*
 .npm
 .build*
 .DS_Store
 node_modules
-.docs
-.tools
-.backup
-README.html
+/web/.meteor/package-metadata

@@ -16,9 +16,9 @@ Get you hacking
 ================
 
 ######1. [Download](archive/development.zip) / clone this repo.
-######2. Go to the project folder in your terminal.
-######3. Install depenencies `source install.sh`
-######4. Start up a local server `hckrs run`
+######2. Go to the ***hckrs*** folder in your terminal.
+######3. Install depenencies `source ./tools/install.sh`
+######4. Move to the project `cd web` and startup a local server `hckrs run`
 
 
 *Support for* ***OS X*** *and* ***Linux*** *right now.*
