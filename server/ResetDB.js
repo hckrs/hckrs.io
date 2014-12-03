@@ -1,41 +1,34 @@
 var self = this;
 
 
-// Reset the database. All documents from all collections will be removed.
-// At the end an initial set of dummy documents will be inserted.
+// When detecting an empty database, add some dummy documents.
 // Dummy documents can be specified in the /private/DummyDB/ folder.
-ResetDB = function() {
+Meteor.startup(function() {
+  Meteor.setTimeout(function(){
+    if (Settings['environment'] === 'dev' && Users.find().count() === 0)
+      resetDB();
+  }, 2000);
+});
+
+
+
+// Reset the database by fill in dummy documents.
+// You must manually clear the database before calling this function.
+var resetDB = function() {
 
   // Don't allow to reset the production database
   if (Settings['environment'] === 'production')
     return;
 
-  // remove all documents
-  console.info("Reset database...")
-  _.each(collections(), clearCollection);
+  // XXX removing documents from the database is handled by 
+  // CLI command "meteor reset", which must be called
+  // before calling this function.
   
   // insert dummy documents
   console.info("Init dummy database...")
   _.each(collections(), fillCollection);
 
   console.info("Done.")
-}
-
-// Initial reset database on first run of meteor
-Meteor.startup(function() {
-  Meteor.setTimeout(function(){
-    if (Settings['environment'] === 'dev' && Users.find().count() === 0)
-      ResetDB();
-  }, 2000);
-});
-  
-
-
-// PRIVATE
-
-// Remove all documents from the specified meteor collection
-var clearCollection = function(collection) {
-  self[collection].remove({});
 }
 
 // Fill the given meteor collection with dummy documents

@@ -65,7 +65,7 @@ elif [ "$1" = "wait" ]; then
   
 elif [ "$1" = "reset" ]; then
   # Reset project/database
-  sh "$SCRIPT_DIR/reset.sh"
+  meteor reset
 
 else
   echo "Unrecognized command!"
