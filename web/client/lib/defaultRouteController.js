@@ -6,6 +6,8 @@ DefaultController = RouteController.extend({
     // wait on global subscriptions ready
     if (Subscriptions.ready())
       this.next();
+    else
+      this.render('loading');
   },
   onAfterAction: function() {
 
