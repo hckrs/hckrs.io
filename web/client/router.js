@@ -27,7 +27,7 @@ var routes = [
   // special routes
   [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
   [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
-  [ 'invite'       , /^\/\+\/(.*)/           ], // e.g. /+/---_--
+  [ 'invite'       , '/+/:inviteBitHash/'    ], // e.g. /+/---_--
 
 ];
 
@@ -50,9 +50,8 @@ InviteController = DefaultController.extend({
   template: 'frontpage',
   onBeforeAction: function() {
     // set some session variables and then redirects to the frontpage
-    // the frontpage is now showing a picture of the user that has invited this visitor
-    var phrase = Url.bitHashInv(this.params[0]);
-    Session.set('invitationPhrase', phrase);
+    // the frontpage is now showing a picture of the user that has invited this visitor;
+    Session.set('inviteBitHash', this.params.inviteBitHash);
     this.redirect('frontpage');
     this.next();
   }
@@ -105,9 +104,10 @@ var loginRequired = function() {
 
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
-  if(UserProp('isAccessDenied')) {
-    if (Meteor.userId() !== Url.userIdFromUrl(window.location.href)) {
-      this.redirect('hacker', Meteor.userId());
+  var user = UserProps(['isAccessDenied','globalId','bitHash']) || {};
+  if(user.isAccessDenied) {
+    if (user._id !== Url.userIdFromUrl(window.location.href)) {
+      this.redirect('hacker', user);
     }
   }
   this.next();
@@ -210,9 +210,9 @@ Router.refresh = function(path) {
 Router.goToCity = function(city) {
   var url;
 
-  var phrase = Session.get('invitationPhrase');
-  if (phrase)
-    url = Router.routes['invite'].url({invitationPhrase: phrase});
+  var bitHash = Session.get('inviteBitHash');
+  if (bitHash)
+    url = Router.routes['invite'].url({inviteBitHash: bitHash});
 
   url = Url.replaceCity(city, url);
 
@@ -222,10 +222,6 @@ Router.goToCity = function(city) {
 
 
 
-
-Router.routes['invite'].url = function(user) {
-  return userInviteUrl(user);
-}
 
 
 // set meta data helpers

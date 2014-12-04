@@ -127,7 +127,12 @@ checkGrowthPhrase = function() {
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
 checkInvitation = function() {
-  var phrase = Session.get('invitationPhrase');
+  var bitHash = Session.get('inviteBitHash');
+  
+  if (!bitHash)
+    return;
+
+  var phrase = Url.bitHashInv(bitHash);
   var broadcastUser = Users.findOne({invitationPhrase: phrase});
 
   if (phrase) {
@@ -168,14 +173,14 @@ checkInvitation = function() {
       }
 
       // clean
-      Session.set('invitationPhrase', null);
+      Session.set('inviteBitHash', null);
 
     });
 
   } else {
 
     // clean
-    Session.set('invitationPhrase', null);
+    Session.set('inviteBitHash', null);
   }
 };
 

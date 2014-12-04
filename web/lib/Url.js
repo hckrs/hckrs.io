@@ -48,11 +48,13 @@ Url.userIdFromUrl = function(url) {
 // calculate bithash of a number
 // transform into a string where 0 and 1 are replaced by the given characters
 Url.bitHash = function(num) {
+  if (!num) return console.log("no valid number passed to Url.bitHash()");
   return parseInt(num).toString(2).replace(/0/g, '_').replace(/1/g, '-');
 }
 
 // invert the bithash opration
 Url.bitHashInv = function(hash) {
+  if (!hash) return console.log("no valid hash passed to Url.bitHashInv()");
   return parseInt(hash.replace(/_/g, '0').replace(/-/g, '1'), 2);
 }
 

@@ -15,7 +15,7 @@ Template.frontpage.helpers({
     return (total >= minimum) ? total : '';
   },
   "invitationBroadcastUser": function() {
-    var phrase = Session.get('invitationPhrase');
+    var phrase = Url.bitHashInv(Session.get('inviteBitHash'));
     return phrase && Users.findOne({invitationPhrase: phrase});
   },
 });

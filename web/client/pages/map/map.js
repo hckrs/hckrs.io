@@ -233,7 +233,7 @@ var setupFeatureLayer = function(map) {
       // make popup
       var popup = [];
       popup.push("<strong>"+props.title+"</strong>");
-      popup.push(Safe.hackerPath(props.id, {text: 'hacker #'+userRank(props.id), target: 'self'}));
+      popup.push(Safe.url(userProfilePath(props.id), {text: 'hacker #'+userRank(props.id), target: 'self'}));
       marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
     }
   });

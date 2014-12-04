@@ -739,8 +739,18 @@ userStatusLabel = function(user) {
   return labels;
 }
 
-userProfileUrl = function(user) {
+
+userProfilePath = function(user) {
+  user = user || Meteor.userId();
   user = OtherUserProps(user, ['city','globalId']);
+  if (!user) return "";
+  return Url.bitHash(user.globalId);
+}
+
+userProfileUrl = function(user) {
+  user = user || Meteor.userId();
+  user = OtherUserProps(user, ['city','globalId']);
+  if (!user) return "";
   var hash = Url.bitHash(user.globalId);
   return Url.replaceCity(user.city, Meteor.absoluteUrl(hash));
 }
@@ -748,7 +758,8 @@ userProfileUrl = function(user) {
 userInviteUrl = function(user) {
   user = user || Meteor.userId();
   var phrase = OtherUserProp(user, 'invitationPhrase');
-  return Meteor.absoluteUrl('+/' + Url.bitHash(phrase));
+  var bitHash = Url.bitHash(phrase);
+  return Router.route['invite'].url({inviteBitHash: bitHash});
 }
 
 userSocialName = function(user, service) {
