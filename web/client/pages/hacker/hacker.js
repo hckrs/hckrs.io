@@ -251,7 +251,7 @@ Template.hackerEdit.helpers({
 
 Template.hackerView.helpers({
   "urlCurrentUser": function() { 
-    return Router.routes['hacker'].url(UserProp("_id")); 
+    return userProfileUrl(Meteor.userId()); 
   },
   "isCompanyOrLocation": function() {
     return !!(this.profile.company || this.profile.location);

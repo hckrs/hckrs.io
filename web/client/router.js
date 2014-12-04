@@ -221,25 +221,7 @@ Router.goToCity = function(city) {
 
 
 
-Router.routes['hacker'].path = function(user) {
-  var redirect = (_.isObject(user) && user.redirect) || false;
 
-  user = OtherUserProps(user, ['globalId']);
-
-  if (!user || !user.globalId)
-    return;
-
-  if (userIsForeign(user) && redirect)
-    return Router.routes['hacker'].url(user); // make full url
-
-  if (userIsForeign(user))
-    return '#'; // no url
-
-  return "/" + Url.bitHash(user.globalId);
-}
-Router.routes['hacker'].url = function(user) {
-  return userProfileUrl(user);
-}
 
 Router.routes['invite'].url = function(user) {
   return userInviteUrl(user);

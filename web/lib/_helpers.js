@@ -375,6 +375,10 @@ if (Meteor.isClient) {
     return Meteor.userId();
   });
 
+  Template.registerHelper('UserProfileUrl', function(user) {
+    return userProfileUrl(user);
+  });
+
   // template helper to use the value of a Session variable directly in the template
   Template.registerHelper('Session', function(key) {
     return Session.get(key);

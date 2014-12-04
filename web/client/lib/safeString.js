@@ -20,7 +20,7 @@ Safe.email = function(email, options) {
 }
 
 Safe.hackerUrl = function(user, options) {
-  var url = Router.routes['hacker'].url(user);
+  var url = userProfileUrl(user);
   return Safe.url(url, options);
 }
 
