@@ -64,8 +64,7 @@ var loggedIn = function() {
   // if a redirectUrl is present, redirect to that url
   // otherwise if also no route is setted to the hackers list
   var redirectUrl = Session.get('redirectUrl');
-  if (!Router.current()) return;
-  var currentRoute = Router.current().route.name;
+  var currentRoute = Router.current() && Router.current().route.getName();
 
   if (redirectUrl) {
     Session.set('redirectUrl', null);

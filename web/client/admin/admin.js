@@ -7,7 +7,7 @@ AdminController = DefaultAdminController.extend({
 
 Template.admin_header.helpers({
   'active': function(route) {
-    return Router.current().route.name === route ? 'active' : '';
+    return Router.current().route.getName() === route ? 'active' : '';
   }
 })
 
