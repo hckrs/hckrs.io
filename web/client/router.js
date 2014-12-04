@@ -54,6 +54,7 @@ InviteController = DefaultController.extend({
     var phrase = Url.bitHashInv(this.params[0]);
     Session.set('invitationPhrase', phrase);
     this.redirect('frontpage');
+    this.next();
   }
 });
 
@@ -63,6 +64,7 @@ GrowthGithubController = DefaultController.extend({
     Session.set('growthType', 'github');
     Session.set('growthPhrase', this.params.phrase);
     this.redirect('frontpage');
+    this.next();
   }
 });
 
@@ -89,6 +91,8 @@ var setMetaData = function() {
     "og:image": Meteor.absoluteUrl("img/favicons/apple-touch-icon-precomposed.png"),
     "og:description": description
   });
+
+  this.next();
 }
 
 var loginRequired = function() {
@@ -96,7 +100,7 @@ var loginRequired = function() {
     Session.set('redirectUrl', location.pathname + location.search + location.hash);
     this.redirect('frontpage');
   }
-  else this.next();
+  this.next();
 }
 
 // make sure that user is allowed to enter the site
@@ -105,12 +109,15 @@ var allowedAccess = function() {
     if (Meteor.userId() !== Url.userIdFromUrl(window.location.href)) {
       this.redirect('hacker', Meteor.userId());
     }
-    else this.next();
   }
-  else this.next();
+  this.next();
 }
 
-
+// GAnalytics
+var pageView = function(route) {
+  GAnalytics.pageview(route);
+  this.next();
+}
 
 
 // set meta data
@@ -124,7 +131,7 @@ Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
 
 // log pageview to Google Analytics
-Router.onRun(GAnalytics.pageview);
+Router.onRun(pageView);
 
 
 
@@ -170,19 +177,10 @@ Meteor.startup(function() {
 
 
 
-
-/* global router configuration */
-
-Router.configure({
-  autoRender: true,
-});
-
 // internals
 
 _.each(routes, function(route) {
-    Router.route(route[1], function () {
-        this.render(route[0])
-    }, {name:route[0]});
+  Router.route(route[1], {name: route[0]});
 });
 
 

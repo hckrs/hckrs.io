@@ -29,11 +29,9 @@ HighlightsController = DefaultController.extend({
     // redirect to hackers page if there are no highlights
     // except for ambassadors and admins
     if (this.ready() && Highlights.find(selector()).count() === 0 && !hasAmbassadorPermission())
-      Router.go('hackers');
-    else if(this.ready()) {
-        this.next();
-    }
-
+      this.redirect('hackers');
+    
+    this.next();
   },
   onAfterAction: function() {
     Interface.setHeaderStyle('fixed');

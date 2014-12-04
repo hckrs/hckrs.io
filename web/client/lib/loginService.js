@@ -20,6 +20,10 @@ var observe = function() {
   var hasLoggedInBefore = false;
 
   Deps.autorun(function() {
+
+    if (!Subscriptions.ready()) 
+      return; // wait until subscriptions are ready
+
     if (Meteor.userId()) { // user logged in
       hasLoggedInBefore = true;
       Tracker.nonreactive(loggedIn);

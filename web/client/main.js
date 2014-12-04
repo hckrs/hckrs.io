@@ -98,9 +98,11 @@ var calculateUsersCount = function() {
 }
 
 Meteor.startup(function() {
-    Meteor.subscribe("userData", function() {
-        calculateUsersCount();
-    });
+  Tracker.autorun(function(tracker) {
+    if (!Subscriptions.ready()) return; 
+    calculateUsersCount();
+    tracker.stop();
+  });
 });
 
 

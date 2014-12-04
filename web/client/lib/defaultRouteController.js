@@ -1,9 +1,6 @@
 
 DefaultController = RouteController.extend({
   layoutTemplate: "main",
-  waitOn: function() {
-      return Meteor.subscribe('userData');
-  },
   onAfterAction: function() {
 
     // change the style of the navigation header to default, every route
@@ -14,9 +11,11 @@ DefaultController = RouteController.extend({
 DefaultAdminController = DefaultController.extend({
   layoutTemplate: "admin_layout",
   onBeforeAction: function() {
+    
     // check permissions to view admin panel
     if (!hasAmbassadorPermission())
-      Router.go('frontpage');
-    else this.next();
+      this.redirect('frontpage');
+
+    this.next();
   }
 });

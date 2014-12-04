@@ -19,6 +19,9 @@ Meteor.startup(function() {
   // extract city from domain
   checkCurrentCity();
 
+  // subscribe to global subscriptions
+  Subscriptions.init();
+
   // observer login state
   Login.init();
 

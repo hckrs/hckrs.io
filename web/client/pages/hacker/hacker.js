@@ -5,14 +5,13 @@ HackerController = DefaultController.extend({
   waitOn: function () {
     return [];
   },
-  onRun: function() {
-    Meteor.autorun(function(c) {
-      if (Subscriptions.ready()) {
-        Session.set('hackerId', Url.userIdFromUrl());
-        Session.set('hackerEditMode', UserProp('isAccessDenied'));  
-        c.stop();    
-      }
-    });
+  onBeforeAction: function() {
+    if (Subscriptions.ready() && !this.initialized) {
+      Session.set('hackerId', Url.userIdFromUrl());
+      Session.set('hackerEditMode', UserProp('isAccessDenied'));  
+      this.initialized = true;
+    }
+    this.next();
   }
 });
 
