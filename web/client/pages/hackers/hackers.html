@@ -64,11 +64,7 @@
           <div class="title">Mail all hackers in {{CurrentCity.name}}</div>
           {{#autoForm id="hackersNewsletterEditorForm" schema=schema resetOnSuccess=false}}
             <label for="template">Template</label>
-            {{#afFieldSelect name="group" id="template" style="width:240px"}}
-              <option value="local_ambassador_messages" template="localMessage">message</option>
-              <option value="local_meetup_announcements" template="localMeetup">meetup</option>
-              <option value="local_meetup_announcements" template="localMeetupReminder">meetup reminder</option>
-            {{/afFieldSelect}}
+            {{> afFieldInput name="group" id="template"}}
             {{> afQuickField name="subject" id="subject" style="width:540px"}}
             {{> afQuickField name="message" id="message" rows="10" style="width:540px"}}
             <button action="submit" class="btn btn-primary">Send</button>

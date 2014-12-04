@@ -759,7 +759,7 @@ userInviteUrl = function(user) {
   user = user || Meteor.userId();
   var phrase = OtherUserProp(user, 'invitationPhrase');
   var bitHash = Url.bitHash(phrase);
-  return Router.route['invite'].url({inviteBitHash: bitHash});
+  return Router.routes['invite'].url({inviteBitHash: bitHash});
 }
 
 userSocialName = function(user, service) {

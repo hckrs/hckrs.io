@@ -26,12 +26,11 @@ Template.invitations_partial.helpers({
     return _.range(UserProp('invitations')); 
   },
   'link': function() { 
-    var bitHash = Url.bitHash(UserProp('invitationPhrase'));
-    return Router.routes['invite'].url({inviteBitHash: bitHash}); 
+    var inviteUrl = userInviteUrl(UserProps(['invitationPhrase']));
+    return inviteUrl;
   },
   'linkUrl': function() { 
-    var bitHash = Url.bitHash(UserProp('invitationPhrase'));
-    var inviteUrl = Router.routes['invite'].url({inviteBitHash: bitHash});
+    var inviteUrl = userInviteUrl(UserProps(['invitationPhrase']));
     return encodeURIComponent(inviteUrl); 
   }
 });

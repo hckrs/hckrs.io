@@ -31,13 +31,17 @@ Schemas.Place = new SimpleSchema([
     "url": {
       type: String,
       optional: true,
-      autoValue: AutoValue.prefixUrlWithHTTP
+      regEx: SimpleSchema.RegEx.Url,
+      autoValue: AutoValue.prefixUrlWithHTTP,
+      autoform: { type: 'url' },
     },
     "type": {
       type: "String",
       optional: true,
       allowedValues: _.pluck(PLACE_TYPE_OPTIONS, 'value'),
-      autoform: { options: PLACE_TYPE_OPTIONS }
+      autoform: { 
+        options: PLACE_TYPE_OPTIONS 
+      },
     },
     "location": {
       type: Object

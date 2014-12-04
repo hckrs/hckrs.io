@@ -20,7 +20,9 @@ Schemas.Deal = new SimpleSchema([
     "url": {
       type: String,
       optional: true,
+      regEx: SimpleSchema.RegEx.Url,
       autoValue: AutoValue.prefixUrlWithHTTP,
+      autoform: { type: 'url' },
       label: 'Company URL'
     },
     "code": {
