@@ -447,11 +447,12 @@ Accounts.onCreateUser(function (options, user) {
     // subscribe user to mailings
     user.mailings = _.chain(MAILING_OPTIONS).where({checked: true}).pluck('value').value();
 
-    // make the first user within the system admin
-    if (Meteor.users.find().count() === 0) {
+    // new users on development have direct access and become admin
+    if (_.contains(["dev","local"], Settings['environment'])) {
       user.isAdmin = true;
+      user.isUninvited = false;
       user.staff = {
-        title: "Co-founder", 
+        title: "staff", 
         email: "mail@hckrs.io",
       };
     }

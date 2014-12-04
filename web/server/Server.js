@@ -18,9 +18,12 @@ Meteor.startup(function() {
   Meteor.setTimeout(runAfterStartupDelayed, 1000 * 60 * 15);
 
   // startup repl when in development mode
-  if (Settings['environment'] === 'local')
+  if (_.contains(['local','dev'], Settings['environment']))
     Repl.start();
   
+  // info about development mode
+  if (Settings['environment'] === 'dev')
+    console.info("Mailservers aren't configured in development mode. You can ignore the warnings.")
 });
 
 
