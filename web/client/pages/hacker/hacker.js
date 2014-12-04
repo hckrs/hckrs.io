@@ -7,7 +7,7 @@ HackerController = DefaultController.extend({
   },
   onBeforeAction: function() {
     if (Subscriptions.ready() && !this.initialized) {
-      Session.set('hackerId', Url.userIdFromUrl());
+      Session.set('hackerId', userForBitHash(this.params.bitHash));
       Session.set('hackerEditMode', UserProp('isAccessDenied'));  
       this.initialized = true;
     }

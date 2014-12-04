@@ -209,6 +209,13 @@ Schemas.User = new SimpleSchema([Schemas.default, {
 Users = Meteor.users;
 
 
+// Transformer
+Users._transform = function(u) {
+  if (u.globalId)
+    u.bitHash = Url.bitHash(u.globalId);
+  return u;
+}
+
 
 
 
@@ -759,4 +766,11 @@ if (Meteor.isClient) {
   Template.registerHelper('UserSocialName', function(user, service) {
     return userSocialName(user, service);
   });
+}
+
+/* find users */
+
+userForBitHash = function(bitHash) {
+  var globalId = Url.bitHashInv(bitHash);
+  return Users.findOne({globalId: globalId})
 }
