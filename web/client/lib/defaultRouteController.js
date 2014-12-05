@@ -1,6 +1,7 @@
 
 DefaultController = RouteController.extend({
   layoutTemplate: "main",
+  loadingTemplate: "loading",
   onBeforeAction: function() {
     
     // wait on global subscriptions ready
