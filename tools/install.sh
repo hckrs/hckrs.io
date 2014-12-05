@@ -1,7 +1,6 @@
 #!/bin/sh
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ".." && pwd )"
 TOOLS="$ROOT/tools"
-EXEC="$TOOLS/hckrs"
 
 
 # OS Check. Put here because here is where we download the precompiled
@@ -33,22 +32,37 @@ PLATFORM="${UNAME}_${ARCH}"
 
 
 
+
 # Check if meteor is installed
 if ! command -v meteor > /dev/null ; then
   echo "Install meteor..."
   curl https://install.meteor.com | /bin/sh
 fi
 
-# Add 'hckrs' executable to PATH
-if ! command -v hckrs > /dev/null ] ; then
-  echo "Install hckrs..."
-  chmod +x $EXEC
-  export PATH=$PATH:$TOOLS
+# Install hckrs executable
+echo "Install hckrs..."
+
+# Add executable to $PATH
+EXPORT="export PATH=$PATH:$HOME/.hckrs"
+if [ -f $HOME/.bash_profile > /dev/null ]; then
+  echo $EXPORT >> $HOME/.bash_profile
+elif [ -f $HOME/.profile > /dev/null ]; then
+  echo $EXPORT >> $HOME/.profile
+else
+  echo "Can't install hckrs executable."
+  echo "Instead you can call ./tools/hckrs from the command line manually."
+  exit 1
 fi
+$EXPORT
+
+# Copy executable to $HOME directory
+mkdir -p $HOME/.hckrs
+cp $TOOLS/hckrs $HOME/.hckrs/hckrs
+chmod +x $HOME/.hckrs/hckrs
 
 # Start hckrs
-echo ""
 echo "hckrs.io development bundle successfully installed!"
+echo ""
 echo "Now move to the project folder:"
 echo "    cd web"
 echo "And start up a local server:"

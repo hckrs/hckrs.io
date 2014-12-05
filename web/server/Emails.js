@@ -336,7 +336,7 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
   var html = Assets.getText('html-email.html')
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
-  html = html.replace(/{{unsubscribe}}/g, 'if you don\'t want receive this kind of email, change your email settings at <a href="http://hckrs.io">hckrs.io</a>');
+  html = html.replace(/{{unsubscribe}}/g, 'if you don\'t want to receive this kind of emails you can <a href="http://hckrs.io">change your email settings</a>');
 
   // segments
   // e.g. {match: 'all', conditions: [{field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" }]}
