@@ -3,6 +3,9 @@ DefaultController = RouteController.extend({
   layoutTemplate: "main",
   loadingTemplate: "loading",
   onBeforeAction: function() {
+
+    /* Default Spin design */
+    Spin.default = { color: '#fff' }
     
     // wait on global subscriptions ready
     if (Subscriptions.ready())
@@ -19,7 +22,11 @@ DefaultController = RouteController.extend({
 
 DefaultAdminController = DefaultController.extend({
   layoutTemplate: "admin_layout",
+  loadingTemplate: "loading",
   onBeforeAction: function() {
+
+    /* Default Spin design */
+    Spin.default = { color: '#ccc' }
     
     // check permissions to view admin panel
     if (!hasAmbassadorPermission())

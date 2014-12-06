@@ -35,13 +35,6 @@ UI.body.rendered = function() {
 
 
 
-/* Default Spin design */
-
-Spin.default = {
-  color: '#fff'
-}
-
-
 
 
 /* HEADER */

@@ -22,12 +22,17 @@ var routes = [
   [ 'invitations'  , '/invitations'          ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
+  
+  // special routes (which will redirect)
+  [ 'login'        , '/login'                ],
+  [ 'logout'       , '/logout'               ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
-
-  // special routes
-  [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
   [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
   [ 'invite'       , '/+/:inviteBitHash/'    ], // e.g. /+/---_--
+
+  // bare routes (must defined as last in this list)
+  [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
+  
 
 ];
 
@@ -35,6 +40,7 @@ var routes = [
 var noLoginRequired = [
   'about',
   'frontpage',
+  'login',
   'invite',
   'verifyEmail',
 ];
@@ -67,6 +73,29 @@ GrowthGithubController = DefaultController.extend({
   }
 });
 
+LoginController = DefaultController.extend({
+  template: 'loading',
+  onBeforeAction: function() {
+    // Show loading screen unitl users becomes logged in
+    this.render('loading');
+  }
+});
+
+LogoutController = DefaultController.extend({
+  template: 'loading',
+  onBeforeAction: function() {
+    if (Meteor.userId()) {
+      GAnalytics.event("LoginService", "logout");
+      Meteor.logout();
+      this.render('loading');
+    } else {
+      this.redirect('frontpage');
+    }
+  }
+});
+
+
+
 /* hooks */
 
 // set meta data based on current city
@@ -96,7 +125,8 @@ var setMetaData = function() {
 
 var loginRequired = function() {
   if (!Meteor.userId()) {
-    Session.set('redirectUrl', location.pathname + location.search + location.hash);
+    if (!Session.get('redirectUrl'))
+      Session.set('redirectUrl', location.pathname + location.search + location.hash);
     this.redirect('frontpage');
   }
   this.next();

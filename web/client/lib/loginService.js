@@ -10,39 +10,36 @@ var serviceOptions = {
 
 
 Login.init = function() {
-  observe();
+  
+  // Observe if user is logging in
+  observeLoggingIn();
 }
 
 
 /* OBSERVE Login State */
 
-var observe = function() {
-  var hasLoggedInBefore = false;
-
+// observe if user is logging in
+var observeLoggingIn = function() {
+  var startLogin;
   Deps.autorun(function() {
-
-    if (!Subscriptions.ready()) 
-      return; // wait until subscriptions are ready
-
-    if (Meteor.userId()) { // user logged in
-      hasLoggedInBefore = true;
-      Tracker.nonreactive(loggedIn);
-    }
-
-    if (!Meteor.userId() && hasLoggedInBefore) {  // user logged out
-      hasLoggedInBefore = false;
-      Tracker.nonreactive(loggedOut);
+    if (Meteor.loggingIn()) {
+      startLogin = true;
+      Tracker.nonreactive(function() {
+        if (!Session.get('redirectUrl'))
+          Session.set('redirectUrl', location.pathname + location.search + location.hash);
+        Router.go('login');
+      });
+    } else if(startLogin && Meteor.userId()) {
+      startLogin = false;
+      Tracker.nonreactive(function() {
+        loggedIn();
+      });
     }
   });
 }
 
 
 /* LOGIN EVENT handlers */
-
-// when user is logged in by filling in its credentials
-var manuallyLoggedIn = function() {
-  /* do nothing */
-}
 
 // when user becomes logged in
 var loggedIn = function() {
@@ -64,29 +61,20 @@ var loggedIn = function() {
   // if a redirectUrl is present, redirect to that url
   // otherwise if also no route is setted to the hackers list
   var redirectUrl = Session.get('redirectUrl');
-  var currentRoute = Router.current() && Router.current().route.getName();
-
-  if (redirectUrl) {
+  
+  if (!_.contains(['/','/login','/logout'], redirectUrl)) {
     Session.set('redirectUrl', null);
     Router.go(redirectUrl);
-  } else if(currentRoute === 'frontpage') {
-    goToEntryPage();
   } else {
-    // nothing
-    // maybe we need to trigger route hooks here again?
+    goToEntryPage();
   }
 
 }
 
-// when user becomes logged out
-var loggedOut = function() {
-  /* empty */
-}
-
-
 // which page should be loaded for logged in users which enter the site
 goToEntryPage = function() {
-  Router.go('highlights');
+  var entryPage = 'highlights';
+  Router.go(entryPage);
 }
 
 
@@ -287,9 +275,6 @@ var loginCallback = function(err) {
     // we have to redirect the subdomain
     if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
       Router.goToCity(Meteor.user().city);
-
-    // on success
-    manuallyLoggedIn();
   }
 }
 
@@ -303,35 +288,19 @@ var loginWithService = function(event) {
   // log
   GAnalytics.event("LoginService", "login", service);
 
+  // Logging in
+  Router.go('login');
+
   // login
-  Meteor["loginWith"+Service](options, loginCallback);
+  Meteor["loginWith"+Service](options, loginCallback);  
+  
 }
 
-// log out the current user
-var logout = function() {
-
-  // log
-  GAnalytics.event("LoginService", "logout");
-
-  // first redirect to frontpage to make sure there are no helpers
-  // active that making use of the user session information
-  // this prevent from errors in the console
-  Router.go('frontpage');
-  Tracker.flush();
-  Meteor.setTimeout(function() {
-    Meteor.logout();
-  }, 200);
-}
 
 
 // bind the sign up buttons to the corresponding actions
 Template.main.events({
   "click .signupService": loginWithService
-});
-
-// bind the sign out button to the sign out action
-Template.main.events({
-  "click #signOutButton": logout
 });
 
 
