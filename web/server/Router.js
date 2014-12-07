@@ -4,92 +4,86 @@ var URL = Npm.require('url');
 
 // SERVER SIDE routes
 
-Router.map(function () {
+Router.route('/mandrill-webhook', function() {
+  var events = EJSON.parse(property(this.request.body, 'mandrill_events') || "[]");
 
-  this.route('mandrillWebhook', {
-    where: 'server',
-    path: '/mandrill-webhook',
-    action: function() {
-      var events = EJSON.parse(property(this.request.body, 'mandrill_events') || "[]");
+  var addEvent = function(event) {
+    // event format: http://help.mandrill.com/entries/24466132-Webhook-Format 
+    
+    if (!event.event) 
+      return; /* not a message event */
 
-      var addEvent = function(event) {
-        // event format: http://help.mandrill.com/entries/24466132-Webhook-Format 
-        
-        if (!event.event) 
-          return; /* not a message event */
+    console.log('Email webhook event:', event.event);
 
-        console.log('Email webhook event:', event.event);
+    var messageId = event._id;
+    var userAgent = event.user_agent_parsed && {
+      mobile: event.user_agent_parsed.mobile,
+      os: event.user_agent_parsed.os_family,
+      client: event.user_agent_parsed.ua_family,
+      version: event.user_agent_parsed.ua_version,
+    };
+    
+    // link event to original message
+    EmailsOutbound.update({'to.messageId': messageId}, {
+      $push: { 'to.$.events': {
+        event: event.event,
+        url: event.url ? event.url : undefined,
+        agent: userAgent ? userAgent : undefined,
+      }}
+    });
 
-        var messageId = event._id;
-        var userAgent = event.user_agent_parsed && {
-          mobile: event.user_agent_parsed.mobile,
-          os: event.user_agent_parsed.os_family,
-          client: event.user_agent_parsed.ua_family,
-          version: event.user_agent_parsed.ua_version,
-        };
-        
-        // link event to original message
-        EmailsOutbound.update({'to.messageId': messageId}, {
-          $push: { 'to.$.events': {
-            event: event.event,
-            url: event.url ? event.url : undefined,
-            agent: userAgent ? userAgent : undefined,
-          }}
-        });
-
-        // when it is a github growth mail, also register in growth collection
-        switch(event.event) {
-          case 'open': GrowthGithub.update({messageId: messageId}, {$set: {open: true}}); break;
-          case 'click': GrowthGithub.update({messageId: messageId}, {$inc: {clicks: 1}}); break;
-        }
-      }
-
-      // store events
-      _.each(events, addEvent);
-
-      // end incoming request
-      this.response.end();
+    // when it is a github growth mail, also register in growth collection
+    switch(event.event) {
+      case 'open': GrowthGithub.update({messageId: messageId}, {$set: {open: true}}); break;
+      case 'click': GrowthGithub.update({messageId: messageId}, {$inc: {clicks: 1}}); break;
     }
-  })
+  }
 
-  this.route('any', {
-    where: 'server',
-    path: '/*',
-    action: function () {
-      var url = getRequestUrl(this.request); 
-      var city = Url.city(url);
-      var isLocalhost = Url.isLocalhost(url);
+  // store events
+  _.each(events, addEvent);
 
-      // check if there is a valid city present in the url
-      if (!city || !CITYMAP[city]) {
+  // end incoming request
+  this.response.end();
 
-        // this subdomain doesn't exist or isn't a valid city
-        
-        // we try to find the closest city
-        var userIp = getClientIp(this.request);
-        var location = requestLocationForIp(userIp);
-        var closestCity = findClosestCity(location);    
-        
-        if (closestCity) {
+}, {where: 'server'});
 
-          // if closest city is found we redirect the user to a new url
-          var cityUrl = Url.replaceCity(closestCity, url);
-          return redirect(cityUrl, this.response);
-          
-        } else if (city !== 'www') {
-  
-          // If closest city can't be found, we redirect to www.
-          // only if we are not already there.
-          var cityUrl = Url.replaceCity('www', url);
-          return redirect(cityUrl, this.response);
-        }
-      }
+
+Router.route('/:catchAll?', function () {
+    var url = getRequestUrl(this.request); 
+    var city = Url.city(url);
+    var isLocalhost = Url.isLocalhost(url);
+    
+    // check if there is a valid city present in the url
+    if (!city || !CITYMAP[city]) {
+
+      // this subdomain doesn't exist or isn't a valid city
       
-      // done!
-      this.next();
+      // we try to find the closest city
+      var userIp = getClientIp(this.request);
+      var location = requestLocationForIp(userIp);
+      var closestCity = findClosestCity(location);    
+      
+      if (closestCity) {
+
+        // if closest city is found we redirect the user to a new url
+        var cityUrl = Url.replaceCity(closestCity, url);
+        return redirect(cityUrl, this.response);
+        
+      } else if (city !== 'www') {
+
+        // If closest city can't be found, we redirect to www.
+        // only if we are not already there.
+        var cityUrl = Url.replaceCity('www', url);
+        return redirect(cityUrl, this.response);
+      }
     }
-  });
-});
+    
+    // done!
+    this.next();
+
+}, {where: 'server'});
+
+
 
 
 
