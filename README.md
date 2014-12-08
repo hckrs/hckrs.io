@@ -1,10 +1,10 @@
-hckrs.io
+hckrs.io ![hckrs icon](https://s3.amazonaws.com/hckrs.io/static/logo/logo-icon-vector-mini.png)
 =========
 
-[hckrs.io](http://hckrs.io) is an invite only platform for hackers; for basicly anyone who has to make stuff, somehow related to technology. #web #design #growth #hardware #life...
-[Join your local city](http://hckrs.io) to see it in action. (Europe only for now)
+[**hckrs.io**](http://hckrs.io) is an invite only platform for hackers; for basicly anyone who has to make stuff, somehow related to technology. ***#web #design #growth #hardware #life...***  
+[**Join your local city**](http://hckrs.io) to see it in action. *(Europe only for now)*
 
-<a href="http://hckrs.io"><img src="https://s3.amazonaws.com/hckrs.io/static/preview/preview1.jpg" width="400" alt="Screenshot hckrs.io" ></a>
+<a href="http://hckrs.io"><img src="https://s3.amazonaws.com/hckrs.io/static/preview/preview1.jpg" alt="Screenshot hckrs.io" ></a>
 
 [ [Live Demo](http://hckrs.io) ]
 
@@ -15,7 +15,7 @@ The project is completely **open source**, meaning that you will have full insig
 Get you hacking
 ================
 
-######1. [Download](archive/development.zip) / clone this repo.
+######1. [Download](https://github.com/Jarnoleconte/hckrs.io/archive/development.zip) / clone this repo.
 ######2. Go to the ***hckrs*** folder in your terminal.
 ######3. Install depenencies `source ./tools/install.sh`
 ######4. Move to the project `cd web` and startup a local server `hckrs run`
@@ -50,8 +50,8 @@ Roadmap
 Documentation
 --------------
 
-Read the [wiki](wiki) to get understanding of the project structure.  
-Techniqual documentation is located at http://docs.hckrs.io.
+Read the [wiki](https://github.com/Jarnoleconte/hckrs.io/wiki) to get understanding of the project structure.  
+Techniqual documentation is located at http://hckrs.io/docs.
 
 
 ![Logo](https://s3.amazonaws.com/hckrs.io/static/logo/logo1.jpg)
