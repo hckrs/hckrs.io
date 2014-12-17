@@ -59,7 +59,7 @@ Template.header.helpers({
 Template.header.events({
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
-    exec(function() {
+    Util.exec(function() {
       Router.goToCity(city);
     });
   }
@@ -111,7 +111,7 @@ Template.citySelect.helpers({
 
     var createCityEntry = _.identity;
 
-    if (hasAdminPermission()) {
+    if (Users.hasAdminPermission()) {
       createCityEntry = function(city) {
         city.invisibleUsers = cityInvisibleUsers.get()[city.key];
         city.visibleUsers = cityVisibleUsers.get()[city.key];

@@ -41,7 +41,7 @@ var checkCurrentCity = function() {
   var city = CITYMAP[subdomain];
 
   if (subdomain === 'www')
-    return exec(function() { Router.go('frontpage'); });
+    return Util.exec(function() { Router.go('frontpage'); });
   else if (!city)
     return;
 

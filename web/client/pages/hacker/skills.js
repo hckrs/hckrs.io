@@ -4,8 +4,8 @@
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
-var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
+var hackerProp = function(field) { return Users.prop(hackerId(), field); }
+var hackerProps = function (fields) { return Users.props(hackerId(), fields); }
 
 
 

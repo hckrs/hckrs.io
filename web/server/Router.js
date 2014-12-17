@@ -5,7 +5,7 @@ var URL = Npm.require('url');
 // SERVER SIDE routes
 
 Router.route('/mandrill-webhook', function() {
-  var events = EJSON.parse(property(this.request.body, 'mandrill_events') || "[]");
+  var events = EJSON.parse(Util.property(this.request.body, 'mandrill_events') || "[]");
 
   var addEvent = function(event) {
     // event format: http://help.mandrill.com/entries/24466132-Webhook-Format 
@@ -60,8 +60,8 @@ Router.route('/:catchAll?', function () {
       
       // we try to find the closest city
       var userIp = getClientIp(this.request);
-      var location = requestLocationForIp(userIp);
-      var closestCity = findClosestCity(location);    
+      var location = Util.requestLocationForIp(userIp);
+      var closestCity = Util.findClosestCity(location);    
       
       if (closestCity) {
 

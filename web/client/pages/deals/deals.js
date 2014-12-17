@@ -17,14 +17,14 @@ DealsController = DefaultController.extend({
 
 var selector = function() {
   var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+  return Users.hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
 }
 
 DealsSorted = function() {
   var city = Session.get('currentCity');
   var deals = Deals.find(selector()).fetch();
   var sort = (DealsSort.findOne({city: city}) || {}).sort || [];
-  return sortedDocs(deals, sort);
+  return Util.sortedDocs(deals, sort);
 }
 
 
@@ -102,7 +102,7 @@ var updateSort = function(sort) {
 Template.deals.rendered = function() {
   
   // make deals sortable for ambassadors
-  if (hasAmbassadorPermission()) {
+  if (Users.hasAmbassadorPermission()) {
     var $deals = this.$('#dealsContainer');
     $deals.addClass('draggable');
     $deals.sortable({ 

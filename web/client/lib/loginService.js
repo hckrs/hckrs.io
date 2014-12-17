@@ -89,7 +89,7 @@ Template.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
 Template.registerHelper('tellUsMore', function() {
-  return UserProp('isIncompleteProfile');
+  return Users.myProp('isIncompleteProfile');
 });
 Template.registerHelper('isInvited', function() {
   return checkInvited();
@@ -176,7 +176,7 @@ checkInvitation = function() {
 // check on server if this is correct
 checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
   if (Meteor.user().isIncompleteProfile) {
-    exec(function() {
+    Util.exec(function() {
       Meteor.call('requestProfileCompleted', function(err) {
         if (err) {
           Session.set('isIncompleteProfileError', true);
@@ -198,7 +198,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
 // observe if the fields email and name are filled in, after saving
 // also the user must have filled in a verified e-mailaddress
 checkAccess = function() { /* GLOBAL, called from router.js */
-  exec(function() {
+  Util.exec(function() {
     var user = Meteor.user();
     var profile = user.profile;
     if (user.isAccessDenied && !user.isIncompleteProfile && checkInvited() && verifiedEmail()) {
@@ -216,17 +216,17 @@ checkAccess = function() { /* GLOBAL, called from router.js */
 
 // check if user is invited
 var checkInvited = function() { //GLOBAL, used in hacker.js
-  return !UserProp('isUninvited');
+  return !Users.myProp('isUninvited');
 }
 
 // check if user's profile e-mail address is verified
 var verifiedEmail = function() { //GLOBAL, used in hacker.js
-  return !!_.findWhere(UserProp('emails'), {address: UserProp('profile.email'), verified: true});
+  return !!_.findWhere(Users.myProp('emails'), {address: Users.myProp('profile.email'), verified: true});
 }
 
 // check if user's profile e-mail address is not verified
 var isUnverifiedEmail = function() {
-  return UserProp('profile.email') && !verifiedEmail();
+  return Users.myProp('profile.email') && !verifiedEmail();
 }
 
 
@@ -283,7 +283,7 @@ var loginWithService = function(event) {
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
   var options = serviceOptions[service];
-  var Service = capitaliseFirstLetter(service);
+  var Service = Util.capitaliseFirstLetter(service);
 
   // log
   GAnalytics.event("LoginService", "login", service);
@@ -312,7 +312,7 @@ Template.main.events({
 // add an external service to current user's account
 var global = this;
 var _addService = function(service, options, onSuccessCallback) {
-  var Service = window[capitaliseFirstLetter(service)];
+  var Service = window[Util.capitaliseFirstLetter(service)];
 
 
   // request a token from the external service

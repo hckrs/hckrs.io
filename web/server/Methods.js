@@ -16,49 +16,23 @@ var Url = Npm.require('url');
 Meteor.methods({
   
   'inviteUserAnonymous': function(userId) {
-    checkAmbassadorPermission();
+    Users.checkAmbassadorPermission();
 
-    forceInvitationOfUser(userId);
+    Account.forceInvitationOfUser(userId);
   },
 
 
   'inviteUserAmbassador': function(userId) {
-    checkAmbassadorPermission();
+    Users.checkAmbassadorPermission();
 
-    var phrase = UserProp('invitationPhrase');
+    var phrase = Users.myProp('invitationPhrase');
     
     if (!phrase || !Match.test(phrase, Number))
       throw new Meteor.Error(500, "invalid phrase");
     
-    verifyInvitationOfUser(phrase, userId);
+    Account.verifyInvitationOfUser(phrase, userId);
   },
 
-  // Users can move thereself to another city when they are not fullu registered.
-  // that means they have the flag 'isAccessDenied'. 
-  // Otherwise you must have ambassador persmissions.
-  'moveUserToCity': function(hackerId, city) {
-    var hacker = Users.findOne(hackerId);
-    
-    if (!hacker)
-      throw new Meteor.Error(500, "no such user");  
-
-    if (!_.contains(CITYKEYS, city))
-      throw new Meteor.Error(500, "no valid city");  
-
-    // check permissions
-    var me = Meteor.userId() === hackerId;
-    var ambPerm = hasAmbassadorPermission(Meteor.user(), hacker.city);
-    
-    if (!me && !ambPerm)
-      throw new Meteor.Error(500, 'not allowed');
-    else if (me && ambPerm) 
-      throw new Meteor.Error(500, "can't move yourself");  
-    else if (me && !hacker.isAccessDenied) 
-      throw new Meteor.Error(500, "cite move not allowed", 'already registered at some city');  
-
-    // move
-    return moveUserToCity(hackerId, city);
-  },
 
   // search the user that is associated with the given e-mail verification token
   'getEmailVerificationTokenUser': function(token) {
@@ -77,7 +51,7 @@ Meteor.methods({
   },
 
   'requestWebPageImages': function(query, maxResults) { /* XXX need to INSTALL cheerio */
-    checkAdminPermission();
+    Users.checkAdminPermission();
 
     var url = 'https://www.google.com/search';
     var options = {
@@ -88,7 +62,7 @@ Meteor.methods({
       },
       headers: { 'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11" }
     }
-    var images = sync(function(cb) {
+    var images = Meteor.wrapAsync(function(cb) {
       HTTP.get(url, options, function(err, res) {
         if (err || !res || !res.content) return cb(err || 'error');
         var $ = cheerio.load(res.content);

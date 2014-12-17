@@ -134,7 +134,7 @@ var loginRequired = function() {
 
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
-  var user = UserProps(['isAccessDenied','globalId','bitHash']) || {};
+  var user = Users.myProps(['isAccessDenied','globalId','bitHash']) || {};
   if(user.isAccessDenied) {
     if (user._id !== Url.userIdFromUrl(window.location.href)) {
       this.redirect('hacker', user);

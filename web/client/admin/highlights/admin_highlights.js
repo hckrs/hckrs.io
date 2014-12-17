@@ -4,7 +4,7 @@ AdminHighlightsController = DefaultAdminController.extend({
   template: 'admin_highlights',
   waitOn: function () {
     var city = Session.get('currentCity');
-    var isAdmin = hasAdminPermission();
+    var isAdmin = Users.hasAdminPermission();
     return [ 
       Meteor.subscribe('highlights', isAdmin ? 'all' : city),
     ];

@@ -59,7 +59,7 @@ Template.map.events({
       featureLayer.eachLayer(function(marker) {
         var dist = map.getCenter().distanceTo(marker.getLatLng());
         var isPlace = marker.feature.properties.filter === 'places';
-        var permission = hasOwnerPermission(marker.feature.properties);
+        var permission = Users.hasOwnerPermission(marker.feature.properties);
         if (isPlace && permission && (!min || dist < minDist)) {
           min = marker;
           minDist = dist;
@@ -79,7 +79,7 @@ Template.map.created = function() {
   var city = Session.get('currentCity');
   if (!state.equals('city', city)) {
     state.set('city', city);
-    state.set('location', getCityLocation(city));
+    state.set('location', Util.getCityLocation(city));
     state.set('zoom', state.defaults.zoom);
   }
 }
@@ -233,7 +233,7 @@ var setupFeatureLayer = function(map) {
       // make popup
       var popup = [];
       popup.push("<strong>"+props.title+"</strong>");
-      popup.push(Safe.url(userProfilePath(props.id), {text: 'hacker #'+userRank(props.id), target: 'self'}));
+      popup.push(Safe.url(Users.userProfilePath(props.id), {text: 'hacker #'+Users.userRank(props.id), target: 'self'}));
       marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
     }
   });
@@ -272,7 +272,7 @@ var openFeaturePopup = function(featureLayer, selected) {
       marker.openPopup();
 
       // ambassador can move markers
-      if (hasOwnerPermission(props) && editor.mode() === 'edit' && props.filter === 'places')
+      if (Users.hasOwnerPermission(props) && editor.mode() === 'edit' && props.filter === 'places')
         marker.dragging.enable();
     }
     else {
@@ -408,7 +408,7 @@ var placesFeatures = function() {
 
 var selector = function() {
   var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+  return Users.hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
 }
 
 // create marker on clicked location

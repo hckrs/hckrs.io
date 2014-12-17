@@ -35,7 +35,7 @@ Meteor.startup(function() {
 var runAfterStartupDelayed = function() {
 
   // update user profile picture on startup
-  ServicesConfiguration.updateProfilePictures();
+  Account.updateProfilePictures();
 }
 
 

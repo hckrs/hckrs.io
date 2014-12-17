@@ -23,7 +23,6 @@ mrt:collection-hooks
 iron:router
 datariot:ganalytics
 aslagle:reactive-table
-mrt:mailchimp
 kidovate:pnotify
 pauloborges:repl
 aldeed:autoform
@@ -35,4 +34,6 @@ chrismbeckett:fontawesome4
 digioak:codemirror
 hckrs:summernote
 hckrs:spin
-
+hckrs
+momentjs:moment
+peerlibrary:async

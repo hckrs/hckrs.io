@@ -104,7 +104,7 @@ Template.admin_emailTemplates.events({
 
     // send preview to staff member
     Email.send({
-      to: property(Meteor.user(), 'staff.email'),
+      to: Util.property(Meteor.user(), 'staff.email'),
       from: Settings["siteEmail"],
       subject: subject,
       html: body,
@@ -152,14 +152,14 @@ Template.admin_emailTemplates.rendered = function() {
   // make sure wysiwyg content is reactive
   this.autorun(function() {
     var doc = EmailTemplates.findOne(state.get('docId'));
-    var body = property(doc, 'body');
+    var body = Util.property(doc, 'body');
     init(body);
   });
 
   // save current selected groups
   this.autorun(function() {
     var doc = EmailTemplates.findOne(state.get('docId'));
-    state.set('groups', property(doc, 'groups') || []);
+    state.set('groups', Util.property(doc, 'groups') || []);
   });
 }
 
@@ -197,7 +197,7 @@ AutoForm.hooks({
 // remove the prefix
 var removeUrlPrefix = function(content, template) {
   var tmpl = _.findWhere(EMAIL_TEMPLATE_GROUPS_OPTIONS, {value: template});
-  var data = property(tmpl || {}, 'example');
+  var data = Util.property(tmpl || {}, 'example');
 
   // check if variables is an URL based on the example data
   // if so, we remove possible duplicate http:// prefixes
@@ -223,6 +223,6 @@ var renderWithData = function(content, data) {
 // fill in the example merge variables
 var renderWithExampleData = function(content, template) {
   var tmpl = _.findWhere(EMAIL_TEMPLATE_GROUPS_OPTIONS, {value: template});
-  var example = property(tmpl || {}, 'example');
+  var example = Util.property(tmpl || {}, 'example');
   return renderWithData(content, example);
 }

@@ -7,9 +7,9 @@ HackerController = DefaultController.extend({
   },
   onBeforeAction: function() {
     if (Subscriptions.ready() && !this.initialized) {
-      var userId = (userForBitHash(this.params.bitHash) || {})._id;
+      var userId = (Users.userForBitHash(this.params.bitHash) || {})._id;
       Session.set('hackerId', userId);
-      Session.set('hackerEditMode', UserProp('isAccessDenied'));  
+      Session.set('hackerEditMode', Users.myProp('isAccessDenied'));  
       this.initialized = true;
     }
     this.next();
@@ -31,8 +31,8 @@ HackerController = DefaultController.extend({
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
-var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
+var hackerProp = function(field) { return Users.prop(hackerId(), field); }
+var hackerProps = function (fields) { return Users.props(hackerId(), fields); }
 
 Template.registerHelper('HackerProp', function(prop) {
   return hackerProp(prop);
@@ -52,7 +52,7 @@ var addToSet = function(event) {
   var value = $elm.val();
   var checked = $elm.is(':checked');
   
-  exec(function() {
+  Util.exec(function() {
     var action = checked ? '$addToSet' : '$pull';
     var modifier = _.object([ action ], [ _.object([field], [value]) ]);
     Users.update(hackerId(), modifier);
@@ -76,9 +76,9 @@ var saveChangedField = function(event, cb) {
   var value = $elm.val();
   
   // show feedback on input element
-  addTemporaryClass($elm, 'saved');
+  Util.addTemporaryClass($elm, 'saved');
 
-  exec(function() {
+  Util.exec(function() {
     var modifier = _.object([ value ? '$set' : '$unset' ], [ _.object([field], [value]) ]);
     Users.update(hackerId(), modifier, cb);
   });
@@ -140,7 +140,7 @@ var pictureChanged = function(event) {
   $picture.css('background-image', "url('"+value+"')");
 
   // store in database
-  exec(function() {
+  Util.exec(function() {
     Meteor.users.update(hackerId(), {$set: {'profile.picture': value}});
   });
 }
@@ -211,7 +211,7 @@ Template.hackerEdit.events({
 
 Template.hacker.helpers({
   'hacker': function() { return hackerProps(); },
-  'canEdit': function() { return isCurrentUser() || hasAmbassadorPermission(); },
+  'canEdit': function() { return isCurrentUser() || Users.hasAmbassadorPermission(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'isEditMode': function() { return Session.get('hackerEditMode'); },
   'activeMode': function(mode) { 
@@ -223,7 +223,7 @@ Template.hacker.helpers({
 Template.hackerEdit.helpers({
   'required': function(field) {
     // indicate required field after user try to proceed without filling in this field
-    return !pathValue(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
+    return !Util.property(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
   },
   "selected": function(socialPicture) { 
     var isSelected = hackerProp('profile.picture') == socialPicture;
@@ -251,7 +251,7 @@ Template.hackerEdit.helpers({
 
 Template.hackerView.helpers({
   "urlCurrentUser": function() { 
-    return userProfileUrl(Meteor.userId()); 
+    return Users.userProfileUrl(Meteor.userId()); 
   },
   "isCompanyOrLocation": function() {
     return !!(this.profile.company || this.profile.location);
@@ -262,7 +262,7 @@ Template.hackerView.helpers({
 // RENDERING
 
 Template.hackerEdit.rendered = function() {
-  initializeAutoGrow();
+  Util.initializeAutoGrow();
 
   if (this.find('#editMap')) {
     var city = CITYMAP[Session.get('currentCity')] || {};

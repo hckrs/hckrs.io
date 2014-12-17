@@ -9,7 +9,7 @@ Template.editorForm.helpers({
   'action': function() { return this.action(); }, 
   'selected': function() { return this.selected(); }, 
   'disallowed': function() { 
-    return !this.selected() || hasOwnerPermission(this.selected()) ? '' : 'disallowed'; 
+    return !this.selected() || Users.hasOwnerPermission(this.selected()) ? '' : 'disallowed'; 
   },
   'privacy': function() {
     var city = Session.get('currentCity');

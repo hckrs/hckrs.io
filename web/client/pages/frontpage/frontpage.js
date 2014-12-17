@@ -23,13 +23,13 @@ Template.frontpage.helpers({
 Template.ambassadors.helpers({
   "ambassadors": function() {
     var city = Session.get('currentCity');
-    var fields = fieldsObj({
+    var fields = Util.fieldsObj({
       profile: ['name','picture','email'],
       'isAmbassador': true,
       'staff': true
     });
     var transform = function(user) {
-      user.twitter = userSocialName(user._id, 'twitter');
+      user.twitter = Users.userSocialName(user._id, 'twitter');
       return user;
     }
     return city && Users.find({city: city, isAmbassador: true}, {fields: fields}).map(transform);
@@ -42,7 +42,7 @@ Template.ambassadors.helpers({
 Template.frontpage.events({
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
-    exec(function() {
+    Util.exec(function() {
       Router.goToCity(city);
     });
   }

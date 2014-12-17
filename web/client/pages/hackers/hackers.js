@@ -35,7 +35,7 @@ var selector = function(inclHidden) {
   if (!_.isEmpty(filter.skills))
     _.extend(selector, {"profile.skills": {$all: filter.skills}});
   
-  if (!hasAmbassadorPermission() || !inclHidden)
+  if (!Users.hasAmbassadorPermission() || !inclHidden)
     _.extend(selector, {"isHidden": {$ne: true}});
   
   return selector;
@@ -53,7 +53,7 @@ Template.hackers.helpers({
     
     var transitionDelay = 0;
     var getUserView = function(user) {
-      user = userView(user);
+      user = Users.userView(user);
       user.transitionDelay = Math.min(transitionDelay, 1);
       transitionDelay += 0.1
       return user;
@@ -64,13 +64,13 @@ Template.hackers.helpers({
   },
   'hacking': function() {
     var hacking = state.get('filter').hacking;
-    var hackingLabels = _.map(hacking, _.partial(getLabel, HACKING_OPTIONS));
-    var hackingSentence = sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');    
+    var hackingLabels = _.map(hacking, _.partial(Util.getLabel, HACKING_OPTIONS));
+    var hackingSentence = Util.sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');    
     return hackingSentence;
   },
   'skills': function() {
     var skillsLabels = state.get('filter').skills;
-    var skillsSentence = sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');    
+    var skillsSentence = Util.sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');    
     return skillsSentence;
   }
 });
@@ -223,7 +223,7 @@ var sendMailing = function(mail, isTest, cb) {
 var filterFormChanged = function(event) {
   var $form = $(event.currentTarget).parents('form:first');
   var formData = $form.serializeObject();
-  var items = array(formData.filter);
+  var items = Util.array(formData.filter);
   
   var filter =_.groupBy(items, function(item){ return /^hacking/.test(item) ? 'hacking' : 'skills'; });
   filter.hacking = _.invoke(filter.hacking, 'replace', /^hacking-/, '');

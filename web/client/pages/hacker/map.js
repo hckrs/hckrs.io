@@ -100,7 +100,7 @@ var markerLocationChanged = function() {
   }
 
   // close map with flashing save effect
-  addTemporaryClass($map, 'before-close-effect', 600);
+  Util.addTemporaryClass($map, 'before-close-effect', 600);
   Meteor.setTimeout(leaveMap, 800);
 }
 
