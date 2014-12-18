@@ -6,6 +6,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('peerlibrary:async');
 
   api.use('base');
@@ -15,13 +17,17 @@ Package.onUse(function(api) {
   api.use('email-transactional');
   api.use('cities');
   api.use('util');
+  api.use('util-base');
+  api.use('util-geo');
+  api.use('util-url');
   api.use('ext-oauth');
   
-  api.addFiles('account/hooks.js', 'server');
-  api.addFiles('account/register-services.js', 'server');
-  api.addFiles('account/servicedata.js', 'server');
-  api.addFiles('account/userdata.js', 'server');
-  api.addFiles('account/account.js', 'server');
+  api.addFiles('account/account.jsdoc', 'server');
+  api.addFiles('account/hooks.jsdoc', 'server');
+  api.addFiles('account/register-services.jsdoc', 'server');
+  api.addFiles('account/servicedata.jsdoc', 'server');
+  api.addFiles('account/userdata.jsdoc', 'server');
+  api.addFiles('account/methods.jsdoc', 'server');
 
   api.export('Account', 'server');
 });

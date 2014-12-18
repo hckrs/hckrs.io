@@ -1,0 +1,363 @@
+// utilities to work on urls
+
+Url = {}
+
+
+/* First some SPECIFIC FUNCTIONS for hckrs.io */
+
+/**
+ * @summary Get city from subdomain of the URL.
+ * @param  {String} [url] Specify an url to extract the city from. Otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.city("http://utrecht.staging.hckrs.io")
+ *   => utrecht
+ *   ```
+ */
+Url.city = function(url) {
+  url = url || currentUrl();
+  var root = Url.root();
+  var subdomain = Url.hostname(url).replace(new RegExp(".?" + root), '');
+  return subdomain;
+}
+
+/**
+ * @summary Replace/Add city in the URL.
+ * @param  {String} [url] Specify an url wherein the city must be replaced. Otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.replaceCity("http://www.staging.hckrs.io") 
+ *   => http://lyon.staging.hckrs.io
+ *   ```
+ */
+Url.replaceCity = function(city, url) {
+  url = url || currentUrl();
+  var cityUrl = Url.replaceCityInSubdomain(city, url);
+  return cityUrl;
+}
+
+// same as replaceCity
+Url.replaceCityInSubdomain = function(city, url) {
+  url = url || currentUrl();
+  var oldHostname = Url.hostname(url);
+  var newHostname = city + '.' + Url.root();
+  return url.replace(oldHostname, newHostname);
+}
+
+/**
+ * @summary Get user identifier object from profile URL.
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.userIdentifierFromUrl("http://utrecht.hckrs.io/-_-")
+ *   => { city: "utrecht", globalId: "5" }
+ *   ```
+ */
+Url.userIdentifierFromUrl = function(url) {
+  url = url || currentUrl();
+  var city = Url.city(url);
+  var globalId = Url.bitHashInv(_.last(url.split('/')));
+  return {city: city, globalId: globalId};
+}
+
+/**
+ * @summary Get userId from profile URL.
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.userIdFromUrl("http://utrecht.hckrs.io/-_-")
+ *   => "2kvw2KqByjr6EkgMy"
+ *   ```
+ */
+Url.userIdFromUrl = function(url) {
+  var selector = Url.userIdentifierFromUrl(url);
+  return (Users.findOne(selector, {fields: {_id: true}}) || {})._id;
+}
+
+/**
+ * @summary Calculate bithash from a number. This will transform the number into a bit representation string, where 0 and 1 are replaced by the characters '-' and '_'.
+ * @param  {Number} num Number to transform to bit string.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.bitHash(5)
+ *   => -_-
+ *   ```
+ */
+Url.bitHash = function(num) {
+  if (!num) return console.log("no valid number passed to Url.bitHash()");
+  return parseInt(num).toString(2).replace(/0/g, '_').replace(/1/g, '-');
+}
+
+/**
+ * @summary Calculate number from a bitHash. This will transform the bit string back into a number.
+ * @param  {String} hash Hash to be transformed to a number.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.bitHashInv("-_-")
+ *   => 5
+ *   ```
+ */
+Url.bitHashInv = function(hash) {
+  if (!hash) return console.log("no valid hash passed to Url.bitHashInv()");
+  return parseInt(hash.replace(/_/g, '0').replace(/-/g, '1'), 2);
+}
+
+
+
+
+
+
+/* GENERAL functions */
+
+/**
+ * @summary Hostname of Meteor's ROOT_URL
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   // staging server
+ *   Url.root();  => staging.hckrs.io
+ *
+ *   // production server
+ *   Url.root();  => hckrs.io
+ *   ```
+ */
+Url.root = function() {
+  var url = Meteor.absoluteUrl(); // ROOT_URL
+  return Url.hostname(url);
+}
+
+/**
+ * @summary Hostname of url
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.hostname("http://lyon.staging.hckrs.io/-_-");  
+ *   => lyon.staging.hckrs.io
+ *   ```
+ */
+Url.hostname = function(url) {
+  url = url || currentUrl();
+  return parseUrl(url).hostname;
+}
+
+/**
+ * @summary Base url, exclude path information
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.baseUrl("http://lyon.staging.hckrs.io/-_-");  
+ *   => http://lyon.staging.hckrs.io
+ *   ```
+ */
+Url.baseUrl = function(url) {
+  url = url || currentUrl();
+  var parsed = parseUrl(url);
+  return parsed.protocol + '//' + parsed.host;
+}
+
+/**
+ * @summary Main domain, excluding subdomains. (ad-hoc for particular TLD).
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.domain("http://lyon.staging.hckrs.io/-_-");  
+ *   => hckrs.io
+ *   ```
+ */
+Url.domain = function(url) {
+  url = url || currentUrl();
+  var hostname = Url.hostname(url);
+  return new RegExp(/([^.]*.[a-zA-Z]{2,4}(.uk)?)$/).exec(hostname)[1];
+}
+
+/**
+ * @summary Url without protocol, for clean displaying.
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.show("http://lyon.staging.hckrs.io/-_-");  
+ *   => lyon.staging.hckrs.io/-_-
+ *   ```
+ */
+Url.show = function(url) {
+  url = url || currentUrl();
+  return url.replace(/^(http(s)?:\/\/(www.)?)/i, "");
+}
+
+/**
+ * @summary Make sure that extern urls includes http:// or https://
+ * @param  {String} url Specify an url.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Url.externUrl("lyon.staging.hckrs.io/-_-");  
+ *   => http://lyon.staging.hckrs.io/-_-
+ *   ```
+ */
+Url.externUrl = function(url) {
+  if (!/^(http(s?):\/\/)/i.test(url))
+    url = "http://" + url;
+  return url;
+}
+
+/**
+ * @summary Check if domain equals **localhost**
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ */
+Url.isLocalhost = function(url) {
+  url = url || currentUrl();
+  return Url.hostname(url) === 'localhost';
+}
+
+/**
+ * @summary Add key/value pairs to the url. It will be appended as query string.
+ * @param  {Object} properties Object containing key/value pairs.
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ */
+Url.addParams = function(properties, url) {
+  url = url || currentUrl();
+  var params = Url.getParams(url);
+  var newParams = _.extend(params, properties)
+  var searchString = Url.createSearchString(newParams);
+  return Url.replace(url, function(o) {
+    o.search = searchString;
+    return o;
+  });  
+}
+
+/**
+ * @summary Create a search string from an object containing properties.
+ * @param  {Object} properties Object containing key/value pairs.
+ * @locus Anywhere
+ */
+Url.createSearchString = function(params) {
+  var queryString = _.map(params, function(v,k) { return k+"="+v; }).join('&');
+  return _.size(params) ? '?' + queryString : "";
+}
+
+/**
+ * @summary Get properties object from query string.
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ */
+Url.getParams = function(url) {
+  url = url || currentUrl();
+  var qs = (url.split('?',2)[1] || "").split("#")[0];
+  return _.object(_.map(_.compact(qs.split('&')), function(kv, k) { return kv.split('=',2); }));
+}
+
+/**
+ * @summary Remove a property from the query string
+ * @param {String} key Name of the property to remove.
+ * @param  {String} [url] Specify an url, otherwise the current URL will be used.
+ * @locus Anywhere
+ */
+Url.removeParam = function(key, url) {
+  url = url || currentUrl();
+  var params = Url.getParams(url);
+  var newParams = _.omit(params, key);
+  var searchString = Url.createSearchString(newParams);
+  return Url.replace(url, function(o) {
+    o.search = searchString;
+    return o;
+  });
+}
+
+
+/**
+ * @summary This function will parse a url and give it to the specified delegate function.arsing and will give the parsed url to the delegate function.
+ * The delegate function can modify the url object and give it back. This functional will format it again to make a url string.
+ * you can ONLY edit the following properties: 
+ * 
+ * * protocol
+ * * host
+ * * pathname
+ * * search
+ * * hash
+ * @param {String} url Specify an url.
+ * @param {Function} func Delegate function that will modify the parsed url object.
+ * @locus Anywhere
+ */
+Url.replace = function(url, func) {
+  return formatUrl(func(parseUrl(url)));
+}
+
+
+
+
+/* GENERAL working with PATHS */
+
+/**
+ * @summary Srip slash at the beginning of a path.
+ * @param {String} path An path.
+ * @locus Anywhere
+ */
+Url.stripTrailingSlash = function(path) {
+  return path.replace(/^\/?/, '');
+}
+
+
+
+
+
+
+// seperate implementations for client & server
+
+var parseUrl;
+var formatUrl;
+var currentUrl;
+
+if (Meteor.isClient) {
+
+  currentUrl = function() {
+    return window.location.href;
+  }
+
+  parseUrl = function(url) {
+    var parser = document.createElement('a');
+    parser.href = url;
+    parser.protocol; // => "http:"
+    parser.hostname; // => "example.com"
+    parser.port;     // => "3000"
+    parser.pathname; // => "/pathname/"
+    parser.search;   // => "?search=test"
+    parser.hash;     // => "#hash"
+    parser.host;     // => "example.com:3000"  
+    return parser;
+  }
+
+  formatUrl = function(o) {
+    return o.protocol + "//" + o.host + o.pathname + o.search + o.hash;
+  }
+
+}
+
+if (Meteor.isServer) {
+
+  var URL = Npm.require('url');
+
+  currentUrl = function() {
+    return Meteor.absoluteUrl();
+  }
+
+  parseUrl = function(url) {
+    return URL.parse(url);
+  }
+
+  formatUrl = function(url) {
+    return URL.format(url);
+  }
+
+}

@@ -5,6 +5,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
+  api.use('util-base');
   api.addFiles('yql.js');
 });

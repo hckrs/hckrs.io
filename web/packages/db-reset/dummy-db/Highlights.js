@@ -2,7 +2,7 @@
   var city, cityUserIds;
 
   // setup cityUserIds
-  cityUserIds = _.object(CITYKEYS, _.map(CITYKEYS, function(){ return [] }));
+  cityUserIds = _.object(City.identifiers(), _.map(City.identifiers(), function(){ return [] }));
 
   // fill cityUserIds
   Users
@@ -28,7 +28,7 @@
   var public = function() {
     return [
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-27T10:33:28.273Z"),
         "imageUrl" : "https://sniperinmahwah.files.wordpress.com/2014/09/p1010342.jpg",
@@ -39,7 +39,7 @@
         "url" : "http://sniperinmahwah.wordpress.com/2014/09/25/hft-in-my-backyard-ii/",
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "title" : "Edward Snowden",
         "subtitle" : "The untold story",
@@ -49,7 +49,7 @@
         "createdAt" : new Date("2014-09-16T16:05:49.904Z"),
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "title" : "How to Start a Startup",
         "subtitle" : "videos",
@@ -61,5 +61,5 @@
     ];
   }
 
-  return _.flatten(_.map(CITYKEYS, private)).concat(public());
+  return _.flatten(_.map(City.identifiers(), private)).concat(public());
 })();

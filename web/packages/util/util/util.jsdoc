@@ -1,0 +1,91 @@
+Util = {}
+
+
+/**
+ * @summary Get the label coresponding to a certain value, out of a options list containing label-value-pair objects.
+ * @param optionsList {Object[]} A list containing objects with 'label' and 'value' fields.
+ * @param value {Value} The value related to the label you would like to get.
+ * @locus Anywhere
+ */
+Util.getLabel = function(optionsList, value) {
+  return (_.findWhere(optionsList, {value: value})||{}).label;
+}
+
+/**
+ * @summary Check if the specified city is foreign, which means that it is an other city
+ * than the one you visiting right now.
+ * @param otherCity {String} The city identifier to compare with.
+ * @locus Anywhere
+ */
+Util.isForeignCity = function(otherCity) {
+  var currentCity = Meteor.isClient ? Session.get('currentCity') : Users.myProp('currentCity');
+  return currentCity && otherCity && currentCity !== otherCity;
+}
+
+/**
+ * @summary Get a username from external service urls.
+ * @param service {String} facebook, twitter or github.
+ * @param url {String} The url whereof to extract the username.
+ * @locus Anywhere
+ */
+Util.socialNameFromUrl = function(service, url) {
+  return (url && /[^./]*$/.exec(url)[0]) || "";
+}
+
+
+
+/**
+ * @summary Execute a performance intensive function after a short delay
+ * to let finish UI updates in the meantime, for more responsive feel.
+ * Notice that this function runs asynchronously.
+ * @param func {Function} A function to run after a short delay.
+ * @locus Anywhere
+ */
+Util.exec = function(func) {
+  setTimeout(func, 50);
+}
+
+
+
+// CLIENT ONLY
+
+if (Meteor.isClient) {
+
+  /**
+   * @summary Initialize the auto grow input fields plugin. 
+   * This must be called after a template is rendered.
+   * @locus Client
+   */
+  Util.initializeAutoGrow = function() {
+    $("input.text").each(function() {
+      $(this).autoGrowInput({
+        comfortZone: parseInt($(this).css('font-size')),
+        minWidth: 150,
+        maxWidth: 500
+      });
+    });
+  }
+
+
+  /**
+   * @summary Add a class to the jquery element for certain duration.
+   * @param $elm {$(elem)} Some jquery element.
+   * @param className {String} The className to add.
+   * @param duration {Number} The duration (ms) this class will be active (default 1000 ms).
+   * @locus Client
+   */
+  Util.addTemporaryClass = function($elm, className, duration) {
+    $elm.addClass(className);
+    Meteor.setTimeout(function() {
+      $elm.removeClass(className);
+    }, duration || 1000);
+  }  
+
+}
+
+
+
+
+
+
+

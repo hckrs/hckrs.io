@@ -24,7 +24,7 @@ DealsSorted = function() {
   var city = Session.get('currentCity');
   var deals = Deals.find(selector()).fetch();
   var sort = (DealsSort.findOne({city: city}) || {}).sort || [];
-  return Util.sortedDocs(deals, sort);
+  return Query.sortedDocs(deals, sort);
 }
 
 

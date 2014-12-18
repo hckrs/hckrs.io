@@ -1,0 +1,9 @@
+/**
+ * @summary Users
+ * @locus Anywhere
+ */
+Collection.Users = Meteor.users;
+
+
+// alias
+Users = Collection.Users;

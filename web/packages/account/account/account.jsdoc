@@ -1,0 +1,296 @@
+Account = {};
+
+
+
+/**
+ * @summary Attach or move user to some city. Users can move thereself to another city when they are not fully registered. Otherwise only ambassadors have the permissions to move users.
+ * @locus Server
+ * @param {String} hackerId The *userId* of the user that will be attached to the given city.
+ * @param {String} city The *cityKey* of the city where user will be attached to. 
+ */
+Account.moveUserToCity = function(hackerId, city) { // called from Methods.js
+  var hacker = Users.findOne(hackerId);
+  
+  if (!hacker)
+    throw new Meteor.Error(500, "no such user");  
+
+  if (!_.contains(City.identifiers(), city))
+    throw new Meteor.Error(500, "no valid city");  
+
+  // check permissions
+  var userId = this.userId || Meteor.userId();
+  var me = userId === hackerId;
+  var ambPerm = Users.hasAmbassadorPermission(userId, hacker.city);
+  
+  if (!me && !ambPerm)
+    throw new Meteor.Error(500, 'not allowed');
+
+  if (!hacker.isAccessDenied && me) {
+    if (ambPerm) 
+      throw new Meteor.Error(500, "can't move yourself");  
+    else 
+      throw new Meteor.Error(500, "cite move not allowed", 'already registered at some city');  
+  }
+
+
+  // update user's city
+  Users.update(hackerId, {$set: {
+    city: city,
+    currentCity: city
+  }});
+
+  // automatic invite the first n users, and give them more invites
+  if (Users.find({city: city}).count() <= Settings['firstNumberOfUsersAutoInvited']) {
+    Users.update(hackerId, {$set: {invitations: Settings['defaultNumberOfInvitesForAutoInvitedUsers']}});
+    try { Account.forceInvitationOfUser(hackerId); } catch(e) {};
+  }
+
+  // let ambassadors/admins know that a new user has registered the site
+  Email.sendOnNewUser(hackerId);
+}
+
+
+/**
+ * @summary Check invitation *phrase* for the current logged in user and give this user access to the site.
+ * @locus Server
+ * @param {Number} phrase The *invitationPhrase* of the user who sent the invitation.
+ */
+Account.verifyInvitation = function(phrase) {
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user.");
+
+  Account.verifyInvitationOfUser(phrase, Meteor.userId());
+}
+
+/**
+ * @summary Check invitation *phrase* and give this user access to the site.
+ * @locus Server
+ * @param {Number} phrase The *invitationPhrase* of the user who sent the invitation.
+ * @param {String} userId The userId of the user who request access to the site.
+ */
+Account.verifyInvitationOfUser = function(phrase, userId) { 
+  check(phrase, Number);
+  check(userId, String);
+
+  // search broadcast user
+  var broadcastUser = Meteor.users.findOne({invitationPhrase: phrase});
+  if (broadcastUser.mergedWith)
+    broadcastUser = Meteor.users.findOne(broadcastUser.mergedWith);
+
+  // receiving user
+  var receivingUser = Meteor.users.findOne(userId);
+
+  // search for previous invitations
+  var alreadyInvited = !!Invitations.findOne({receivingUser: userId});
+
+  if (!receivingUser)
+    throw new Meteor.Error(500, "Unknow user: " + userId);
+
+  if (alreadyInvited)
+    throw new Meteor.Error(500, "User is already invited.");
+
+  if (!broadcastUser)
+    throw new Meteor.Error(500, "Unknow broadcast user");
+
+  if (broadcastUser._id === receivingUser._id)
+    throw new Meteor.Error(500, "Can't invite yourself");
+
+  if (broadcastUser.invitations < 1)
+    throw new Meteor.Error(200, "limit", "Invitation limit reached.");
+  
+  // invitation valid
+
+  // insert invitation couple in database
+  Invitations.insert({
+    broadcastUser: broadcastUser._id,
+    receivingUser: userId
+  });  
+
+  // decrement broadcast user's unused invitations
+  Meteor.users.update(broadcastUser._id, {$inc: {invitations: -1}});
+
+  // mark as invited
+  Account.forceInvitationOfUser(receivingUser._id);
+}
+
+/**
+ * @summary Skip invitation check and give this user access to the site.
+ * @locus Server
+ * @param {String} userId The userId of the user who will get access to the site.
+ */
+Account.forceInvitationOfUser = function(userId) {
+  check(userId, String);
+
+  // receiving user
+  if (!Meteor.users.findOne(userId))
+    throw new Meteor.Error(500, "Unknow user: " + userId);
+
+  // mark as invited
+  Meteor.users.update(userId, {$unset: {isUninvited: true}});
+
+  // check if user now get access to the website
+  Account.requestAccessOfUser(userId); 
+}
+
+
+
+/**
+ * @summary Check if the user satisfies all conditions in order to get access, then give access.
+ * @locus Server
+ * @param {String} userId The userId of the user who will get access to the site.
+ */
+Account.requestAccessOfUser = function(userId) { 
+  var user = Meteor.users.findOne(userId);
+
+  if (!user)
+    throw new Meteor.Error(500, "Unknow user");
+
+  if (!user.city) 
+    throw new Meteor.Error(500, "User isn't attached to some city.");    
+
+  if (user.isUninvited)
+    throw new Meteor.Error(500, "notInvited", "User hasn't used an invitation code.");
+
+  if (user.isIncompleteProfile)
+    throw new Meteor.Error(500, "profileIncomplete", "User profile is incomplete.");
+
+  if (!_.findWhere(user.emails, {address: user.profile.email, verified: true}))
+    throw new Meteor.Error(500, "emailNotVerified", "e-mailaddress isn't verified.");
+
+  // access allowed!
+
+  // execute these commands if user had previously no access
+  if (user.isAccessDenied === true) {
+    
+    // set signup date
+    if (!user.accessAt)
+      Meteor.users.update(userId, {$set: {accessAt: new Date()}});
+  }
+
+  // allow access for this user
+  Meteor.users.update(userId, {$unset: {isAccessDenied: true}});
+
+  // request visibility
+  requestVisibilityOfUser(userId);
+}
+
+
+
+
+/**
+ * @summary User let us know that he is ready filling in his profile. 
+ * Check if all required properties are filled in.
+ * @locus Server
+ */
+Account.requestProfileCompleted = function() {
+
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user");
+
+  if (!Meteor.user().profile.email || !Meteor.user().profile.name)
+    throw new Meteor.Error(500, "profileIncomplete", "User profile is incomplete.");
+
+  // make user visible to other users
+  Meteor.users.update(Meteor.userId(), {$unset: {isIncompleteProfile: true}});
+
+  // request access for this user
+  Account.requestAccess();
+}
+
+
+/**
+ * @summary User request to get access to the site.
+ * This is allowed if user is invited, complete his profile and has a verified email.
+ * @locus Server
+ */
+Account.requestAccess = function() {
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user.");
+
+  Account.requestAccessOfUser(Meteor.userId());
+}
+
+/**
+ * @summary When user have manually entered e-mail address he must verify it. Admins can force to skip this process.
+ * @locus Server
+ * @param {String} userId The userId.
+ */
+Account.forceEmailVerification = function(userId) {
+  var user = Users.findOne(userId);
+  var emails = _.pluck(user.emails, 'address');
+
+  if (!Users.hasAmbassadorPermission())
+    throw new Meteor.Error(500, "No permissions");
+  if (!user)
+    throw new Meteor.Error(500, "User doesn't exists");
+  if (!_.contains(emails, user.profile.email))
+    throw new Meteor.Error(500, "E-mail not registered", "E-mail address not present in user's list of addresses.")
+  if (_.findWhere(user.emails, {address: user.profile.email, verified: true}))
+    throw new Meteor.Error(500, "E-mail already verified")    
+
+  // force verification
+  Users.update({_id: userId, "emails.address": user.profile.email}, {$set: {"emails.$.verified": true}});
+
+  // request access of user
+  Account.requestAccessOfUser(userId);
+}
+
+/**
+ * @summary Resend verification email to the given user.
+ * @locus Server
+ * @param {String} userId The userId.
+ */
+Account.sendVerificationEmail = function(userId) {
+  var user = Users.findOne(userId);
+
+  if (!Users.hasAmbassadorPermission())
+    throw new Meteor.Error(500, "No permissions");
+  if (!user)
+    throw new Meteor.Error(500, "User doesn't exists");
+
+  Accounts.sendVerificationEmail(userId, user.profile.email);
+}
+
+
+
+
+
+/* private */
+
+
+// make a user visible for others
+// by default a user is hidden at time of signup 
+// until he is allowed to access the site.
+// also admins are hidden
+var requestVisibility = function() {
+  if (!Meteor.user())
+    throw new Meteor.Error(500, "Unknow user.");
+
+  requestVisibilityOfUser(Meteor.userId());
+}
+
+// when this function is called, is must already be verified that 
+// the user is allowed to do this operation
+var requestVisibilityOfUser = function(userId) {
+  var user = Meteor.users.findOne(userId);
+
+  if (!user)
+    throw new Meteor.Error(500, "Unknow user");
+
+  // user must have allow access to become visible
+  if (user.isAccessDenied == true)
+    throw new Meteor.Error(500, "User don't allowed to be visible");
+
+  // make user visible to other users
+  Meteor.users.update(userId, {$unset: {isHidden: true}});
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,5 @@
 
-EmailTemplates = new Meteor.Collection('emailTemplates');
+
 
 
 Schemas.EmailTemplates = new SimpleSchema([

@@ -223,7 +223,7 @@ Template.hacker.helpers({
 Template.hackerEdit.helpers({
   'required': function(field) {
     // indicate required field after user try to proceed without filling in this field
-    return !Util.property(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
+    return !Object.property(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
   },
   "selected": function(socialPicture) { 
     var isSelected = hackerProp('profile.picture') == socialPicture;
@@ -265,7 +265,7 @@ Template.hackerEdit.rendered = function() {
   Util.initializeAutoGrow();
 
   if (this.find('#editMap')) {
-    var city = CITYMAP[Session.get('currentCity')] || {};
+    var city = City.lookup(Session.get('currentCity')) || {};
     var latlng = {lat: city.latitude, lng: city.longitude};
     initializeMap(this.find('#editMap'), latlng, hackerProp('profile.location'), true); // initialize map
   }

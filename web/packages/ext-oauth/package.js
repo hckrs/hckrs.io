@@ -5,12 +5,14 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
   api.use('oauth');
   api.use('util-url');
 
   api.addFiles('relax-domain.js', 'server');
-  api.addFiles('oauth.js', 'server');
+  api.addFiles('oauth.jsdoc', 'server');
 
   api.imply('oauth');
 });

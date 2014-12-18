@@ -5,8 +5,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.0');
+  api.use('hckrs:docs');
   
+  api.versionsFrom('1.0');
   api.imply('meteor-platform');
 
   api.imply('stylus');

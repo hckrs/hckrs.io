@@ -1,6 +1,5 @@
 
-// collections
-GrowthGithub = new Meteor.Collection('growthGithub');
+
 
 
 Schemas.GrowthGithub = new SimpleSchema({

@@ -23,7 +23,7 @@ Template.frontpage.helpers({
 Template.ambassadors.helpers({
   "ambassadors": function() {
     var city = Session.get('currentCity');
-    var fields = Util.fieldsObj({
+    var fields = Query.fieldsObj({
       profile: ['name','picture','email'],
       'isAmbassador': true,
       'staff': true

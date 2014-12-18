@@ -5,7 +5,7 @@ var runMigration = function(migration, callback) {
 
   // start
   Migrations.insert({name: migration.name, status: 'inProgress', processedAt: new Date()});
-  log('TASK:', migration.name);
+  console.log('TASK:', migration.name);
 
   // process
   migration.task(function(err) {
@@ -33,7 +33,7 @@ Meteor.startup(function() {
   
   if (!allDone) {
   
-    log("BEGIN MIGRATIONS")  
+    console.log("BEGIN MIGRATIONS")  
 
     // loop through migration
     async.eachSeries(migrations, function(migration, callback) {
@@ -51,9 +51,9 @@ Meteor.startup(function() {
 
     }, function(err) {
       if (err) 
-        log("[Migration Error]", err);
+        console.log("[Migration Error]", err);
       else
-        log("END MIGRATIONS")
+        console.log("END MIGRATIONS")
     });
 
   }

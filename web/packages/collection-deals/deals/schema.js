@@ -1,10 +1,4 @@
 
-
-// collection
-Deals = new Meteor.Collection('deals');
-DealsSort = new Meteor.Collection('dealsSort');
-
-
 Schemas.Deal = new SimpleSchema([
   Schemas.default,
   Schemas.city,

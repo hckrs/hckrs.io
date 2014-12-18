@@ -1,0 +1,110 @@
+Schemas = {}
+
+/**
+ * @summary Common fields for a database record, containing *Date()* information.
+ * 
+ * * On an insert operation, the field **createdAt** will be added with the current Date().
+ * * On update operations, the field **updatedAt** will be updated with the current Date().
+ * 
+ * @locus Anywhere
+ */
+Schemas.default = new SimpleSchema({
+  "createdAt": {
+    type: Date,
+    autoValue: function() {
+      if (this.isInsert) return new Date;
+      if (this.isUpsert) return {$setOnInsert: new Date};
+      this.unset();
+    }
+  },
+  "updatedAt": {
+    type: Date,
+    autoValue: function() {
+      if (this.isUpdate) return new Date();
+      this.unset();
+    },
+    optional: true
+  }
+});
+
+/**
+ * @summary Common field for a database record, containing a foreign key to some user.
+ * 
+ * * The **userId** field will be added to the record in the case of an insert operation, 
+ * containing the value of the current logged in user.
+ * 
+ * @locus Anywhere
+ */
+Schemas.userId = new SimpleSchema({
+  "userId": {
+    type: String,
+    optional: true,
+    autoValue: function() {
+      if (this.isFromTrustedCode) return; // not possible
+      if (this.isInsert) return Meteor.userId();
+      if (this.isUpsert) return {$setOnInsert: Meteor.userId()};
+      this.unset();
+    }
+  }
+});
+
+/**
+ * @summary Common field for a database record, containing a foreign key to some city identifier.
+ * 
+ * * The **city** field will be added to the record in the case of an insert operation, 
+ * containing the value *current city* of the logged in user.
+ * 
+ * @locus Anywhere
+ */
+Schemas.city = new SimpleSchema({
+  "city": {
+    type: String,
+    allowedValues: City.identifiers(),
+    optional: true,
+    autoValue: function() {
+      if (this.isFromTrustedCode) return; // not possible
+      if (this.isInsert) return Meteor.user().currentCity;
+      if (this.isUpsert) return {$setOnInsert: Meteor.user().currentCity};
+      this.unset();
+    }
+  }
+});
+
+/**
+ * @summary Common field for a database record, to specify if this
+ * record should be ONLY visible in the city where it belongs to.
+ *
+ * * Will add the **private** field to the record, containing a boolean to indicate if this is a local item.
+ * 
+ * @locus Anywhere
+ */
+Schemas.private = function(private) {
+  return new SimpleSchema({
+    "private": {
+      type: Boolean,
+      label: 'Private to ' + (City.lookup(Url.city()) || {}).name,
+      defaultValue: !!private
+    }
+  });
+}
+
+/**
+ * @summary Common field for a database record, to specify in which countries this item should be hidden.
+ * 
+ * * Will add a **hiddenIn** field containing a list of city indentifiers,
+ * for the cities where this record should NOT be visible.
+ * 
+ *   > For example, ambassdors can hide public records created by other cities, in the case
+ *   > he/she thinks this item isn't relevant.
+ * 
+ * @locus Anywhere
+ */
+Schemas.hiddenIn = new SimpleSchema({
+  "hiddenIn": {
+    type: [String],
+    allowedValues: City.identifiers(),
+    optional: true
+  },
+});
+
+

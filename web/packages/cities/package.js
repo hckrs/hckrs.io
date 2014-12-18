@@ -6,18 +6,15 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
 
   api.addFiles('cities/cities.js');
   api.addFiles('cities/country-codes.js');
-  api.addFiles('cities/export.js');
+  api.addFiles('cities/export.jsdoc');
 
   api.export([
-    'CITIES',
-    'CITYNAMES',
-    'CITYKEYS',
-    'CITYMAP',
-    'COUNTRYMAP',
-    'COUNTRYCODES',
+    'City'
   ]);
 });

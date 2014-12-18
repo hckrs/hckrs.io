@@ -1,6 +1,4 @@
 
-Highlights = new Meteor.Collection('highlights');
-HighlightsSort = new Meteor.Collection('highlightsSort');
 
 Schemas.Highlight = new SimpleSchema([
   Schemas.default,

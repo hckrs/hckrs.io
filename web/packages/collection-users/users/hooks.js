@@ -5,8 +5,8 @@ Users.after.update(function(userId, doc, fieldNames, modifier, options) {
   var prevUser = this.previous;
   var user = doc;
 
-  var prevEmail = Util.property(prevUser, 'profile.email');
-  var email = Util.property(user, 'profile.email');
+  var prevEmail = Object.property(prevUser, 'profile.email');
+  var email = Object.property(user, 'profile.email');
   
   /* 
     handle new e-mailaddress 
@@ -34,6 +34,6 @@ Users.after.update(function(userId, doc, fieldNames, modifier, options) {
       Account.requestAccessOfUser(userId)  
 
     // remove previous mailaddress
-    Meteor.setTimeout(_.partial(Account.cleanEmailAddress, userId), 10000);
+    Meteor.setTimeout(_.partial(Account.userData.cleanEmailAddress, userId), 10000);
   }
 });

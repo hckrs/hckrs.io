@@ -6,6 +6,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('peerlibrary:async', 'server');
   api.use('mrt:mailchimp@0.4.0', 'server');
 
@@ -13,10 +15,11 @@ Package.onUse(function(api) {
   api.use('cities');
   api.use('collection-users');
   api.use('email-templates');
+  api.use('util-base');
   
-  api.addFiles('mailing/mailing.js', 'server');
-  api.addFiles('mailing/subscriptions.js', 'server');
-  api.addFiles('mailing/send.js', 'server');
+  api.addFiles('mailing/mailing.jsdoc', 'server');
+  api.addFiles('mailing/subscriptions.jsdoc', 'server');
+  api.addFiles('mailing/send.jsdoc', 'server');
 
   api.export('Mailing');
 });

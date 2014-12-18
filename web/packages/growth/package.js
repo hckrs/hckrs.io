@@ -5,6 +5,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('peerlibrary:async');
 
   api.use('base');
@@ -13,6 +15,7 @@ Package.onUse(function(api) {
   api.use('collection-email-templates');
   api.use('collection-emails-outbound');
   api.use('cities');
+  api.use('util-base');
   api.use('util-url');
   api.use('email-templates');
 

@@ -1,5 +1,5 @@
 
-EmailsOutbound = new Meteor.Collection('emailsOutbound');
+
 
 
 var eventSchema = new SimpleSchema({ /* events from mandrill (webhook) */
@@ -21,7 +21,7 @@ Schemas.EmailsOutbound = new SimpleSchema([
   {
     "kind"            : { type: String, optional: true, allowedValues: ['news', 'transactional', 'notification', 'growth'] },
     "type"            : { type: String, optional: true },
-    "city"            : { type: String, optional: true, allowedValues: CITYKEYS },
+    "city"            : { type: String, optional: true, allowedValues: City.identifiers() },
     "from": { 
       type: new SimpleSchema({
         "email"       : { type: String },

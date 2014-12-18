@@ -61,7 +61,7 @@ var rowClass = function(doc) {
 
 Template.admin_growth.helpers({
   'city': function() {
-    return CITYMAP[state.get('city')];
+    return City.lookup(state.get('city'));
   },
   'collection': function() {
     return GrowthGithub.find({city: state.get('city')});
@@ -119,7 +119,7 @@ Template.admin_growth.events({
       if (err && err.reason === 'busy')
         alert('Crawler already busy with crawling some city.')
       else if (err)
-        debug(err);
+        console.log(err);
     });
   },
 })

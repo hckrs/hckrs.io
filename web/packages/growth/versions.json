@@ -1,6 +1,14 @@
 {
   "dependencies": [
     [
+      "account",
+      "1.0.0"
+    ],
+    [
+      "accounts-base",
+      "1.1.2"
+    ],
+    [
       "aldeed:collection2",
       "2.2.0"
     ],
@@ -69,6 +77,10 @@
       "1.0.0"
     ],
     [
+      "collection-invitations",
+      "1.0.0"
+    ],
+    [
       "collection-users",
       "1.0.0"
     ],
@@ -93,6 +105,10 @@
       "1.0.0"
     ],
     [
+      "email-transactional",
+      "1.0.0"
+    ],
+    [
       "ext-email",
       "1.0.0"
     ],
@@ -102,6 +118,10 @@
     ],
     [
       "ext-match",
+      "1.0.0"
+    ],
+    [
+      "ext-oauth",
       "1.0.0"
     ],
     [
@@ -125,6 +145,10 @@
       "1.0.1"
     ],
     [
+      "hckrs:docs",
+      "0.1.2"
+    ],
+    [
       "html-tools",
       "1.0.2"
     ],
@@ -141,6 +165,38 @@
       "1.0.1"
     ],
     [
+      "iron:controller",
+      "1.0.3"
+    ],
+    [
+      "iron:core",
+      "1.0.6"
+    ],
+    [
+      "iron:dynamic-template",
+      "1.0.6"
+    ],
+    [
+      "iron:layout",
+      "1.0.6"
+    ],
+    [
+      "iron:location",
+      "1.0.6"
+    ],
+    [
+      "iron:middleware-stack",
+      "1.0.3"
+    ],
+    [
+      "iron:router",
+      "1.0.3"
+    ],
+    [
+      "iron:url",
+      "1.0.6"
+    ],
+    [
       "jquery",
       "1.0.1"
     ],
@@ -153,12 +209,24 @@
       "1.0.0"
     ],
     [
+      "less",
+      "1.0.11"
+    ],
+    [
       "livedata",
       "1.0.11"
     ],
     [
+      "localstorage",
+      "1.0.1"
+    ],
+    [
       "logging",
       "1.0.5"
+    ],
+    [
+      "markdown",
+      "1.0.2"
     ],
     [
       "meteor",
@@ -201,6 +269,10 @@
       "1.0.0"
     ],
     [
+      "oauth",
+      "1.1.2"
+    ],
+    [
       "observe-sequence",
       "1.0.3"
     ],
@@ -234,6 +306,10 @@
     ],
     [
       "routepolicy",
+      "1.0.2"
+    ],
+    [
+      "service-configuration",
       "1.0.2"
     ],
     [
@@ -277,7 +353,39 @@
       "1.0.2"
     ],
     [
+      "util",
+      "1.0.0"
+    ],
+    [
       "util-base",
+      "1.0.0"
+    ],
+    [
+      "util-base-array",
+      "1.0.0"
+    ],
+    [
+      "util-base-number",
+      "1.0.0"
+    ],
+    [
+      "util-base-object",
+      "1.0.0"
+    ],
+    [
+      "util-base-query",
+      "1.0.0"
+    ],
+    [
+      "util-base-string",
+      "1.0.0"
+    ],
+    [
+      "util-base-time",
+      "1.0.0"
+    ],
+    [
+      "util-geo",
       "1.0.0"
     ],
     [

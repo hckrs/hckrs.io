@@ -45,27 +45,27 @@ var data = {
     return Users.userInviteUrl(hackerId());
   },
   'city': function() {
-    return CITYMAP[Session.get('currentCity')].name;
+    return City.lookup(Session.get('currentCity')).name;
   },
   'citykey': function() { // lower case city name
     return Session.get('currentCity');
   },
   'staffName': function() {
-    return Util.property(Meteor.user(), 'profile.name').split(' ')[0];
+    return Object.property(Meteor.user(), 'profile.name').split(' ')[0];
   },
   'staffTitle': function() {
-    return Util.property(Meteor.user(), 'staff.title');
+    return Object.property(Meteor.user(), 'staff.title');
   },
   'staffEmail': function() {
-    return Util.property(Meteor.user(), 'staff.email');
+    return Object.property(Meteor.user(), 'staff.email');
   },
   'staffTwitter': function() {
-    var twitter = CITYMAP[Session.get('currentCity')].twitter;
+    var twitter = City.lookup(Session.get('currentCity')).twitter;
     return Safe.string(twitter ? '<a href="https://twitter.com/'+twitter+'">@'+twitter+'</a>' : ''); 
   },
   'staffPhone': function() {
-    var phone = Util.property(Meteor.user(), 'profile.phone');
-    var available = Util.property(Meteor.user(), 'profile.available');
+    var phone = Object.property(Meteor.user(), 'profile.phone');
+    var available = Object.property(Meteor.user(), 'profile.available');
     var visible = _.contains(available, 'call');
     return visible && phone ? phone : ''; 
   },

@@ -9,8 +9,8 @@
 var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier) {
   Users.checkAdminPermission();
 
-  var subject = Util.property(EmailTemplates.findOne({identifier: subjectIdentifier}), 'subject');
-  var body = Util.property(EmailTemplates.findOne({identifier: bodyIdentifier}), 'body');
+  var subject = Object.property(EmailTemplates.findOne({identifier: subjectIdentifier}), 'subject');
+  var body = Object.property(EmailTemplates.findOne({identifier: bodyIdentifier}), 'body');
 
   if (!subject || !body)
     throw new Meteor.Error(500, "incomplete message", "No subject or body provided.");
@@ -34,12 +34,12 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
 
   var globalVars = {
     "CITY_KEY": city,
-    "CITY_NAME": CITYMAP[city].name,
-    "ADMIN_NAME": Util.property(admin, 'profile.name'),
-    "ADMIN_FIRSTNAME": (Util.property(admin, 'profile.name') || "").split(' ')[0],
-    "ADMIN_EMAIL": Util.property(admin, 'staff.email'),
-    "ADMIN_TITLE": Util.property(admin, 'staff.title'),
-    "ADMIN_IMAGE_URL": Util.property(admin, 'profile.picture'),
+    "CITY_NAME": City.lookup(city).name,
+    "ADMIN_NAME": Object.property(admin, 'profile.name'),
+    "ADMIN_FIRSTNAME": (Object.property(admin, 'profile.name') || "").split(' ')[0],
+    "ADMIN_EMAIL": Object.property(admin, 'staff.email'),
+    "ADMIN_TITLE": Object.property(admin, 'staff.title'),
+    "ADMIN_IMAGE_URL": Object.property(admin, 'profile.picture'),
   }
  
   var merge_vars = _.map(users, function(user) {
@@ -140,7 +140,7 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
 
     // link mandrill's message IDs
     _.each(to_list, function(mail) {
-      mail.messageId = Util.property(_.findWhere(res.data, {email: mail.email}), '_id');
+      mail.messageId = Object.property(_.findWhere(res.data, {email: mail.email}), '_id');
     });
 
     // save email

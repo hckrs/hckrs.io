@@ -6,5 +6,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.addFiles('email-wrappers/html-email.html', 'server', {isAsset: true});
 });

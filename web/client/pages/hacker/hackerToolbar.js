@@ -83,7 +83,7 @@ Template.hackerToolbar.events({
   },
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
-    var cityName = CITYMAP[city].name;
+    var cityName = City.lookup(city).name;
     var userId = hackerId();
     var userName = hackerProp('profile.name');
 

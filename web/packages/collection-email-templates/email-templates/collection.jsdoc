@@ -1,0 +1,10 @@
+
+/**
+ * @summary Email templates
+ * @locus Anywhere
+ */
+Collection.EmailTemplates = new Meteor.Collection('emailTemplates');
+
+
+// alias
+EmailTemplates = Collection.EmailTemplates;

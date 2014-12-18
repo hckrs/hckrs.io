@@ -1,0 +1,10 @@
+/**
+ * @summary Places
+ * @locus Anywhere
+ */
+Collection.Places = new Meteor.Collection('places');
+
+
+// alias
+Places = Collection.Places;
+

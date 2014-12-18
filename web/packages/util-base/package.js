@@ -5,21 +5,14 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.versionsFrom('1.0');
-  api.use('underscore');
-  api.use('momentjs:moment');
 
-  api.addFiles('util-base/base.js');
-  api.addFiles('util-base/underscore.js');
-  api.addFiles('util-base/string.js');
-  api.addFiles('util-base/number.js');
-  api.addFiles('util-base/time.js');
-  api.addFiles('util-base/meteor.js');
-  api.addFiles('util-base/geo.js');
-
-  api.export([
-    'Util',
-    'log',
-    'debug',
-  ]);
+  api.imply('util-base-array');
+  api.imply('util-base-number');
+  api.imply('util-base-object');
+  api.imply('util-base-query');
+  api.imply('util-base-string');
+  api.imply('util-base-time');
 });

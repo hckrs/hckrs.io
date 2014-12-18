@@ -5,9 +5,13 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
   api.use('collection-users');
+  api.use('cities');
   
+  api.addFiles('growthGithub/collection.jsdoc');
   api.addFiles('growthGithub/schema.js');
   api.addFiles('growthGithub/allow-deny.js');
   api.addFiles('growthGithub/publish.js', 'server');

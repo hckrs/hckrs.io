@@ -65,12 +65,12 @@ Template.hackers.helpers({
   'hacking': function() {
     var hacking = state.get('filter').hacking;
     var hackingLabels = _.map(hacking, _.partial(Util.getLabel, HACKING_OPTIONS));
-    var hackingSentence = Util.sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');    
+    var hackingSentence = String.sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');    
     return hackingSentence;
   },
   'skills': function() {
     var skillsLabels = state.get('filter').skills;
-    var skillsSentence = Util.sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');    
+    var skillsSentence = String.sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');    
     return skillsSentence;
   }
 });
@@ -204,7 +204,7 @@ var sendMailing = function(mail, isTest, cb) {
         console.log('Mailing succeed');
         new PNotify({
           title: 'E-mail Sent',
-          text: 'To all users of ' + CITYMAP[Session.get('currentCity')].name,
+          text: 'To all users of ' + City.lookup(Session.get('currentCity')).name,
           icon: false
         });
         state.set('toolbarOpen', false);
@@ -223,7 +223,7 @@ var sendMailing = function(mail, isTest, cb) {
 var filterFormChanged = function(event) {
   var $form = $(event.currentTarget).parents('form:first');
   var formData = $form.serializeObject();
-  var items = Util.array(formData.filter);
+  var items = Array.array(formData.filter);
   
   var filter =_.groupBy(items, function(item){ return /^hacking/.test(item) ? 'hacking' : 'skills'; });
   filter.hacking = _.invoke(filter.hacking, 'replace', /^hacking-/, '');

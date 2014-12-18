@@ -5,9 +5,12 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('peerlibrary:async', 'server');
 
   api.use('base');
+  api.use('collection-users');
   api.use('collection-migrations');
 
   api.addFiles('migrations/migrations.js', 'server');

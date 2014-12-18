@@ -1,9 +1,5 @@
 
-// database migrations on deploying new app versions
-// When changing the model the existing database must fit the new model
-// After running the migration the data should be up to date.
-// This collection stores the already processed migrations
-Migrations = new Meteor.Collection('migrations');
+
 
 
 Schemas.Migration = new SimpleSchema([

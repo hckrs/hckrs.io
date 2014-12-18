@@ -1,5 +1,5 @@
 
-Places = new Meteor.Collection('places');
+
 
 
 Schemas.Place = new SimpleSchema([

@@ -1,7 +1,5 @@
 
-// Meteor.users is a collection that is already defined by meteor.
-// But we attach a schema to validate content.
-Users = Meteor.users;
+
 
 
 // ATTENTION: when changing the model, make sure you also change
@@ -104,11 +102,11 @@ Schemas.User = new SimpleSchema([Schemas.default, {
 
   "city": {             // the city where this hacker is registered to (lowercase)
     type: String,
-    allowedValues: CITYKEYS
+    allowedValues: City.identifiers()
   },        
   "currentCity": {      // the city this (admin) user is visiting
     type: String,
-    allowedValues: CITYKEYS
+    allowedValues: City.identifiers()
   },   
   "globalId": {       // assigned hacker number based on create-account-order of all world hackers
     type: Number

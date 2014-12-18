@@ -5,8 +5,13 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
   api.use('util');
+  api.use('util-base');
+  api.use('util-url');
+  api.use('cities');
 
-  api.addFiles('tmpl-helpers.js', 'client');
+  api.addFiles('tmpl-helpers.jsdoc', 'client');
 });

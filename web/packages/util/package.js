@@ -5,12 +5,19 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
+  api.use('collection-users', {unordered: true});
   api.use('util-base');
   api.use('util-url');
-
-  api.addFiles('util/util.js');
+  api.imply('util-geo');
+  
+  api.addFiles('util/util.jsdoc');
 
   api.imply('util-base');
   api.imply('util-url');
+  api.imply('util-geo');
+
+  api.export('Util');
 });

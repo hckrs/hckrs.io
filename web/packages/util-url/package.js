@@ -6,9 +6,11 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
   
-  api.addFiles('url.js');
+  api.addFiles('url.jsdoc');
   
   api.export('Url');
 });

@@ -29,7 +29,7 @@ try {
 
 
 var users = _.flatten(
-  _.map(CITYKEYS, function(city) { 
+  _.map(City.identifiers(), function(city) { 
     console.log("Add users for", city)
 
     // generate 15 users per city
@@ -78,8 +78,8 @@ var users = _.flatten(
           hacking: Random.subarray(HACKING_VALUES),
           homepage: Random.choice(urls),
           location: {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
           },
           name: firstname + " " + surname,
           picture: socialPicture,

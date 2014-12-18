@@ -11,7 +11,7 @@ if (Meteor.isClient) {
   // fetch from github all usersnames related to the given city.
   // These usernames will be stored in the database.
   Crawler.fetchGithubUsersInCity = function(city, cb) {
-    check(city, Match.In(CITYKEYS));
+    check(city, Match.In(City.identifiers()));
     return Meteor.call('crawlFetchGithubUsersInCity', city, cb);  
   }
 

@@ -1,0 +1,12 @@
+
+// define methods that can be called from the client-side
+Meteor.methods({
+  "addServiceToUser": Account.userData.addServiceToCurrentUser,
+  "removeServiceFromUser": Account.userData.removeServiceFromCurrentUser,
+  "moveUserToCity": Account.moveUserToCity,
+  "requestAccess": Account.requestAccess,
+  "requestProfileCompleted": Account.requestProfileCompleted,
+  "verifyInvitation": Account.verifyInvitation,
+  "forceEmailVerification": Account.forceEmailVerification,
+  "sendVerificationEmail": Account.sendVerificationEmail,
+});

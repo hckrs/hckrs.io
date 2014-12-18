@@ -38,7 +38,7 @@ Meteor.startup(function() {
 // extract city from domain
 var checkCurrentCity = function() {
   var subdomain = Url.city()
-  var city = CITYMAP[subdomain];
+  var city = City.lookup(subdomain);
 
   if (subdomain === 'www')
     return Util.exec(function() { Router.go('frontpage'); });

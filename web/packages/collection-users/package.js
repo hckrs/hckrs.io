@@ -5,14 +5,20 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
   api.use('collection-base');
   api.use('cities');
   api.use('util-url');
+  api.use('util-base');
+  api.use('util');
+  api.use('account', {unordered: true});
 
+  api.addFiles('users/collection.jsdoc');
   api.addFiles('users/constants.js');
   api.addFiles('users/schema.js');
-  api.addFiles('users/helpers.js');
+  api.addFiles('users/helpers.jsdoc');
   api.addFiles('users/allow-deny.js');
   api.addFiles('users/publish.js', 'server');
   api.addFiles('users/hooks.js', 'server');

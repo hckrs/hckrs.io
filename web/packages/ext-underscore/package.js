@@ -5,6 +5,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.versionsFrom('1.0');
   api.use('underscore');
   api.use('mrt:underscore-inflection', {unordered: true});

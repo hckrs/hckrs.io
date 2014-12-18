@@ -29,7 +29,7 @@ YQL.prototype.contentSearch = function(selector, cb) {
                and css=@selector";
 
   this.request(query, params, function(data) {
-    var results = Util.property(data, 'query.results.results');
+    var results = Object.property(data, 'query.results.results');
     results = this.parseContent(results);
     if (selector.indexOf(',') === -1)
       results = _.values(results)[0] || [];
@@ -43,10 +43,10 @@ YQL.prototype.contentAnalysis = function(cb) {
   var query = "select * from contentanalysis.analyze where url=@url";
   
   this.request(query, params, function(data) {
-    var results = Util.property(data, 'query.results');
+    var results = Object.property(data, 'query.results');
     var data = {};
-    data.categories = Util.property(results, 'yctCategories.yctCategory') || [];
-    data.entities = Util.property(results, 'entities.entity') || [];
+    data.categories = Object.property(results, 'yctCategories.yctCategory') || [];
+    data.entities = Object.property(results, 'entities.entity') || [];
     cb(data);
   });
 }
@@ -91,9 +91,9 @@ YQL.prototype.parseContent = function(data) {
   
   var parseItem = function(val) {
     if (_.isObject(val))
-      val.content = Util.decodeHtmlEntities(val.content);
+      val.content = String.decodeHtmlEntities(val.content);
     else
-      val = { content: Util.decodeHtmlEntities(val.toString()) };
+      val = { content: String.decodeHtmlEntities(val.toString()) };
     return val;
   }
 

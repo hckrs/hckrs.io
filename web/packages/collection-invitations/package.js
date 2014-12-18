@@ -5,9 +5,12 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs');
+  
   api.use('base');
   api.use('collection-users');
   
+  api.addFiles('invitations/collection.jsdoc');
   api.addFiles('invitations/schema.js');
   api.addFiles('invitations/allow-deny.js');
   api.addFiles('invitations/publish.js', 'server');

@@ -79,7 +79,7 @@ Template.map.created = function() {
   var city = Session.get('currentCity');
   if (!state.equals('city', city)) {
     state.set('city', city);
-    state.set('location', Util.getCityLocation(city));
+    state.set('location', Geo.getCityLocation(city));
     state.set('zoom', state.defaults.zoom);
   }
 }

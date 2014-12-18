@@ -5,13 +5,15 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('hckrs:docs@0.1.2');
+  
   api.imply('base');
 
-  api.imply('util-url');
+  api.imply('account');
   api.imply('util');
-  
   api.imply('cities');
   api.imply('tmpl-helpers');
+  
 
   // collections
   api.imply('collection-base');
@@ -24,9 +26,6 @@ Package.onUse(function(api) {
   api.imply('collection-migrations');
   api.imply('collection-places');
   api.imply('collection-users');
-
-  // accounts
-  api.imply('account');
 
   // modules
   api.imply('db-migrations');

@@ -19,7 +19,7 @@ Template.editorForm.helpers({
       attr: {
         action: 'privacy',
         toggle: doc.private ? 'off' : 'on',  
-        title: doc.private ? 'Click to make this item available for all cities' : 'Click to make this item only available in ' + CITYMAP[city].name,
+        title: doc.private ? 'Click to make this item available for all cities' : 'Click to make this item only available in ' + City.lookup(city).name,
       }
     }
   },
@@ -32,7 +32,7 @@ Template.editorForm.helpers({
       attr: {
         action: 'visibility',
         toggle: isHidden ? 'on' : 'off',  
-        title: 'Click to '+txt+' current item in ' + CITYMAP[city].name,
+        title: 'Click to '+txt+' current item in ' + City.lookup(city).name,
       }
     }
   }

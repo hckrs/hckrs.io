@@ -87,10 +87,10 @@ var permissionDeps = [
 
 Meteor.publish('userData', function() {
   var self = this;
-  var queryOptions = {fields: Util.fieldsArray(allUserFields)};
+  var queryOptions = {fields: Query.fieldsArray(allUserFields)};
   
   // initial permissions (can be changed below)
-  var permissions = Users.findOne(this.userId, {fields: Util.fieldsArray(permissionDeps)}) || {};
+  var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(permissionDeps)}) || {};
   
   // observe docs changes and push the changes to the client
   // only include fields that are allowed to publish, this can vary between users
@@ -119,7 +119,7 @@ Meteor.publish('userData', function() {
   // Check if depended permissions fields from current user changes
   // if so, we have to republish the whole user collection
   if (self.userId)
-    var myObserver = Users.find({_id: self.userId}, {fields: Util.fieldsArray(permissionDeps)}).observe({'changed': republish});
+    var myObserver = Users.find({_id: self.userId}, {fields: Query.fieldsArray(permissionDeps)}).observe({'changed': republish});
 
 
   // handlers
@@ -160,14 +160,14 @@ var excludeUserFields = function(permissions, doc, isUpdate) {
   if (hasAccess && isSameCity) {
     useFields.push(userFieldsData);
 
-    var available = Util.property(doc, 'profile.available') || [];
+    var available = Object.property(doc, 'profile.available') || [];
     
     // only publish e-mailadresses of user who accepted that
-    if (Util.someIn(['drink','lunch','email','cowork','couchsurf'], available))
+    if (Array.someIn(['drink','lunch','email','cowork','couchsurf'], available))
       useFields.push(userFieldsEmail);
   
     // only publish phone/skype information of user who accepted that
-    if (Util.someIn(['call', 'couchsurf'], available))
+    if (Array.someIn(['call', 'couchsurf'], available))
       useFields.push(userFieldsCall);
   }
 

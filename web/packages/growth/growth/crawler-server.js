@@ -2,13 +2,13 @@ var _busy = false;
 
 // fetch usernames from github related to all cities from hckrs.io
 var fetchGithubUsersInAllCities = function() {
-  async.forEachSeries(CITYKEYS, Meteor.bindEnvironment(fetchGithubUsersInCity));
+  async.forEachSeries(City.identifiers(), Meteor.bindEnvironment(fetchGithubUsersInCity));
 }
 
 // fetch from github all usersnames related to the given city.
 // These usernames will be stored in the database.
 var fetchGithubUsersInCity = function(city) {
-  check(city, Match.In(CITYKEYS));
+  check(city, Match.In(City.identifiers()));
   
   if (_busy)
     throw new Meteor.Error(500, "busy");
@@ -17,7 +17,7 @@ var fetchGithubUsersInCity = function(city) {
   this.unblock();
   
   // query
-  var cityName = CITYMAP[city].name;
+  var cityName = City.lookup(city).name;
   var query = "type:user location:" + cityName.replace(' ', '+');
 
 
@@ -93,7 +93,7 @@ var fetchSingleUser = function(city, userLogin) {
     user.createdAt = new Date(user.createdAt);
     user.updatedAt = new Date(user.updatedAt);
     user.city = city;
-    user = Util.omitEmpty(user);
+    user = Object.omitEmpty(user);
     
     if (!user.email)
       return; // user don't have email

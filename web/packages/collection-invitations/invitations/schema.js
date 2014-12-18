@@ -1,5 +1,5 @@
 
-Invitations = new Meteor.Collection('invitations');
+
 
 // Invitations is a collection that contains signup invitation codes
 // new users must have such code in order to signup

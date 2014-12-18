@@ -38,6 +38,7 @@ var routes = [
 
 // the routes that DON'T require login
 var noLoginRequired = [
+  'docs',
   'about',
   'frontpage',
   'login',
@@ -100,7 +101,7 @@ LogoutController = DefaultController.extend({
 
 // set meta data based on current city
 var setMetaData = function() {
-  var city = CITYMAP[Session.get('currentCity')];
+  var city = City.lookup(Session.get('currentCity'));
   var title, description;
 
   // modify meta data

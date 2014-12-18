@@ -15,7 +15,7 @@ Meteor.setInterval(function() {
 
 
 var getBackground = function() {
-  var city = CITYMAP[Session.get('currentCity')] || {};
+  var city = City.lookup(Session.get('currentCity')) || {};
   var date = Session.get('date');
   var isNight = date && (date.getHours() < 7 || date.getHours() >= 19);
 
@@ -121,15 +121,15 @@ Template.citySelect.helpers({
 
     var createCountryEntry = function(cities, countryCode) {
       return {
-        "name": COUNTRYCODES[countryCode] || "Other",
+        "name": City.countryName(countryCode) || "Other",
         "cities": _.map(cities, createCityEntry)
       };
     }
 
-    return _.sortBy(_.map(COUNTRYMAP, createCountryEntry), 'name');
+    return _.sortBy(_.map(_.groupBy(City.cities(), 'country'), createCountryEntry), 'name');
   },
   "selected": function(city, current) {
-    if (_.isString(current) && CITYMAP[current])
+    if (_.isString(current) && City.lookup(current))
       return current == city ? 'selected' : '';
     else
       return Session.equals('currentCity', city) ? 'selected' : '';

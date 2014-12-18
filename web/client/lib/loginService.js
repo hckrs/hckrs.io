@@ -146,7 +146,7 @@ checkInvitation = function() {
 
         Router.scrollToTop();
 
-        log("Error", err);
+        console.log("Error", err);
 
         // log to google analytics
         GAnalytics.event('Invitations', 'invalid phrase', phrase);
@@ -181,7 +181,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
         if (err) {
           Session.set('isIncompleteProfileError', true);
           Router.scrollToTop();
-          log(err);
+          console.log(err);
         } else {
           Session.set('isIncompleteProfileError', false);
           goToEntryPage();
@@ -205,7 +205,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
       Meteor.call('requestAccess', function(err) {
         if (err) {
           Router.scrollToTop();
-          log(err);
+          console.log(err);
         } else {
           goToEntryPage();
         }
@@ -267,7 +267,7 @@ var loginCallback = function(err) {
 
     Session.set('serviceLoginError', message);
     Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 12000);
-    log(err);
+    console.log(err);
 
   } else {
 
@@ -283,7 +283,7 @@ var loginWithService = function(event) {
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
   var options = serviceOptions[service];
-  var Service = Util.capitaliseFirstLetter(service);
+  var Service = String.capitaliseFirstLetter(service);
 
   // log
   GAnalytics.event("LoginService", "login", service);
@@ -312,7 +312,7 @@ Template.main.events({
 // add an external service to current user's account
 var global = this;
 var _addService = function(service, options, onSuccessCallback) {
-  var Service = window[Util.capitaliseFirstLetter(service)];
+  var Service = window[String.capitaliseFirstLetter(service)];
 
 
   // request a token from the external service
@@ -328,7 +328,7 @@ var _addService = function(service, options, onSuccessCallback) {
           Session.set('isAddServiceError_'+service, true);
           Meteor.setTimeout(function() { Session.set('isAddServiceError_'+service, false); }, 10000);
         } else {
-          log(err);
+          console.log(err);
         }
 
         // log

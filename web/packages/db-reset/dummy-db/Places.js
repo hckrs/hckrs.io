@@ -2,7 +2,7 @@
   var city, cityUserIds;
 
   // setup cityUserIds
-  cityUserIds = _.object(CITYKEYS, _.map(CITYKEYS, function(){ return [] }));
+  cityUserIds = _.object(City.identifiers(), _.map(City.identifiers(), function(){ return [] }));
 
   // fill cityUserIds
   Users
@@ -19,8 +19,8 @@
         "createdAt" : new Date("2014-10-23T11:12:34.321Z"),
         "description" : "Passionate people, great softwares",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "Sogilis",
@@ -34,8 +34,8 @@
         "createdAt" : new Date("2014-10-23T11:13:22.899Z"),
         "description" : "The place to be for entrepreneurs and developers in Grenoble",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "Co-work",
@@ -50,8 +50,8 @@
         "createdAt" : new Date("2014-09-13T15:29:00.472Z"),
         "description" : "On the 'deals' page you will find a free trail day.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "La Cordée — Charpennes",
@@ -65,8 +65,8 @@
         "createdAt" : new Date("2014-09-16T20:55:07.573Z"),
         "description" : "Coworking space for freelance media producers and web makers.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "L'atelier des médias",
@@ -80,8 +80,8 @@
         "createdAt" : new Date("2014-09-16T21:20:24.786Z"),
         "description" : "@ L'antre-autre, 11 Rue Terme",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "Meetup PostgreSQL",
@@ -94,8 +94,8 @@
         "createdAt" : new Date("2014-09-16T20:58:58.950Z"),
         "description" : "Lyon's hacker space. Often open on Tuesday nights starting at 8PM.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "Laboratoire ouvert lyonnais",
@@ -109,8 +109,8 @@
         "createdAt" : new Date("2014-09-13T15:33:48.343Z"),
         "description" : "On the 'deals' page you will find a free trail day.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : true,
         "title" : "La Cordée — Villefranche",
@@ -124,13 +124,13 @@
   var public = function() {
     return [
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-16T21:04:00.431Z"),
         "description" : "Ecological coworking space.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "Écoworking",
@@ -140,13 +140,13 @@
       
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-16T21:07:12.683Z"),
         "description" : "Tuesday from 2PM to 9AM,\nSaturday from 10AM to 6PM",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "Fabrique d’Objets Libres",
@@ -155,13 +155,13 @@
         "url" : "http://www.fablab-lyon.fr/",
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-16T21:10:47.981Z"),
         "description" : "look on the 'adenda' page for the dates.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "Javascript user group",
@@ -170,13 +170,13 @@
         "url" : "http://lyonjs.org/",
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-16T21:28:23.432Z"),
         "description" : "Check the 'agenda' page for dates.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "Microsoft user group",
@@ -184,13 +184,13 @@
         "updatedAt" : new Date("2014-09-16T21:32:01.042Z"),
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-13T11:58:14.504Z"),
         "description" : "On the 'deals' page you will find a free trail day.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "La Cordée — Liberté",
@@ -199,13 +199,13 @@
         "url" : "http://www.la-cordee.net/",
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-16T21:25:01.113Z"),
         "description" : "3rd Tuesday of the month",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "Java user group",
@@ -214,13 +214,13 @@
         "url" : "http://www.lyonjug.org/",
       },
       {
-        "city" : (city = Random.choice(CITYKEYS)),
+        "city" : (city = Random.choice(City.identifiers())),
         "userId" : Random.choice(cityUserIds[city]),
         "createdAt" : new Date("2014-09-13T12:02:55.908Z"),
         "description" : "On the 'deals' page you will find a free trail day.",
         "location" : {
-            lat: CITYMAP[city].latitude + (Random.fraction() * 0.10 - 0.05),
-            lng: CITYMAP[city].longitude + (Random.fraction() * 0.10 - 0.05)
+            lat: City.lookup(city).latitude + (Random.fraction() * 0.10 - 0.05),
+            lng: City.lookup(city).longitude + (Random.fraction() * 0.10 - 0.05)
         },
         "private" : false,
         "title" : "La Cordée — Perrache",
@@ -231,5 +231,5 @@
     ];
   }
 
-  return _.flatten(_.map(CITYKEYS, private)).concat(public());
+  return _.flatten(_.map(City.identifiers(), private)).concat(public());
 })();
