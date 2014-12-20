@@ -89,7 +89,7 @@ Template.registerHelper('invitationLimitReached', function() {
   return Session.get('invitationLimitReached');
 });
 Template.registerHelper('tellUsMore', function() {
-  return UserProp('isIncompleteProfile');
+  return Users.myProp('isIncompleteProfile');
 });
 Template.registerHelper('isInvited', function() {
   return checkInvited();
@@ -146,7 +146,7 @@ checkInvitation = function() {
 
         Router.scrollToTop();
 
-        log("Error", err);
+        console.log("Error", err);
 
         // log to google analytics
         GAnalytics.event('Invitations', 'invalid phrase', phrase);
@@ -176,12 +176,12 @@ checkInvitation = function() {
 // check on server if this is correct
 checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
   if (Meteor.user().isIncompleteProfile) {
-    exec(function() {
+    Util.exec(function() {
       Meteor.call('requestProfileCompleted', function(err) {
         if (err) {
           Session.set('isIncompleteProfileError', true);
           Router.scrollToTop();
-          log(err);
+          console.log(err);
         } else {
           Session.set('isIncompleteProfileError', false);
           goToEntryPage();
@@ -198,14 +198,14 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
 // observe if the fields email and name are filled in, after saving
 // also the user must have filled in a verified e-mailaddress
 checkAccess = function() { /* GLOBAL, called from router.js */
-  exec(function() {
+  Util.exec(function() {
     var user = Meteor.user();
     var profile = user.profile;
     if (user.isAccessDenied && !user.isIncompleteProfile && checkInvited() && verifiedEmail()) {
       Meteor.call('requestAccess', function(err) {
         if (err) {
           Router.scrollToTop();
-          log(err);
+          console.log(err);
         } else {
           goToEntryPage();
         }
@@ -216,17 +216,17 @@ checkAccess = function() { /* GLOBAL, called from router.js */
 
 // check if user is invited
 var checkInvited = function() { //GLOBAL, used in hacker.js
-  return !UserProp('isUninvited');
+  return !Users.myProp('isUninvited');
 }
 
 // check if user's profile e-mail address is verified
 var verifiedEmail = function() { //GLOBAL, used in hacker.js
-  return !!_.findWhere(UserProp('emails'), {address: UserProp('profile.email'), verified: true});
+  return !!_.findWhere(Users.myProp('emails'), {address: Users.myProp('profile.email'), verified: true});
 }
 
 // check if user's profile e-mail address is not verified
 var isUnverifiedEmail = function() {
-  return UserProp('profile.email') && !verifiedEmail();
+  return Users.myProp('profile.email') && !verifiedEmail();
 }
 
 
@@ -267,7 +267,7 @@ var loginCallback = function(err) {
 
     Session.set('serviceLoginError', message);
     Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 12000);
-    log(err);
+    console.log(err);
 
   } else {
 
@@ -283,7 +283,7 @@ var loginWithService = function(event) {
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
   var options = serviceOptions[service];
-  var Service = capitaliseFirstLetter(service);
+  var Service = String.capitaliseFirstLetter(service);
 
   // log
   GAnalytics.event("LoginService", "login", service);
@@ -312,7 +312,7 @@ Template.main.events({
 // add an external service to current user's account
 var global = this;
 var _addService = function(service, options, onSuccessCallback) {
-  var Service = window[capitaliseFirstLetter(service)];
+  var Service = window[String.capitaliseFirstLetter(service)];
 
 
   // request a token from the external service
@@ -328,7 +328,7 @@ var _addService = function(service, options, onSuccessCallback) {
           Session.set('isAddServiceError_'+service, true);
           Meteor.setTimeout(function() { Session.set('isAddServiceError_'+service, false); }, 10000);
         } else {
-          log(err);
+          console.log(err);
         }
 
         // log

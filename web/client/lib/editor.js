@@ -69,7 +69,7 @@ Editor = function(collection) {
     return state.get('active');
   }
   var show = function() {
-    return mode() === 'add' || (mode() === 'edit' && active() && selected() && hasOwnerPermission(selected()));
+    return mode() === 'add' || (mode() === 'edit' && active() && selected() && Users.hasOwnerPermission(selected()));
   }
   var action = function() {
     switch (mode()) {

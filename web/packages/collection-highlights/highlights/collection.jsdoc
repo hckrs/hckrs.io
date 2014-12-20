@@ -1,0 +1,12 @@
+/**
+ * @summary Highlights
+ * @locus Anywhere
+ */
+Collection.Highlights = new Meteor.Collection('highlights');
+Collection.HighlightsSort = new Meteor.Collection('highlightsSort');
+
+
+// alias
+Highlights = Collection.Highlights;
+HighlightsSort = Collection.HighlightsSort;
+

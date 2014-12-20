@@ -11,26 +11,26 @@ InvitationsController = DefaultController.extend({
 
 Template.invitations_partial.helpers({
   'unusedTotal': function() { 
-    return UserProp('invitations'); 
+    return Users.myProp('invitations'); 
   },
   'invitedTotal': function() { 
     return Invitations.find({broadcastUser: Meteor.userId()}).count(); 
   },
   'invitedUserViews': function() { 
     var getUserView = function(u) { 
-      return userView(u.receivingUser); 
+      return Users.userView(u.receivingUser); 
     };
     return Invitations.find({broadcastUser: Meteor.userId()}, {fields: {receivingUser: 1}, sort: {createdAt: 1}}).map(getUserView);
   },
   'availableSlots': function() { 
-    return _.range(UserProp('invitations')); 
+    return _.range(Users.myProp('invitations')); 
   },
   'link': function() { 
-    var inviteUrl = userInviteUrl(UserProps(['invitationPhrase']));
+    var inviteUrl = Users.userInviteUrl(Users.myProps(['invitationPhrase']));
     return inviteUrl;
   },
   'linkUrl': function() { 
-    var inviteUrl = userInviteUrl(UserProps(['invitationPhrase']));
+    var inviteUrl = Users.userInviteUrl(Users.myProps(['invitationPhrase']));
     return encodeURIComponent(inviteUrl); 
   }
 });

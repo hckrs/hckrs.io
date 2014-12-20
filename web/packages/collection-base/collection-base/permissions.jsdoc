@@ -1,0 +1,46 @@
+
+// ALLOW and DENY rules specifies which database queries are allowed
+// and which not. This will be validated on the server
+
+Permissions = {}
+
+var True = function() { return true; }
+var False = function() { return false; }
+var Admin = function(userId) { return Users.hasAdminPermission(userId); }
+
+
+// shorthands
+
+Permissions.TRUE = True;
+Permissions.FALSE = False;
+
+/**
+ * @summary *Allow* ***OR*** *Deny*, ALL operations (insert, update, remove).
+ * @locus Anywhere
+ */
+Permissions.ALL = { 
+  insert: True, 
+  update: True, 
+  remove: True 
+};
+
+/**
+ * @summary *Allow* ***OR*** *Deny*, NONE of the operations (insert, update, remove).
+ * @locus Anywhere
+ */
+Permissions.NONE = { 
+  insert: False, 
+  update: False, 
+  remove: False 
+};
+
+/**
+ * @summary *Allow* ***OR*** *Deny*, for ADMINS all operations (insert, update, remove).
+ * @locus Anywhere
+ */
+Permissions.ADMIN = { 
+  insert: Admin, 
+  update: Admin, 
+  remove: Admin 
+};
+

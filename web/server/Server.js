@@ -35,7 +35,7 @@ Meteor.startup(function() {
 var runAfterStartupDelayed = function() {
 
   // update user profile picture on startup
-  ServicesConfiguration.updateProfilePictures();
+  Account.userData.updateProfilePictures();
 }
 
 
@@ -43,7 +43,7 @@ var runAfterStartupDelayed = function() {
 var uptimeLogging = function() {
   var startupDate = new Date();
   var logging = function() { 
-    log("[Server Uptime]: " + moment(startupDate).fromNow(true)); 
+    console.log("[Server Uptime]: " + moment(startupDate).fromNow(true)); 
   }
   Meteor.setInterval(logging, 15 * 60 * 1000);
 }

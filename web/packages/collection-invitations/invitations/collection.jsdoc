@@ -1,0 +1,10 @@
+/**
+ * @summary Invitations
+ * @locus Anywhere
+ */
+Collection.Invitations = new Meteor.Collection('invitations');
+
+
+// alias
+Invitations = Collection.Invitations;
+

@@ -29,7 +29,7 @@ DefaultAdminController = DefaultController.extend({
     Spin.default = { color: '#ccc' }
     
     // check permissions to view admin panel
-    if (!hasAmbassadorPermission())
+    if (!Users.hasAmbassadorPermission())
       this.redirect('frontpage');
 
     this.next();

@@ -4,7 +4,7 @@ AdminDealsController = DefaultAdminController.extend({
   template: 'admin_deals',
   waitOn: function () {
     var city = Session.get('currentCity');
-    var isAdmin = hasAdminPermission();
+    var isAdmin = Users.hasAdminPermission();
     return [ 
       Meteor.subscribe('deals', isAdmin ? 'all' : city),
     ];

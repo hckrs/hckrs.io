@@ -1,0 +1,14 @@
+
+Email = {};
+
+/**
+ * @summary Send a plain text email.
+ * Ambassadors can use this directly from the client.
+ * @param options {Object} See [meteor documentation](http://docs.meteor.com/#/full/email_send).
+ * @param forceSendingInDevelopMode {Boolean} On test machines it will NOT be simulated when this flag is setted to **true**. This means that the user will receive the email in his inbox.
+ * @param [callback] {Function} optional callback function *(Client only)*.
+ * @locus Anywhere
+ */
+Email.send = function(options, forceSendingInDevelopMode, cb) {
+  Meteor.call('EmailSend', options, forceSendingInDevelopMode, cb);
+}

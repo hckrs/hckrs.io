@@ -5,7 +5,7 @@ var URL = Npm.require('url');
 // SERVER SIDE routes
 
 Router.route('/mandrill-webhook', function() {
-  var events = EJSON.parse(property(this.request.body, 'mandrill_events') || "[]");
+  var events = EJSON.parse(Object.property(this.request.body, 'mandrill_events') || "[]");
 
   var addEvent = function(event) {
     // event format: http://help.mandrill.com/entries/24466132-Webhook-Format 
@@ -54,14 +54,14 @@ Router.route('/:catchAll?', function () {
     var isLocalhost = Url.isLocalhost(url);
     
     // check if there is a valid city present in the url
-    if (!city || !CITYMAP[city]) {
+    if (!city || !City.lookup(city)) {
 
       // this subdomain doesn't exist or isn't a valid city
       
       // we try to find the closest city
       var userIp = getClientIp(this.request);
-      var location = requestLocationForIp(userIp);
-      var closestCity = findClosestCity(location);    
+      var location = Geo.requestLocationForIp(userIp);
+      var closestCity = Geo.findClosestCity(location);    
       
       if (closestCity) {
 

@@ -1,0 +1,10 @@
+/**
+ * @summary Emails Outbound
+ * @locus Anywhere
+ */
+Collection.EmailsOutbound = new Meteor.Collection('emailsOutbound');
+
+
+// alias
+EmailsOutbound = Collection.EmailsOutbound;
+

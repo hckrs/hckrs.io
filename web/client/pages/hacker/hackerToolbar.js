@@ -2,8 +2,8 @@
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
-var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
+var hackerProp = function(field) { return Users.prop(hackerId(), field); }
+var hackerProps = function (fields) { return Users.props(hackerId(), fields); }
 
 
 // state
@@ -75,7 +75,7 @@ Template.hackerToolbar.events({
     var userId = hackerId();
 
     // update invitations count
-    exec(function() {
+    Util.exec(function() {
       Users.update(userId, {$set: {invitations: invitations}});
     });
 
@@ -83,7 +83,7 @@ Template.hackerToolbar.events({
   },
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
-    var cityName = CITYMAP[city].name;
+    var cityName = City.lookup(city).name;
     var userId = hackerId();
     var userName = hackerProp('profile.name');
 
@@ -161,7 +161,7 @@ Template.hackerToolbar.helpers({
     return _.findWhere(hackerProp('emails'), {address: hackerProp('profile.email'), verified: false});
   },
   'statusLabels': function() {
-    return userStatusLabel(hackerId());
+    return Users.userStatusLabel(hackerId());
   },
   'active': function(panel) {
     return state.equals('activePanel', panel) ? 'active' : '';
@@ -170,7 +170,7 @@ Template.hackerToolbar.helpers({
     return hackerProp(flag) ? 'active' : '';
   },
   'staff': function() {
-    return hasAmbassadorPermission(hackerId());
+    return Users.hasAmbassadorPermission(hackerId());
   }
 });
 

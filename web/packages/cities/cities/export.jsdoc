@@ -1,0 +1,41 @@
+City = {}
+
+var _cities = _.sortBy(cities, 'name');
+var _citiesByIdentifier = _.indexBy(cities, 'key');
+var _cityIdentifiers = _.pluck(cities, 'key').sort()
+
+
+/**
+ * @summary Get a list containing all *city records*, ordered by city name.
+ * @locus Anywhere
+ */
+City.cities = function() {
+  return _cities;
+}
+
+/**
+ * @summary Get a list containing all *city identifiers*. 
+ * For example, identifiers are used in subdomains.
+ * @locus Anywhere
+ */
+City.identifiers = function() {
+  return _cityIdentifiers;
+}
+
+/**
+ * @summary Get a *city record* by specifying the *city identifier*.
+ * @locus Anywhere
+ * @param {String} cityIdentifier The city identifier, for example **lyon**.
+ */
+City.lookup = function(cityIdentifier) {
+  return _citiesByIdentifier[cityIdentifier];
+}
+
+/**
+ * @summary Get the full name of an country by specifying the country code.
+ * @locus Anywhere
+ * @param {String} countryCode 2-character countrycode.
+ */
+City.countryName = function(countryCode) {
+  return codes[countryCode];
+}

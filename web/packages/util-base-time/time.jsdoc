@@ -1,0 +1,60 @@
+Time = {}
+
+/**
+ * @summary Get a new Date() object by using format YYYY-MM-DD hh::mm:ss
+ * @param  {String} dateString A string in YYYY-MM-DD hh::mm:ss format.
+ * @locus Anywhere
+ */
+Time.newDate = function(dateString) {
+  if (!dateString)
+    return moment().toDate();
+  return moment(dateString, "YYYY-MM-DD hh:mm:ss").toDate();
+}
+
+/**
+ * @summary Display date and time  (in the specified format).
+ * @param  {Date} date Some date object.
+ * @param {String} [format] Specify format, otherwise YYYY/MM/DD hh::mm will be used.
+ * @locus Anywhere
+ */
+Time.dateTimeFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "YYYY/MM/DD hh:mm";
+  return moment(date).format(format);
+}
+
+/**
+ * @summary Display date only  (in the specified format).
+ * @param  {Date} date Some date object.
+ * @param {String} [format] Specify format, otherwise YYYY/MM/DD will be used.
+ * @locus Anywhere
+ */
+Time.dateFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "YYYY/MM/DD";
+  return moment(date).format(format);
+}
+
+/**
+ * @summary Display time only (in the specified format).
+ * @param  {Date} date Some date object.
+ * @param {String} [format] Specify format, otherwise hh::mm will be used.
+ * @locus Anywhere
+ */
+Time.timeFormat = function(date, format) {
+  if (!date) return "";
+  if (!_.isString(format)) 
+    format = "hh:mm";
+  return moment(date).format(format);
+}
+
+/**
+ * @summary Display calendar date as human readable string.
+ * @param  {Date} date Some date object.
+ * @locus Anywhere
+ */
+Time.calendar = function(date) {
+  return moment(date).calendar();
+}

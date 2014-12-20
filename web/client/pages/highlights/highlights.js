@@ -1,7 +1,7 @@
 
 var selector = function() {
   var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+  return Users.hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
 }
 
 // get sorted highlights
@@ -9,7 +9,7 @@ HighlightsSorted = function(options) {
   var city = Session.get('currentCity');
   var highlights = Highlights.find(selector(), options).fetch();
   var sort = (HighlightsSort.findOne({city: city}) || {}).sort || [];
-  return sortedDocs(highlights, sort);
+  return Query.sortedDocs(highlights, sort);
 }
 
 
@@ -28,7 +28,7 @@ HighlightsController = DefaultController.extend({
 
     // redirect to hackers page if there are no highlights
     // except for ambassadors and admins
-    if (this.ready() && Highlights.find(selector()).count() === 0 && !hasAmbassadorPermission())
+    if (this.ready() && Highlights.find(selector()).count() === 0 && !Users.hasAmbassadorPermission())
       this.redirect('hackers');
     
     this.next();
@@ -121,7 +121,7 @@ var setupOnePageScroll = function(tmpl) {
   });
 
   // make sortable for ambassadors
-  if (hasAmbassadorPermission())
+  if (Users.hasAmbassadorPermission())
     HighlightEditor.initSortable();
 
   return $onePageScroll;
