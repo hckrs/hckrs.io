@@ -142,6 +142,8 @@ var pageView = function(route) {
 }
 
 
+
+
 // set meta data
 Router.onRun(setMetaData);
 
@@ -157,45 +159,39 @@ Router.onRun(pageView);
 
 
 
-// save and restore scroll state for every page
 
+
+// save and restore scroll state for every page
 var scrollState = new State('routerScrollState', {
   routes: {}
 });
 
-Router.restoreScrollState = function() {
-  var params = Router.current().params;
-  var route = Router.current().path;
-  var top = scrollState.get(route);
-
-  if (top === 0 && params.hash)
-    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});
-  else
-    $(window).scrollTop(top || 0);
-}
-
 var scrollHandler = function(event) {
-  var route = Router.current().path;
+  var route = Router.current().url;
   var top = $(window).scrollTop();
   scrollState.set(route, top);
 }
 
 Meteor.startup(function() {
-  var routes = _.map(Router.routes, _.property('name'));
-
-  _.each(Template, function(template, templateName) {
-    if (_.contains(routes, templateName)) { // is route template
-      var prevRenderFunc = template.rendered;
-      template.rendered = function() {
-        if (prevRenderFunc) prevRenderFunc.call(this);
-        Router.restoreScrollState(); // restore scroll state
-      }
-    }
-  });
-
   $(window).on("scrollstop", scrollHandler);
 });
 
+// Restore scroll state after route is loaded
+Router.restoreScrollState = function() {
+  var params = Router.current().getParams();
+  var route = Router.current().url;
+  var top = scrollState.get(route);
+
+  Tracker.afterFlush(function() {
+    if (top === 0 && params.hash)
+      $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});
+    else
+      $(window).scrollTop(top || 0);  
+  });
+}
+
+// Restore scroll state after route is loaded
+Router.onAfterAction(Router.restoreScrollState);
 
 
 
