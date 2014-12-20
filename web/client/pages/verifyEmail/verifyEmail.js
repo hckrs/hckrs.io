@@ -12,13 +12,15 @@ VerifyEmailController = DefaultController.extend({
         GAnalytics.event('EmailVerification', 'verified user', user._id);
       else GAnalytics.event('EmailVerification', 'invalid token', token);
     });
+
+    this.next();
   },
   waitOn: function () {
     return [];
   },
   action: function() { 
     Accounts.verifyEmail(this.params.token, checkAccess);
-    Router.go('hackers');
-    this.stop();
+    this.redirect('hackers');
+    this.next();
   }
 });

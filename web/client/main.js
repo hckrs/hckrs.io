@@ -1,7 +1,7 @@
 
 /* GENERAL */
 
-// update datetime in session every second 
+// update datetime in session every second
 // reactive templates will update automatically
 
 Session.set('date', new Date());
@@ -10,16 +10,16 @@ Meteor.setInterval(function() {
 }, 60000);
 
 
-// change background image depending on time 
+// change background image depending on time
 // 1. night,  2. in daytime
 
 
 var getBackground = function() {
-  var city = CITYMAP[Session.get('currentCity')] || {};  
+  var city = CITYMAP[Session.get('currentCity')] || {};
   var date = Session.get('date');
   var isNight = date && (date.getHours() < 7 || date.getHours() >= 19);
-  
-  if (isNight) 
+
+  if (isNight)
     return city.backgroundImageNight || "/img/backgrounds/default_night.jpg";
   return city.backgroundImage || "/img/backgrounds/default.jpg";
 }
@@ -37,16 +37,13 @@ UI.body.rendered = function() {
 
 
 
-
-
-
 /* HEADER */
 
 Template.header.helpers({
   'backgroundImage': function() {
     return getBackground();
   },
-  'headerStyle': function() { 
+  'headerStyle': function() {
     return Interface.getHeaderStyle();
   },
   'hidden': function() {
@@ -63,12 +60,12 @@ Template.header.events({
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
     exec(function() {
-      Router.goToCity(city);  
+      Router.goToCity(city);
     });
   }
 });
 
-// header rendering 
+// header rendering
 // hide or show header based on scrolling
 Template.main.rendered = function() {
   var prevY = 0, newY = 0;
@@ -111,7 +108,7 @@ Meteor.startup(function() {
 
 Template.citySelect.helpers({
   "countries": function() {
-    
+
     var createCityEntry = _.identity;
 
     if (hasAdminPermission()) {
@@ -121,10 +118,10 @@ Template.citySelect.helpers({
         return city;
       }
     }
-    
+
     var createCountryEntry = function(cities, countryCode) {
-      return { 
-        "name": COUNTRYCODES[countryCode] || "Other", 
+      return {
+        "name": COUNTRYCODES[countryCode] || "Other",
         "cities": _.map(cities, createCityEntry)
       };
     }
@@ -138,6 +135,3 @@ Template.citySelect.helpers({
       return Session.equals('currentCity', city) ? 'selected' : '';
   }
 });
-
-
-

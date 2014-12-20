@@ -1,12 +1,13 @@
 AdminController = DefaultAdminController.extend({
   onBeforeAction: function() {
     Router.go('admin_hackers');
+    this.next();
   }
 });
 
 Template.admin_header.helpers({
   'active': function(route) {
-    return Router.current().route.name === route ? 'active' : '';
+    return Router.current().route.getName() === route ? 'active' : '';
   }
 })
 
@@ -85,5 +86,3 @@ Field.url = {
     return Safe.url(val, {text: text});
   }
 }
-
-

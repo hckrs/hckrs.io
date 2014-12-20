@@ -26,9 +26,11 @@ Template.invitations_partial.helpers({
     return _.range(UserProp('invitations')); 
   },
   'link': function() { 
-    return Router.routes['invite'].url(); 
+    var inviteUrl = userInviteUrl(UserProps(['invitationPhrase']));
+    return inviteUrl;
   },
   'linkUrl': function() { 
-    return encodeURIComponent(Router.routes['invite'].url()); 
+    var inviteUrl = userInviteUrl(UserProps(['invitationPhrase']));
+    return encodeURIComponent(inviteUrl); 
   }
 });

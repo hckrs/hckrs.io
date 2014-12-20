@@ -21,7 +21,6 @@ underscore
 stylus
 mrt:collection-hooks
 iron:router
-mrt:iron-router-progress
 datariot:ganalytics
 aslagle:reactive-table
 mrt:mailchimp
@@ -35,3 +34,5 @@ reactive-var
 chrismbeckett:fontawesome4
 digioak:codemirror
 hckrs:summernote
+hckrs:spin
+

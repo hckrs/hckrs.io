@@ -10,7 +10,10 @@ Schemas.Highlight = new SimpleSchema([
   {
     "imageUrl": {
       type: String,
-      label: 'Image URL'
+      label: 'Image URL',
+      regEx: SimpleSchema.RegEx.Url,
+      autoValue: AutoValue.prefixUrlWithHTTP,
+      autoform: { type: 'url' },
     },
     "title": {
       type: String,
@@ -26,6 +29,7 @@ Schemas.Highlight = new SimpleSchema([
       optional: true,
       regEx: SimpleSchema.RegEx.Url,
       autoValue: AutoValue.prefixUrlWithHTTP,
+      autoform: { type: 'url' },
       label: 'Website URL'
     },
   }

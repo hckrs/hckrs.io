@@ -1,36 +1,37 @@
 
 DefaultController = RouteController.extend({
   layoutTemplate: "main",
-  onRun: function() {
-
-  },
+  loadingTemplate: "loading",
   onBeforeAction: function() {
+
+    /* Default Spin design */
+    Spin.default = { color: '#fff' }
     
     // wait on global subscriptions ready
-    this.wait({ready: Subscriptions.ready}); 
-    
+    if (Subscriptions.ready())
+      this.next();
+    else
+      this.render('loading');
   },
   onAfterAction: function() {
 
     // change the style of the navigation header to default, every route
     Interface.setHeaderStyle('default');
-
-  },
-  onStop: function() {
-
-
   }
 });
 
 DefaultAdminController = DefaultController.extend({
   layoutTemplate: "admin_layout",
+  loadingTemplate: "loading",
   onBeforeAction: function() {
 
-    if (!this.ready())
-      return; // wait for subscriptions
-
+    /* Default Spin design */
+    Spin.default = { color: '#ccc' }
+    
     // check permissions to view admin panel
     if (!hasAmbassadorPermission())
-      Router.go('frontpage');
+      this.redirect('frontpage');
+
+    this.next();
   }
 });

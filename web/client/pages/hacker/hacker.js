@@ -5,14 +5,14 @@ HackerController = DefaultController.extend({
   waitOn: function () {
     return [];
   },
-  onRun: function() {
-    Meteor.autorun(function(c) {
-      if (Subscriptions.ready()) {
-        Session.set('hackerId', Url.userIdFromUrl());
-        Session.set('hackerEditMode', UserProp('isAccessDenied'));  
-        c.stop();    
-      }
-    });
+  onBeforeAction: function() {
+    if (Subscriptions.ready() && !this.initialized) {
+      var userId = (userForBitHash(this.params.bitHash) || {})._id;
+      Session.set('hackerId', userId);
+      Session.set('hackerEditMode', UserProp('isAccessDenied'));  
+      this.initialized = true;
+    }
+    this.next();
   }
 });
 
@@ -251,7 +251,7 @@ Template.hackerEdit.helpers({
 
 Template.hackerView.helpers({
   "urlCurrentUser": function() { 
-    return Router.routes['hacker'].url(UserProp("_id")); 
+    return userProfileUrl(Meteor.userId()); 
   },
   "isCompanyOrLocation": function() {
     return !!(this.profile.company || this.profile.location);

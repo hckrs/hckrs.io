@@ -90,12 +90,12 @@
                   <div style="background-image:url({{UserProp 'profile.picture'}});" class="pictureView small clickable"></div>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a href="{{pathFor 'hacker' _id=CurrentUserId redirect=true}}"><i class="glyphicon glyphicon-user"></i> {{UserProp 'profile.name'}}</a></li>
+                  <li><a href="{{UserProfileUrl CurrentUserId}}"><i class="glyphicon glyphicon-user"></i> {{UserProp 'profile.name'}}</a></li>
                   {{#unless UserProp 'isAccessDenied'}}
                     <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite hackers ({{UserProp 'invitations'}})</a></li>
                   {{/unless}}
                   <li class="divider"></li>
-                  <li><a href="" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>
+                  <li><a href="{{pathFor 'logout'}}" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>
                 </ul>
               </div>
             </div>

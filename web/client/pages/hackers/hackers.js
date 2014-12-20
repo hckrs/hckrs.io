@@ -90,20 +90,24 @@ Template.hackersToolbar.helpers({
   },
   'schema': function() {
     return new SimpleSchema({
+      "subject": { type: String },
+      "message": { type: String },
       "group": {
         type: String,
-        allowedValues: MAILING_VALUES
+        allowedValues: MAILING_VALUES,
+        autoform: {
+          type: 'select',
+          firstOption: false,
+          options: [
+            {value: 'local_ambassador_messages', label: 'localMessage'},
+            {value: 'local_meetup_announcements', label: 'localMeetup'},
+            {value: 'local_meetup_announcements', label: 'localMeetupReminder'},
+          ]
+        }
       },
-      "subject": {
-        type: String
-      },
-      "message": {
-        type: String
-      }
     });
   }
 });
-
 
 
 /* events */
@@ -162,11 +166,13 @@ var setTemplate = function() {
       $subject = $mailing.find('[name="subject"]'),
       $message = $mailing.find('[name="message"]'),
       $option = $mailing.find('[name="group"] option:selected'),
-      templateName = $option.attr('template'),
+      templateName = $option.text(),
       template = loadEmailTemplate(templateName);
   $subject.val(template.subject);
   $message.val(template.message);
 }
+
+
 
 var sendMailing = function(mail, isTest, cb) {
   

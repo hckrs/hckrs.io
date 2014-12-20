@@ -1,7 +1,7 @@
-// ROUTES 
+// ROUTES
 
 var routes = [
-  
+
   // staff routes
   [ 'admin'                 , '/admin'                  ],
   [ 'admin_dashboard'       , '/admin/dashboard'        ],
@@ -13,60 +13,86 @@ var routes = [
   [ 'admin_emailTemplates'  , '/admin/emailTemplates'   ],
 
   // normal routes
+  [ 'frontpage'    , '/'                     ],
   [ 'about'        , '/about'                ],
   [ 'agenda'       , '/agenda'               ],
   [ 'books'        , '/books'                ],
-  [ 'frontpage'    , '/'                     ],
   [ 'hackers'      , '/hackers'              ],
   [ 'highlights'   , '/highlights'           ],
   [ 'invitations'  , '/invitations'          ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
-  [ 'verifyEmail'  , '/verify-email/:token'  ],
   
-  // special routes
-  [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
+  // special routes (which will redirect)
+  [ 'login'        , '/login'                ],
+  [ 'logout'       , '/logout'               ],
+  [ 'verifyEmail'  , '/verify-email/:token'  ],
   [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
-  [ 'invite'       , /^\/\+\/(.*)/           ], // e.g. /+/---_--
+  [ 'invite'       , '/+/:inviteBitHash/'    ], // e.g. /+/---_--
+
+  // bare routes (must defined as last in this list)
+  [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
+  
 
 ];
 
 // the routes that DON'T require login
 var noLoginRequired = [
   'about',
-  'frontpage', 
-  'invite', 
+  'frontpage',
+  'login',
+  'invite',
   'verifyEmail',
 ];
 
 
 
-/* 
-  special entry routes 
-  includes refer information 
+/*
+  special entry routes
+  includes refer information
 */
 
 InviteController = DefaultController.extend({
   template: 'frontpage',
-  onBeforeAction: function() { 
+  onBeforeAction: function() {
     // set some session variables and then redirects to the frontpage
-    // the frontpage is now showing a picture of the user that has invited this visitor
-    var phrase = Url.bitHashInv(this.params[0]);        
-    Session.set('invitationPhrase', phrase);
+    // the frontpage is now showing a picture of the user that has invited this visitor;
+    Session.set('inviteBitHash', this.params.inviteBitHash);
     this.redirect('frontpage');
+    this.next();
   }
 });
 
 GrowthGithubController = DefaultController.extend({
   template: 'frontpage',
-  onBeforeAction: function() { 
+  onBeforeAction: function() {
     Session.set('growthType', 'github');
     Session.set('growthPhrase', this.params.phrase);
     this.redirect('frontpage');
+    this.next();
   }
 });
 
+LoginController = DefaultController.extend({
+  template: 'loading',
+  onBeforeAction: function() {
+    // Show loading screen unitl users becomes logged in
+    this.render('loading');
+  }
+});
 
+LogoutController = DefaultController.extend({
+  template: 'loading',
+  onBeforeAction: function() {
+    if (Meteor.userId()) {
+      GAnalytics.event("LoginService", "logout");
+      Meteor.logout();
+      this.render('loading');
+    } else {
+      this.redirect('frontpage');
+    }
+  }
+});
 
 
 
@@ -93,25 +119,35 @@ var setMetaData = function() {
     "og:image": Meteor.absoluteUrl("img/favicons/apple-touch-icon-precomposed.png"),
     "og:description": description
   });
+
+  this.next();
 }
 
 var loginRequired = function() {
   if (!Meteor.userId()) {
-    Session.set('redirectUrl', location.pathname + location.search + location.hash);
-    this.redirect('frontpage');  
+    if (!Session.get('redirectUrl'))
+      Session.set('redirectUrl', location.pathname + location.search + location.hash);
+    this.redirect('frontpage');
   }
+  this.next();
 }
 
 // make sure that user is allowed to enter the site
 var allowedAccess = function() {
-  if(UserProp('isAccessDenied')) {
-    if (Meteor.userId() !== Url.userIdFromUrl(window.location.href)) {
-      this.redirect('hacker', Meteor.userId()); 
+  var user = UserProps(['isAccessDenied','globalId','bitHash']) || {};
+  if(user.isAccessDenied) {
+    if (user._id !== Url.userIdFromUrl(window.location.href)) {
+      this.redirect('hacker', user);
     }
   }
+  this.next();
 }
 
-
+// GAnalytics
+var pageView = function(route) {
+  GAnalytics.pageview(route);
+  this.next();
+}
 
 
 // set meta data
@@ -125,7 +161,7 @@ Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
 
 // log pageview to Google Analytics
-Router.onRun(GAnalytics.pageview);
+Router.onRun(pageView);
 
 
 
@@ -141,9 +177,9 @@ Router.restoreScrollState = function() {
   var top = scrollState.get(route);
 
   if (top === 0 && params.hash)
-    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});  
+    $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});
   else
-    $(window).scrollTop(top || 0);  
+    $(window).scrollTop(top || 0);
 }
 
 var scrollHandler = function(event) {
@@ -159,7 +195,7 @@ Meteor.startup(function() {
     if (_.contains(routes, templateName)) { // is route template
       var prevRenderFunc = template.rendered;
       template.rendered = function() {
-        if (prevRenderFunc) prevRenderFunc.call(this);  
+        if (prevRenderFunc) prevRenderFunc.call(this);
         Router.restoreScrollState(); // restore scroll state
       }
     }
@@ -171,26 +207,10 @@ Meteor.startup(function() {
 
 
 
-
-/* global router configuration */
-
-Router.configure({
-  autoRender: true
-});
-
-IronRouterProgress.configure({
-  enabled: false,
-  spinner: false
-});
-
-
-
 // internals
 
-Router.map(function () {
-  _.each(routes, function(route) {
-    this.route(route[0], {path: route[1]});
-  }, this);
+_.each(routes, function(route) {
+  Router.route(route[1], {name: route[0]});
 });
 
 
@@ -198,7 +218,7 @@ Router.map(function () {
 /* router plugins */
 
 Router.scrollToTop = function() {
-  $(window).scrollTop(0); 
+  $(window).scrollTop(0);
 }
 
 // reload current route (hack)
@@ -219,11 +239,11 @@ Router.refresh = function(path) {
 // browser refresh location to new city
 Router.goToCity = function(city) {
   var url;
-  
-  var phrase = Session.get('invitationPhrase');
-  if (phrase)
-    url = Router.routes['invite'].url({invitationPhrase: phrase});
-  
+
+  var bitHash = Session.get('inviteBitHash');
+  if (bitHash)
+    url = Router.routes['invite'].url({inviteBitHash: bitHash});
+
   url = Url.replaceCity(city, url);
 
   Router.refresh(url);
@@ -231,29 +251,7 @@ Router.goToCity = function(city) {
 
 
 
-Router.routes['hacker'].path = function(user) {
-  var redirect = (_.isObject(user) && user.redirect) || false;
-  
-  user = OtherUserProps(user, ['globalId']);
 
-  if (!user || !user.globalId)
-    return;
-
-  if (userIsForeign(user) && redirect)
-    return Router.routes['hacker'].url(user); // make full url
-
-  if (userIsForeign(user))
-    return '#'; // no url
-
-  return "/" + Url.bitHash(user.globalId);
-}
-Router.routes['hacker'].url = function(user) {
-  return userProfileUrl(user);
-}
-
-Router.routes['invite'].url = function(user) {
-  return userInviteUrl(user);
-}
 
 
 // set meta data helpers
@@ -278,5 +276,3 @@ var clear = function() {
   setMeta("description", "");
   clearProperties();
 }
-
-

@@ -10,38 +10,36 @@ var serviceOptions = {
 
 
 Login.init = function() {
-  observe();
+  
+  // Observe if user is logging in
+  observeLoggingIn();
 }
 
 
 /* OBSERVE Login State */
 
-var observe = function() {
-  var hasLoggedInBefore = false;
-  
+// observe if user is logging in
+var observeLoggingIn = function() {
+  var startLogin;
   Deps.autorun(function() {
-    if (!Subscriptions.ready()) 
-      return; // wait until subscriptions are ready
-    
-    if (Meteor.userId()) { // user logged in
-      hasLoggedInBefore = true;
-      Tracker.nonreactive(loggedIn);
-    }
-    
-    if (!Meteor.userId() && hasLoggedInBefore) {  // user logged out
-      hasLoggedInBefore = false;
-      Tracker.nonreactive(loggedOut);
+    if (Meteor.loggingIn()) {
+      startLogin = true;
+      Tracker.nonreactive(function() {
+        if (!Session.get('redirectUrl'))
+          Session.set('redirectUrl', location.pathname + location.search + location.hash);
+        Router.go('login');
+      });
+    } else if(startLogin && Meteor.userId()) {
+      startLogin = false;
+      Tracker.nonreactive(function() {
+        loggedIn();
+      });
     }
   });
 }
 
 
 /* LOGIN EVENT handlers */
-
-// when user is logged in by filling in its credentials
-var manuallyLoggedIn = function() {
-  /* do nothing */
-}
 
 // when user becomes logged in
 var loggedIn = function() {
@@ -63,29 +61,20 @@ var loggedIn = function() {
   // if a redirectUrl is present, redirect to that url
   // otherwise if also no route is setted to the hackers list
   var redirectUrl = Session.get('redirectUrl');
-  var currentRoute = Router.current().route.name;
   
-  if (redirectUrl) {
+  if (!_.contains(['/','/login','/logout'], redirectUrl)) {
     Session.set('redirectUrl', null);
     Router.go(redirectUrl);
-  } else if(currentRoute === 'frontpage') {
-    goToEntryPage();
   } else {
-    // nothing
-    // maybe we need to trigger route hooks here again?
+    goToEntryPage();
   }
 
 }
 
-// when user becomes logged out
-var loggedOut = function() {
-  /* empty */
-}
-
-
 // which page should be loaded for logged in users which enter the site
 goToEntryPage = function() {
-  Router.go('highlights');
+  var entryPage = 'highlights';
+  Router.go(entryPage);
 }
 
 
@@ -119,18 +108,23 @@ checkGrowthPhrase = function() {
   var phrase = Session.get('growthPhrase');
 
   // register growth phrase
-  if (type && phrase)  
+  if (type && phrase)
     Meteor.call('verifyGrowthPhrase', type, phrase);
 }
 
 // when user isn't yet allowed to enter the site
 // check if he has signed up with a valid invite code
 checkInvitation = function() {
-  var phrase = Session.get('invitationPhrase');
+  var bitHash = Session.get('inviteBitHash');
+  
+  if (!bitHash)
+    return;
+
+  var phrase = Url.bitHashInv(bitHash);
   var broadcastUser = Users.findOne({invitationPhrase: phrase});
 
   if (phrase) {
-  
+
     // make a server call to check the invitation
     Meteor.call('verifyInvitation', phrase, function(err) {
 
@@ -143,11 +137,11 @@ checkInvitation = function() {
         Meteor.setTimeout(function() {
           Session.set('invitationLimitReached', false);
         }, 5 * 60 * 1000);
-        
+
         // log to google analytics
         if (broadcastUser)
           GAnalytics.event('Invitations', 'limit reached for user', broadcastUser._id);
-      
+
       } else if (err) {
 
         Router.scrollToTop();
@@ -156,25 +150,25 @@ checkInvitation = function() {
 
         // log to google analytics
         GAnalytics.event('Invitations', 'invalid phrase', phrase);
-      
+
       } else { //on success
 
         goToEntryPage();
-        
+
         // log to google analytics
         if (broadcastUser)
           GAnalytics.event('Invitations', 'invited by user', broadcastUser._id);
       }
 
       // clean
-      Session.set('invitationPhrase', null);
+      Session.set('inviteBitHash', null);
 
     });
 
   } else {
 
     // clean
-    Session.set('invitationPhrase', null);
+    Session.set('inviteBitHash', null);
   }
 };
 
@@ -259,8 +253,8 @@ var loginCallback = function(err) {
 
     // on error
     var message = "<h3>Something went wrong...</h3>Please try again or <a href=\"&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;\">email</a> us.";
-    
-    // emailadres is in use by another user 
+
+    // emailadres is in use by another user
     if (err.reason === "duplicateEmail")
       message = "<h3>Oopsy!</h3>Please try one of the other services!";
 
@@ -274,16 +268,13 @@ var loginCallback = function(err) {
     Session.set('serviceLoginError', message);
     Meteor.setTimeout(function() { Session.set('serviceLoginError', false); }, 12000);
     log(err);
-  
+
   } else {
 
     // when the merged user account is located in an other city
     // we have to redirect the subdomain
     if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
       Router.goToCity(Meteor.user().city);
-
-    // on success
-    manuallyLoggedIn();
   }
 }
 
@@ -297,35 +288,19 @@ var loginWithService = function(event) {
   // log
   GAnalytics.event("LoginService", "login", service);
 
+  // Logging in
+  Router.go('login');
+
   // login
-  Meteor["loginWith"+Service](options, loginCallback);
-}
-
-// log out the current user
-var logout = function() {
+  Meteor["loginWith"+Service](options, loginCallback);  
   
-  // log
-  GAnalytics.event("LoginService", "logout");
-
-  // first redirect to frontpage to make sure there are no helpers
-  // active that making use of the user session information
-  // this prevent from errors in the console
-  Router.go('frontpage');
-  Tracker.flush();
-  Meteor.setTimeout(function() {
-    Meteor.logout(); 
-  }, 200);
 }
+
 
 
 // bind the sign up buttons to the corresponding actions
 Template.main.events({
   "click .signupService": loginWithService
-});
-
-// bind the sign out button to the sign out action
-Template.main.events({
-  "click #signOutButton": logout
 });
 
 
@@ -339,17 +314,17 @@ var global = this;
 var _addService = function(service, options, onSuccessCallback) {
   var Service = window[capitaliseFirstLetter(service)];
 
-  
+
   // request a token from the external service
   Service.requestCredential(options, function(token, more) {
     var secret = OAuth._retrieveCredentialSecret(token);
 
-    // send the token to our server-side method, which will handle 
+    // send the token to our server-side method, which will handle
     // updating the user with the new service information
     Meteor.call("addServiceToUser", token, secret, service, function(err, res) {
       if (err) {
         if (err.reason === "duplicateEmail") {
-          // emailadres is in use by another user  
+          // emailadres is in use by another user
           Session.set('isAddServiceError_'+service, true);
           Meteor.setTimeout(function() { Session.set('isAddServiceError_'+service, false); }, 10000);
         } else {
@@ -364,14 +339,14 @@ var _addService = function(service, options, onSuccessCallback) {
         // we have to redirect the subdomain
         if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
           Router.goToCity(Meteor.user().city);
-        
+
         if(_.isFunction(onSuccessCallback))
           onSuccessCallback();
-        
+
         // log
         GAnalytics.event("LoginService", "link service", service);
       }
-    });       
+    });
   });
 }
 
@@ -379,11 +354,11 @@ var _addService = function(service, options, onSuccessCallback) {
 var _removeService = function(service) {
   Meteor.call("removeServiceFromUser", service, function(err, res) {
     if (err)
-      throw new Meteor.Error(500, err.reason);    
+      throw new Meteor.Error(500, err.reason);
     else
       // log
       GAnalytics.event("LoginService", "unlink service", service);
-  });  
+  });
 }
 
 // user toggles an external service
@@ -396,7 +371,3 @@ toggleService = function (event, onSuccessCallback) {
 
   isLinked ? _removeService(service) : _addService(service, options, onSuccessCallback);
 }
-
-
-
-
