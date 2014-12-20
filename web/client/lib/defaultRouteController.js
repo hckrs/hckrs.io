@@ -8,10 +8,12 @@ DefaultController = RouteController.extend({
     Spin.default = { color: '#fff' }
     
     // wait on global subscriptions ready
-    if (Subscriptions.ready())
-      this.next();
-    else
+    if (!Subscriptions.ready() || Meteor.loggingIn()) {
       this.render('loading');
+      return;
+    }
+
+    this.next(); 
   },
   onAfterAction: function() {
 

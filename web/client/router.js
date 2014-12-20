@@ -24,7 +24,6 @@ var routes = [
   [ 'deals'        , '/deals'                ],
   
   // special routes (which will redirect)
-  [ 'login'        , '/login'                ],
   [ 'logout'       , '/logout'               ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
   [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
@@ -41,7 +40,6 @@ var noLoginRequired = [
   'docs',
   'about',
   'frontpage',
-  'login',
   'invite',
   'verifyEmail',
 ];
@@ -71,14 +69,6 @@ GrowthGithubController = DefaultController.extend({
     Session.set('growthPhrase', this.params.phrase);
     this.redirect('frontpage');
     this.next();
-  }
-});
-
-LoginController = DefaultController.extend({
-  template: 'loading',
-  onBeforeAction: function() {
-    // Show loading screen unitl users becomes logged in
-    this.render('loading');
   }
 });
 
@@ -123,6 +113,7 @@ var setMetaData = function() {
 
   this.next();
 }
+
 
 var loginRequired = function() {
   if (!Meteor.userId()) {

@@ -24,12 +24,9 @@ var observeLoggingIn = function() {
   Deps.autorun(function() {
     if (Meteor.loggingIn()) {
       startLogin = true;
-      Tracker.nonreactive(function() {
-        if (!Session.get('redirectUrl'))
-          Session.set('redirectUrl', location.pathname + location.search + location.hash);
-        Router.go('login');
-      });
-    } else if(startLogin && Meteor.userId()) {
+      if (!Session.get('redirectUrl'))
+        Session.set('redirectUrl', location.pathname + location.search + location.hash);
+    } else if(startLogin && Meteor.userId() && Subscriptions.ready()) {
       startLogin = false;
       Tracker.nonreactive(function() {
         loggedIn();
@@ -62,7 +59,7 @@ var loggedIn = function() {
   // otherwise if also no route is setted to the hackers list
   var redirectUrl = Session.get('redirectUrl');
   
-  if (!_.contains(['/','/login','/logout'], redirectUrl)) {
+  if (redirectUrl && !_.contains(['/','/logout'], redirectUrl)) {
     Session.set('redirectUrl', null);
     Router.go(redirectUrl);
   } else {
@@ -287,9 +284,6 @@ var loginWithService = function(event) {
 
   // log
   GAnalytics.event("LoginService", "login", service);
-
-  // Logging in
-  Router.go('login');
 
   // login
   Meteor["loginWith"+Service](options, loginCallback);  
