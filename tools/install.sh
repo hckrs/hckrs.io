@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ".." && pwd )"
 TOOLS="$ROOT/tools"
 
