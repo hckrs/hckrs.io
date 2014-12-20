@@ -1,0 +1,17 @@
+#!/bin/bash
+ROOT_DIR="$(pwd)"
+
+# Locate the hckrs project folder
+while true; do
+  if [ -f "$ROOT_DIR/tools/hckrs" ]; then
+    break # in project directory
+  fi
+  if [ $ROOT_DIR = '/' ]; then
+    echo "Not in the hckrs project directory."
+    exit 1
+  fi
+  ROOT_DIR=$(cd $ROOT_DIR && cd .. && pwd)
+done
+
+
+sh $ROOT_DIR/tools/main.sh $@
