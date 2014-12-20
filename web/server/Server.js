@@ -16,10 +16,6 @@ Meteor.startup(function() {
   // taken into account that the Heroku server
   // is restarted once every day
   Meteor.setTimeout(runAfterStartupDelayed, 1000 * 60 * 15);
-
-  // startup repl when in development mode
-  if (_.contains(['local','dev'], Settings['environment']))
-    Repl.start();
   
   // info about development mode
   if (Settings['environment'] === 'dev')

@@ -24,7 +24,6 @@ iron:router
 datariot:ganalytics
 aslagle:reactive-table
 kidovate:pnotify
-pauloborges:repl
 aldeed:autoform
 aldeed:collection2
 oauth
