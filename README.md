@@ -19,7 +19,7 @@ Get you hacking
 ######2. Go to the ***hckrs*** folder in your terminal.
 ######3. Install depenencies `source ./tools/install.sh`
 ######4. Move to the project `cd web` and startup a local server `hckrs run`
-
+######5. Open [http://localhost:3000](http://localhost:3000) in your browser and login with ***Twitter*** ([why?](https://github.com/Jarnoleconte/hckrs.io/wiki/Run-Project#login-at-the-site)) 
 
 *Support for* ***OS X*** *and* ***Linux*** *right now.*
 *Meteor has no solid support for windows yet.*
@@ -51,7 +51,10 @@ Documentation
 --------------
 
 Read the [wiki](https://github.com/Jarnoleconte/hckrs.io/wiki) to get understanding of the project structure.  
-Techniqual documentation is located at http://hckrs.io/docs.
+
+Techniqual documentation is available during development.  
+Start up a local server and navigate in your browser to:  
+[http://localhost:3000/docs](http://localhost:3000/docs)
 
 
 ![Logo](https://s3.amazonaws.com/hckrs.io/static/logo/logo1.jpg)
