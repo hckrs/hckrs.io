@@ -14,4 +14,4 @@ while true; do
 done
 
 
-sh $ROOT_DIR/tools/main.sh $@
+bash $ROOT_DIR/tools/main.sh $@

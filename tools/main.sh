@@ -76,9 +76,9 @@ elif [ "$1" = "reset" ]; then
 elif [ "$1" = "admin" ]; then
 
   if [ "$2" = "backup" ]; then
-    sh "$TOOLS/#private-backup-$3.sh"    
+    bash "$TOOLS/#private-backup-$3.sh"    
   elif [ "$2" = "clone" ]; then
-    sh "$TOOLS/#private-clone-$3-to-$4.sh"
+    bash "$TOOLS/#private-clone-$3-to-$4.sh"
   fi
 
 # Otherwise
