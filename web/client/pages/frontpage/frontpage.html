@@ -1,77 +1,22 @@
 <template name="frontpage">
-  <div id="frontpage" class="page">
-    <div class="logo-large"></div>
-  
-    {{#if invitationBroadcastUser}}
-      {{#with invitationBroadcastUser}}
-        <div class="invited-by-container">
-          <div style="background-image:url({{profile.picture}});float:left;" class="pictureView"></div>
-          <div style="" class="speach-bubble"><div class="larger">... welcome</div><br/><div class="name">— {{profile.name}}</div></div>
-        </div>
-      {{/with}}
-    {{/if}}
-
-    {{> citySelect}} {{!-- defined in main.js --}}
+  <div id="frontpage">
     
-    {{#if CurrentUserId}}
-      <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
-    {{else}}
-      {{#if CurrentCity}}
-        {{#if serviceLoginError}}
-          <div class="error">{{{serviceLoginError}}}</div>
-        {{/if}}
-        <div class="frontpage-login"> 
-          <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
-          <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
-          <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
-          <div class="frontpage-join-us"></div>
-        </div>
-      {{/if}}
-    {{/if}}
-
-    {{> ambassadors}}
-
-    {{#if CurrentCity}}
-      <H1 class="frontpage-headline">join {{totalHackers}} other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
-    {{/if}}
-    <div class="page-space"></div>
-    <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> • <a href="{{pathFor 'about'}}">about hckrs</a></div>
-  </div>
-</template>
-
-
-<template name="ambassadors">
-  <div class="ambassadors-container">
     
-    {{#if CurrentCity.twitter}}
-    <div class="city-twitter">
-      <a href="https://twitter.com/{{CurrentCity.twitter}}" target="_blank" class="action action-tweet">@{{CurrentCity.twitter}}</a>
-    </div>
-    {{else}}
-      {{#if ambassadors}}
-        <div class="city-twitter">
-          Ambassadors of {{CurrentCity.name}}
-        </div>
-      {{/if}}
-    {{/if}}
-    
-    <div class="ambassadors">
-      {{#each ambassadors}}
-      <div class="hacker">
-        <div style="background-image:url({{profile.picture}});" class="pictureView route-transition"></div>
-        <div class="name">{{profile.name}}</div>
-        <div class="ambassador">
-            {{staff.title}}
-        </div>
-        {{#if twitter}}
-          <a href="https://twitter.com/{{twitter}}" target="_blank" class="action action-tweet">@{{twitter}}</a> 
-        {{/if}}
-        <a href="#" class="action action-email">e-mail</a>
 
+    <div id="introSlide" class="slide">
+      <div id="introSlideLeft" class="curtain-overlay intro-overlay left-side">
+        <div>make you a</div>
       </div>
-      {{/each}}
-      <div class="clear"></div>
+      <div id="introSlideRight" class="curtain-overlay intro-overlay right-side">
+        <div>better hacker</div>
+      </div>
+      <!-- <div class="content">
+        <h2>Where do you hack?</h2>
+        <input type="text" />
+      </div> -->
     </div>
+
 
   </div>
 </template>
+
