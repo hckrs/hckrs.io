@@ -7,48 +7,59 @@
   width: inherit;
   height: inherit;
   
-  .curtain-overlay {
-    position: absolute;
-    top: 0px;
-    width: 50%;
-    opacity: 0.85;
+  .overlay {
+    position: fixed;
+    z-index: 99;
+    bottom: 0;
+    width: 100%;
     height: 100%;
-    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 1px;
     background-attachment: fixed;
-    &.left-side { left: 0; background-position: 0 0; }
-    &.right-side { right: 0; background-position: 100% 0; }
     
-    transition: width 1.2s cubic-bezier(0.220, 0.375, 0.610, -0.060);
-    
-  
-    /* background */
-    &.intro-overlay { background-image: url(/img/backgrounds/frontpage-blur.jpg); }
-    
-    /* text */
-    &.intro-overlay {
-      div { 
-        position: absolute; 
-        top: 48%; 
-        width: 300px;
-        font-size: 3em; 
-      }
-      &.left-side div { right: 14px; text-align: right; }
-      &.right-side div { left: 0; text-align: left; }
-    }
+    transition: height 1s ease-in, visibility 0s 1s;
   }
   
   .slide {
-    position: relative;
     min-width: 100%;
     min-height: 100%;
-    overflow-y: auto;
-    background-image: url(/img/backgrounds/frontpage-normal.jpg);
-    background-size: 100% 100%;
+    background-size: cover;
+    background-attachment: fixed;
   }
-
+  
   .slide .content {
     padding: 100px;
-    border: 1px solid blue;
   }
+  
 
+  #welcomeOverlay {
+    background-image: url(/img/backgrounds/frontpage-intro-blur.jpg);
+    div { 
+      margin-top: 30%; 
+      font-size: 3em; 
+      text-align: center;
+    }
+  }
+  
+  #introSlide {
+    background-image: url(/img/backgrounds/frontpage-intro.jpg);
+  }
+  
+  #toolsSlide {
+    background-image: url(/img/backgrounds/frontpage-tools.jpg);
+  }
+  
+  #videoSlide {
+    background-image: url(/img/backgrounds/frontpage-video.jpg);
+  }
+  
+  #manifestoSlide {
+    background-image: url(/img/backgrounds/frontpage-manifesto.jpg);
+  }
+  
+  #aboutSlide {
+    background-image: url(/img/backgrounds/frontpage-about.jpg);
+  }
+  
 }

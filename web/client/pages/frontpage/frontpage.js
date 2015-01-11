@@ -56,14 +56,15 @@ FrontpageController = DefaultController.extend({
 // });
 
 Template.frontpage.rendered = function() {
-  var b;
-  console.log(1)
+  var b = true;
   var call = function() {
-    console.log(2)
-    $(".intro-overlay").css('width', b ? "50%" : "0%");
+    $("#welcomeOverlay").css({
+      'height': b ? "0%" : "100%",
+      'visibility': b ? 'hidden' : 'visible',
+    });
     b = !b;
   }
-  Meteor.setInterval(call, 4000);
+  Meteor.setTimeout(call, 4000);
 }
 
 // typer text on frontpage
