@@ -93,7 +93,8 @@ var getRequestUrl = function(request) {
   // XXX: not all properties can be resolved through '_parsedUrl'
   // Therefor we try to add some properties ourself.
   var parsed = {};
-  parsed.protocol = request.headers['x-forwarded-proto'] || "http";
+  parsed.protocol = (request.headers['x-forwarded-proto'] &&
+                    request.headers['x-forwarded-proto'].split(",")[0]) || "http";
   parsed.host     = request.headers['host'];
   parsed.hostname = request.headers.host.split(':')[0];
   parsed.port     = request.headers.host.split(':')[1] || null;

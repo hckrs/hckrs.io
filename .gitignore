@@ -2,5 +2,5 @@
 .npm
 .build*
 .DS_Store
+.demeteorized
 node_modules
-/web/.meteor/package-metadata

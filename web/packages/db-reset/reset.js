@@ -5,7 +5,7 @@ var self = this;
 // Dummy documents can be specified in the /private/DummyDB/ folder.
 Meteor.startup(function() {
   Meteor.setTimeout(function(){
-    if (Settings['environment'] === 'dev' && Users.find().count() === 0)
+    if (Settings['environment'] !== 'production' && Users.find().count() === 0)
       resetDB();
   }, 2000);
 });

@@ -20,18 +20,30 @@ Account.moveUserToCity = function(hackerId, city) { // called from Methods.js
   // check permissions
   var userId = this.userId || Meteor.userId();
   var me = userId === hackerId;
-  var ambPerm = Users.hasAmbassadorPermission(userId, hacker.city);
   
-  if (!me && !ambPerm)
-    throw new Meteor.Error(500, 'not allowed');
+  var allowed = function() {
+    if (me && hacker.isAccessDenied)
+      return true;
 
-  if (!hacker.isAccessDenied && me) {
-    if (ambPerm) 
-      throw new Meteor.Error(500, "can't move yourself");  
-    else 
-      throw new Meteor.Error(500, "cite move not allowed", 'already registered at some city');  
+    // don't execute this code before the above check
+    // because Meteor.userId() isn't defined on first login attempt
+    var ambPerm = Users.hasAmbassadorPermission(userId, hacker.city);
+
+    if (!me && !ambPerm)
+      throw new Meteor.Error(500, 'not allowed');
+
+    if (!hacker.isAccessDenied && me) {
+      if (ambPerm) 
+        throw new Meteor.Error(500, "can't move yourself");  
+      else 
+        throw new Meteor.Error(500, "cite move not allowed", 'already registered at some city');  
+    }
+
+    return true;
   }
 
+  if (!allowed())
+    return;
 
   // update user's city
   Users.update(hackerId, {$set: {
