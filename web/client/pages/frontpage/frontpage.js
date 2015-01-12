@@ -83,9 +83,10 @@ Template.frontpage.rendered = function() {
 }
 
 Template.frontpage.events({
-  'click .slide-nav a': function(evt) {
+  'click a': function(evt) {
     var href = $(evt.currentTarget).attr('href');
-    $(document).scrollTo(href, {duration: 800});
+    if (href.substring(0, 1) === "#") // check for hash anchor
+      $(document).scrollTo(href, {duration: 800});
   },
   'click #video-play': function(evt) {
     evt.preventDefault();
@@ -96,6 +97,12 @@ Template.frontpage.events({
     exitVideo();
   }
 });
+
+Template.frontpage.helpers({
+  'staff': function() {
+    return Users.find({"staff.title": {$exists: true}}).fetch();
+  }
+})
 
 var showVideo = function() {
   $(document).scrollTo("#video");

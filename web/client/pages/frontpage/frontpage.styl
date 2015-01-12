@@ -267,10 +267,43 @@ centered()
   
   #manifesto {
     background-image: url(/img/backgrounds/frontpage-manifesto.jpg);
+    .content-block {
+      width: 600px;
+      padding-right: 200px;
+    }
   }
   
   #about {
     background-image: url(/img/backgrounds/frontpage-about.jpg);
+    .content-block {
+      width: 400px;
+    }
+    #modulus-logo {
+      width: 150px;
+      padding: 0 5px;
+    }
+    #staff {
+      margin-top: 40px;
+      text-align: center;
+      .picture-view {
+        display: inline-block;
+        margin-right: 12px;
+        margin-bottom: 12px;
+        margin-top: 8px;
+        text-align: center;
+      }
+    }
+    #to-top {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: block;
+      width: 30px;
+      height: 30px;
+      img {
+        width: 100%;
+        transform: rotate(180deg);
+      }
+    }
   }
-  
 }

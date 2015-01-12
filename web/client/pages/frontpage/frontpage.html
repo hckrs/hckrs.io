@@ -46,42 +46,42 @@
           <div class="row">
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
             <div class="col-xs-3">
                 <img src="/img/frontpage-podcast.svg" alt="drink-up" />
-                <h2>drink-up</h2>
+                <h3>drink-up</h3>
                 <p>montly meetup meet &amp; drink</p>
             </div>
           </div>
@@ -107,18 +107,47 @@
     </div>
 
     <div id="manifesto" class="slide">
-      <div class="content">
-        <div>slide</div>
+      <div class="content-block">
+        <h2>Hackers manifesto</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur posuere velit at fermentum auctor. Donec nec risus et lacus sodales tincidunt quis eu enim. In vehicula tristique mi et bibendum. Vivamus at orci et neque lobortis pulvinar non sed nisl. Etiam nisl magna, scelerisque eu fermentum id, elementum et diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc sed risus ornare, mattis urna ac, tempor urna. Pellentesque id leo in nisi sagittis lobortis ac et justo. Etiam ullamcorper lorem purus, non sagittis tortor scelerisque vitae. Proin laoreet faucibus aliquam. Cras sit amet erat vitae.</p>
       </div>
     </div>
 
     <div id="about" class="slide">
-      <div class="content">
-        <div>slide</div>
+      <div class="content-block">
+        
+        <h2>About</h2>
+        
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur posuere velit at fermentum auctor. Donec nec risus et lacus sodales tincidunt quis eu enim. In vehicula tristique mi et bibendum. Vivamus at orci et neque lobortis pulvinar non sed nisl. Etiam nisl magna, scelerisque eu fermentum id, elementum et diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc sed risus ornare, mattis urna ac, tempor urna. Pellentesque id leo in nisi sagittis lobortis ac et justo. Etiam ullamcorper lorem purus, non sagittis tortor scelerisque vitae. Proin laoreet faucibus aliquam. Cras sit amet erat vitae.</p>
+
+        <p>We are in permanent beta, so feel free to experiment with us.</p>
+
+        <p>Hosting powered by <a href="http://modulus.io" target="_blank"><img src="/img/frontpage-modulus.svg" alt="Modulus" id="modulus-logo" /></a></p>
+
+        <div id="staff">
+          <div class="members">
+          {{#each staff}}
+            {{#with UserView this._id}}
+              {{> pictureView}}
+            {{/with}}
+          {{/each}}
+          </div>
+          <div class="desc">hckrs team</div>
+        </div>
+
       </div>
+      <a id="to-top" href="#welcome">
+        <img src="/img/frontpage-arrowdown.svg" alt="Go to top" />
+      </a>
     </div>
 
 
   </div>
+</template>
+
+<template name="pictureView">
+  <a href="{{pathFor 'hacker'}}" {{foreign}} class="picture-view pictureViewLink" title="{{profile.name}}">
+    <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}" {{foreign}} label="{{label}}"></div>
+  </a>
 </template>
 
