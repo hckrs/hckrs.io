@@ -1,6 +1,10 @@
 
 @import "nib"
 
+mousehover()
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 3px white;
+
 /* FRONTPAGE */
 
 #frontpage {
@@ -31,7 +35,32 @@
     }
   }
   
+  .slide-nav {
+    position: fixed;
+    z-index: 40;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    & > a {
+      display: block;
+      margin: 5px 0px;
+      width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      background-color: white;
+      opacity: 0.3;
+      &:hover {
+        opacity: 0.6;
+      }
+      &.active {
+        opacity: 1;
+        box-shadow: 0 0 3px white; 
+      }
+    }
+  }
+  
   .slide {
+    position: relative;
     min-width: 100%;
     min-height: 100%;
     background-size: cover;
@@ -39,9 +68,20 @@
   }
   
   .slide .content-block {
-    width: auto;
     margin: 0 auto;
-    padding: 100px;
+    padding: 100px 20px;
+  }
+  
+  .centered { 
+    /* 
+      Align in center, both vertical and horizontal.
+      Apply only if the height of the element is less than window height. 
+      Furthermore the parent must be postioned absolute|fixed|relative.
+    */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .button {
@@ -51,8 +91,7 @@
     text-align: center;
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
     &:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0px 0px 3px white;
+      mousehover();
     }
   }
   
@@ -114,10 +153,10 @@
 
   /* slides */
   
-  #introSlide {
+  #welcome {
     background-image: url(/img/backgrounds/frontpage-intro.jpg);
     .content-block { 
-      width: 600px; 
+      width: 440px; 
     }
     #location-block {
       input { 
@@ -137,6 +176,8 @@
         } 
       }
       #video-btn-small {
+        width: 180px;
+        padding: 10px;
         margin: 50px auto;
         text-align: center;
         display: block;
@@ -148,24 +189,47 @@
           margin-top: 4px;
           display: block;
         }
+        &:hover {
+          mousehover()
+        }
       }
     }
       
   }
   
-  #toolsSlide {
+  #tools {
     background-image: url(/img/backgrounds/frontpage-tools.jpg);
+    .row {
+      text-align: center;
+      & > div {
+        padding: 50px 10px;
+      }
+      img {
+        display: block;
+        margin: 0 auto;
+      }   
+    }
   }
   
-  #videoSlide {
+  #video {
     background-image: url(/img/backgrounds/frontpage-video.jpg);
+    #playVideo {
+      display: block;
+      width: 65%;
+      img {
+        width: 100%;
+      }
+      &:hover {
+        mousehover();
+      }
+    }
   }
   
-  #manifestoSlide {
+  #manifesto {
     background-image: url(/img/backgrounds/frontpage-manifesto.jpg);
   }
   
-  #aboutSlide {
+  #about {
     background-image: url(/img/backgrounds/frontpage-about.jpg);
   }
   

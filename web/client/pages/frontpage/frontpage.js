@@ -39,40 +39,50 @@ FrontpageController = DefaultController.extend({
 
 // events
 
-// Template.frontpage.events({
-//   "change #citySelect select": function(evt) {
-//     var city = $(evt.currentTarget).val();
-//     Util.exec(function() {
-//       Router.goToCity(city);
-//     });
-//   }
-// });
-
-// Template.ambassadors.events({
-//   "click .action-email": function() {
-//     var email = this.staff.email || this.profile.email;
-//     location.href = "mailto:" + email;
-//   }
-// });
 
 Template.frontpage.rendered = function() {
-  var b = true;
-  var call = function() {
+  
+  // drop welcome screen with animation
+  Meteor.setTimeout(function() {
     $("#welcomeOverlay").addClass('anim-dropout');
-    $("#introSlide input").focus();
-    b = !b;
-  }
-  Meteor.setTimeout(call, 4000);
-
-  var $btn = this.$('#enroll-btn');
-  var btnY = $btn.offset().top;
-  var offset = parseInt($btn.css('bottom'));
-
-  $(document).on('scroll', function() {
-    var fixed = btnY - $(window).scrollTop() < offset;
-    $btn[fixed ? 'addClass' : 'removeClass']('fixed');
-  })
+  }, 4000);
+  
+  // focus location finder
+  Meteor.setTimeout(function() {
+    var hash = Router.current().getParams().hash;
+    if (!hash || hash == 'welcome')
+      $("#welcome input").focus();
+  }, 5000);
+  
+  // fixed enroll button
+  $("#enroll-btn").scrollspy({
+    min: $("#enroll-btn").offset().top,
+    max: $(document).height(),
+    onEnter: function(elm, pos) {
+      $(elm).addClass('fixed');
+    },
+    onLeave: function(elm) {
+      $(elm).removeClass('fixed');
+    }
+  });
+  
+  // slide navigation circles
+  $(".slide").each(function() {
+    var id = $(this).attr('id');
+    var offset = $(this).offset().top - $(window).height()/2;  
+    var $nav = $("#frontpage-slide-nav");
+    $(this).scrollspy({
+      min: offset,
+      max: offset + $(this).height(),
+      onEnter: function(elm, pos) {
+        $nav.find("a").removeClass('active');
+        $nav.find("a[href='#"+id+"']").addClass('active');
+      },
+    });
+  });
 }
+
+
 
 // typer text on frontpage
 // Template.frontpage.rendered = function() {
