@@ -77,7 +77,16 @@ Template.frontpage.rendered = function() {
       onEnter: function(elm, pos) {
         $nav.find("a").removeClass('active');
         $nav.find("a[href='#"+id+"']").addClass('active');
+        
+        switch ($(elm).attr('id')) {
+          case 'about': $(elm).find("#to-top").addClass('visible'); break;
+        }
       },
+      onLeave: function(elm, pos) {
+        switch ($(elm).attr('id')) {
+          case 'about': $(elm).find("#to-top").removeClass('visible'); break;
+        }
+      }
     });
   });
 }

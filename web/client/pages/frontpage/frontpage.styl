@@ -294,7 +294,8 @@ centered()
       }
     }
     #to-top {
-      position: absolute;
+      position: fixed;
+      z-index: 40;
       bottom: 20px;
       right: 20px;
       display: block;
@@ -303,6 +304,14 @@ centered()
       img {
         width: 100%;
         transform: rotate(180deg);
+      }
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.6s, visibility 0s 0.8s;
+      &.visible {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.6s, visibility 0s 0.8s;
       }
     }
   }
