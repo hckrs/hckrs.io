@@ -180,13 +180,16 @@ Meteor.startup(function() {
 Router.restoreScrollState = function() {
   var params = Router.current().getParams();
   var route = Router.current().url;
-  var top = scrollState.get(route);
 
-  Tracker.afterFlush(function() {
-    if (top === 0 && params.hash)
-      $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});
-    else
-      $(window).scrollTop(top || 0);  
+  Tracker.nonreactive(function() {  
+    Tracker.afterFlush(function() {
+      if (params.hash) {
+        $(document).scrollTo("#"+params.hash, {duration: 800, offset: 0});
+      } else {
+        var top = scrollState.get(route);
+        $(document).scrollTop(top || 0);  
+      }
+    });
   });
 }
 
