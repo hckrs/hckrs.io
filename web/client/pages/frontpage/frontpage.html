@@ -1,20 +1,45 @@
 <template name="frontpage">
   <div id="frontpage">
+
+    <a id="logo" href="">
+      <img src="/img/frontpage-logo.svg" alt="hckrs.io" />
+    </a>
+  
+    <a id="enroll-btn" href="" class="button">
+      enroll
+    </a>  
     
     <div id="welcomeOverlay" class="overlay">
       <div>make you a better hacker</div>
     </div>
 
     <div id="introSlide" class="slide" index="0">
-      <div class="content">
-        <h2>Where do you hack?</h2>
-        <input type="text" />
+      <div class="content-block">
+        <div id="location-block">
+          <h2>Where do you hack?</h2>
+          <input type="text" />
+        </div>
+        <div id="enroll-block">
+          <a id="enroll-btn-large" href="#" class="button">
+            I wanna enroll
+            <small>Join your local hacker tribe</small>
+          </a>
+          <a id="video-btn-small" href="#">
+            <img src="/img/frontpage-playbutton.svg" alt="View hckrs.io trailer." />
+            <span>watch video</span>
+          </a>
+        </div>
       </div>
     </div>
 
     <div id="toolsSlide" class="slide" index="1">
-      <div class="content">
-        <div>slide</div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-offset-4 col-md-4">
+              <h2>Where do you hack?</h2>
+              <input type="text" />
+          </div>
+        </div>
       </div>
     </div>
 

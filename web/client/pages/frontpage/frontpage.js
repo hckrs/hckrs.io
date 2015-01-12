@@ -58,13 +58,20 @@ FrontpageController = DefaultController.extend({
 Template.frontpage.rendered = function() {
   var b = true;
   var call = function() {
-    $("#welcomeOverlay").css({
-      'height': b ? "0%" : "100%",
-      'visibility': b ? 'hidden' : 'visible',
-    });
+    $("#welcomeOverlay").addClass('anim-dropout');
+    $("#introSlide input").focus();
     b = !b;
   }
   Meteor.setTimeout(call, 4000);
+
+  var $btn = this.$('#enroll-btn');
+  var btnY = $btn.offset().top;
+  var offset = parseInt($btn.css('bottom'));
+
+  $(document).on('scroll', function() {
+    var fixed = btnY - $(window).scrollTop() < offset;
+    $btn[fixed ? 'addClass' : 'removeClass']('fixed');
+  })
 }
 
 // typer text on frontpage
