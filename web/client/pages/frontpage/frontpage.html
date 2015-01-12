@@ -90,9 +90,20 @@
     </div>
 
     <div id="video" class="slide">
-      <a id="playVideo" href="#" class="centered" title="Play video">
+
+      <a id="video-play" href="#" title="Play video">
         <img src="/img/frontpage-video.svg" alt="Play video">
       </a>
+      
+      <!-- hidden by default -->
+      <video id="video-player" controls>
+        <source src="/video/teaser.mp4" type="video/mp4">
+        <!-- TODO add all kind of sources -->
+      </video>
+      <a id="video-exit" href="#">
+        <img src="/img/close.svg" alt="Close video." />
+      </a>
+      
     </div>
 
     <div id="manifesto" class="slide">

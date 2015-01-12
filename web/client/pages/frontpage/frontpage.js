@@ -82,7 +82,39 @@ Template.frontpage.rendered = function() {
   });
 }
 
+Template.frontpage.events({
+  'click .slide-nav a': function(evt) {
+    var href = $(evt.currentTarget).attr('href');
+    $(document).scrollTo(href, {duration: 800});
+  },
+  'click #video-play': function(evt) {
+    evt.preventDefault();
+    showVideo();
+  },
+  'click #video-exit': function(evt) {
+    evt.preventDefault();
+    exitVideo();
+  }
+});
 
+var showVideo = function() {
+  $(document).scrollTo("#video");
+  $("#video").addClass('playing');
+  
+  var video = $("#video video").get(0)
+  video.play();
+  video.onended = function() {
+    exitVideo();
+  }
+}
+
+var exitVideo = function() {
+  var video = $("#video video").get(0);
+  video.pause();
+  video.currentTime = 0;
+  
+  $("#video").removeClass('playing');
+}
 
 // typer text on frontpage
 // Template.frontpage.rendered = function() {
