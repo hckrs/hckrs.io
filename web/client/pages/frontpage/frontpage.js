@@ -109,11 +109,11 @@ var showVideo = function() {
 }
 
 var exitVideo = function() {
+  $("#video").removeClass('playing');
+
   var video = $("#video video").get(0);
   video.pause();
   video.currentTime = 0;
-  
-  $("#video").removeClass('playing');
 }
 
 // typer text on frontpage
