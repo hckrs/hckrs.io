@@ -32,7 +32,7 @@ function is_meteor_running {
 
 # Run meteor
 function run {
-  IP="$( ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' )"
+  IP="$( ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:|adr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' )"
   URL=http://$IP.xip.io:3000
   SETTINGS=$ROOT/settings/dev.json
 
