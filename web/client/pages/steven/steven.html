@@ -1,0 +1,42 @@
+<template name="steven">
+  <div id="steven" class="page">
+    <div class="container">     
+      <button class="btn sloop">Sloop</button><br>
+      
+	Als hij leeg is, klikt hier:    <button class="btn fillCollBtn">Hier</button> om hem bij te vullen!
+      <br>
+       <input type="text" autofocus name="searchBar" id="searchBar" class="text intSearch" placeholder="Interest Query">
+      <a href="#" class="clearSearchbar"><i class="glyphicon glyphicon-remove glyphicon-white"></i></a><br>
+{{> InterestBox}}
+      
+      <br><br>
+      <br>interests:<br>
+	{{#each allInfo}}
+	{{globalId}}:  <button class="btn testbutton" id="{{_id}}" >Delete</button><br>
+	<div class="indiv_interests" data-id="{{_id}}">
+	  {{#each interests}}
+	    {{this}}    
+	    <a href="#" class="intbutton" data-interest="{{this}}"><i class="glyphicon glyphicon-remove glyphicon-white" ></i></a><br> 	  
+	  {{/each}}
+	</div>
+	{{/each}}
+      
+    </div>
+  </div>
+</template>
+
+
+<template name="InterestBox">      
+      <div  class="interestbox">
+      {{#if subsReady}}
+	  {{#each int}}
+	  <div class="interestfield" data-interest="{{this.Interest}}"><a href="#" class="interesthref">{{this.Interest}} 
+	  <span class="count">({{this.Count}})</span> <i class="addInterest glyphicon glyphicon-plus glyphicon-white"></i>
+	  </a></div><br>
+	  {{/each}}
+	  {{#if tooMany}}
+	  <div class="cullMsg">{{maxResults}} out of {{amtInt}} shown. Tighten your search to show more results.</div>
+	  {{/if}}
+	{{/if}}
+      </div>
+</template>

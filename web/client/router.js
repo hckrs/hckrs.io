@@ -22,6 +22,7 @@ var routes = [
   [ 'invitations'  , '/invitations'          ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
+  [ 'steven'       , '/steven'        	     ],
   
   // special routes (which will redirect)
   [ 'logout'       , '/logout'               ],

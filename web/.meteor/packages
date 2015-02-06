@@ -36,3 +36,7 @@ hckrs:spin
 hckrs
 momentjs:moment
 peerlibrary:async
+peerlibrary:xml2js
+meteorhacks:npm
+
+

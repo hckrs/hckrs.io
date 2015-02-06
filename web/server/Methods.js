@@ -6,6 +6,57 @@ var Url = Npm.require('url');
 // implementations
 
 
+//STEVENDINGEN
+StevenInterests = new Mongo.Collection("steveninterests");
+StevenInterests.allow({
+	'insert': function(userId, doc) {
+		return true
+		},
+	'remove': function(userId, doc) {
+		return true
+		},
+	'update': function(userId, doc) {
+		return true
+	}
+});
+Meteor.publish("steveninterests", function(){
+    
+  return StevenInterests.find();
+  
+});
+
+InterestCollection = new Mongo.Collection("interestcollection");
+InterestCollection.allow({
+	'insert': function(userId, doc) {
+		return true
+		},
+	'remove': function(userId, doc) {
+		return true
+		},
+	'update': function(userId, doc) {
+		return true
+	}
+});
+Meteor.publish("interestcollection", function(searchInput, userId) {
+  
+  var options = {sort: [["Count","desc"]]};
+  var alreadySelected = [];
+  var user;
+  if (user= StevenInterests.findOne({globalId: userId}))
+    alreadySelected=user.interests;
+  
+  return (InterestCollection.find(
+    {$and:
+      [
+      {Interest: {$regex: searchInput, $options: 'i'}},
+      {Interest: {$nin: alreadySelected}}
+      ]
+    },
+    options));
+    
+});
+//END STEVENDINGEN
+
 
 
 
@@ -14,6 +65,47 @@ var Url = Npm.require('url');
 // but executed on the server because of the use of private data
 
 Meteor.methods({
+  
+  //STEVEN DINGEN
+  'buildTagCollection': function(){
+  var log = Assets.getText("Tags.xml"); 
+  var parseString = xml2js.parseString;
+  parseString(log, function (err, result) {
+    console.log("gaatie");
+    //for (var hmm in result.tags.row)
+    //{
+    for (i=0;i<result.tags.row.length;i++)
+    {
+      var tag = result.tags.row[i].$;
+      if (tag.Count>100)
+      {
+      InterestCollection.insert(
+	{
+	 Interest: tag.TagName,
+	 Count: parseInt(tag.Count),	  
+	}, function(error, result){ if (error) {console.log(error);}
+	  else {console.log(result);}
+	});
+      }
+      
+    }
+    console.log("klaar!");
+    
+     //for (var pff in result.tags.row[1].$)
+     //{
+	//console.log(pff);
+     //}
+    //}
+     
+   });
+  },
+  
+  'nukeCollection': function() {
+    InterestCollection.remove({});
+  },
+  
+  
+  //END STEVEN DINGEN
   
   'inviteUserAnonymous': function(userId) {
     Users.checkAmbassadorPermission();
