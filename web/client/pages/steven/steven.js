@@ -27,20 +27,23 @@ Template.steven.helpers({
 
 Template.InterestBox.helpers({
   'amtInt': function() { 
+    return Template.instance().accurateInterestCount();
     //return returnRelevantInterests(false).fetch().length;
-    return Template.instance().interests(0).count();
+    //var countEntry = InterestCount.findOne();
+    //return countEntry.count;
+    //return Template.instance().interests().count();
     //return null;
   },
   'maxResults': function() { return maxResults;},
   'tooMany': function() {
-    return Template.instance().interests(0).count()>maxResults;
+      return Template.instance().accurateInterestCount()>maxResults;
+    //var countEntry = InterestCount.findOne();
+    //return countEntry.count>maxResults;
     //return false;
     
   },
-  'int': function() { 
-    //return returnRelevantInterests(true);
-    return Template.instance().interests(maxResults);
-    //return null;
+  'int': function() {     
+    return Template.instance().interests();
   },
   'subsReady': function() {
    return Template.instance().ready.get(); 
@@ -51,18 +54,14 @@ Template.InterestBox.helpers({
 Template.steven.events({
   "click .testbutton": function(event,template) {
     StevenInterests.remove(event.currentTarget.id);
+//    Session.set("intSearchBar",Session.get("intSearchBar"));
   },
   "click .intbutton": function(event, template) {
    var $elm = $(event.currentTarget);
    var $par = $(event.currentTarget.parentNode);
    var id = $par.data('id');
    var int = $elm.data('interest');
-   //var id = event.currentTarget.parentNode.classList[1];
-   //var int =  event.currentTarget.classList[2];
    var result = StevenInterests.update({_id:id},{$pull: {interests: int}});
-   //var allInterests = StevenInterests.findOne({_id: id}).interests;
-   //var newInterests = _.without(allInterests, int);
-   //console.log(StevenInterests.update({_id:id},{$set: {interests:newInterests}}));
   },
   "click .fillCollBtn": function(event, template) {
     Meteor.call("buildTagCollection",function (error,result){console.log(error,result);});  
@@ -70,12 +69,6 @@ Template.steven.events({
    "click .sloop": function(event, template) {
       console.log("Hier komt de sloop!")
       Meteor.call('nukeCollection',function (error,result){console.log(error,result);});
-      
-     // while(col=InterestCollection.findOne())
-      //{
-//	console.log("Boem!");
-//	InterestCollection.remove({_id:col._id},function(error,result){if(error) {console.log(error);}});
-  //    }
    },
     "keyup .intSearch": function(event, template) {
      searchBarChanged(event.target.value);
@@ -105,8 +98,15 @@ Template.InterestBox.created = function() {
   instance.autorun(function() {
     
     var textEntry = Session.get("intSearchBar");
-    var sub = Meteor.subscribe("interestcollection", textEntry, Meteor.userId());
+    var userRecord;
+    var userInterests=[];
+    if (userRecord = StevenInterests.findOne({globalId: Meteor.userId()}))
+    {
+	userInterests = userRecord.interests;
+    }
     
+    var sub = Meteor.subscribe("interestcollection", 
+	textEntry, userInterests, maxResults);
     if (sub.ready()){
      instance.ready.set(true); 
     }
@@ -115,58 +115,51 @@ Template.InterestBox.created = function() {
      instance.ready.set(false); 
     }
     
+    Meteor.subscribe("interestcount", textEntry);
+    
   });
-  instance.interests = function(limit) {
-   return InterestCollection.find({},{limit: limit}); 
+  
+  
+  
+  instance.interests = function() {
+     return InterestCollection.find({},{sort: [["Count","desc"]]});
+
+  }
+  
+  instance.accurateInterestCount = function() {
+  var countCol = InterestCount.findOne();
+  var countEntry =0;
+  if (countCol)
+  {
+    countEntry = countCol.count;
+  }
+  var searchInput = Session.get("intSearchBar");
+  var amtUser = 0;
+  var user;
+  if (user = StevenInterests.findOne({globalId: Meteor.userId()}))
+  {
+    var re = new RegExp(searchInput,"i");
+    var interests =  user.interests;
+    amtUser = _.filter(interests, function(element){
+      return re.test(element);      
+    }).length;  
     
   }
+  return countEntry-amtUser;
+    
+  }
+  
 }
 
-StevenInterests = new Mongo.Collection("steveninterests");
-InterestCollection = new Mongo.Collection("interestcollection");
 
+StevenInterests = new Mongo.Collection("steveninterests");
+InterestCount = new Mongo.Collection("interestcount");
+//InterestCollection = new Mongo.Collection("interestcollection");
 //Meteor.autorun(function() { Meteor.subscribe("steveninterests");});
 //Meteor.autorun(function() { Meteor.subscribe("interestcollection");});
 
 var amt=1;
 var maxResults=50;
-
-
-var returnRelevantInterests = function(limited) {
-  var options = {};
-  if (limited)
-    options = {sort: [["Count","desc"]],
-		limit: maxResults};
-  else		  
-    options = {sort: [["Count","desc"]]};
-  
-  var alreadySelected = [];
-  var user;
-  if (user = StevenInterests.findOne({globalId: Meteor.userId()}))
-  {
-      alreadySelected= user.interests;     
-  }
-  var textEntry = Session.get("intSearchBar");
-    if (textEntry==="")
-    {
-      return (InterestCollection.find(
-		{Interest: {$nin: alreadySelected} },
-		options)
-	     );
-    }
-    else
-    {
-      return (InterestCollection.find(
-		{$and:
-		  [
-		    {Interest: {$regex: textEntry, $options: 'i'}},
-		    {Interest: {$nin: alreadySelected}}
-		  ]
-		},
-		options)
-	     );          
-    }
-}
 
 var searchBarChanged = function(newField) {
   if (newField!==Session.get("intSearchBar"))

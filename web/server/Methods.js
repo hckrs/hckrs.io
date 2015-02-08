@@ -25,36 +25,8 @@ Meteor.publish("steveninterests", function(){
   
 });
 
-InterestCollection = new Mongo.Collection("interestcollection");
-InterestCollection.allow({
-	'insert': function(userId, doc) {
-		return true
-		},
-	'remove': function(userId, doc) {
-		return true
-		},
-	'update': function(userId, doc) {
-		return true
-	}
-});
-Meteor.publish("interestcollection", function(searchInput, userId) {
-  
-  var options = {sort: [["Count","desc"]]};
-  var alreadySelected = [];
-  var user;
-  if (user= StevenInterests.findOne({globalId: userId}))
-    alreadySelected=user.interests;
-  
-  return (InterestCollection.find(
-    {$and:
-      [
-      {Interest: {$regex: searchInput, $options: 'i'}},
-      {Interest: {$nin: alreadySelected}}
-      ]
-    },
-    options));
-    
-});
+
+
 //END STEVENDINGEN
 
 

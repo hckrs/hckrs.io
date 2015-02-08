@@ -26,6 +26,7 @@ Package.onUse(function(api) {
   api.imply('collection-migrations');
   api.imply('collection-places');
   api.imply('collection-users');
+  api.imply('collection-interests');
 
   // modules
   api.imply('db-migrations');

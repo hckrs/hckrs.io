@@ -28,7 +28,7 @@
 
 <template name="InterestBox">      
       <div  class="interestbox">
-      {{#if subsReady}}
+      <!--{{#if subsReady}}-->
 	  {{#each int}}
 	  <div class="interestfield" data-interest="{{this.Interest}}"><a href="#" class="interesthref">{{this.Interest}} 
 	  <span class="count">({{this.Count}})</span> <i class="addInterest glyphicon glyphicon-plus glyphicon-white"></i>
@@ -37,6 +37,6 @@
 	  {{#if tooMany}}
 	  <div class="cullMsg">{{maxResults}} out of {{amtInt}} shown. Tighten your search to show more results.</div>
 	  {{/if}}
-	{{/if}}
+     <!-- {{/if}}-->
       </div>
 </template>
