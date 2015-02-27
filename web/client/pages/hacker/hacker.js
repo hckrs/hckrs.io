@@ -252,9 +252,6 @@ Template.hackerEdit.helpers({
 Template.hackerView.helpers({
   "urlCurrentUser": function() { 
     return Users.userProfileUrl(Meteor.userId()); 
-  },
-  "isCompanyOrLocation": function() {
-    return !!(this.profile.company || this.profile.location);
   }
 });
 
