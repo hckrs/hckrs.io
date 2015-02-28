@@ -2,7 +2,8 @@
   "public": {
     "environment": "dev",
     "simpleSchemeDebug": true,
-   
+    "NEO4J_AUTH": "Interestrelations:0NKzYBRfnnpWQ7f2dSID",
+    "NEO4J_URL": "http://Interestrelations:0NKzYBRfnnpWQ7f2dSID@interestrelations.sb04.stations.graphenedb.com:24789",
     "mapbox": {
       "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
     },

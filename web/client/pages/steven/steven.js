@@ -5,6 +5,7 @@ StevenController = DefaultController.extend({
   },
   onBeforeAction: function() {
     Session.set("intSearchBar","");  
+    Session.set("initializedbuttons",false)
     this.next();
   },
   subscriptions: function() {
@@ -23,7 +24,17 @@ Template.steven.helpers({
   'isIntColEmpty': function() { 
     //return (InterestCollection.find().fetch().length===0);}
   return false;}
-});
+  ,
+  'initializedButtons': function() {
+    return Session.get("initializedbuttons");
+    
+  },
+  'preferenceButtons': function() {
+    console.log(Session.get("preferencebuttons"));
+      return Session.get("preferencebuttons");
+  }
+}
+);
 
 Template.InterestBox.helpers({
   'amtInt': function() { 
@@ -51,17 +62,31 @@ Template.InterestBox.helpers({
   }
 });
 
+Template.OrderedBox.helpers({
+  'interest': function() {
+      var userId = Meteor.userId();      
+      return StevenInterests.findOne({globalId: userId}, {fields: {interests: 1}});
+    
+  }
+  
+  
+  
+});
+
 Template.steven.events({
   "click .testbutton": function(event,template) {
     StevenInterests.remove(event.currentTarget.id);
 //    Session.set("intSearchBar",Session.get("intSearchBar"));
   },
   "click .intbutton": function(event, template) {
-   var $elm = $(event.currentTarget);
+   // console.log(this);
+   //var $elm = $(event.currentTarget);
    var $par = $(event.currentTarget.parentNode);
+  // console.log($elm);
    var id = $par.data('id');
-   var int = $elm.data('interest');
-   var result = StevenInterests.update({_id:id},{$pull: {interests: int}});
+   //var int = $elm.data('interest');
+   //console.log(int);
+   var result = StevenInterests.update({_id:id},{$pull: {interests: {Name: this.Name}}});
   },
   "click .fillCollBtn": function(event, template) {
     Meteor.call("buildTagCollection",function (error,result){console.log(error,result);});  
@@ -78,6 +103,17 @@ Template.steven.events({
       $sbar = $("#searchBar");
       $sbar.val("");
       searchBarChanged("");
+    },
+    "click .initializer": function(event, template) {
+	BuildButtons();
+    },
+    "click .leftbutton": function(event,template){      
+	SetPreference(Session.get("preferencebuttons").Left,Session.get("preferencebuttons").Right);
+	BuildButtons();
+    },
+    "click .rightbutton": function(event,template){      
+      SetPreference(Session.get("preferencebuttons").Right,Session.get("preferencebuttons").Left);
+      BuildButtons();
     }
 });
 
@@ -102,9 +138,11 @@ Template.InterestBox.created = function() {
     var userInterests=[];
     if (userRecord = StevenInterests.findOne({globalId: Meteor.userId()}))
     {
-	userInterests = userRecord.interests;
-    }
-    
+      for (entry in userRecord.interests)
+      {	
+	userInterests.push(userRecord.interests[entry].Name);
+      }
+    }    
     var sub = Meteor.subscribe("interestcollection", 
 	textEntry, userInterests, maxResults);
     if (sub.ready()){
@@ -122,7 +160,16 @@ Template.InterestBox.created = function() {
   
   
   instance.interests = function() {
-     return InterestCollection.find({},{sort: [["Count","desc"]]});
+      var userInterests=[];
+      if (userRecord = StevenInterests.findOne({globalId: Meteor.userId()}))
+      {
+	for (entry in userRecord.interests)
+	{	
+	  userInterests.push(userRecord.interests[entry].Name);
+	}
+      }  
+      var val= InterestCollection.find({Interest: {$nin: userInterests}},{sort: [["relationcount","desc"],["Count","desc"]]});     
+      return val;
 
   }
   
@@ -139,7 +186,9 @@ Template.InterestBox.created = function() {
   if (user = StevenInterests.findOne({globalId: Meteor.userId()}))
   {
     var re = new RegExp(searchInput,"i");
-    var interests =  user.interests;
+    var interests = [];
+    for (entry in user.interests)
+      interests.push(entry.Name);
     amtUser = _.filter(interests, function(element){
       return re.test(element);      
     }).length;  
@@ -168,6 +217,107 @@ var searchBarChanged = function(newField) {
   }
   
 }
+var BuildButtons = function() {  
+ var userRecord;
+	if ((userRecord = StevenInterests.findOne({globalId: Meteor.userId()})))
+	{
+	  var left = Math.floor(Math.random()*(userRecord.interests.length));  
+	  var right =Math.floor(Math.random()*(userRecord.interests.length));  
+	  while (left==right)
+	  {
+	    var right =Math.floor(Math.random()*(userRecord.interests.length));  
+	  }
+	  Session.set("preferencebuttons",{
+	    Left: userRecord.interests[left].Name, 
+	    Right: userRecord.interests[right].Name});
+	}
+	else
+	{
+	    Session.set("preferencebuttons",{Left:"Links",Right: "Rechts"});
+	   
+	  
+	}
+	Session.set("initializedbuttons",true); 
+  
+}
+
+var SetPreference = function(top, bottom) {
+  var incompleteTop = true;
+  var incompleteBottom = true;
+  var topMap;
+  var bottomMap;
+  var userRecord;
+  if ((userRecord=StevenInterests.findOne({globalId: Meteor.userId()})))
+  {
+      for (i=0;i<userRecord.interests.length;i++)
+      {
+	if (incompleteTop)
+	  if (userRecord.interests[i].Name == top)
+	  {
+	      topMap = userRecord.interests[i].Map;
+	      incompleteTop = false;
+	    
+	  }
+	if (incompleteBottom)
+	  if (userRecord.interests[i].Name== bottom)
+	  {
+	      bottomMap = userRecord.interests[i].Map;
+	      incompleteBottom = false;
+	    
+	  }	
+      }   
+      if (incompleteTop || incompleteBottom)
+      {throw "Can't find one of the two buttons in the list of interests";}
+      StevenInterests.update({_id: userRecord._id},
+			     {$push: {GraphRelations: {Greater: topMap, Smaller: bottomMap}}}, 
+			     function(error,result) {
+			       if (error) 
+				 console.log(error)
+			     });
+	
+  }
+  else
+  {
+      throw "Geen record?!";
+  }
+  
+}
+DBTest = function(name) {
+ Meteor.call('TestConnection', name); 
+  
+}
+
+FillDB = function(tag1,tag2,amt) {
+ Meteor.call('FillDB',tag1, tag2, amt); 
+  
+}
+
+TestDB = function() {
+ Meteor.call('FillTagCollection'); 
+}
+
+DestroyDB = function() {
+ Meteor.call('DestroyTags'); 
+  
+}
+TestQuery = function(tags) {
+ Meteor.call('TestQuery',tags, function(error,result)
+ {
+   if (error)
+     console.log(error);
+   else
+   {
+    console.log("result");
+   }   
+ });
+  
+}
+
+result = function()
+{
+ return Session.get("query");
+  
+}
 
 var addInterest = function(evt, template) {
   var $elm = $(evt.currentTarget);
@@ -178,7 +328,7 @@ var addInterest = function(evt, template) {
   {
     StevenInterests.update({_id: intId._id},
       {
-	  $addToSet: {interests: interest}
+	  $addToSet: {interests: {Name: interest}}
       }      
     );
     
@@ -188,7 +338,7 @@ var addInterest = function(evt, template) {
     StevenInterests.insert({
       globalId: userid
       ,
-	interests: [interest]
+	interests: [{Name: interest}]
       }
     );
   }

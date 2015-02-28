@@ -32,10 +32,6 @@ Settings['defaultNumberOfInvitesForNewUsers'] = 2;
 Settings['defaultNumberOfInvitesForAutoInvitedUsers'] = 8;
 
 
-
-
-
-
 // Third-party packages
 
 if (this.SimpleSchema)

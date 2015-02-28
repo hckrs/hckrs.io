@@ -39,4 +39,5 @@ peerlibrary:async
 peerlibrary:xml2js
 meteorhacks:npm
 
-
+ostrio:neo4jdriver
+matb33:collection-hooks
