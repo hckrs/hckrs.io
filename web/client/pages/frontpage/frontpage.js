@@ -41,22 +41,22 @@ FrontpageController = DefaultController.extend({
 
 
 Template.frontpage.rendered = function() {
-  
+
   // drop welcome screen with animation
   Meteor.setTimeout(function() {
     $("#welcomeOverlay").addClass('anim-dropout');
   }, 4000);
-  
+
   // focus location finder
   Meteor.setTimeout(function() {
     var hash = Router.current().getParams().hash;
     if (!hash || hash == 'welcome')
       $("#welcome input").focus();
   }, 5000);
-  
+
   // fixed enroll button
   $("#enroll-btn").scrollspy({
-    min: $("#enroll-btn").offset().top,
+    min: $("#enroll-btn").offset().top - 20,
     max: $(document).height(),
     onEnter: function(elm, pos) {
       $(elm).addClass('fixed');
@@ -65,11 +65,11 @@ Template.frontpage.rendered = function() {
       $(elm).removeClass('fixed');
     }
   });
-  
+
   // slide navigation circles
   $(".slide").each(function() {
     var id = $(this).attr('id');
-    var offset = $(this).offset().top - $(window).height()/2;  
+    var offset = $(this).offset().top - $(window).height()/2;
     var $nav = $("#frontpage-slide-nav");
     $(this).scrollspy({
       min: offset,
@@ -77,7 +77,7 @@ Template.frontpage.rendered = function() {
       onEnter: function(elm, pos) {
         $nav.find("a").removeClass('active');
         $nav.find("a[href='#"+id+"']").addClass('active');
-        
+
         switch ($(elm).attr('id')) {
           case 'about': $(elm).find("#to-top").addClass('visible'); break;
         }
@@ -116,7 +116,7 @@ Template.frontpage.helpers({
 var showVideo = function() {
   $(document).scrollTo("#video");
   $("#video").addClass('playing');
-  
+
   var video = $("#video video").get(0)
   video.play();
   video.onended = function() {
