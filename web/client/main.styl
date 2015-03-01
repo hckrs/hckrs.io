@@ -1,8 +1,8 @@
 @import "nib"
+@import "../../general.import"
 
 $pagePaddingHeight = 20px;
 $pagePaddingWidth = 40px;
-$hover = #ffea87;
 
 html, body {
   margin: 0;
@@ -48,7 +48,7 @@ a img {
 
 
   .page {
-    padding: $pagePaddingHeight $pagePaddingWidth; 
+    padding: $pagePaddingHeight $pagePaddingWidth;
   }
   .page-space {
     height: 100px;
@@ -169,7 +169,7 @@ a img {
       position: fixed;
       top: 0px;
       left: 0px;
-      
+
       width: 100%;
       height: $headerHeight;
 
@@ -196,7 +196,7 @@ a img {
         left: $pagePaddingWidth;
         height: 63px;
         width: 190px;
-        background-image: url('/img/logo-inversed.svg');  
+        background-image: url('/img/logo-inversed.svg');
       }
 
       .menu { /* middle */
@@ -209,7 +209,7 @@ a img {
          .menu-item {
           display: block;
           float: left;
-          
+
           a {
             display: inline-block;
             padding: 12px 0px;
@@ -218,14 +218,14 @@ a img {
           }
           a:hover{
             text-decoration: none;
-            color: $hover; 
+            color: $hover;
           }
 
-          &:after { 
+          &:after {
             padding: 0px 10px 0px 9px;
-            content: '•'; 
+            content: '•';
           }
-          &:last-of-type:after { 
+          &:last-of-type:after {
             content: '';
           }
         }
@@ -250,8 +250,8 @@ a img {
           &:hover {
             background-color: rgba(0,0,0,0.3);
           }
-        }  
-      
+        }
+
         #citySelect {
           margin: 32px 5px;
           color: red;
@@ -272,7 +272,7 @@ a img {
           }
         }
 
-        .account {  
+        .account {
           margin: 15px 15px;
           margin-right: $pagePaddingWidth * 0.5;
           .dropdown {
@@ -299,7 +299,7 @@ a img {
         }
 
       }
-        
+
     }
 
     /* transition */
@@ -316,7 +316,7 @@ a img {
         box-shadow: 0px 0px 10px rgba(0,0,0,0.15);
       }
     }
-    
+
 
   }
 
@@ -386,7 +386,7 @@ a img {
     margin-left: 22px;
   }
 
-  
+
 
   .change{
     line-height: 60px;
@@ -402,7 +402,7 @@ a img {
   }
 
   .edit-mode, .toolbar-section, .toolbar-editor, .panel {
-      
+
       textarea, input[type="text"], select, input[type="password"],
       input[type="datetime"], input[type="datetime-local"],
       input[type="date"], input[type="month"],
@@ -481,7 +481,7 @@ a img {
         background-image: none !important;
       }
     }
-    
+
     select:active, select:focus {
       outline-style: none; -moz-outline-style:none;
     }
