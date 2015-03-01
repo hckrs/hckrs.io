@@ -4,11 +4,11 @@
     <a id="logo" href="">
       <img src="/img/frontpage-logo.svg" alt="hckrs.io" />
     </a>
-  
-    <a id="enroll-btn" href="" class="button">
+
+    <a id="enroll-btn" href="#enroll" class="button {{enrollActive}}">
       enroll
-    </a>  
-    
+    </a>
+
     <div id="welcomeOverlay" class="overlay">
       <div>make you a better hacker</div>
     </div>
@@ -22,21 +22,41 @@
     </div>
 
     <div id="welcome" class="slide" index="0">
+      <div id="enroll"><!-- scroll #target --></div>
       <div class="content-block">
         <div id="location-block">
           <h2>Where do you hack?</h2>
           <input type="text" />
         </div>
         <div id="enroll-block">
-          <a id="enroll-btn-large" href="#" class="button">
+          <a id="enroll-btn-large" href="#enroll" class="button">
             I wanna enroll
-            <small>Join your local hacker tribe</small>
           </a>
+          <small>Join your local hacker tribe</small>
           <a id="video-btn-small" href="#video">
             <img src="/img/frontpage-playbutton.svg" alt="View hckrs.io trailer." />
             <span>watch video</span>
           </a>
         </div>
+      </div>
+      <div id="login-block" class="{{enrollActive}}">
+        <div class="content">
+          <div class="title">
+            {{#if enrollActive}}
+              enroll:
+            {{else}}
+              sign in:
+            {{/if}}
+          </div>
+          <div class="sign-in-buttons">
+            <a href="#" class="signupService" data-service="github"><img src="/img/frontpage-github.svg" alt="Sign in with Github." /></a>
+            <a href="#" class="signupService" data-service="twitter"><img src="/img/frontpage-twitter.svg" alt="Sign in with Twitter." /></a>
+            <a href="#" class="signupService" data-service="facebook"><img src="/img/frontpage-facebook.svg" alt="Sign in with Facebook." /></a>
+          </div>
+        </div>
+        <a id="enroll-exit" href="#">
+          <img src="/img/close.svg" alt="Don't enroll now." />
+        </a>
       </div>
     </div>
 
@@ -94,16 +114,16 @@
       <a id="video-play" href="#" title="Play video">
         <img src="/img/frontpage-video.svg" alt="Play video">
       </a>
-      
+
       <!-- hidden by default -->
-      <video id="video-player" controls>
-        <source src="/video/teaser.mp4" type="video/mp4">
+      <video id="video-player">
+        <source src="http://assets.hckrs.io/video/hckrs-teaser3.mov" type="video/mp4">
         <!-- TODO add all kind of sources -->
       </video>
       <a id="video-exit" href="#">
         <img src="/img/close.svg" alt="Close video." />
       </a>
-      
+
     </div>
 
     <div id="manifesto" class="slide">
@@ -115,9 +135,9 @@
 
     <div id="about" class="slide">
       <div class="content-block">
-        
+
         <h2>About</h2>
-        
+
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur posuere velit at fermentum auctor. Donec nec risus et lacus sodales tincidunt quis eu enim. In vehicula tristique mi et bibendum. Vivamus at orci et neque lobortis pulvinar non sed nisl. Etiam nisl magna, scelerisque eu fermentum id, elementum et diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc sed risus ornare, mattis urna ac, tempor urna. Pellentesque id leo in nisi sagittis lobortis ac et justo. Etiam ullamcorper lorem purus, non sagittis tortor scelerisque vitae. Proin laoreet faucibus aliquam. Cras sit amet erat vitae.</p>
 
         <p>We are in permanent beta, so feel free to experiment with us.</p>

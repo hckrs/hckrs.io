@@ -36,6 +36,12 @@ FrontpageController = DefaultController.extend({
 //   },
 // });
 
+// state
+var state = new State('frontpage', {
+  "enrollActive": false,
+});
+
+
 
 // events
 
@@ -93,9 +99,13 @@ Template.frontpage.rendered = function() {
 
 Template.frontpage.events({
   'click a': function(evt) {
+    state.set('enrollActive', false);
     var href = $(evt.currentTarget).attr('href');
     if (href.substring(0, 1) === "#") // check for hash anchor
       $(document).scrollTo(href, {duration: 800});
+  },
+  'click a[href="#enroll"]': function() {
+    state.set('enrollActive', true);
   },
   'click #video-play': function(evt) {
     evt.preventDefault();
@@ -110,6 +120,9 @@ Template.frontpage.events({
 Template.frontpage.helpers({
   'staff': function() {
     return Users.find({"staff.title": {$exists: true}}).fetch();
+  },
+  'enrollActive': function() {
+    return state.get('enrollActive') ? 'active' : '';
   }
 })
 

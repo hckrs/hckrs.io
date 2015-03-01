@@ -1,9 +1,19 @@
-
 @import "nib"
+@import "../../main"
 
-mousehover()
+text-shadow()
+  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
+
+button()
+  border: 1px solid white;
+  border-radius: 2px;
+  padding: 5px;
+  text-align: center;
+  text-shadow()
+
+
+button-active()
   background-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 0px 3px white;
 
 centered()
   /*
@@ -16,6 +26,25 @@ centered()
   top: 50%;
   transform: translate(-50%, -50%);
 
+frontpage-blur-background()
+  background-color: #396e8a;
+  background-image: url(/img/backgrounds/frontpage-intro-blur.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 1px;
+  background-attachment: fixed;
+
+exit-button()
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 80;
+  display: block;
+  width: 30px;
+  height: 30px;
+  img {
+    width: 100%;
+  }
 
 
 /* FRONTPAGE */
@@ -26,16 +55,34 @@ centered()
 
   /* GENERIC */
 
+  .title {
+    color: $hover;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  .button {
+    button();
+    &:hover {
+      button-active();
+    }
+  }
+
+  input[type="text"] {
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 1px solid white;
+    border-radius: 2px;
+    outline: 0;
+  }
+
   .overlay {
     position: fixed;
     z-index: 50;
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 1px;
-    background-attachment: fixed;
+    frontpage-blur-background()
 
     &.anim-dropout {
       transition: height 1s ease-in, visibility 0s 1s;
@@ -79,31 +126,11 @@ centered()
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    box-shadow: 0px -5px 5px rgba(0,0,0,0.3);
   }
 
   .slide .content-block {
     margin: 0 auto;
     padding: 100px 20px;
-  }
-
-  .button {
-    border: 1px solid white;
-    border-radius: 2px;
-    padding: 5px;
-    text-align: center;
-    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
-    &:hover {
-      mousehover();
-    }
-  }
-
-  input[type="text"] {
-    background-color: transparent;
-    border: 0px;
-    border-bottom: 1px solid white;
-    border-radius: 2px;
-    outline: 0;
   }
 
 
@@ -133,14 +160,15 @@ centered()
       top: 20px;
       bottom: auto;
     }
+    &.active { /* enroll mode already active */
+      visibility: hidden;
+    }
   }
 
 
   /* overlay */
 
   #welcomeOverlay {
-    background-color: #396e8a;
-    background-image: url(/img/backgrounds/frontpage-intro-blur.jpg);
     div {
       position: fixed;
       top: 50%;
@@ -169,36 +197,105 @@ centered()
       }
     }
     #enroll-block {
-      margin-top: 200px;
+      margin-top: 130px;
       #enroll-btn-large {
         display: block;
-        font-size: 2.2em;
-        small {
-          display: block;
-          font-size: 0.5em;
-          font-weight: normal;
-        }
+        font-size: 2.4em;
+        border-width: 3px;
+      }
+      small {
+        display: block;
+        margin-top: 10px;
+        font-size: 1em;
+        font-style: italic;
+        text-align: center;
+        text-shadow()
       }
       #video-btn-small {
         width: 180px;
         padding: 10px;
-        margin: 50px auto;
+        margin: 30px auto;
         text-align: center;
         display: block;
         img {
           margin: 0 auto;
-          width: 50px;
+          width: 35px;
         }
         span {
-          margin-top: 4px;
-          display: block;
+          margin-left: 6px;
         }
         &:hover {
-          mousehover()
+          button-active()
         }
       }
     }
+    #login-block {
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      height: 70px;
+      text-align: center;
+      transition: height 1s;
+      z-index: 45;
 
+      .content {
+        position: absolute;
+        top: 50%;
+        height: 70px;
+        transform: translateY(-50%);
+        width: 100%;
+        text-align: center;
+      }
+
+      &.active {
+        height: 100%;
+      }
+
+      /* blur background after sign in buttons
+         after clicking enroll */
+      &::after {
+        position: absolute;
+        z-index: -1;
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+        content: "";
+        frontpage-blur-background()
+        opacity: 0;
+        transition: opacity 0.4s 0.9s;
+      }
+      &.active::after {
+        opacity: 1;
+        transition: opacity 0.2s 0s;
+      }
+
+      #enroll-exit { display: none; }
+      &.active #enroll-exit {
+        exit-button();
+      }
+
+      .sign-in-buttons,
+      .sign-in-buttons a,
+      .title {
+        display: inline-block;
+      }
+      .sign-in-buttons a,
+      .title {
+        padding: 15px 35px 10px 35px;
+        height: 70px;
+        margin: 0px;
+      }
+      .title {
+        position: relative;
+        top: 5px;
+      }
+      .sign-in-buttons a {
+        &:hover {
+          button-active();
+        }
+      }
+    }
   }
 
   #tools {
@@ -226,7 +323,7 @@ centered()
         width: 100%;
       }
       &:hover {
-        mousehover();
+        button-active();
       }
     }
 
@@ -241,17 +338,9 @@ centered()
     }
 
     #video-exit {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 80;
-      display: block;
-      width: 30px;
-      height: 30px;
+      exit-button();
       display: none;
-      img {
-        width: 100%;
-      }
+
     }
 
     /* toggle visivility */
