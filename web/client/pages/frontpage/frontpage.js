@@ -45,14 +45,14 @@ Template.frontpage.rendered = function() {
   // drop welcome screen with animation
   Meteor.setTimeout(function() {
     $("#welcomeOverlay").addClass('anim-dropout');
-  }, 4000);
+  }, 2500);
 
   // focus location finder
   Meteor.setTimeout(function() {
     var hash = Router.current().getParams().hash;
     if (!hash || hash == 'welcome')
       $("#welcome input").focus();
-  }, 5000);
+  }, 3500);
 
   // fixed enroll button
   $("#enroll-btn").scrollspy({

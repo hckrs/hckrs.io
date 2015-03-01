@@ -4,28 +4,28 @@
 mousehover()
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0px 0px 3px white;
-  
+
 centered()
-  /* 
+  /*
     Align in center, both vertical and horizontal.
-    Apply only if the height of the element is less than window height. 
+    Apply only if the height of the element is less than window height.
     Furthermore the parent must be postioned absolute|fixed|relative.
   */
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  
-  
+
+
 
 /* FRONTPAGE */
 
 #frontpage {
   width: inherit;
   height: inherit;
-  
+
   /* GENERIC */
-  
+
   .overlay {
     position: fixed;
     z-index: 50;
@@ -36,18 +36,18 @@ centered()
     background-size: cover;
     background-position: 0 1px;
     background-attachment: fixed;
-    
+
     &.anim-dropout {
       transition: height 1s ease-in, visibility 0s 1s;
       height: 0%;
       visibility: hidden;
-      & > * { 
-        transition: opacity 1s;
-        opacity: 0; 
+      & > * {
+        transition: opacity 0.3s 0.6s;
+        opacity: 0;
       }
     }
   }
-  
+
   .slide-nav {
     position: fixed;
     z-index: 40;
@@ -67,11 +67,11 @@ centered()
       }
       &.active {
         opacity: 1;
-        box-shadow: 0 0 3px white; 
+        box-shadow: 0 0 3px white;
       }
     }
   }
-  
+
   .slide {
     position: relative;
     min-width: 100%;
@@ -81,12 +81,12 @@ centered()
     background-repeat: no-repeat;
     box-shadow: 0px -5px 5px rgba(0,0,0,0.3);
   }
-  
+
   .slide .content-block {
     margin: 0 auto;
     padding: 100px 20px;
   }
-  
+
   .button {
     border: 1px solid white;
     border-radius: 2px;
@@ -97,7 +97,7 @@ centered()
       mousehover();
     }
   }
-  
+
   input[type="text"] {
     background-color: transparent;
     border: 0px;
@@ -105,7 +105,7 @@ centered()
     border-radius: 2px;
     outline: 0;
   }
-  
+
 
 
   /* SPECIFIC */
@@ -134,49 +134,50 @@ centered()
       bottom: auto;
     }
   }
-  
+
 
   /* overlay */
 
   #welcomeOverlay {
     background-color: #396e8a;
     background-image: url(/img/backgrounds/frontpage-intro-blur.jpg);
-    div { 
-      position: relative;
+    div {
+      position: fixed;
       top: 50%;
+      width: 100%;
       transform: translateY(-50%);
+      font-size: 3em;
       text-align: center;
-      font-size: 3em; 
     }
     .logo {
       position: absolute;
     }
   }
-  
+
 
   /* slides */
-  
+
   #welcome {
     background-image: url(/img/backgrounds/frontpage-intro.jpg);
-    .content-block { 
-      width: 440px; 
+    .content-block {
+      width: 440px;
     }
     #location-block {
-      input { 
-        width: 100%; 
-        font-size: 1.8em; 
-      }  
+      input {
+        width: 100%;
+        font-size: 1.8em;
+      }
     }
     #enroll-block {
       margin-top: 200px;
-      #enroll-btn-large { 
-        display: block; 
-        font-size: 2.2em; 
+      #enroll-btn-large {
+        display: block;
+        font-size: 2.2em;
         small {
           display: block;
           font-size: 0.5em;
           font-weight: normal;
-        } 
+        }
       }
       #video-btn-small {
         width: 180px;
@@ -197,9 +198,9 @@ centered()
         }
       }
     }
-      
+
   }
-  
+
   #tools {
     background-image: url(/img/backgrounds/frontpage-tools.jpg);
     .row {
@@ -210,13 +211,13 @@ centered()
       img {
         display: block;
         margin: 0 auto;
-      }   
+      }
     }
   }
-  
+
   #video {
     background-image: url(/img/backgrounds/frontpage-video.jpg);
-  
+
     #video-play {
       centered();
       display: block;
@@ -228,7 +229,7 @@ centered()
         mousehover();
       }
     }
-    
+
     #video-player {
       position: absolute;
       width: 100%;
@@ -238,7 +239,7 @@ centered()
       visibility: hidden;
       opacity: 0;
     }
-    
+
     #video-exit {
       position: absolute;
       top: 20px;
@@ -252,7 +253,7 @@ centered()
         width: 100%;
       }
     }
-    
+
     /* toggle visivility */
     &.playing {
       #video-play { display: none; }
@@ -264,7 +265,7 @@ centered()
     #video-player { transition: opacity 0.6s, visibility 0s 0.8s; }
     &.playing #video-player { transition: opacity 0.6s, visibility 0s 0s; }
   }
-  
+
   #manifesto {
     background-image: url(/img/backgrounds/frontpage-manifesto.jpg);
     .content-block {
@@ -272,7 +273,7 @@ centered()
       padding-right: 200px;
     }
   }
-  
+
   #about {
     background-image: url(/img/backgrounds/frontpage-about.jpg);
     .content-block {
@@ -307,7 +308,7 @@ centered()
       }
       visibility: hidden;
       opacity: 0;
-      transition: opacity 0.6s, visibility 0s 0.8s;
+      transition: opacity 0.6s, visibility 0s 0s;
       &.visible {
         visibility: visible;
         opacity: 1;
