@@ -2,6 +2,10 @@
 // Route Controller
 FrontpageController = DefaultController.extend({
   template: 'frontpage',
+  subscriptions: function() {
+    this.subscribe('staff');
+    this.subscribe('ambassadors');
+  },
 });
 
 /* FRONTPAGE */
@@ -50,9 +54,11 @@ Template.frontpage.rendered = function() {
   var tmpl = this;
 
   // drop welcome screen with animation
-  Meteor.setTimeout(function() {
-    $("#welcomeOverlay").addClass('anim-dropout');
-  }, 3500);
+  Util.exec(function() {
+    Meteor.setTimeout(function() {
+      $("#welcomeOverlay").addClass('anim-dropout');
+    }, 3500);
+  });
 
   // focus location finder
   Meteor.setTimeout(function() {
@@ -137,9 +143,18 @@ Template.frontpage.events({
 
 });
 
+
+
+
 Template.frontpage.helpers({
   'staff': function() {
-    return Users.find({"staff.title": {$exists: true}}).fetch();
+    return Users.find({"roles.staff": {$size: {$gt: 0}}}).fetch();
+  },
+  'admins': function() {
+    return Users.find({
+      "roles.staff": {$not: {$size: {$gt: 0}}},
+      "isAmbassador": true
+    }, {limit: 20}).fetch();
   },
   'enrollActive': function() {
     return state.get('enrollActive') ? 'active' : '';
@@ -164,3 +179,4 @@ var exitVideo = function() {
   video.pause();
   video.currentTime = 0;
 }
+

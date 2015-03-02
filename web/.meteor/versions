@@ -5,6 +5,7 @@ accounts-github@1.0.3
 accounts-oauth@1.1.3
 accounts-password@1.0.5
 accounts-twitter@1.0.3
+alanning:roles@1.2.13
 aldeed:autoform@4.2.1
 aldeed:collection2@2.3.0
 aldeed:simple-schema@1.1.0

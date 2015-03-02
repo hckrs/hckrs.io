@@ -1,12 +1,12 @@
 // ROUTES
 
 // Define routes here.
-// 
+//
 // These routes are shared between client and server.
 // The actual router is implemented in /client/router.js
 // Furthermore, every route have a corresponding RouteController located
 // in the /client/pages/{page}/{page}.js files.
-// 
+//
 // The server-only routes aren't here, but only defined in /server/router.js
 
 var routes = [
@@ -31,7 +31,7 @@ var routes = [
   [ 'invitations'  , '/invitations'          ],
   [ 'map'          , '/map'                  ],
   [ 'deals'        , '/deals'                ],
-  
+
   // special routes (which will redirect)
   [ 'logout'       , '/logout'               ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
@@ -40,7 +40,7 @@ var routes = [
 
   // bare routes (must defined as last in this list)
   [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
-  
+
 
 ];
 

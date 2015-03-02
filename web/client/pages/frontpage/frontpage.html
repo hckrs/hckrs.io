@@ -144,10 +144,10 @@
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur posuere velit at fermentum auctor. Donec nec risus et lacus sodales tincidunt quis eu enim. In vehicula tristique mi et bibendum. Vivamus at orci et neque lobortis pulvinar non sed nisl. Etiam nisl magna, scelerisque eu fermentum id, elementum et diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc sed risus ornare, mattis urna ac, tempor urna. Pellentesque id leo in nisi sagittis lobortis ac et justo. Etiam ullamcorper lorem purus, non sagittis tortor scelerisque vitae. Proin laoreet faucibus aliquam. Cras sit amet erat vitae.</p>
 
         <p>We are in permanent beta, so feel free to experiment with us.</p>
-
-        <p>Hosting powered by <a href="http://modulus.io" target="_blank"><img src="/img/frontpage-modulus.svg" alt="Modulus" id="modulus-logo" /></a></p>
-
+      </div>
+      <div class="content-block large">
         <div id="staff">
+          <div class="desc">hckrs team</div>
           <div class="members">
           {{#each staff}}
             {{#with UserView this._id}}
@@ -155,9 +155,15 @@
             {{/with}}
           {{/each}}
           </div>
-          <div class="desc">hckrs team</div>
+          <div class="desc">admins</div>
+          <div class="members">
+          {{#each admins}}
+            {{#with UserView this._id}}
+              {{> pictureView}}
+            {{/with}}
+          {{/each}}
+          </div>
         </div>
-
       </div>
       <a id="to-top" href="#welcome">
         <img src="/img/frontpage-arrowdown.svg" alt="Go to top" />
