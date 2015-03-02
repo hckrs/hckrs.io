@@ -1,19 +1,19 @@
 <head>
   <title>hckrs.io</title>
   <!--
-   ██░ ██  ▄████▄   ██ ▄█▀ ██▀███    ██████        ██▓ ▒█████  
+   ██░ ██  ▄████▄   ██ ▄█▀ ██▀███    ██████        ██▓ ▒█████
   ▓██░ ██▒▒██▀ ▀█   ██▄█▒ ▓██ ▒ ██▒▒██    ▒       ▓██▒▒██▒  ██▒
   ▒██▀▀██░▒▓█    ▄ ▓███▄░ ▓██ ░▄█ ▒░ ▓██▄         ▒██▒▒██░  ██▒
   ░▓█ ░██ ▒▓▓▄ ▄██▒▓██ █▄ ▒██▀▀█▄    ▒   ██▒      ░██░▒██   ██░
   ░▓█▒░██▓▒ ▓███▀ ░▒██▒ █▄░██▓ ▒██▒▒██████▒▒  ██▓ ░██░░ ████▓▒░
-   ▒ ░░▒░▒░ ░▒ ▒  ░▒ ▒▒ ▓▒░ ▒▓ ░▒▓░▒ ▒▓▒ ▒ ░  ▒▓▒ ░▓  ░ ▒░▒░▒░ 
-   ▒ ░▒░ ░  ░  ▒   ░ ░▒ ▒░  ░▒ ░ ▒░░ ░▒  ░ ░  ░▒   ▒ ░  ░ ▒ ▒░ 
-   ░  ░░ ░░        ░ ░░ ░   ░░   ░ ░  ░  ░    ░    ▒ ░░ ░ ░ ▒  
-   ░  ░  ░░ ░      ░  ░      ░           ░     ░   ░      ░ ░  
+   ▒ ░░▒░▒░ ░▒ ▒  ░▒ ▒▒ ▓▒░ ▒▓ ░▒▓░▒ ▒▓▒ ▒ ░  ▒▓▒ ░▓  ░ ▒░▒░▒░
+   ▒ ░▒░ ░  ░  ▒   ░ ░▒ ▒░  ░▒ ░ ▒░░ ░▒  ░ ░  ░▒   ▒ ░  ░ ▒ ▒░
+   ░  ░░ ░░        ░ ░░ ░   ░░   ░ ░  ░  ░    ░    ▒ ░░ ░ ░ ▒
+   ░  ░  ░░ ░      ░  ░      ░           ░     ░   ░      ░ ░
           ░                                    ░              t
   -->
   <meta name="author" content="Toon van Ramshorst &amp; Jarno Le Conté">
-  <meta name="title" content="hckrs.io" /> 
+  <meta name="title" content="hckrs.io" />
   <meta name="description" content="Hackers community in your city" />
   <meta property="og:title" content="Hackers community in your city" />
   <meta property="og:site_name" content="hckrs.io" />
@@ -67,23 +67,23 @@
 <template name="header">
   <div id="header" class="{{headerStyle}} {{hidden}} {{active}}">
     <div class="floating">
-      <div class="background" style="background-image:url('{{backgroundImage}}');"></div>
+      <div class="background"></div>
       <div class="content">
-       
+
         <a href="{{pathFor 'highlights'}}"><div class="logo-small"></div></a>
-       
+
 
           <!-- right menu -->
           <div class="session">
-            
+
             {{#if hasAdminPermission}}
               {{> citySelect}}
             {{/if}}
             {{#if hasAmbassadorPermission}}
               <a href="{{pathFor 'admin'}}" action="admin" class="button btn btn-inverse light"><i class="glyphicon glyphicon-white glyphicon-wrench"></i></a>
             {{/if}}
-            
-          
+
+
             <div class="account">
               <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -104,21 +104,21 @@
 
           <div class="menu">
             {{#unless MyProp 'isAccessDenied'}}
-              
+
               <div class="menu-item">
                 <a href="{{pathFor 'hackers'}}">hackers</a>
               </div>
-              
+
               {{#if CurrentCity.agenda}}
               <div class="menu-item">
                 <a href="{{pathFor 'agenda'}}">agenda</a>
               </div>
               {{/if}}
-              
+
               <div class="menu-item">
                 <a href="{{pathFor 'map'}}">map</a>
               </div>
-              
+
               <div class="menu-item">
                 <a href="{{pathFor 'deals'}}">deals</a>
               </div>
@@ -152,7 +152,7 @@
               {{/if}}
               {{#if invisibleUsers}}
                 ~ {{invisibleUsers}}
-              {{/if}} 
+              {{/if}}
             </option>
           {{/each}}
         </optgroup>

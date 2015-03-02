@@ -4,6 +4,10 @@
 $pagePaddingHeight = 20px;
 $pagePaddingWidth = 40px;
 
+backgroundImage()
+  background-image: url(/img/backgrounds/frontpage-intro-blur.jpg);
+
+
 html, body {
   margin: 0;
   padding: 0;
@@ -13,8 +17,12 @@ body{
   font-family: 'open sans';
   -webkit-font-smoothing: antialiased;
   transition: background-image 2s;
+  background-color: #396e8a;
+  backgroundImage();
+  background-repeat: no-repeat;
   background-size: cover;
-  background-attachment:fixed;
+  background-position: 0 1px;
+  background-attachment: fixed;
   color: white;
   /*background-image:linear-gradient(white, #1b3a4b) !important;*/
 }
@@ -181,6 +189,7 @@ a img {
         width: 100%;
         height: $headerHeight;
         background-size: cover;
+        backgroundImage();
         opacity: 0.95;
       }
 
