@@ -1,9 +1,4 @@
-AdminController = DefaultAdminController.extend({
-  onBeforeAction: function() {
-    Router.go('admin_hackers');
-    this.next();
-  }
-});
+
 
 Template.admin_header.helpers({
   'active': function(route) {

@@ -1,12 +1,13 @@
 
 // Route Controller
-FrontpageController = DefaultController.extend({
-  template: 'frontpage',
-  subscriptions: function() {
-    this.subscribe('staff');
-    this.subscribe('ambassadors');
-  },
-});
+// FrontpageController = DefaultController.extend({
+//   template: 'frontpage',
+//   subscriptions: function() {
+//     this.subscribe('staff');
+//     this.subscribe('ambassadors');
+//   },
+//   fastRender: true
+// });
 
 /* FRONTPAGE */
 
@@ -148,13 +149,20 @@ Template.frontpage.events({
 
 Template.frontpage.helpers({
   'staff': function() {
-    return Users.find({"roles.staff": {$size: {$gt: 0}}}).fetch();
+    return Users.find({$and: [
+      {"roles.staff": {$exists: true}},
+      {"roles.staff": {$not: {$size: 0}}}
+    ]}).fetch();
   },
   'admins': function() {
-    return Users.find({
-      "roles.staff": {$not: {$size: {$gt: 0}}},
-      "isAmbassador": true
-    }, {limit: 20}).fetch();
+    // admin without the staff members
+    return Users.find({$and: [
+      {"isAmbassador": true},
+      {$or: [
+        {"roles.staff": {$exists: false}},
+        {"roles.staff": []}
+      ]}
+    ]}).fetch();
   },
   'enrollActive': function() {
     return state.get('enrollActive') ? 'active' : '';

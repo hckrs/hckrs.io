@@ -21,7 +21,7 @@ Subscriptions.init = function() {
         handles.push(handle);
       }, function() {
         Session.set('subscriptionsReady', true);
-      });  
+      });
     });
   });
 }

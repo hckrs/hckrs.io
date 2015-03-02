@@ -1,29 +1,10 @@
-// Route Controller
-
-HackerController = DefaultController.extend({
-  template: 'hacker',
-  waitOn: function () {
-    return [];
-  },
-  onBeforeAction: function() {
-    if (Subscriptions.ready() && !this.initialized) {
-      var userId = (Users.userForBitHash(this.params.bitHash) || {})._id;
-      Session.set('hackerId', userId);
-      Session.set('hackerEditMode', Users.myProp('isAccessDenied'));  
-      this.initialized = true;
-    }
-    this.next();
-  }
-});
 
 
 
-
-
-/* HACKER 
+/* HACKER
    - general user info
    - skills & favorites
-   - map to pick a location 
+   - map to pick a location
    - link external social services
 */
 
@@ -51,7 +32,7 @@ var addToSet = function(event) {
   var field = $elm.attr('name');
   var value = $elm.val();
   var checked = $elm.is(':checked');
-  
+
   Util.exec(function() {
     var action = checked ? '$addToSet' : '$pull';
     var modifier = _.object([ action ], [ _.object([field], [value]) ]);
@@ -65,7 +46,7 @@ var addToSet = function(event) {
 
 // DB: input-to-string
 // when user input field becomes unfoccused
-// update the user info in the database  
+// update the user info in the database
 //
 // this is how the html is related to the database
 // input[name]  --> database field name
@@ -74,7 +55,7 @@ var saveChangedField = function(event, cb) {
   var $elm = $(event.currentTarget); //input element
   var field = $elm.attr('name');
   var value = $elm.val();
-  
+
   // show feedback on input element
   Util.addTemporaryClass($elm, 'saved');
 
@@ -97,11 +78,11 @@ var fieldChanged = function(event) {
 
 // special case when autosaving email field
 // callback after email field updated in the database
-var updateEmailCallback = function(err) { 
+var updateEmailCallback = function(err) {
   Session.set('isDuplicateEmail', false);
   Session.set('isNotValidEmail', false);
   if (err) {
-    if (err.reason === "Access denied") { 
+    if (err.reason === "Access denied") {
       // possible no valid e-mailaddress
       Session.set('isNotValidEmail', true);
     } else {
@@ -150,7 +131,7 @@ var moveCity = function(evt) {
   Meteor.call('moveUserToCity', hackerId(), city, function(err) {
     if (err) return;
     Router.goToCity(city); // redirect to new city
-  }); 
+  });
 }
 
 
@@ -180,13 +161,13 @@ Template.hacker.events({
   // general autosave input fields
   "blur input[autosave]": function(evt) {
     var callback;
-    
+
     // callback after changing email field
-    if ($(evt.currentTarget).hasClass('email')) 
+    if ($(evt.currentTarget).hasClass('email'))
       callback = updateEmailCallback;
 
     saveChangedField(evt, callback);
-    
+
   },
   "keyup input[autosave]": fieldChanged,
   "click input[type='checkbox'][autosave]": addToSet,
@@ -214,7 +195,7 @@ Template.hacker.helpers({
   'canEdit': function() { return isCurrentUser() || Users.hasAmbassadorPermission(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'isEditMode': function() { return Session.get('hackerEditMode'); },
-  'activeMode': function(mode) { 
+  'activeMode': function(mode) {
     var currentMode = Session.get('hackerEditMode') ? 'edit' : 'preview';
     return currentMode === mode ? 'active' : '';
   }
@@ -225,7 +206,7 @@ Template.hackerEdit.helpers({
     // indicate required field after user try to proceed without filling in this field
     return !Object.property(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
   },
-  "selected": function(socialPicture) { 
+  "selected": function(socialPicture) {
     var isSelected = hackerProp('profile.picture') == socialPicture;
     return  isSelected ? 'checked' : "";
   },
@@ -250,8 +231,8 @@ Template.hackerEdit.helpers({
 });
 
 Template.hackerView.helpers({
-  "urlCurrentUser": function() { 
-    return Users.userProfileUrl(Meteor.userId()); 
+  "urlCurrentUser": function() {
+    return Users.userProfileUrl(Meteor.userId());
   },
   "isCompanyOrLocation": function() {
     return !!(this.profile.company || this.profile.location);

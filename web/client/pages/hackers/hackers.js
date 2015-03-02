@@ -7,16 +7,6 @@ var state = new State('hackers', {
 });
 
 
-// Route Controller
-
-HackersController = DefaultController.extend({
-  template: 'hackers',
-  waitOn: function () {
-    return [ 
-      Meteor.subscribe('invitations'),
-    ];
-  }
-});
 
 
 /* HACKERS list */
@@ -34,10 +24,10 @@ var selector = function(inclHidden) {
 
   if (!_.isEmpty(filter.skills))
     _.extend(selector, {"profile.skills": {$all: filter.skills}});
-  
+
   if (!Users.hasAmbassadorPermission() || !inclHidden)
     _.extend(selector, {"isHidden": {$ne: true}});
-  
+
   return selector;
 }
 
@@ -46,11 +36,11 @@ var selector = function(inclHidden) {
 
 Template.hackers.helpers({
   "total": function() {
-    return Meteor.users.find(selector()).count(); 
+    return Meteor.users.find(selector()).count();
   },
-  "hackerViews": function() { 
+  "hackerViews": function() {
     var city = Session.get('currentCity');
-    
+
     var transitionDelay = 0;
     var getUserView = function(user) {
       user = Users.userView(user);
@@ -60,17 +50,17 @@ Template.hackers.helpers({
     }
 
     var options = {sort: {isAmbassador: -1, accessAt: -1}};
-    return Users.find(selector(true), options).map(getUserView); 
+    return Users.find(selector(true), options).map(getUserView);
   },
   'hacking': function() {
     var hacking = state.get('filter').hacking;
     var hackingLabels = _.map(hacking, _.partial(Util.getLabel, HACKING_OPTIONS));
-    var hackingSentence = String.sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');    
+    var hackingSentence = String.sentenceFromList(hackingLabels, ', ', ' and ', '<strong>', '</strong>');
     return hackingSentence;
   },
   'skills': function() {
     var skillsLabels = state.get('filter').skills;
-    var skillsSentence = String.sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');    
+    var skillsSentence = String.sentenceFromList(skillsLabels, ', ', ' and ', '<strong>', '</strong>');
     return skillsSentence;
   }
 });
@@ -123,19 +113,19 @@ Template.hackersToolbar.events({
   },
   'click [action="submit"]': function(evt) {
     evt.preventDefault();
-    
+
     var $button = $(evt.currentTarget);
     var $form = $("#hackersNewsletterEditorForm");
     var formData = $form.serializeObject();
     var isPreview = $button.attr('preview') === "true";
-    
+
     if (!AutoForm.validateForm("hackersNewsletterEditorForm"))
       return;
 
     // disable button for a few seconds
     var text = $button.text();
-    $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');  
-    var cb = function() { 
+    $button.attr('disabled', 'disabled').addClass('disabled').text('Sending...');
+    var cb = function() {
       $button.removeAttr('disabled').removeClass('disabled').text(text);
     };
 
@@ -157,7 +147,7 @@ var loadEmailTemplate = function(templateName) {
       tmpl_message = Template['emailContent_' + templateName],
       subject = Blaze.toHTML(tmpl_subject),
       message = Blaze.toHTML(tmpl_message);
-  
+
   return { subject: subject, message: message };
 }
 
@@ -175,7 +165,7 @@ var setTemplate = function() {
 
 
 var sendMailing = function(mail, isTest, cb) {
-  
+
   // preserve line breaks in message
   mail.message = mail.message.replace(/\n/g, '<br/>');
 
@@ -210,7 +200,7 @@ var sendMailing = function(mail, isTest, cb) {
         state.set('toolbarOpen', false);
       }
     }
-    cb(err);  
+    cb(err);
   });
 }
 
@@ -224,7 +214,7 @@ var filterFormChanged = function(event) {
   var $form = $(event.currentTarget).parents('form:first');
   var formData = $form.serializeObject();
   var items = Array.array(formData.filter);
-  
+
   var filter =_.groupBy(items, function(item){ return /^hacking/.test(item) ? 'hacking' : 'skills'; });
   filter.hacking = _.invoke(filter.hacking, 'replace', /^hacking-/, '');
   filter.skills = _.invoke(filter.skills, 'replace', /^skill-/, '');

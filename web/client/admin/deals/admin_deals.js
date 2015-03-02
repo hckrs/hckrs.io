@@ -1,15 +1,4 @@
-// Route Controller
 
-AdminDealsController = DefaultAdminController.extend({
-  template: 'admin_deals',
-  waitOn: function () {
-    var city = Session.get('currentCity');
-    var isAdmin = Users.hasAdminPermission();
-    return [ 
-      Meteor.subscribe('deals', isAdmin ? 'all' : city),
-    ];
-  }
-});
 
 
 Template.admin_deals.helpers({
@@ -21,12 +10,12 @@ Template.admin_deals.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        Field.date, 
-        Field.city, 
-        Field.private, 
-        'title', 
-        'description', 
-        Field.url, 
+        Field.date,
+        Field.city,
+        Field.private,
+        'title',
+        'description',
+        Field.url,
         'code'
       ],
     }

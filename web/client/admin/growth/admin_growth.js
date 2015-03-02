@@ -6,27 +6,12 @@ var state = new State('adminGrowth', {
 });
 
 
-// Route Controller
-
-AdminGrowthController = DefaultAdminController.extend({
-  template: 'admin_growth',
-  onRun: function() {
-    state.set('city', Session.get('currentCity'));
-  },
-  waitOn: function () {
-    return [ 
-      // load all github users from the selected city
-      Meteor.subscribe('growthGithub', state.get('city')),
-      Meteor.subscribe('emailTemplates'), 
-    ];
-  }
-});
 
 // including fields
 
 var fields = function() {
   return [
-    Field.city, 
+    Field.city,
     { key: 'createdAt', label: 'since', sortByValue: true, fn: Field.fn.date },
     { key: 'avatarUrl', label: '#', fn: function(avatarUrl, obj) { return Safe.string('<a href="https://github.com/'+obj['username']+'" target="_blank"><img src="'+avatarUrl+'" width="50" /></a>'); }},
     // 'name',
@@ -39,7 +24,7 @@ var fields = function() {
     { key: 'biography', label: 'bio', fn: function(bio) { return bio ? Safe.string('<span class="glyphicon glyphicon-leaf" title="'+bio+'" style="cursor:help;"></span>') : ''; } },
     { key: 'company', label: 'comp.', fn: function(company) { return company ? Safe.string('<span class="glyphicon glyphicon-briefcase" title="'+company+'" style="cursor:help;"></span>') : ''; } },
     { key: 'location', label: 'loc.', fn: function(location) { return location ? Safe.string('<span class="glyphicon glyphicon-map-marker" title="'+location+'" style="cursor:help;"></span>') : ''; } },
-    
+
     { key: 'website', label: 'site', sortByValue: true, fn: function(url) { return url ? Safe.url(url, {text: '<span class="glyphicon glyphicon-globe"></span>'}) : ''; }},
     { key: 'email', label: 'email', sortByValue: true, fn: Field.fn.email },
     { key: 'invitedAt', label: 'invited', sortByValue: true, fn: Field.fn.date},
@@ -80,7 +65,7 @@ Template.admin_growth.helpers({
 // Template rendered
 
 Template.admin_growth.rendered = function() {
-  // default sorting 
+  // default sorting
   // XXX can be implemented using a 'sort' attribute in later package versions of reactive-table
   Session.set('reactive-table-reactive-table-sort', 1); // signup date github
   Session.set('reactive-table-reactive-table-sort-direction', -1); // desc
@@ -137,7 +122,7 @@ Template.admin_growthEmail.events({
       , userIds  = getUsersFromTop(number)
       , subjectIdentifier  = formData.subject
       , bodyIdentifier     = formData.body;
-    
+
     // validate email
     if (!AutoForm.validateForm("adminGrowthEmailForm"))
       return;
@@ -148,7 +133,7 @@ Template.admin_growthEmail.events({
     var cb = function() {
       $button.removeAttr('disabled').removeClass('disabled').text(text);
     }
-    
+
     // send mail
     sendGrowthMailing(userIds, subjectIdentifier, bodyIdentifier, cb);
   }
@@ -168,20 +153,20 @@ var getTableInfo = function(fields) {
 }
 
 // get x number of users from top of the table
-// based on current sorting and skip users that 
+// based on current sorting and skip users that
 // are already invited/signedup
 var getUsersFromTop = function(number) {
   var table = getTableInfo(fields())
     , city  = state.get('city');
 
   var selector = {
-    city: city, 
+    city: city,
     invitedAt: {$exists: false},
     signupAt: {$exists: false},
   };
 
   var options = {
-    sort: _.object([table.sortKey], [table.sortDir]), 
+    sort: _.object([table.sortKey], [table.sortDir]),
     limit: number
   };
 
@@ -195,7 +180,7 @@ var sendGrowthMailing = function(githubUserIds, subjectIdentifier, bodyIdentifie
 
   // send mail from server
   Meteor.call('githubGrowthMail', city, githubUserIds, subjectIdentifier, bodyIdentifier, function(err, res) {
-    
+
     // error handling
     if (err) {
       console.log('Mail failed')
@@ -206,7 +191,7 @@ var sendGrowthMailing = function(githubUserIds, subjectIdentifier, bodyIdentifie
         icon: false
       });
     } else {
-      console.log('Mail send');  
+      console.log('Mail send');
       new PNotify({
         title: 'Mail sent',
         text: 'E-mail sent to '+users+' users',

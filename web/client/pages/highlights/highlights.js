@@ -13,31 +13,6 @@ HighlightsSorted = function(options) {
 }
 
 
-// Route Controller
-
-HighlightsController = DefaultController.extend({
-  template: 'highlights',
-  waitOn: function() {
-    var city = Session.get('currentCity');
-    return [
-      Meteor.subscribe('highlights', city),
-      Meteor.subscribe('highlightsSort', city),
-    ];
-  },
-  onBeforeAction: function() {
-
-    // redirect to hackers page if there are no highlights
-    // except for ambassadors and admins
-    if (this.ready() && Highlights.find(selector()).count() === 0 && !Users.hasAmbassadorPermission())
-      this.redirect('hackers');
-    
-    this.next();
-  },
-  onAfterAction: function() {
-    Interface.setHeaderStyle('fixed');
-  }
-});
-
 
 // editor
 

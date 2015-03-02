@@ -1,56 +1,5 @@
 // ROUTES
 
-// the routes that DON'T require login
-var noLoginRequired = [
-  'docs',
-  'about',
-  'frontpage',
-  'invite',
-  'verifyEmail',
-];
-
-
-
-/*
-  special entry routes
-  includes refer information
-*/
-
-InviteController = DefaultController.extend({
-  template: 'frontpage',
-  onBeforeAction: function() {
-    // set some session variables and then redirects to the frontpage
-    // the frontpage is now showing a picture of the user that has invited this visitor;
-    Session.set('inviteBitHash', this.params.inviteBitHash);
-    this.redirect('frontpage');
-    this.next();
-  }
-});
-
-GrowthGithubController = DefaultController.extend({
-  template: 'frontpage',
-  onBeforeAction: function() {
-    Session.set('growthType', 'github');
-    Session.set('growthPhrase', this.params.phrase);
-    this.redirect('frontpage');
-    this.next();
-  }
-});
-
-LogoutController = DefaultController.extend({
-  template: 'loading',
-  onBeforeAction: function() {
-    if (Meteor.userId()) {
-      GAnalytics.event("LoginService", "logout");
-      Meteor.logout();
-      this.render('loading');
-    } else {
-      this.redirect('frontpage');
-    }
-  }
-});
-
-
 
 /* hooks */
 
@@ -109,18 +58,18 @@ var pageView = function(route) {
 
 
 
-// set meta data
-Router.onRun(setMetaData);
+// // set meta data
+// Router.onRun(setMetaData);
 
-// make sure the user is logged in, except for the pages below
-Router.onRun(loginRequired, {except: noLoginRequired});
-Router.onBeforeAction(loginRequired, {except: noLoginRequired});
+// // make sure the user is logged in, except for the pages below
+// Router.onRun(loginRequired, {except: noLoginRequired});
+// Router.onBeforeAction(loginRequired, {except: noLoginRequired});
 
-// make sure that user is allowed to enter the site
-Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
+// // make sure that user is allowed to enter the site
+// Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
 
-// log pageview to Google Analytics
-Router.onRun(pageView);
+// // log pageview to Google Analytics
+// Router.onRun(pageView);
 
 
 
@@ -146,13 +95,13 @@ Router.restoreScrollState = function() {
   var params = Router.current().getParams();
   var route = Router.current().url;
 
-  Tracker.nonreactive(function() {  
+  Tracker.nonreactive(function() {
     Tracker.afterFlush(function() {
       if (params.hash) {
         $(document).scrollTo("#"+params.hash, {duration: 800, offset: 0});
       } else {
         var top = scrollState.get(route);
-        $(document).scrollTop(top || 0);  
+        $(document).scrollTop(top || 0);
       }
     });
   });

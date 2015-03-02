@@ -11,21 +11,6 @@ var state = new State("map", {
 var zoomLevelPictures = 14;
 
 
-// Route Controller
-
-MapController = DefaultController.extend({
-  template: 'map',
-  waitOn: function () {
-    var city = Session.get('currentCity');
-    return [
-      Meteor.subscribe('places', city)
-    ];
-  },
-  onAfterAction: function() {
-    Interface.setHeaderStyle('fixed');
-  }
-});
-
 
 // editor
 
@@ -86,7 +71,7 @@ Template.map.created = function() {
 
 
 Template.map.rendered = function() {
-  
+
   // Setup map
   map           =  setupMap();
   featureLayer  =  setupFeatureLayer(map);
@@ -104,7 +89,7 @@ Template.map.rendered = function() {
 
   this.modeObserver = editor.observe('mode', function(mode) {
     reload();
-    if (!mode) 
+    if (!mode)
       clear();
   });
 
@@ -115,7 +100,7 @@ Template.map.rendered = function() {
   this.selectedObserver = state.observe('selected', function(selected) {
     openFeaturePopup(featureLayer, selected);
     editor.select(selected && selected.id);
-    if (selected) 
+    if (selected)
       clear(selected.id);
   });
 
@@ -160,14 +145,14 @@ var setupMap = function() {
   map.on('zoomend', function(e) { // save zoom state
     var prevZoom = state.get('zoom');
     var newZoom = map.getZoom();
-    
+
     // save zoom level
     state.set('zoom', newZoom)
 
     // reload data when certain zoom level is passed
     if (newZoom < zoomLevelPictures && zoomLevelPictures <= prevZoom
       || newZoom >= zoomLevelPictures && zoomLevelPictures > prevZoom) {
-      reload(); 
+      reload();
     }
   });
 
@@ -177,14 +162,14 @@ var setupMap = function() {
 var setupFeatureLayer = function(map) {
 
   // create marker layer
-  var featureLayer = L.mapbox.featureLayer().addTo(map);  
+  var featureLayer = L.mapbox.featureLayer().addTo(map);
 
   // icon based on feature properties
   featureLayer.on('layeradd', function(e) {
     var marker = e.layer;
     var props = marker.feature.properties;
     var type = props.type;
-    
+
     if (props.filter === 'places') {
 
       // places marker
@@ -204,9 +189,9 @@ var setupFeatureLayer = function(map) {
         if (props.url)         popup.push(Safe.url(props.url));
         marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
       }
-    
+
     } else if (props.filter === 'hackers') {
-      
+
       if (state.get('zoom') >= zoomLevelPictures && props.image) { // show picture
 
         // hacker image
@@ -245,8 +230,8 @@ var setupFilters = function(featureLayer, $) {
 
   // // which filters are active/checked?
   // var getActiveFilters = function() {
-  //   return $("[filter]:checked").map(function() { 
-  //     return $(this).attr('filter'); 
+  //   return $("[filter]:checked").map(function() {
+  //     return $(this).attr('filter');
   //   });
   // }
 
@@ -324,7 +309,7 @@ var setDefaultEvents = function(map, featureLayer) {
   // dragging
   featureLayer.eachLayer(function(marker) {
     var markerId = marker.feature.properties.id;
-    
+
     // update location
     marker.on('dragend', function(e) {
       updateLocation(markerId, _.pick(marker.getLatLng(), 'lat', 'lng'));
@@ -345,17 +330,17 @@ var setData = function(featureLayer) {
   featureLayer.setGeoJSON(geojson);
 }
 
-// create a geojson feature for each hacker 
+// create a geojson feature for each hacker
 // who have specified a location in their profile
 var hackersFeatures = function() {
 
   // select only users with specified location
   var selector = {
     "city": Session.get('currentCity'),
-    "profile.location.lat": {$type: 1}, 
+    "profile.location.lat": {$type: 1},
     "profile.location.lng": {$type: 1},
   };
-   
+
   return Users.find(selector).map(function(user) {
     return {  // geojson feature object
       "type": "Feature",
