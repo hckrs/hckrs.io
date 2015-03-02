@@ -114,7 +114,14 @@ Template.frontpage.events({
   'click #video-exit': function(evt) {
     evt.preventDefault();
     exitVideo();
+  },
+  'change #citySelect select': function(evt) {
+    var city = $(evt.currentTarget).val();
+    Util.exec(function() {
+      Router.goToCity(city);
+    });
   }
+
 });
 
 Template.frontpage.helpers({
