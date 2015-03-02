@@ -47,11 +47,12 @@ var state = new State('frontpage', {
 
 
 Template.frontpage.rendered = function() {
+  var tmpl = this;
 
   // drop welcome screen with animation
   Meteor.setTimeout(function() {
     $("#welcomeOverlay").addClass('anim-dropout');
-  }, 2500);
+  }, 3500);
 
   // focus location finder
   Meteor.setTimeout(function() {
@@ -95,6 +96,18 @@ Template.frontpage.rendered = function() {
       }
     });
   });
+
+  // typer text on frontpage intro overlay
+  $('#typer-blink').each(function() {
+    var $elem = $(this);
+    setInterval(function() {
+      var visibility = $elem.css('visibility') == 'hidden' ? 'visible': 'hidden';
+      $elem.css('visibility', visibility);
+    }, 500);
+  });
+  var texts = ['make you a better hacker'];
+  $('#typer-target').teletype({ text: texts });
+  $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 0 });
 }
 
 Template.frontpage.events({
@@ -151,21 +164,3 @@ var exitVideo = function() {
   video.pause();
   video.currentTime = 0;
 }
-
-// typer text on frontpage
-// Template.frontpage.rendered = function() {
-//   var tmpl = this;
-//   tmpl.$('.blink').each(function() {
-//     var elem = tmpl.$(this);
-//     setInterval(function() {
-//         if (elem.css('visibility') == 'hidden') {
-//             elem.css('visibility', 'visible');
-//         } else {
-//             elem.css('visibility', 'hidden');
-//         }
-//     }, 500);
-//   });
-//   var texts = ['web','app','software','game','design','life','hardware','life','open source','growth'];
-//   tmpl.$('#target').teletype({ text: texts });
-//   tmpl.$('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 500 });
-// }
