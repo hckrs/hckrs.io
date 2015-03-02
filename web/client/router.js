@@ -1,40 +1,5 @@
 // ROUTES
 
-var routes = [
-
-  // staff routes
-  [ 'admin'                 , '/admin'                  ],
-  [ 'admin_dashboard'       , '/admin/dashboard'        ],
-  [ 'admin_highlights'      , '/admin/highlights'       ],
-  [ 'admin_hackers'         , '/admin/hackers'          ],
-  [ 'admin_deals'           , '/admin/deals'            ],
-  [ 'admin_places'          , '/admin/places'           ],
-  [ 'admin_growth'          , '/admin/growth'           ],
-  [ 'admin_emailTemplates'  , '/admin/emailTemplates'   ],
-
-  // normal routes
-  [ 'frontpage'    , '/'                     ],
-  [ 'about'        , '/about'                ],
-  [ 'agenda'       , '/agenda'               ],
-  [ 'books'        , '/books'                ],
-  [ 'hackers'      , '/hackers'              ],
-  [ 'highlights'   , '/highlights'           ],
-  [ 'invitations'  , '/invitations'          ],
-  [ 'map'          , '/map'                  ],
-  [ 'deals'        , '/deals'                ],
-  
-  // special routes (which will redirect)
-  [ 'logout'       , '/logout'               ],
-  [ 'verifyEmail'  , '/verify-email/:token'  ],
-  [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
-  [ 'invite'       , '/+/:inviteBitHash/'    ], // e.g. /+/---_--
-
-  // bare routes (must defined as last in this list)
-  [ 'hacker'       , '/:bitHash'             ], // e.g. /--_-_-
-  
-
-];
-
 // the routes that DON'T require login
 var noLoginRequired = [
   'docs',
@@ -197,12 +162,6 @@ Router.restoreScrollState = function() {
 Router.onAfterAction(Router.restoreScrollState);
 
 
-
-// internals
-
-_.each(routes, function(route) {
-  Router.route(route[1], {name: route[0]});
-});
 
 
 
