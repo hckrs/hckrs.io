@@ -196,12 +196,13 @@ var setupFeatureLayer = function(map) {
       }
 
     } else if (props.filter === 'hackers') {
+      var user = props.user;
 
-      if (state.get('zoom') >= zoomLevelPictures && props.image) { // show picture
+      if (state.get('zoom') >= zoomLevelPictures && user.profile.picture) { // show picture
 
         // hacker image
         marker.setIcon(L.icon({
-          iconUrl:      props.image,
+          iconUrl:      user.profile.picture,
           className:    "marker-hacker picture",
           iconSize:     [40, 40], // size of the icon
           iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
@@ -221,10 +222,22 @@ var setupFeatureLayer = function(map) {
       }
 
       // make popup
-      var popup = [];
-      popup.push("<strong>"+props.title+"</strong>");
-      popup.push(Safe.url(Users.userProfilePath(props.id), {text: 'hacker #'+Users.userRank(props.id), target: 'self'}));
-      marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
+      var html = "";
+
+      html += "<div class='profile-picture'><img src='"+user.profile.picture+"' /></div>";
+      html += Safe.url(Users.userProfilePath(user._id), {text: user.profile.name, target: 'self'});
+
+      if (user.profile.companyUrl)
+        html += ' / <span class="company">'+Safe.url(user.profile.companyUrl, {text: user.profile.company, target: 'blank'})+'</span>';
+      else if (user.profile.company)
+        html += ' / <span class="company">'+user.profile.company+'</span>';
+
+      if (user.profile.available && user.profile.available.length)
+        html += '<div class="available-buttons">'+Blaze.toHTMLWithData(Template.userAvailableButtons, user)+'</div>';
+
+      html += "<div class='clear'></div>";
+
+      marker.bindPopup(html, {closeButton: false, closeOnClick: false, minWidth: 300});
 
     } else if (props.filter === 'hackers-all') {
 
@@ -367,9 +380,7 @@ var cityHackersFeatures = function() {
       },
       "properties": {
         "filter": "hackers",
-        "title": user.profile.name,
-        "image": user.profile.picture,
-        "url": Router.routes['hacker'].path(user),
+        "user": user,
         "id": user._id,
         // "marker-symbol": "marker-stroked",
         "marker-size": "small",

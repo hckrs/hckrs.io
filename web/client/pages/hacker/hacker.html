@@ -13,7 +13,7 @@
               <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
             </div>
           {{/if}}
-          
+
           {{#if isUnverifiedEmail}}
             <div class="access-denied alert alert-info">
               <h1>Check your e-mail :)</h1>
@@ -21,7 +21,7 @@
             </div>
           {{else}}
             {{#if tellUsMore}}
-              {{#if isInvited}} 
+              {{#if isInvited}}
                 {{! XXX user must only complete his profile to enter website (already invited) }}
                 <div class="access-denied alert alert-info">
                   <h1>Tell us more</h1>
@@ -46,7 +46,7 @@
               {{/unless}}
             {{/if}}
           {{/if}}
-        
+
         </div>
         <div class="clear"></div>
 
@@ -55,9 +55,9 @@
   </div>
 
   <div id="hacker" class="page">
-    {{!-- 
+    {{!--
       This template is rendering a hacker's profile.
-      When the logged in user ownes the profile he has the 
+      When the logged in user ownes the profile he has the
       possibility to edit his data.
     --}}
 
@@ -83,7 +83,7 @@
           <div class="form-group">
             <label class="control-label col-sm-2"></label>
             <div class="controls col-sm-8 profile-ready">
-              Are you ready to enter the website? 
+              Are you ready to enter the website?
               <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
             </div>
           </div>
@@ -97,8 +97,8 @@
 </template>
 
 
-<template name="hackerEdit">  
-    
+<template name="hackerEdit">
+
   <form class="form-horizontal">
 
     <div class="form-group">
@@ -107,14 +107,14 @@
         <div id="profilePicture">
           <div class="current-picture {{changePictureAllowed}}">
             <div class="change hide">change</div>
-            <div style="background-image:url({{profile.picture}});" class="picture"></div>    
+            <div style="background-image:url({{profile.picture}});" class="picture"></div>
           </div>
           <div class="picture-choser" id="pictureChoser">
             {{#with profile.socialPicture}}
               {{#if facebook}}
                 <div class="choice-wrapper">
                   <label for="inputPictureFacebook" class="radio">
-                    <div style="background-image:url({{facebook}});" class="picture"></div>    
+                    <div style="background-image:url({{facebook}});" class="picture"></div>
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{facebook}}" id="inputPictureFacebook" class="imputPictureRadio" {{selected facebook}} />
                       Facebook
@@ -125,7 +125,7 @@
               {{#if twitter}}
                 <div class="choice-wrapper">
                   <label for="inputPictureTwitter" class="control-label radio">
-                    <div style="background-image:url({{twitter}});" class="picture"></div>    
+                    <div style="background-image:url({{twitter}});" class="picture"></div>
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{twitter}}" id="inputPictureTwitter" class="imputPictureRadio" {{selected twitter}} />
                       Twitter
@@ -136,7 +136,7 @@
               {{#if github}}
                 <div class="choice-wrapper">
                   <label for="inputPictureGithub" class="radio">
-                    <div style="background-image:url({{github}});" class="picture"></div>    
+                    <div style="background-image:url({{github}});" class="picture"></div>
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{github}}" id="inputPictureGithub" class="imputPictureRadio" {{selected github}} />
                       Github
@@ -159,7 +159,7 @@
     <div class="form-group" id="register-city-move">
       <label class="control-label col-sm-2" for="inputCity">city</label>
       <div class="controls col-sm-8">
-        {{> citySelect}} 
+        {{> citySelect}}
         <span class="description hover">— Choose your local city</span>
       </div>
     </div>
@@ -235,7 +235,7 @@
       <div class="controls col-sm-8">
         <input type="text" name="profile.company" class="text save" autosave value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
         <input type="url" name="profile.companyUrl" class="text save" autosave value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
-        <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
+        <div id="mapWrapper" class="edit {{mapFullscreenActive}}">
           <div class="event-catch-overlay"></div>
           <div id="editMap" class="map"></div>
           <a class="close-map"><img src="img/close.svg" /></a>
@@ -250,7 +250,7 @@
           <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
           have a drink <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
         </label>
-        
+
         <div class="clear"></div>
 
         <label for="inputAvailableLunch" class="checkbox">
@@ -275,7 +275,7 @@
           <input type="text" name="profile.skype" class="text save" autosave value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
           <input type="text" name="profile.phone" class="text save" autosave value="{{profile.phone}}" placeholder="phone" id="inputPhone" />
         </div>
-        
+
 
         <div class="clear"></div>
 
@@ -322,7 +322,7 @@
       <label class="control-label col-sm-2">Twitter</label>
       <div class="controls col-sm-8">
         {{#if profile.social.twitter}}
-          <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a> 
+          <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
           <a href="#" class="toggle toggleService" data-service="twitter"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
           <span class="disabled">none</span>
@@ -368,12 +368,12 @@
   </form>
 
 </template>
-  
+
 
 
 <template name="hackerView">
   <div id="hackerView">
-    
+
 
     <div class="form-group">
       <label class="control-label col-sm-2">
@@ -397,12 +397,12 @@
         </div>
       </div>
     </div>
-    
+
     <div style="clear:both;margin-bottom: 20px;"></div>
 
     <form class="form-horizontal">
-    
-      {{#if profile.skills}}  
+
+      {{#if profile.skills}}
       <div class="form-group">
         <label class="control-label col-sm-2">skillset</label>
         <div class="controls col-sm-8 skillset">
@@ -462,7 +462,7 @@
               {{profile.company}}
             {{/if}}
           {{/if}}
-          {{#if profile.location}}    
+          {{#if profile.location}}
             <div id="mapWrapper" class="view">
               <div id="viewMap" class="map"></div>
             </div>
@@ -470,35 +470,13 @@
         </div>
       </div>
       {{/if}}
-      
+
       {{#if profile.available}}
       <div class="spacer"></div>
       <div class="form-group">
         <label class="control-label col-sm-2">open to</label>
         <div class="controls col-sm-8">
-          {{#if contains profile.available "drink"}}
-          <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have a drink</a>
-          {{/if}}
-          {{#if contains profile.available "lunch"}}
-          <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have lunch</a>
-          {{/if}}
-          {{#if contains profile.available "email"}}
-          <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
-          {{/if}}
-          {{#if contains profile.available "call"}}
-            {{#if profile.phone}}
-            <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
-            {{/if}}
-            {{#if profile.skype}}
-            <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
-            {{/if}}
-          {{/if}}
-          {{#if contains profile.available "cowork"}}
-          <a href="mailto:{{profile.email}}?subject=Can I co-work at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
-          {{/if}}
-          {{#if contains profile.available "couchsurf"}}
-          <a href="mailto:{{profile.email}}?subject=Can I couchsurf at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
-          {{/if}}
+          {{> userAvailableButtons}}
         </div>
       </div>
       {{/if}}
