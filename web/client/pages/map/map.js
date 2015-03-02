@@ -1,6 +1,10 @@
 // State
 var map, featureLayer;
 
+// collection containing only coordinate documents
+// representing all hackers from other cities.
+var hackersLocations = new Mongo.Collection('mapHackersLocations');
+
 var state = new State("map", {
   city: undefined,          // String
   location: undefined,      // Object {lat: Number, lng, Number}
@@ -9,6 +13,7 @@ var state = new State("map", {
 });
 
 var zoomLevelPictures = 13;
+
 
 
 
@@ -220,6 +225,17 @@ var setupFeatureLayer = function(map) {
       popup.push("<strong>"+props.title+"</strong>");
       popup.push(Safe.url(Users.userProfilePath(props.id), {text: 'hacker #'+Users.userRank(props.id), target: 'self'}));
       marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
+
+    } else if (props.filter === 'hackers-all') {
+
+      // hacker point
+      marker.setIcon(L.icon({
+        iconUrl:      "/img/markers/point.png",
+        className:    "marker-hacker point",
+        iconSize:     [6, 6], // size of the icon
+        iconAnchor:   [3, 3], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -3] // point from which the popup should open relative to the iconAnchor
+      }));
     }
   });
 
@@ -324,15 +340,16 @@ var setDefaultEvents = function(map, featureLayer) {
 
 // load data and add markers to map
 var setData = function(featureLayer) {
-  var geoHackers = hackersFeatures();
+  var geoCityHackers = cityHackersFeatures();
+  var geoOtherCityHackers = otherCityHackersFeatures();
   var geoPlaces = placesFeatures();
-  var geojson = geoHackers.concat(geoPlaces);
+  var geojson = geoOtherCityHackers.concat(geoCityHackers, geoPlaces);
   featureLayer.setGeoJSON(geojson);
 }
 
-// create a geojson feature for each hacker
+// create a geojson feature for each hacker (of the current city)
 // who have specified a location in their profile
-var hackersFeatures = function() {
+var cityHackersFeatures = function() {
 
   // select only users with specified location
   var selector = {
@@ -355,6 +372,33 @@ var hackersFeatures = function() {
         "url": Router.routes['hacker'].path(user),
         "id": user._id,
         // "marker-symbol": "marker-stroked",
+        "marker-size": "small",
+        "marker-color": "#fff",
+      },
+    };
+  });
+}
+
+// create a geojson feature for each hacker (from other cities)
+// who have specified a location in their profile
+var otherCityHackersFeatures = function() {
+
+  // select only users with specified location
+  var selector = {
+    "city": {$ne: Session.get('currentCity')},
+    "profile.location.lat": {$type: 1},
+    "profile.location.lng": {$type: 1},
+  };
+
+  return hackersLocations.find().map(function(doc) {
+    return {  // geojson feature object
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [doc.lng, doc.lat]
+      },
+      "properties": {
+        "filter": "hackers-all",
         "marker-size": "small",
         "marker-color": "#fff",
       },

@@ -207,7 +207,9 @@ MapController = DefaultController.extend({
   waitOn: function () {
     var city = Url.city();
     return !city ? [] : [
-      Meteor.subscribe('places', city)
+      Meteor.subscribe('places', city),
+      // load anonym location data of all users world wide (XXX TODO: async)
+      Meteor.subscribe('mapHackersLocations', {excludeCity: city})
     ];
   },
   onAfterAction: function() {
