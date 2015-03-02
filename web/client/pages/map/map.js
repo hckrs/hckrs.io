@@ -228,9 +228,9 @@ var setupFeatureLayer = function(map) {
       html += Safe.url(Users.userProfilePath(user._id), {text: user.profile.name, target: 'self'});
 
       if (user.profile.companyUrl)
-        html += ' / <span class="company">'+Safe.url(user.profile.companyUrl, {text: user.profile.company, target: 'blank'})+'</span>';
+        html += ' @ <span class="company">'+Safe.url(user.profile.companyUrl, {text: user.profile.company, target: 'blank'})+'</span>';
       else if (user.profile.company)
-        html += ' / <span class="company">'+user.profile.company+'</span>';
+        html += ' @ <span class="company">'+user.profile.company+'</span>';
 
       if (user.profile.available && user.profile.available.length)
         html += '<div class="available-buttons">'+Blaze.toHTMLWithData(Template.userAvailableButtons, user)+'</div>';
