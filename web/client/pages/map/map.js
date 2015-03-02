@@ -8,7 +8,7 @@ var state = new State("map", {
   selected: null,           // Object? {filter: String, id: String}
 });
 
-var zoomLevelPictures = 14;
+var zoomLevelPictures = 13;
 
 
 
