@@ -40,9 +40,7 @@ var checkCurrentCity = function() {
   var subdomain = Url.city()
   var city = City.lookup(subdomain);
 
-  if (subdomain === 'www')
-    return Util.exec(function() { Router.go('frontpage'); });
-  else if (!city)
+  if (!city)
     return;
 
   // set current city in session

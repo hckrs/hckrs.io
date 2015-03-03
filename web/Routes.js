@@ -350,6 +350,38 @@ AdminPlacesController = DefaultAdminController.extend({
 });
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Hooks
+///////////////////////////////////////////////////////////////////////////////
+
+var loginRequired = function() {
+  if (!Meteor.userId()) {
+    if (!Session.get('redirectUrl'))
+      Session.set('redirectUrl', location.pathname + location.search + location.hash);
+    this.redirect('frontpage');
+  }
+  this.next();
+}
+
+// make sure that user is allowed to enter the site
+var allowedAccess = function() {
+  var user = Users.myProps(['isAccessDenied','globalId','bitHash']) || {};
+  if(user.isAccessDenied) {
+    if (user._id !== Url.userIdFromUrl(window.location.href)) {
+      this.redirect('hacker', user);
+    }
+  }
+  this.next();
+}
+
+if (Meteor.isClient) {
+  // make sure the user is logged in, except for the pages below
+  Router.onRun(loginRequired, {except: noLoginRequired});
+  Router.onBeforeAction(loginRequired, {except: noLoginRequired});
+
+  // make sure that user is allowed to enter the site
+  Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
+}
 
 
 
