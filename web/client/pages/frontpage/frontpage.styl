@@ -14,7 +14,7 @@ button()
 
 
 button-active()
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
 
 centered()
   /*
@@ -56,6 +56,7 @@ exit-button()
 
   h1,h2,h3 {
     font-family: "Tiempos Headline", 'open sans';
+    font-weight: bold;
   }
 
   /* GENERIC */
@@ -107,10 +108,10 @@ exit-button()
     transform: translateY(-50%);
     & > a {
       display: block;
-      margin: 5px 0px;
-      width: 16px;
-      height: 16px;
-      border-radius: 8px;
+      margin: 14px 0px;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
       background-color: white;
       opacity: 0.3;
       &:hover {
@@ -118,7 +119,6 @@ exit-button()
       }
       &.active {
         opacity: 1;
-        box-shadow: 0 0 3px white;
       }
     }
   }
@@ -178,7 +178,7 @@ exit-button()
       top: 50%;
       width: 100%;
       transform: translateY(-50%);
-      font-size: 3em;
+      font-size: 4.5em;
       text-align: center;
     }
     .logo {
@@ -219,6 +219,9 @@ exit-button()
         border-width: 3px;
         border-radius: 0px !important;
       }
+      #enroll-btn-large:hover{
+          background-color:rgba(0,0,0,0.1);
+        }
       small {
         display: block;
         margin-top: 10px;
@@ -261,9 +264,11 @@ exit-button()
 
       }
       #video-btn-small {
-        width: 180px;
+        width: 155px;
+        font-weight: normal;
+        font-style: italic;
         padding: 10px;
-        margin: 30px auto;
+        margin: 35px auto;
         text-align: center;
         display: block;
         img {
@@ -410,9 +415,16 @@ exit-button()
       padding-right: 0px;
     }
     ol {
-      padding: 1.3em;
+      padding: 1.1em;
       font-size: 1.3em;
-      line-height: 2em;
+      line-height: 1.6em;
+      li {
+        margin-bottom: 12px;
+      }
+    }
+    .content-block {
+      margin: 0 auto;
+      padding: 200px 20px;
     }
   }
 
@@ -423,6 +435,8 @@ exit-button()
     }
     .row.intro {
       margin: 30px 0 40px 0;
+      font-size: 1.3em;
+      line-height: 1.6em;
     }
     .row.items {
       text-align: center;
@@ -434,11 +448,17 @@ exit-button()
         margin: 0 auto;
       }
     }
+    .row.extro {
+      font-size: 1em;
+      font-style: italic;
+    }
   }
 
   #about {
     background-image: url(/img/frontpage/bg6.jpg);
     .content {
+      font-size: 1.3em;
+      line-height: 1.6em;
       margin: 0 auto;
       max-width: 600px;
       p.spacer {

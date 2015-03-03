@@ -129,7 +129,7 @@ Template.frontpage.rendered = function() {
       $elem.css('visibility', visibility);
     }, 500);
   });
-  var texts = ['makes you a better hacker'];
+  var texts = ['Makes you a better hacker.'];
   $('#typer-target').teletype({ text: texts });
   $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 0 });
 }
