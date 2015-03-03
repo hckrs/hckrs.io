@@ -96,7 +96,7 @@ DefaultAdminController = DefaultController.extend({
 
     // check permissions to view admin panel
     if (!Users.hasAmbassadorPermission())
-      this.redirect('frontpage');
+      return this.redirect('frontpage');
 
     this.next();
   }
@@ -184,7 +184,7 @@ HighlightsController = DefaultController.extend({
     // redirect to hackers page if there are no highlights
     // except for ambassadors and admins
     if (this.ready() && Highlights.find(selector).count() === 0 && !Users.hasAmbassadorPermission())
-      this.redirect('hackers');
+      return this.redirect('hackers');
 
     this.next();
   },
@@ -225,25 +225,12 @@ MapController = DefaultController.extend({
 
 VerifyEmailController = DefaultController.extend({
   template: 'frontpage',
-  onRun: function() {
-    var token = this.params.token;
-
-    // log to google analytics
-    Meteor.call('getEmailVerificationTokenUser', token, function(err, user) {
-      if (!err && user)
-        GAnalytics.event('EmailVerification', 'verified user', user._id);
-      else GAnalytics.event('EmailVerification', 'invalid token', token);
-    });
-
-    this.next();
-  },
   waitOn: function () {
     return [];
   },
   action: function() {
     Accounts.verifyEmail(this.params.token, checkAccess);
     this.redirect('hackers');
-    this.next();
   }
 });
 
@@ -254,7 +241,6 @@ InviteController = DefaultController.extend({
     // the frontpage is now showing a picture of the user that has invited this visitor;
     Session.set('inviteBitHash', this.params.inviteBitHash);
     this.redirect('frontpage');
-    this.next();
   }
 });
 
@@ -264,7 +250,6 @@ GrowthGithubController = DefaultController.extend({
     Session.set('growthType', 'github');
     Session.set('growthPhrase', this.params.phrase);
     this.redirect('frontpage');
-    this.next();
   }
 });
 

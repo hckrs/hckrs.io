@@ -1,45 +1,5 @@
 
-// Route Controller
-// FrontpageController = DefaultController.extend({
-//   template: 'frontpage',
-//   subscriptions: function() {
-//     this.subscribe('staff');
-//     this.subscribe('ambassadors');
-//   },
-//   fastRender: true
-// });
-
 /* FRONTPAGE */
-
-// // bind total number of hackers to template
-// Template.frontpage.helpers({
-//   "totalHackers": function() {
-//     var city = Session.get('currentCity');
-//     var total = Meteor.users.find({city: city, isHidden: {$ne: true}}).count();
-//     var minimum = Settings['minimumUserCountToShow'];
-//     return (total >= minimum) ? total : '';
-//   },
-//   "invitationBroadcastUser": function() {
-//     var phrase = Url.bitHashInv(Session.get('inviteBitHash'));
-//     return phrase && Users.findOne({invitationPhrase: phrase});
-//   },
-// });
-
-// Template.ambassadors.helpers({
-//   "ambassadors": function() {
-//     var city = Session.get('currentCity');
-//     var fields = Query.fieldsObj({
-//       profile: ['name','picture','email'],
-//       'isAmbassador': true,
-//       'staff': true
-//     });
-//     var transform = function(user) {
-//       user.twitter = Users.userSocialName(user._id, 'twitter');
-//       return user;
-//     }
-//     return city && Users.find({city: city, isAmbassador: true}, {fields: fields}).map(transform);
-//   },
-// });
 
 // state
 var state = new State('frontpage', {
@@ -47,9 +7,66 @@ var state = new State('frontpage', {
 });
 
 
+// template helpers
 
-// events
+Template.frontpage.helpers({
+  'enrollActive': function() {
+    return state.get('enrollActive') ? 'active' : '';
+  },
+  'invitationBroadcastUser': function() {
+    var phrase = Url.bitHashInv(Session.get('inviteBitHash'));
+    return phrase && Users.findOne({invitationPhrase: phrase});
+  },
+  'staff': function() {
+    return Users.find({$and: [
+      {"roles.staff": {$exists: true}},
+      {"roles.staff": {$not: {$size: 0}}}
+    ]}).fetch();
+  },
+  'admins': function() {
+    // admin without the staff members
+    return Users.find({$and: [
+      {"isAmbassador": true},
+      {$or: [
+        {"roles.staff": {$exists: false}},
+        {"roles.staff": []}
+      ]}
+    ]}).fetch();
+  }
+});
 
+
+// template events
+
+Template.frontpage.events({
+  'click a': function(evt) {
+    state.set('enrollActive', false);
+    var href = $(evt.currentTarget).attr('href');
+    if (href.substring(0, 1) === "#") // check for hash anchor
+      $(document).scrollTo(href, {duration: 800});
+  },
+  'click a[href="#enroll"]': function() {
+    state.set('enrollActive', true);
+  },
+  'click #video-play': function(evt) {
+    evt.preventDefault();
+    showVideo();
+  },
+  'click #video-exit': function(evt) {
+    evt.preventDefault();
+    exitVideo();
+  },
+  'change #citySelect select': function(evt) {
+    var city = $(evt.currentTarget).val();
+    Util.exec(function() {
+      Router.goToCity(city);
+    });
+  }
+
+});
+
+
+// template render
 
 Template.frontpage.rendered = function() {
   var tmpl = this;
@@ -117,57 +134,8 @@ Template.frontpage.rendered = function() {
   $('#cursor').teletype({ text: [' ', ' '], delay: 0, pause: 0 });
 }
 
-Template.frontpage.events({
-  'click a': function(evt) {
-    state.set('enrollActive', false);
-    var href = $(evt.currentTarget).attr('href');
-    if (href.substring(0, 1) === "#") // check for hash anchor
-      $(document).scrollTo(href, {duration: 800});
-  },
-  'click a[href="#enroll"]': function() {
-    state.set('enrollActive', true);
-  },
-  'click #video-play': function(evt) {
-    evt.preventDefault();
-    showVideo();
-  },
-  'click #video-exit': function(evt) {
-    evt.preventDefault();
-    exitVideo();
-  },
-  'change #citySelect select': function(evt) {
-    var city = $(evt.currentTarget).val();
-    Util.exec(function() {
-      Router.goToCity(city);
-    });
-  }
 
-});
-
-
-
-
-Template.frontpage.helpers({
-  'staff': function() {
-    return Users.find({$and: [
-      {"roles.staff": {$exists: true}},
-      {"roles.staff": {$not: {$size: 0}}}
-    ]}).fetch();
-  },
-  'admins': function() {
-    // admin without the staff members
-    return Users.find({$and: [
-      {"isAmbassador": true},
-      {$or: [
-        {"roles.staff": {$exists: false}},
-        {"roles.staff": []}
-      ]}
-    ]}).fetch();
-  },
-  'enrollActive': function() {
-    return state.get('enrollActive') ? 'active' : '';
-  }
-})
+// helper functions
 
 var showVideo = function() {
   $(document).scrollTo("#video");

@@ -10,7 +10,7 @@ var serviceOptions = {
 
 
 Login.init = function() {
-  
+
   // Observe if user is logging in
   observeLoggingIn();
 }
@@ -58,7 +58,7 @@ var loggedIn = function() {
   // if a redirectUrl is present, redirect to that url
   // otherwise if also no route is setted to the hackers list
   var redirectUrl = Session.get('redirectUrl');
-  
+
   if (redirectUrl && !_.contains(['/','/logout'], redirectUrl)) {
     Session.set('redirectUrl', null);
     Router.go(redirectUrl);
@@ -113,7 +113,7 @@ checkGrowthPhrase = function() {
 // check if he has signed up with a valid invite code
 checkInvitation = function() {
   var bitHash = Session.get('inviteBitHash');
-  
+
   if (!bitHash)
     return;
 
@@ -277,6 +277,9 @@ var loginCallback = function(err) {
 
 // login by using a external service
 var loginWithService = function(event) {
+  if (!Session.get('currentCity'))
+    return alert('Specify where do you hack in order to continue.');
+
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
   var options = serviceOptions[service];
@@ -286,8 +289,8 @@ var loginWithService = function(event) {
   GAnalytics.event("LoginService", "login", service);
 
   // login
-  Meteor["loginWith"+Service](options, loginCallback);  
-  
+  Meteor["loginWith"+Service](options, loginCallback);
+
 }
 
 
