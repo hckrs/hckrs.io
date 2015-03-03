@@ -55,10 +55,9 @@ exit-button()
 
   /* GENERIC */
 
-  .title {
+  em {
     color: $hover;
-    font-size: 1.5em;
-    font-weight: bold;
+    font-style: normal;
   }
 
   .button {
@@ -244,19 +243,10 @@ exit-button()
       position: absolute;
       bottom: 0px;
       width: 100%;
-      height: 70px;
+      height: 90px;
       text-align: center;
       transition: height 1s;
       z-index: 45;
-
-      .content {
-        position: absolute;
-        top: 50%;
-        height: 70px;
-        transform: translateY(-50%);
-        width: 100%;
-        text-align: center;
-      }
 
       &.active {
         height: 100%;
@@ -274,11 +264,11 @@ exit-button()
         content: "";
         frontpage-blur-background()
         opacity: 0;
-        transition: opacity 0.4s 0.9s;
+        transition: opacity 0.6s 0.6s ease-out;
       }
       &.active::after {
         opacity: 1;
-        transition: opacity 0.2s 0s;
+        transition: opacity 0.2s 0s ease-out;
       }
 
       #enroll-exit { display: none; }
@@ -286,22 +276,30 @@ exit-button()
         exit-button();
       }
 
-      .sign-in-buttons,
-      .sign-in-buttons a,
-      .title {
+      .content {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        text-align: center;
+      }
+      .title > div {
         display: inline-block;
-      }
-      .sign-in-buttons a,
-      .title {
-        padding: 15px 35px 10px 35px;
-        height: 70px;
-        margin: 0px;
-      }
-      .title {
-        position: relative;
-        top: 5px;
+        width: 100px;
+        &.line-filler {
+          position: relative;
+          top: -5px;
+          width: 200px;
+          border-bottom: 1px solid rgba(255,255,255,0.6);
+        }
       }
       .sign-in-buttons a {
+        display: inline-block;
+        padding: 15px 35px 10px 35px;
+        width: 160px;
+        height: 70px;
+        margin: 0px;
+        border:
         &:hover {
           button-active();
         }
@@ -369,25 +367,48 @@ exit-button()
   #manifesto {
     background-image: url(/img/backgrounds/frontpage-manifesto.jpg);
     .content-block {
-      width: 600px;
-      padding-right: 200px;
+      max-width: 640px;
+      padding-right: 0px;
+    }
+    ol {
+      padding: 1.3em;
+      font-size: 1.3em;
+      line-height: 2em;
+    }
+  }
+
+  #influencers {
+    .container {
+      padding: 0px 60px;
+    }
+    .row.intro {
+      margin: 30px 0 40px 0;
+    }
+    .row.items {
+      text-align: center;
+      & > div {
+        padding: 50px 10px;
+      }
+      img {
+        display: block;
+        margin: 0 auto;
+      }
     }
   }
 
   #about {
     background-image: url(/img/backgrounds/frontpage-about.jpg);
-    .content-block {
-      width: 400px;
-    }
-    .content-block.large {
-      width: 80%;
-    }
-    #modulus-logo {
-      width: 150px;
-      padding: 0 5px;
+    .content {
+      margin: 0 auto;
+      max-width: 600px;
+      p.spacer {
+        margin-top: 3em;
+      }
     }
     #staff {
-      margin-top: 40px;
+      margin: auto;
+      width: 80%;
+      margin-top: 70px;
       text-align: center;
       .picture-view {
         display: inline-block;
