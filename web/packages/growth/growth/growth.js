@@ -17,9 +17,11 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
 
   var adminId = Meteor.userId();
   var admin = Meteor.user();
+  var iniviteHash = Url.bitHash(admin.invitationPhrase);
   var from_email = city + "@hckrs.io";
 
-  var html = Assets.getText('email-wrappers/html-email.html')
+
+  var html = HTMLEmailTemplates.baseTemplate();
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, body);
   html = html.replace(/{{unsubscribe}}/g, '');
@@ -27,7 +29,7 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
   var users = GrowthGithub.find({_id: {$in: userIds}}).fetch();
   var allVars = _.findWhere(EMAIL_TEMPLATE_GROUPS_OPTIONS, {value: 'growthGithub'}).vars;
   var usedVars = _.filter(allVars, function(v){ return html.indexOf('*|'+v.toUpperCase()+'|*') > -1; });
- 
+
   var to_list = _.map(users, function(user) {
     return { email: user.email, name: user.name || user.username, type: 'to', userId: user._id };
   });
@@ -41,9 +43,9 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
     "ADMIN_TITLE": Object.property(admin, 'staff.title'),
     "ADMIN_IMAGE_URL": Object.property(admin, 'profile.picture'),
   }
- 
+
   var merge_vars = _.map(users, function(user) {
-   
+
     var vars = {
       'USERNAME': user.username,
       'EMAIL': user.email,
@@ -54,17 +56,17 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
       'GISTS': user.gists,
       'WEBSITE': user.website,
       'COMPANY': user.company,
-      'SIGNUP_URL': Url.replaceCity(city, Meteor.absoluteUrl('gh/'+user._id)),
+      'SIGNUP_URL': Url.replaceCity(city, Meteor.absoluteUrl('gh/'+user._id+'/'+iniviteHash)),
       'NAME': user.name || user.username,
       'FIRSTNAME': (user.name || "").split(' ')[0] || user.username,
     };
 
     // include used vars in mandrill's format
-    return { 
-      rcpt: user.email, 
-      vars: _.map(_.pick(vars, usedVars), function(val, key) { 
-        return { name: key, content: val }; 
-      }) 
+    return {
+      rcpt: user.email,
+      vars: _.map(_.pick(vars, usedVars), function(val, key) {
+        return { name: key, content: val };
+      })
     };
   });
 
@@ -106,7 +108,7 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
     type: "growthGithub",
     city: city,
     from: {
-      email: from_email, 
+      email: from_email,
       userId: adminId
     },
     to: to_list,
@@ -134,7 +136,7 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
   try {
     var url = 'https://mandrillapp.com/api/1.0/messages/send.json';
     var res = HTTP.post(url, {data: mail});
-    
+
     if (res.statusCode !== 200)
       throw 'mailing failed with status code' + res.statusCode;
 
@@ -180,7 +182,7 @@ var checkGrowthEmailAddress = function(userId, email) {
 
   // user not related to growth mailing
   if (!growthUser)
-    return; 
+    return;
 
   // mark growth user as signed up
   markGithubSignup(growthUser._id, userId);

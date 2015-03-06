@@ -6,7 +6,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('hckrs:docs');
-  
+
   api.use('peerlibrary:async');
 
   api.use('base');
@@ -22,4 +22,8 @@ Package.onUse(function(api) {
   api.addFiles('growth/growth.js', 'server');
   api.addFiles('growth/crawler-server.js', 'server');
   api.addFiles('growth/crawler-client.js', 'client');
+
+  api.export([
+    'Crawler',
+  ]);
 });

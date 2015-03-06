@@ -35,7 +35,7 @@ var routes = [
   // special routes (which will redirect)
   [ 'logout'       , '/logout'               ],
   [ 'verifyEmail'  , '/verify-email/:token'  ],
-  [ 'growth_github', '/gh/:phrase'           ], // e.g. /gh/FDMwdYYXxMY7dLcD4
+  [ 'growth_github', '/gh/:phrase/:inviteBitHash?'], // e.g. /gh/FDMwdYYXxMY7dLcD4/---_--
   [ 'invite'       , '/+/:inviteBitHash/'    ], // e.g. /+/---_--
 
   // bare routes (must defined as last in this list)
@@ -50,6 +50,7 @@ var noLoginRequired = [
   'docs',
   'frontpage',
   'invite',
+  'growth_github',
   'verifyEmail',
 ];
 
@@ -274,7 +275,10 @@ GrowthGithubController = DefaultController.extend({
   onBeforeAction: function() {
     Session.set('growthType', 'github');
     Session.set('growthPhrase', this.params.phrase);
-    this.redirect('frontpage');
+    if (this.params.inviteBitHash)
+      this.redirect('invite', {inviteBitHash: this.params.inviteBitHash});
+    else
+      this.redirect('frontpage');
   }
 });
 
@@ -298,29 +302,23 @@ LogoutController = DefaultController.extend({
 
 AdminController = DefaultAdminController.extend({
   waitOn: function() {
-    return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
-      Meteor.subscribe('users') // XXX be more precise
-    ];
+    return [];
   },
   onBeforeAction: function() {
-    Router.go('admin_hackers');
-    this.next();
+    this.redirect('admin_hackers');
   }
 });
 
 AdminDashboardController = DefaultAdminController.extend({
   template: 'admin_dashboard',
   waitOn: function() {
-    return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
-      Meteor.subscribe('users') // XXX be more precise
-    ];
+    return [];
   },
 });
 
 AdminDealsController = DefaultAdminController.extend({
   template: 'admin_deals',
+  fastRender: false,
   waitOn: function () {
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
@@ -334,6 +332,7 @@ AdminDealsController = DefaultAdminController.extend({
 
 AdminEmailTemplatesController = DefaultAdminController.extend({
   template: 'admin_emailTemplates',
+  fastRender: false,
   waitOn: function () {
     return [
       Meteor.subscribe('currentUser', Meteor.userId()),
@@ -345,14 +344,15 @@ AdminEmailTemplatesController = DefaultAdminController.extend({
 
 AdminGrowthController = DefaultAdminController.extend({
   template: 'admin_growth',
+  fastRender: false,
   onRun: function() {
-    state.set('city', Session.get('currentCity'));
+    AdminGrowth.setCity(Session.get('currentCity'))
   },
   waitOn: function () {
     return [
       Meteor.subscribe('currentUser', Meteor.userId()),
       // load all github users from the selected city
-      Meteor.subscribe('growthGithub', state.get('city')),
+      Meteor.subscribe('growthGithub', AdminGrowth.getCity()),
       Meteor.subscribe('emailTemplates'),
       Meteor.subscribe('users') // XXX be more precise
     ];
@@ -361,6 +361,7 @@ AdminGrowthController = DefaultAdminController.extend({
 
 AdminHackersController = DefaultAdminController.extend({
   template: 'admin_hackers',
+  fastRender: false,
   waitOn: function () {
     return [
       Meteor.subscribe('currentUser', Meteor.userId()),
@@ -371,6 +372,7 @@ AdminHackersController = DefaultAdminController.extend({
 
 AdminHighlightsController = DefaultAdminController.extend({
   template: 'admin_highlights',
+  fastRender: false,
   waitOn: function () {
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
@@ -385,6 +387,7 @@ AdminHighlightsController = DefaultAdminController.extend({
 
 AdminPlacesController = DefaultAdminController.extend({
   template: 'admin_places',
+  fastRender: false,
   waitOn: function () {
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();

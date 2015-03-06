@@ -1,5 +1,15 @@
+AdminGrowth = {}
 
-// State
+AdminGrowth.setCity = function(city) {
+  state.set('city', city);
+}
+AdminGrowth.getCity = function() {
+  return state.get('city');
+}
+
+
+
+// state
 
 var state = new State('adminGrowth', {
   'city': null,
