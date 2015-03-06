@@ -231,7 +231,7 @@
 
 
     <div class="form-group">
-      <label class="control-label col-sm-2" for="inputCompany">company / school</label>
+      <label class="control-label col-sm-2" for="inputCompany">daytime location</label>
       <div class="controls col-sm-8">
         <input type="text" name="profile.company" class="text save" autosave value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
         <input type="url" name="profile.companyUrl" class="text save" autosave value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
@@ -453,7 +453,7 @@
 
       {{#if isCompanyOrLocation}}
       <div class="form-group">
-        <label class="control-label col-sm-2">company / school</label>
+        <label class="control-label col-sm-2">daytime location</label>
         <div class="controls col-sm-8">
           {{#if profile.company}}
             {{#if profile.companyUrl}}

@@ -33,15 +33,6 @@
           {{> citySelect}} {{!-- defined in main.js --}}
         </div>
         <div id="enroll-block">
-          <a id="enroll-btn-large" href="#enroll" class="button">
-            {{#if invitationBroadcastUser}}
-              Accept invitation
-            {{else}}
-              I wanna enroll
-            {{/if}}
-          </a>
-          <small>Join your local hacker tribe.</small>
-
           {{#if invitationBroadcastUser}}
             {{#with UserView invitationBroadcastUser._id}}
               <div class="invitation-container">
@@ -50,7 +41,14 @@
               </div>
             {{/with}}
           {{/if}}
-
+          <a id="enroll-btn-large" href="#enroll" class="button">
+            {{#if invitationBroadcastUser}}
+              Accept invitation
+            {{else}}
+              I wanna enroll
+            {{/if}}
+          </a>
+          <small>Join your local hacker tribe.</small>
           <a id="video-btn-small" href="#video">
             <img src="/img/frontpage/icon-playbutton.svg" alt="View hckrs.io trailer." />
             <span>watch video</span>
