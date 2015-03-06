@@ -21,11 +21,17 @@ Template.header.helpers({
     return Interface.getHeaderStyle();
   },
   'hidden': function() {
-    // we hide the navigation bar by explicit set the style to fixed
-    return Meteor.userId() ? '' : 'fixed';
+    // To hide navigation
+    // 1. fix navigation
+    // 2. make inactive
+    var visible = Meteor.userId() &&
+                  Router.current().route.getName() != 'frontpage';
+    return visible ? '' : 'fixed';
   },
   'active': function() {
-    var isActive = Meteor.userId() && !Session.equals('pageScrollDirection', 'down');
+    var isActive = Meteor.userId()  &&
+                  !Session.equals('pageScrollDirection', 'down') &&
+                  Router.current().route.getName() != 'frontpage';
     return isActive ? 'active' : '';
   }
 });
@@ -61,20 +67,20 @@ Template.main.rendered = function() {
 var cityInvisibleUsers = new ReactiveVar({});
 var cityVisibleUsers = new ReactiveVar({});
 
-var calculateUsersCount = function() {
-  var invisibleUsers = Users.find({isHidden: true}, {fields: {city: true}, reactive: false}).fetch();
-  var visibleUsers = Users.find({isHidden: {$ne: true}}, {fields: {city: true}, reactive: false}).fetch();
-  cityInvisibleUsers.set(_.countBy(invisibleUsers, 'city'));
-  cityVisibleUsers.set(_.countBy(visibleUsers, 'city'));
-}
+// var calculateUsersCount = function() {
+//   var invisibleUsers = Users.find({isHidden: true}, {fields: {city: true}, reactive: false}).fetch();
+//   var visibleUsers = Users.find({isHidden: {$ne: true}}, {fields: {city: true}, reactive: false}).fetch();
+//   cityInvisibleUsers.set(_.countBy(invisibleUsers, 'city'));
+//   cityVisibleUsers.set(_.countBy(visibleUsers, 'city'));
+// }
 
-Meteor.startup(function() {
-  Tracker.autorun(function(tracker) {
-    if (!Subscriptions.ready()) return;
-    calculateUsersCount();
-    tracker.stop();
-  });
-});
+// Meteor.startup(function() {
+//   Tracker.autorun(function(tracker) {
+//     // if (!Subscriptions.ready()) return;
+//     calculateUsersCount();
+//     tracker.stop();
+//   });
+// });
 
 
 

@@ -10,6 +10,9 @@ var state = new State('frontpage', {
 // template helpers
 
 Template.frontpage.helpers({
+  'hideWelcomeScreen': function() {
+    return amplify.store('hideWelcomeScreen') ? 'hide' : '';
+  },
   'enrollActive': function() {
     return state.get('enrollActive') ? 'active' : '';
   },
@@ -40,13 +43,20 @@ Template.frontpage.helpers({
 
 Template.frontpage.events({
   'click a': function(evt) {
+
+    // drop down enrollment overlay (if opened) after some navigation handling.
     state.set('enrollActive', false);
+
+    // scroll to certain anchor
     var href = $(evt.currentTarget).attr('href');
     if (href.substring(0, 1) === "#") // check for hash anchor
       $(document).scrollTo(href, {duration: 800});
   },
   'click a[href="#enroll"]': function() {
     state.set('enrollActive', true);
+  },
+  'click a[href="#video"]#video-btn-small': function() {
+    Meteor.setTimeout(showVideo, 1200);
   },
   'click #video-play': function(evt) {
     evt.preventDefault();
@@ -75,6 +85,7 @@ Template.frontpage.rendered = function() {
   Util.exec(function() {
     Meteor.setTimeout(function() {
       $("#welcomeOverlay").addClass('anim-dropout');
+      amplify.store('hideWelcomeScreen', true);
     }, 3500);
   });
 
@@ -85,7 +96,7 @@ Template.frontpage.rendered = function() {
       $("#welcome input").focus();
   }, 3500);
 
-  // fixed enroll button
+  // make enroll button fixed after certain scroll position
   $("#enroll-btn").scrollspy({
     min: $("#enroll-btn").offset().top - 20,
     max: $(document).height(),
@@ -97,7 +108,7 @@ Template.frontpage.rendered = function() {
     }
   });
 
-  // slide navigation circles
+  // slides navigation circles at the right of the screen
   $(".slide").each(function() {
     var id = $(this).attr('id');
     var offset = $(this).offset().top - $(window).height()/2;
@@ -138,9 +149,8 @@ Template.frontpage.rendered = function() {
 // helper functions
 
 var showVideo = function() {
-  $(document).scrollTo("#video");
+  $(document).scrollTo("#video", {duration: 0});
   $("#video").addClass('playing');
-
   var video = $("#video video").get(0)
   video.play();
   video.onended = function() {

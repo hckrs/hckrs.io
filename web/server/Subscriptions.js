@@ -1,16 +1,25 @@
 
+var userFields = [
+  "city",
+  "globalId",
+  "profile.picture",
+  "profile.name",
+];
+
+var staffFields = [
+  "isAmbassador",
+  "roles",
+  "staff",
+]
+
+
+
 
 Meteor.publish('staff', function() {
   var query = {
     "roles.staff": {$size: {$gt: 0}}
   };
-  var fields = Query.fieldsArray([
-    "city",
-    "isAmbassador",
-    "profile",
-    "roles",
-    "staff",
-  ]);
+  var fields = Query.fieldsArray(_.union(userFields, staffFields));
   return Users.find(query, {fields: fields});
 });
 
@@ -18,13 +27,7 @@ Meteor.publish('ambassadors', function() {
   var query = {
     "isAmbassador": true
   };
-  var fields = Query.fieldsArray([
-    "city",
-    "isAmbassador",
-    "profile",
-    "roles",
-    "staff",
-  ]);
+  var fields = Query.fieldsArray(_.union(userFields, staffFields));
   return Users.find(query, {fields: fields});
 });
 
@@ -53,3 +56,14 @@ Meteor.publish('mapHackersLocations', function(options) {
     handle.stop();
   });
 });
+
+Meteor.publish('inviteBroadcastUser', function(inviteBitHash) {
+  var invitePhrase = inviteBitHash ? Url.bitHashInv(inviteBitHash) : 0;
+  var fields = Query.fieldsArray(_.union(userFields, ['invitationPhrase']));
+  return !invitePhrase ? [] : Users.find({invitationPhrase: invitePhrase}, {fields: fields, limit: 1});
+});
+
+
+
+
+

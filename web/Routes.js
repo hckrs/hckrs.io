@@ -24,7 +24,6 @@ var routes = [
 
   // normal routes
   [ 'frontpage'    , '/'                     ],
-  [ 'about'        , '/about'                ],
   [ 'agenda'       , '/agenda'               ],
   [ 'books'        , '/books'                ],
   [ 'hackers'      , '/hackers'              ],
@@ -49,7 +48,6 @@ var routes = [
 // the routes that DON'T require login
 var noLoginRequired = [
   'docs',
-  'about',
   'frontpage',
   'invite',
   'verifyEmail',
@@ -60,6 +58,7 @@ var noLoginRequired = [
 // Base Controllers (make instances of these controllers)
 ///////////////////////////////////////////////////////////////////////////////
 
+var loginCallbackCalled = false;
 
 DefaultController = RouteController.extend({
   layoutTemplate: "main",
@@ -70,10 +69,12 @@ DefaultController = RouteController.extend({
     /* Default Spin design */
     Spin.default = { color: '#fff' }
 
-    // wait on global subscriptions ready
-    if (!Subscriptions.ready() || Meteor.loggingIn()) {
-      this.render('loading');
-      return;
+    // call login callback after user logged in
+    if (Meteor.loggingIn()) {
+      loginCallbackCalled = false;
+    } else if (!loginCallbackCalled && this.ready() && Meteor.userId() && !Meteor.loggingIn()) {
+      loginCallbackCalled = true;
+      Login.loggedIn()
     }
 
     this.next();
@@ -111,23 +112,35 @@ FrontpageController = DefaultController.extend({
   template: 'frontpage',
   waitOn: function() {
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       Meteor.subscribe('staff'),
-      Meteor.subscribe('ambassadors'),
-    ]
-  }
+      Meteor.subscribe('ambassadors')
+    ];
+  },
+  onBeforeAction: function() { // async
+    if (Meteor.isClient)
+      this.subscribe('inviteBroadcastUser', Session.get('inviteBitHash'))
+    this.next();
+  },
 });
 
 AgendaController = DefaultController.extend({
   template: 'agenda',
   waitOn: function () {
-    return [];
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ];
   }
 });
 
 BooksController = DefaultController.extend({
   template: 'books',
   waitOn: function () {
-    return [];
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ];
   }
 });
 
@@ -135,20 +148,26 @@ DealsController = DefaultController.extend({
   template: 'deals',
   waitOn: function () {
     var city = Url.city();
-    return !city ? [] : [
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ].concat(!city ? [] : [
       Meteor.subscribe('deals', city),
       Meteor.subscribe('dealsSort', city)
-    ];
+    ]);
   }
 });
 
 HackerController = DefaultController.extend({
   template: 'hacker',
   waitOn: function () {
-    return [];
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ];
   },
   onBeforeAction: function() {
-    if (Subscriptions.ready() && !this.initialized) {
+    if (this.ready() && !this.initialized) {
       var userId = (Users.userForBitHash(this.params.bitHash) || {})._id;
       Session.set('hackerId', userId);
       Session.set('hackerEditMode', Users.myProp('isAccessDenied'));
@@ -162,7 +181,9 @@ HackersController = DefaultController.extend({
   template: 'hackers',
   waitOn: function () {
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       Meteor.subscribe('invitations'),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -172,10 +193,13 @@ HighlightsController = DefaultController.extend({
   template: 'highlights',
   waitOn: function() {
     var city = Url.city();
-    return !city ? [] : [
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ].concat(!city ? [] : [
       Meteor.subscribe('highlights', city),
-      Meteor.subscribe('highlightsSort', city),
-    ];
+      Meteor.subscribe('highlightsSort', city)
+    ]);
   },
   onBeforeAction: function() {
     var city = Session.get('currentCity');
@@ -184,9 +208,9 @@ HighlightsController = DefaultController.extend({
     // redirect to hackers page if there are no highlights
     // except for ambassadors and admins
     if (this.ready() && Highlights.find(selector).count() === 0 && !Users.hasAmbassadorPermission())
-      return this.redirect('hackers');
-
-    this.next();
+      this.redirect('hackers');
+    else
+      this.next();
   },
   onAfterAction: function() {
     Interface.setHeaderStyle('fixed');
@@ -197,7 +221,9 @@ InvitationsController = DefaultController.extend({
   template: 'invitations',
   waitOn: function () {
     return [
-      Meteor.subscribe('invitations')
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('invitations'),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -206,11 +232,13 @@ MapController = DefaultController.extend({
   template: 'map',
   waitOn: function () {
     var city = Url.city();
-    return !city ? [] : [
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ].concat(!city ? [] : [
       Meteor.subscribe('places', city),
-      // load anonym location data of all users world wide (XXX TODO: async)
-      Meteor.subscribe('mapHackersLocations', {excludeCity: city})
-    ];
+      Meteor.subscribe('mapHackersLocations', {excludeCity: city}) // load anonym location data of all users world wide (XXX TODO: async)
+    ]);
   },
   onAfterAction: function() {
     Interface.setHeaderStyle('fixed');
@@ -225,10 +253,7 @@ MapController = DefaultController.extend({
 
 VerifyEmailController = DefaultController.extend({
   template: 'frontpage',
-  waitOn: function () {
-    return [];
-  },
-  action: function() {
+  onBeforeAction: function() {
     Accounts.verifyEmail(this.params.token, checkAccess);
     this.redirect('hackers');
   }
@@ -272,6 +297,12 @@ LogoutController = DefaultController.extend({
 ///////////////////////////////////////////////////////////////////////////////
 
 AdminController = DefaultAdminController.extend({
+  waitOn: function() {
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ];
+  },
   onBeforeAction: function() {
     Router.go('admin_hackers');
     this.next();
@@ -280,9 +311,12 @@ AdminController = DefaultAdminController.extend({
 
 AdminDashboardController = DefaultAdminController.extend({
   template: 'admin_dashboard',
-  waitOn: function () {
-    return [ ];
-  }
+  waitOn: function() {
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ];
+  },
 });
 
 AdminDealsController = DefaultAdminController.extend({
@@ -291,7 +325,9 @@ AdminDealsController = DefaultAdminController.extend({
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       Meteor.subscribe('deals', isAdmin ? 'all' : city),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -300,7 +336,9 @@ AdminEmailTemplatesController = DefaultAdminController.extend({
   template: 'admin_emailTemplates',
   waitOn: function () {
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       Meteor.subscribe('emailTemplates'),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -312,9 +350,11 @@ AdminGrowthController = DefaultAdminController.extend({
   },
   waitOn: function () {
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       // load all github users from the selected city
       Meteor.subscribe('growthGithub', state.get('city')),
       Meteor.subscribe('emailTemplates'),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -322,7 +362,10 @@ AdminGrowthController = DefaultAdminController.extend({
 AdminHackersController = DefaultAdminController.extend({
   template: 'admin_hackers',
   waitOn: function () {
-    return [ ];
+    return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('users') // XXX be more precise
+    ];
   }
 });
 
@@ -332,7 +375,9 @@ AdminHighlightsController = DefaultAdminController.extend({
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       Meteor.subscribe('highlights', isAdmin ? 'all' : city),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -344,7 +389,9 @@ AdminPlacesController = DefaultAdminController.extend({
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
     return [
+      Meteor.subscribe('currentUser', Meteor.userId()),
       Meteor.subscribe('places', isAdmin ? 'all' : city),
+      Meteor.subscribe('users') // XXX be more precise
     ];
   }
 });
@@ -358,7 +405,7 @@ var loginRequired = function() {
   if (!Meteor.userId()) {
     if (!Session.get('redirectUrl'))
       Session.set('redirectUrl', location.pathname + location.search + location.hash);
-    this.redirect('frontpage');
+    return this.redirect('frontpage');
   }
   this.next();
 }
@@ -384,6 +431,10 @@ if (Meteor.isClient) {
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Setup routes
+///////////////////////////////////////////////////////////////////////////////
 
 _.each(routes, function(route) {
   Router.route(route[1], {name: route[0]});
