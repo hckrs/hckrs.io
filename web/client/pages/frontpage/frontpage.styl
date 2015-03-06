@@ -191,6 +191,7 @@ exit-button()
 
   #welcome {
     background-image: url(/img/frontpage/bg1.jpg);
+    position: relative;
     #opensource {
       position: absolute;
       top: 0px;
@@ -204,6 +205,8 @@ exit-button()
     }
     .content-block {
       width: 440px;
+      padding-left: 0px;
+      padding-right: 0px;
     }
     #location-block {
       select {
@@ -212,7 +215,10 @@ exit-button()
       }
     }
     #enroll-block {
-      margin-top: 130px;
+      position: absolute;
+      top: 50%;
+      width: inherit;
+      transform: translateY(-35%);
       #enroll-btn-large {
         display: block;
         font-size: 2.4em;
