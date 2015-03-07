@@ -17,7 +17,7 @@ Get you hacking
 
 ######1. [Download](https://github.com/Jarnoleconte/hckrs.io/archive/development.zip) / clone this repo.
 ######2. Go to the ***hckrs*** folder in your terminal.
-######3. Install depenencies `source ./tools/install.sh`
+######3. Install dependencies: `source ./tools/install.sh`
 ######4. Move to the project `cd web` and startup a local server `hckrs run`
 ######5. Open [http://localhost:3000](http://localhost:3000) in your browser and login with ***Twitter*** ([why?](https://github.com/Jarnoleconte/hckrs.io/wiki/Run-Project#login-at-the-site)) 
 
@@ -30,19 +30,18 @@ Get you hacking
 Roadmap 
 --------
 
-* go open source
-* subcultures with meetups
-* gather interests — based on the stackoverflow tags
-* go mobile — a hybrid application
+* Subcultures with meetups
+* Gather interests — based on the Stack Overflow tags
+* Go mobile — a hybrid application
 
 
-**parallel things we need help with**
+**Parallel things we need help with**
 
-* build a CalDAV / CardDAV server per city
-* agreagation of different agenda feeds into a single one
-* building a social invite plugin
-* integrating http://telescope.meteor.com/
-* finding parners that want to give discounts to hackers.
+* Build a CalDAV / CardDAV server per city
+* Aggregation of different agenda feeds into a single one
+* Building a social invite plugin
+* Integrating http://telescope.meteor.com/
+* Finding parners that want to give discounts to hackers.
 
 
 
