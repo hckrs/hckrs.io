@@ -91,6 +91,16 @@ var updateEmailCallback = function(err) {
       Session.set('isDuplicateEmail', true);
     }
   }
+
+  // scroll to top to see the message about verifying your email.
+  Tracker.autorun(function(c) {
+    if (!Login.verifiedEmail()) {
+      Meteor.setTimeout(function() {
+        Router.scrollToTop();
+        c.stop();
+      }, 1000);
+    }
+  });
 }
 
 // show picture choser when user clicked on the current profile picture

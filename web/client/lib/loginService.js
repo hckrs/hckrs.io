@@ -8,7 +8,9 @@ var serviceOptions = {
 }
 
 
-
+Login.verifiedEmail = function() {
+  verifiedEmail();
+}
 
 
 /* LOGIN EVENT handlers */
