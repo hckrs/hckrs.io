@@ -170,7 +170,7 @@ Template.hacker.events({
 
   },
   "keyup input[autosave]": fieldChanged,
-  "click input[type='checkbox'][autosave]": addToSet,
+  "click input[type='checkbox'][autosave-set]": addToSet,
 });
 
 Template.hackerEdit.events({
@@ -260,8 +260,8 @@ Template.hackerView.rendered = function() {
   }
 
   // render social follow buttons
-  FB.XFBML.parse();
-  twttr.widgets.load();
+  window.FB && FB.XFBML.parse();
+  window.twttr && twttr.widgets.load();
 }
 
 

@@ -49,9 +49,7 @@ Router.onRun(pageView);
 
 
 // save and restore scroll state for every page
-var scrollState = new State('routerScrollState', {
-  routes: {}
-});
+var scrollState;
 
 var scrollHandler = function(event) {
   var route = Router.current().url;
@@ -60,6 +58,9 @@ var scrollHandler = function(event) {
 }
 
 Meteor.startup(function() {
+  scrollState = new State('routerScrollState', {
+    routes: {}
+  });
   $(window).on("scrollstop", scrollHandler);
 });
 

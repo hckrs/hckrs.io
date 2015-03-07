@@ -7,6 +7,6 @@ AutoValue = {}
  * @locus Anywhere
  */
 AutoValue.prefixUrlWithHTTP = function() {
-  if (this.isSet) 
+  if (this.isSet)
     return Url.externUrl(this.value)
 }

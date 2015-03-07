@@ -6,7 +6,7 @@
 // 2. Lower in this file you have to define a new a RouteController instance.
 //
 // More route functionality:
-// Some specific client router functionality is in /client/router.js
+// Some specific client router functionality is in /client/lib/router.js
 // Some specific server router functionality is in /server/Router.js
 
 
@@ -61,21 +61,25 @@ var noLoginRequired = [
 
 var loginCallbackCalled = false;
 
+
+
 DefaultController = RouteController.extend({
   layoutTemplate: "main",
   loadingTemplate: "loading",
-  fastRender: true,
   onBeforeAction: function() {
+    var self = this;
 
     /* Default Spin design */
     Spin.default = { color: '#fff' }
 
     // call login callback after user logged in
+    // this will redirect the user
     if (Meteor.loggingIn()) {
       loginCallbackCalled = false;
     } else if (!loginCallbackCalled && this.ready() && Meteor.userId() && !Meteor.loggingIn()) {
       loginCallbackCalled = true;
-      Login.loggedIn()
+      Tracker.nonreactive(function() { Login.callback(self); });
+      return;
     }
 
     this.next();
@@ -90,7 +94,6 @@ DefaultController = RouteController.extend({
 DefaultAdminController = DefaultController.extend({
   layoutTemplate: "admin_layout",
   loadingTemplate: "loading",
-  fastRender: true,
   onBeforeAction: function() {
 
     /* Default Spin design */
@@ -111,6 +114,7 @@ DefaultAdminController = DefaultController.extend({
 
 FrontpageController = DefaultController.extend({
   template: 'frontpage',
+  fastRender: true,
   waitOn: function() {
     return [
       Meteor.subscribe('currentUser', Meteor.userId()),
@@ -318,7 +322,6 @@ AdminDashboardController = DefaultAdminController.extend({
 
 AdminDealsController = DefaultAdminController.extend({
   template: 'admin_deals',
-  fastRender: false,
   waitOn: function () {
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
@@ -332,7 +335,6 @@ AdminDealsController = DefaultAdminController.extend({
 
 AdminEmailTemplatesController = DefaultAdminController.extend({
   template: 'admin_emailTemplates',
-  fastRender: false,
   waitOn: function () {
     return [
       Meteor.subscribe('currentUser', Meteor.userId()),
@@ -344,7 +346,6 @@ AdminEmailTemplatesController = DefaultAdminController.extend({
 
 AdminGrowthController = DefaultAdminController.extend({
   template: 'admin_growth',
-  fastRender: false,
   onRun: function() {
     AdminGrowth.setCity(Session.get('currentCity'))
   },
@@ -361,7 +362,6 @@ AdminGrowthController = DefaultAdminController.extend({
 
 AdminHackersController = DefaultAdminController.extend({
   template: 'admin_hackers',
-  fastRender: false,
   waitOn: function () {
     return [
       Meteor.subscribe('currentUser', Meteor.userId()),
@@ -372,7 +372,6 @@ AdminHackersController = DefaultAdminController.extend({
 
 AdminHighlightsController = DefaultAdminController.extend({
   template: 'admin_highlights',
-  fastRender: false,
   waitOn: function () {
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
@@ -387,7 +386,6 @@ AdminHighlightsController = DefaultAdminController.extend({
 
 AdminPlacesController = DefaultAdminController.extend({
   template: 'admin_places',
-  fastRender: false,
   waitOn: function () {
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
@@ -406,8 +404,11 @@ AdminPlacesController = DefaultAdminController.extend({
 
 var loginRequired = function() {
   if (!Meteor.userId()) {
-    if (!Session.get('redirectUrl'))
-      Session.set('redirectUrl', location.pathname + location.search + location.hash);
+    if (!Session.get('redirectUrl')){
+      var redirectUrl = location.pathname + location.search + location.hash;
+      if (redirectUrl != '/logout')
+        Session.set('redirectUrl', redirectUrl);
+    }
     return this.redirect('frontpage');
   }
   this.next();

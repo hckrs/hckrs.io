@@ -71,10 +71,11 @@ Users.deny({
       return true; /* DENY */
 
     // test against user schema
-    if (!Schemas.User.newContext().validate(modifier, {modifier: true}))
+    var cleanedModifier = Schemas.User.clean(modifier);
+    if (!Schemas.User.newContext().validate(cleanedModifier, {modifier: true}))
       return true; /* DENY */
   }
 });
 
 
-    
+

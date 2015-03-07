@@ -9,50 +9,50 @@ var serviceOptions = {
 
 
 
-Login.loggedIn = function() {
-  loggedIn();
-}
 
 
 /* LOGIN EVENT handlers */
 
-// when user becomes logged in
-var loggedIn = function() {
+// redirect after login
+// and do access checks
+Login.callback = function(router) {
 
   // log
   GAnalytics.event("LoginService", "login", "automatically");
 
+  // redirect
+  var redirectUrl = Session.get('redirectUrl');
+  if (!redirectUrl && location.pathname == '/')
+    redirectUrl = 'highlights';
+  if (redirectUrl) {
+    router.redirect(redirectUrl);
+    Session.set('redirectUrl', null);
+  } else {
+    router.next();
+  }
+
+  // access checks
+  accessChecks();
+}
+
+// when user becomes logged in
+var accessChecks = function() {
+
   // set currentCity (which user is visiting) based on city in the url
-  if (Meteor.user().isAdmin)
-    Users.update(Meteor.userId(), {$set: {currentCity: Session.get('currentCity')}})
+  Tracker.afterFlush(function() {
+    Tracker.nonreactive(function(){
+      if (Meteor.user().isAdmin)
+        Users.update(Meteor.userId(), {$set: {currentCity: Session.get('currentCity')}})
+    })
+  });
 
   // XXX maybe we can do this on the server side, because
   // meteor introduces a function called Accounts.validateLoginAttempt()
   checkInvitation();
   checkGrowthPhrase();
   checkAccess();
-
-  // if a redirectUrl is present, redirect to that url
-  // otherwise if also no route is setted to the hackers list
-  var redirectUrl = Session.get('redirectUrl') || location.pathname + location.search + location.hash;
-
-  if (redirectUrl && !_.contains(['/','/logout'], redirectUrl)) {
-    Session.set('redirectUrl', null);
-    Util.exec(function() {
-      Router.go(redirectUrl);
-    });
-  } else {
-    goToEntryPage();
-  }
 }
 
-// which page should be loaded for logged in users which enter the site
-goToEntryPage = function() {
-  var entryPage = 'highlights';
-  Util.exec(function() {
-    Router.go(entryPage);
-  });
-}
 
 
 
@@ -125,7 +125,7 @@ checkInvitation = function() {
 
       } else { //on success
 
-        goToEntryPage();
+        Router.go('highlights');
 
         // log to google analytics
         GAnalytics.event('Invitations', 'invited by user');
@@ -155,7 +155,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
           console.log(err);
         } else {
           Session.set('isIncompleteProfileError', false);
-          goToEntryPage();
+          Router.go('highlights');
         }
       });
     });
@@ -178,7 +178,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
           Router.scrollToTop();
           console.log(err);
         } else {
-          goToEntryPage();
+          Router.go('highlights');
         }
       });
     }

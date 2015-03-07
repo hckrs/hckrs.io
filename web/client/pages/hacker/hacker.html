@@ -185,39 +185,39 @@
       <label class="control-label col-sm-2">hacking</label>
       <div class="controls col-sm-8">
         <label for="inputHackingWeb" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
           web
         </label>
         <label for="inputHackingApp" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
           apps
         </label>
         <label for="inputHackingSoftware" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
           software
         </label>
         <label for="inputHackingGame" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
           games
         </label>
         <label for="inputHackingDesign" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
           design
         </label>
         <label for="inputHackingLife" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
           life
         </label>
         <label for="inputHackingHardware" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
           hardware
         </label>
         <label for="inputHackingOpenSource" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingOpenSource" value="opensource" {{checked "profile.hacking" "opensource"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingOpenSource" value="opensource" {{checked "profile.hacking" "opensource"}} />
           open source
         </label>
         <label for="inputHackingGrowth" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingGrowth" value="growth" {{checked "profile.hacking" "growth"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingGrowth" value="growth" {{checked "profile.hacking" "growth"}} />
           growth
         </label>
       </div>
@@ -247,28 +247,28 @@
       <label class="control-label col-sm-2">open to</label>
       <div class="controls col-sm-8">
         <label for="inputAvailableDrink" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
           have a drink <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableLunch" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
           have lunch <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to have lunch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableEmail" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
           e-mail <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to get in touch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableCall" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
           call <span class="description hover">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
         </label>
         <div class="clear details {{#unless checked 'profile.available' 'call'}}hide{{/unless}}">
@@ -280,7 +280,7 @@
         <div class="clear"></div>
 
         <label for="inputAvailableCowork" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
           co-work <span class="description hover">— hackers can see your email address to get in touch to come work at your place</span>
           <div class="details"></div>
         </label>
@@ -288,7 +288,7 @@
         <div class="clear"></div>
 
         <label for="inputAvailableCouchsurf" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
           couchsurfing <span class="description hover">— hackers traveling to {{CurrentCity.name}} can see your email address and/or phone number to get in touch to stay at your place</span>
           <div class="details"></div>
         </label>
@@ -356,7 +356,7 @@
       <div class="controls col-sm-8">
         {{#each Constant "MAILING_OPTIONS"}}
           <label for="inputMailing-{{value}}" class="checkbox">
-            <input type="checkbox" name="mailings" class="save" autosave id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
+            <input type="checkbox" name="mailings" class="save" autosave-set id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
             {{label}} <span class="description hover">{{description}}</span>
           </label>
           <div class="clear"></div>
