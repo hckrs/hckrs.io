@@ -16,9 +16,10 @@ var staffFields = [
 
 
 Meteor.publish('staff', function() {
-  var query = {
-    "roles.staff": {$size: {$gt: 0}}
-  };
+  var query = {$and: [
+    {"roles.staff": {$exists: true}},
+    {"roles.staff": {$not: {$size: 0}}}
+  ]};
   var fields = Query.fieldsArray(_.union(userFields, staffFields));
   return Users.find(query, {fields: fields});
 });
