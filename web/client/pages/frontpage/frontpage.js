@@ -16,6 +16,9 @@ Template.frontpage.helpers({
   'enrollActive': function() {
     return state.get('enrollActive') ? 'active' : '';
   },
+  'loginFailure': function() {
+    return Session.get('serviceLoginError') ? 'failure' : '';
+  },
   'invitationBroadcastUser': function() {
     var phrase = Url.bitHashInv(Session.get('inviteBitHash'));
     return phrase && Users.findOne({invitationPhrase: phrase});

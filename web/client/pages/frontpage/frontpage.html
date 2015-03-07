@@ -58,11 +58,15 @@
       <div id="login-block" class="{{enrollActive}}">
         <div class="content">
           <div class="title">
-            <div class="line-filler"></div>
-            <div class="text">
-              <em>{{#if enrollActive}}enroll{{else}}sign in{{/if}}</em>
+            <div class="line-filler {{loginFailure}}"></div>
+            <div class="text {{loginFailure}}">
+              {{#if loginFailure}}
+                something went wrong
+              {{else}}
+                <em>{{#if enrollActive}}enroll{{else}}sign in{{/if}}</em>
+              {{/if}}
             </div>
-            <div class="line-filler"></div>
+            <div class="line-filler {{loginFailure}}"></div>
           </div>
           <div class="sign-in-buttons">
             <a href="#" class="signupService" data-service="github"><img src="/img/frontpage/login-github.svg" alt="Sign in with Github." /></a>

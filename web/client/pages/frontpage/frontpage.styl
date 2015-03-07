@@ -336,13 +336,17 @@ exit-button()
       }
       .title > div {
         display: inline-block;
-        width: 100px;
+        &.text {
+          width: 100px;
+        }
         &.line-filler {
           position: relative;
           top: -5px;
           width: 200px;
           border-bottom: 1px solid rgba(255,255,255,0.6);
         }
+        &.line-filler.failure { width: 160px; }
+        &.text.failure { width: 180px; color: red;  }
       }
       .sign-in-buttons a {
         display: inline-block;
