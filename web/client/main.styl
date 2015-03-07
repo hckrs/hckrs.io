@@ -1,8 +1,12 @@
 @import "nib"
+@import "style.import"
 
 $pagePaddingHeight = 20px;
 $pagePaddingWidth = 40px;
-$hover = #ffea87;
+
+backgroundImage()
+  background-image: url(/img/frontpage/bg1-blur.jpg);
+
 
 html, body {
   margin: 0;
@@ -10,15 +14,22 @@ html, body {
   height: 100%;
 }
 body{
-  font-family: 'open sans';
+  font-family: 'Tiempos Text', 'open sans';
   -webkit-font-smoothing: antialiased;
   transition: background-image 2s;
+  background-color: #396e8a;
+  backgroundImage();
+  background-repeat: no-repeat;
   background-size: cover;
-  background-attachment:fixed;
+  background-position: 0 1px;
+  background-attachment: fixed;
   color: white;
   /*background-image:linear-gradient(white, #1b3a4b) !important;*/
 }
-
+a img {
+  text-decoration: none;
+  border:0px;
+}
 
 
 
@@ -45,7 +56,7 @@ body{
 
 
   .page {
-    padding: $pagePaddingHeight $pagePaddingWidth; 
+    padding: $pagePaddingHeight $pagePaddingWidth;
   }
   .page-space {
     height: 100px;
@@ -65,11 +76,6 @@ body{
     color: $hover;
     /*border-bottom: 2px dotted #1466a8;
     margin-bottom: -5px;*/
-  }
-
-  a img {
-    text-decoration: none;
-    border:0px;
   }
 
   .small{
@@ -171,7 +177,7 @@ body{
       position: fixed;
       top: 0px;
       left: 0px;
-      
+
       width: 100%;
       height: $headerHeight;
 
@@ -183,6 +189,7 @@ body{
         width: 100%;
         height: $headerHeight;
         background-size: cover;
+        backgroundImage();
         opacity: 0.95;
       }
 
@@ -194,15 +201,15 @@ body{
 
       .logo-small { /* left */
         position: absolute;
-        top: 11px;
+        top: 32px;
         left: $pagePaddingWidth;
-        height: 63px;
-        width: 190px;
-        background-image: url('/img/logo-inversed.svg');  
+        height: 24px;
+        width: 137px;
+        background-image: url('/img/frontpage/logo.svg');
       }
 
       .menu { /* middle */
-        margin-top: 5px;
+        margin-top: 6px;
         margin-left: 250px;
         margin-right: 100px;
         font-size: 18px;
@@ -211,7 +218,7 @@ body{
          .menu-item {
           display: block;
           float: left;
-          
+
           a {
             display: inline-block;
             padding: 12px 0px;
@@ -220,14 +227,14 @@ body{
           }
           a:hover{
             text-decoration: none;
-            color: $hover; 
+            color: $hover;
           }
 
-          &:after { 
+          &:after {
             padding: 0px 10px 0px 9px;
-            content: '•'; 
+            content: '•';
           }
-          &:last-of-type:after { 
+          &:last-of-type:after {
             content: '';
           }
         }
@@ -252,8 +259,8 @@ body{
           &:hover {
             background-color: rgba(0,0,0,0.3);
           }
-        }  
-      
+        }
+
         #citySelect {
           margin: 32px 5px;
           color: red;
@@ -274,7 +281,7 @@ body{
           }
         }
 
-        .account {  
+        .account {
           margin: 15px 15px;
           margin-right: $pagePaddingWidth * 0.5;
           .dropdown {
@@ -301,7 +308,7 @@ body{
         }
 
       }
-        
+
     }
 
     /* transition */
@@ -318,7 +325,7 @@ body{
         box-shadow: 0px 0px 10px rgba(0,0,0,0.15);
       }
     }
-    
+
 
   }
 
@@ -388,7 +395,7 @@ body{
     margin-left: 22px;
   }
 
-  
+
 
   .change{
     line-height: 60px;
@@ -404,7 +411,7 @@ body{
   }
 
   .edit-mode, .toolbar-section, .toolbar-editor, .panel {
-      
+
       textarea, input[type="text"], select, input[type="password"],
       input[type="datetime"], input[type="datetime-local"],
       input[type="date"], input[type="month"],
@@ -483,7 +490,7 @@ body{
         background-image: none !important;
       }
     }
-    
+
     select:active, select:focus {
       outline-style: none; -moz-outline-style:none;
     }

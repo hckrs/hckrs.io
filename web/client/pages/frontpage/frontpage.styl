@@ -1,219 +1,520 @@
-
 @import "nib"
+@import "../../style.import"
+
+text-shadow()
+  /* no text shadow */
+  text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
+
+button()
+  border: 1px solid white;
+  border-radius: 2px;
+  padding: 5px;
+  text-align: center;
+  text-shadow()
+
+
+button-active()
+  background-color: rgba(255, 255, 255, 0.1);
+
+centered()
+  /*
+    Align in center, both vertical and horizontal.
+    Apply only if the height of the element is less than window height.
+    Furthermore the parent must be postioned absolute|fixed|relative.
+  */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+frontpage-blur-background()
+  background-color: #396e8a;
+  background-image: url(/img/frontpage/bg1-blur.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 1px;
+  background-attachment: fixed;
+
+exit-button()
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 80;
+  display: block;
+  width: 30px;
+  height: 30px;
+  img {
+    width: 100%;
+  }
+
 
 /* FRONTPAGE */
 
 #frontpage {
+  width: inherit;
+  height: inherit;
 
-  text-align: center;
-  margin-top: 60px;
+  h1,h2,h3 {
+    font-family: "Tiempos Headline", 'open sans';
+    font-weight: bold;
+  }
 
-  h1, h2 {
+  /* GENERIC */
+
+  em {
+    color: $hover;
+    font-style: normal;
+  }
+
+  .button {
+    button();
+    &:hover {
+      button-active();
+    }
+  }
+
+  input[type="text"] {
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 1px solid white;
+    border-radius: 2px;
+    outline: 0;
+  }
+
+  .overlay {
+    position: fixed;
+    z-index: 50;
+    bottom: 0;
     width: 100%;
-  }
-  h1 {
-    color: #FFF;
-    margin-bottom: 5px;
-    font-size: 60px;
-    letter-spacing: 0px;
-    font-weight: 100;
-    line-height: 140%;
-  }
-  h2 {
-    color: #6D461D;
-    font-weight: 400;
-    margin-top: 0;
-    margin-bottom: 10px;
+    height: 100%;
+    frontpage-blur-background()
+
+    &.anim-dropout {
+      transition: height 1s ease-in, visibility 0s 1s;
+      height: 0%;
+      visibility: hidden;
+      & > * {
+        transition: opacity 0.3s 0.6s;
+        opacity: 0;
+      }
+    }
   }
 
-  /* #citySelect partially defined in main.styl */
-  #citySelect select {
+  .slide-nav {
+    position: fixed;
+    z-index: 40;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    & > a {
+      display: block;
+      margin: 14px 0px;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: white;
+      opacity: 0.3;
+      &:hover {
+        opacity: 0.6;
+      }
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+
+  .slide {
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  .slide .content-block {
     margin: 0 auto;
-    margin-bottom: 76px;
-    font-size: 24px;
-    line-height: 24px;
-    height: 40px;
-    width: 480px;
-    font-weight: 100;
-    letter-spacing: 2px;
-    padding-left: 12px;
+    padding: 100px 20px;
   }
 
-  #cursor{
-    font-weight: 100;
-  }
 
-  #target, .blink{
-    color:#FFF;
-    font-weight: 700;
-  }
 
-  .logo-large{
-    height: 240px;
-    width: 550px;
-    margin: auto;
-    margin-bottom: 20px;
-    background: url('/img/logo.svg') no-repeat;
-    background-size: 100%;
-    border-left: 64px solid rgba(0,0,0,0);
-  }
+  /* SPECIFIC */
 
-  .error {
-    padding: 6px 24px 24px 24px;
-    margin-bottom: 48px;
-    margin-top: -48px;
-    background-color: rgba(255,255,255,0.15);
-    color: #fff;
-    a {
-      color: inherit;
-      text-decoration: underline;
-    }
-  }
+  /* buttons */
 
-  .frontpage-login{
-    height: 100px;
-    width: 850px;
-    margin: auto;
-    margin-bottom: 48px;
-    margin-top: 0px;
-    padding-left: 140px;
-    line-height: 78px;
-    vertical-align: top;
-    border-left: 24px solid rgba(0,0,0,0);
-    clear: both;
+  #logo {
+    position: fixed;
+    z-index: 90;
+    top: 20px;
+    left: 20px;
+    width: 150px;
+    display: block;
+    img { width: 100%; }
   }
-
-  .social-logo{
-    height: 78px;
-    width: 181px;
-    float: left;
-    cursor: pointer;
-  }
-
-  .social-logo-line{
-    border-right: 1px solid white;
-  }
-
-  .social-logo:hover{
-    background-color: rgba(255,255,255,0.08);
-  }
-
-  .social-logo-facebook{
-    background: url('/img/social-logo-facebook.svg') center no-repeat;
-  }
-
-  .social-logo-twitter{
-    background: url('/img/social-logo-twitter.svg') center no-repeat;
-  }
-
-  .social-logo-github{
-    background: url('/img/social-logo-github.svg') center no-repeat;
-  }
-
-  .frontpage-join-us{
-    background: url('/img/join-us.svg') center no-repeat;
-    height: 78px;
+  #enroll-btn {
+    position: absolute;
+    z-index: 60;
+    bottom: 20px;
+    right: 20px;
     width: 100px;
-    margin-left: 12px;
-    margin-top: -24px;
-    float: left;
+    display: block;
+    &.fixed {
+      position: fixed;
+      top: 20px;
+      bottom: auto;
+    }
+    &.active { /* enroll mode already active */
+      visibility: hidden;
+    }
   }
 
-  .city-twitter{
-    font-size: 24px;
-    margin-bottom: 48px;
 
+  /* overlay */
+
+  #welcomeOverlay {
+    div {
+      position: fixed;
+      top: 50%;
+      width: 100%;
+      transform: translateY(-50%);
+      font-size: 4.5em;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+    }
   }
 
-  .frontpage-headline{
-    margin-top:32px !important;
-    margin-bottom: 12px !important;
-    font-size: 24px !important;
-  }
 
-  .invited-by-container{
+  /* slides */
 
-    $speackBubbleBackground = rgba(255,255,255,0.15);
-
-    margin: auto;
-    margin-bottom: 40px;
-    margin-top: -50px;
-    width: 480px; 
-    height: 180px;
-
-      .speach-bubble{
+  #welcome {
+    background-image: url(/img/frontpage/bg1.jpg);
+    position: relative;
+    #opensource {
+      position: absolute;
+      top: 0px;
+      right: -2px;
+      display: block;
+      width: 100px;
+      height: 100px;
+      img {
+        width: 100%;
+      }
+    }
+    .content-block {
+      width: 440px;
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    #location-block {
+      select {
+        width: 100%;
+        // font-size: 1.8em;
+      }
+    }
+    #enroll-block {
+      position: absolute;
+      top: 50%;
+      width: inherit;
+      transform: translateY(-35%);
+      #enroll-btn-large {
+        display: block;
+        font-size: 2.4em;
+        border-width: 3px;
+        border-radius: 0px !important;
+        margin-top: 50px;
+      }
+      #enroll-btn-large:hover{
+          background-color:rgba(0,0,0,0.1);
+        }
+      small {
+        display: block;
+        margin-top: 10px;
+        font-size: 1em;
+        font-style: italic;
+        text-align: center;
+        text-shadow()
+      }
+      .invitation-container {
         position: relative;
-        width: 200px;
-        height: 50px;
-        padding: 24px;
-        background: $speackBubbleBackground;
-        color: #FFF;
-        margin: auto;
-        float: left;
-        margin-left: 32px;
-        margin-top: 42px;
-
-        .larger{
-          font-size: 1.8em;
-          font-weight: 400;
-          line-height: 32px;
-          color: #fff;
-          float: left;
-          margin-bottom: 8px;
+        width: 300px;
+        height: 100px;
+        margin: 0px auto;
+        .pictureView {
+          margin: 0px;
         }
-
-        .name{
-          float: right;
-          color: #FFF;
-          font-weight: 100;
-          color: fff;
-        }
-       
-      }.speach-bubble:after{
-
-          content: '';
+        .bubble {
+          $bubbleBgColor = rgba(255,255,255,0.15)
+          $margin = 90px;
           position: absolute;
-          border-style: solid;
-          border-width: 15px 17px 15px 0;
-          border-color: transparent $speackBubbleBackground;
-          display: block;
-          width: 0;
-          z-index: 1;
-          left: -17px;
-          top: 34px;
+          top: 26px;
+          left: $margin;
+          width: 200px;
+          padding: 15px 20px;
+          background-color: $bubbleBgColor;
+          font-size: 1.2em;
+          &::after{
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 13px 15px 13px 0;
+            border-color: transparent $bubbleBgColor;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -15px;
+            top: 14px;
+          }
+        }
 
       }
-  }
-
-  .ambassadors-container{
-    display:inline-block;
-
-
-    .ambassadors{
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 4px;
-      width: auto;
-
-      .hacker{
-        float: left;
-        .name{
-          font-size: 24px;
-          margin-top: 8px;
-          margin-bottom: 4px;
+      #video-btn-small {
+        width: 155px;
+        font-weight: normal;
+        font-style: italic;
+        padding: 10px;
+        margin: 35px auto;
+        text-align: center;
+        display: block;
+        img {
+          margin: 0 auto;
+          width: 35px;
         }
-        .ambassador{
-          font-weight: lighter;
-          margin-bottom: 4px;
+        span {
+          margin-left: 6px;
         }
-        .action:after {
-          content: ' • ';
+        &:hover {
+          button-active()
         }
-        .action:last-of-type:after {
-          content: '';
+      }
+    }
+    #login-block {
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      height: 90px;
+      text-align: center;
+      transition: height 1s;
+      z-index: 45;
+
+      &.active {
+        height: 100%;
+      }
+
+      /* blur background after sign in buttons
+         after clicking enroll */
+      &::after {
+        position: absolute;
+        z-index: -1;
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+        content: "";
+        frontpage-blur-background()
+        opacity: 0;
+        transition: opacity 0.6s 0.6s ease-out;
+      }
+      &.active::after {
+        opacity: 1;
+        transition: opacity 0.2s 0s ease-out;
+      }
+
+      #enroll-exit { display: none; }
+      &.active #enroll-exit {
+        exit-button();
+      }
+
+      .content {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        text-align: center;
+      }
+      .title > div {
+        display: inline-block;
+        &.text {
+          width: 100px;
+        }
+        &.line-filler {
+          position: relative;
+          top: -5px;
+          width: 200px;
+          border-bottom: 1px solid rgba(255,255,255,0.6);
+        }
+        &.line-filler.failure { width: 160px; }
+        &.text.failure { width: 180px; color: red;  }
+      }
+      .sign-in-buttons a {
+        display: inline-block;
+        padding: 15px 35px 10px 35px;
+        width: 160px;
+        height: 70px;
+        margin: 0px 0px 20px 0px;
+        border:
+        &:hover {
+          button-active();
         }
       }
     }
   }
 
+  #tools {
+    background-image: url(/img/frontpage/bg2.jpg);
+    .row {
+      text-align: center;
+      & > div {
+        padding: 50px 10px;
+      }
+      img {
+        display: block;
+        margin: 0 auto;
+      }
+      a{
+        margin: 0px;
+      }
+    }
+  }
+
+  #video {
+    background-image: url(/img/frontpage/bg3.jpg);
+
+    #video-play {
+      centered();
+      display: block;
+      width: 65%;
+      img {
+        width: 100%;
+      }
+      &:hover {
+        button-active();
+      }
+    }
+
+    #video-player {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 80;
+      background-color: black;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    #video-exit {
+      exit-button();
+      display: none;
+
+    }
+
+    /* toggle visivility */
+    &.playing {
+      #video-play { display: none; }
+      #video-player { visibility: visible; opacity: 1; }
+      #video-exit { display: block; }
+    }
+
+    /* fade animation */
+    #video-player { transition: opacity 0.6s, visibility 0s 0.8s; }
+    &.playing #video-player { transition: opacity 0.6s, visibility 0s 0s; }
+  }
+
+  #manifesto {
+    background-image: url(/img/frontpage/bg4.jpg);
+    .content-block {
+      max-width: 640px;
+      padding-right: 0px;
+    }
+    ol {
+      padding: 1.1em;
+      font-size: 1.3em;
+      line-height: 1.6em;
+      li {
+        margin-bottom: 12px;
+      }
+    }
+    .content-block {
+      margin: 0 auto;
+      padding: 200px 20px;
+    }
+  }
+
+  #influencers {
+    background-image: url(/img/frontpage/bg5.jpg);
+    .container {
+      padding: 0px 120px;
+    }
+    .row.intro {
+      margin: 30px 0 40px 0;
+      font-size: 1.3em;
+      line-height: 1.6em;
+    }
+    .row.items {
+      text-align: center;
+      & > div {
+        padding: 50px 10px;
+      }
+      img {
+        display: block;
+        margin: 0 auto;
+      }
+    }
+    .row.extro {
+      font-size: 1em;
+      font-style: italic;
+    }
+  }
+
+  #about {
+    background-image: url(/img/frontpage/bg6.jpg);
+    .content {
+      font-size: 1.3em;
+      line-height: 1.6em;
+      margin: 0 auto;
+      max-width: 600px;
+      p.spacer {
+        margin-top: 3em;
+      }
+    }
+    #staff {
+      margin: auto;
+      width: 80%;
+      margin-top: 70px;
+      text-align: center;
+      .picture-view {
+        display: inline-block;
+        margin-right: 12px;
+        margin-bottom: 12px;
+        margin-top: 8px;
+        text-align: center;
+      }
+      .members {
+        margin-bottom: 20px;
+      }
+    }
+    #to-top {
+      position: fixed;
+      z-index: 40;
+      bottom: 20px;
+      right: 20px;
+      display: block;
+      width: 30px;
+      height: 30px;
+      img {
+        width: 100%;
+        transform: rotate(180deg);
+      }
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.6s, visibility 0s 0s;
+      &.visible {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.6s, visibility 0s 0.8s;
+      }
+    }
+  }
 }

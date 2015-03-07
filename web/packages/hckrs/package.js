@@ -5,15 +5,15 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('hckrs:docs@0.1.2');
-  
+  api.use('hckrs:docs@0.1.5');
+
   api.imply('base');
 
   api.imply('account');
   api.imply('util');
   api.imply('cities');
   api.imply('tmpl-helpers');
-  
+
 
   // collections
   api.imply('collection-base');

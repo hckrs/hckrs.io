@@ -1,56 +1,5 @@
 // ROUTES
 
-// the routes that DON'T require login
-var noLoginRequired = [
-  'docs',
-  'about',
-  'frontpage',
-  'invite',
-  'verifyEmail',
-];
-
-
-
-/*
-  special entry routes
-  includes refer information
-*/
-
-InviteController = DefaultController.extend({
-  template: 'frontpage',
-  onBeforeAction: function() {
-    // set some session variables and then redirects to the frontpage
-    // the frontpage is now showing a picture of the user that has invited this visitor;
-    Session.set('inviteBitHash', this.params.inviteBitHash);
-    this.redirect('frontpage');
-    this.next();
-  }
-});
-
-GrowthGithubController = DefaultController.extend({
-  template: 'frontpage',
-  onBeforeAction: function() {
-    Session.set('growthType', 'github');
-    Session.set('growthPhrase', this.params.phrase);
-    this.redirect('frontpage');
-    this.next();
-  }
-});
-
-LogoutController = DefaultController.extend({
-  template: 'loading',
-  onBeforeAction: function() {
-    if (Meteor.userId()) {
-      GAnalytics.event("LoginService", "logout");
-      Meteor.logout();
-      this.render('loading');
-    } else {
-      this.redirect('frontpage');
-    }
-  }
-});
-
-
 
 /* hooks */
 
@@ -80,26 +29,6 @@ var setMetaData = function() {
 }
 
 
-var loginRequired = function() {
-  if (!Meteor.userId()) {
-    if (!Session.get('redirectUrl'))
-      Session.set('redirectUrl', location.pathname + location.search + location.hash);
-    this.redirect('frontpage');
-  }
-  this.next();
-}
-
-// make sure that user is allowed to enter the site
-var allowedAccess = function() {
-  var user = Users.myProps(['isAccessDenied','globalId','bitHash']) || {};
-  if(user.isAccessDenied) {
-    if (user._id !== Url.userIdFromUrl(window.location.href)) {
-      this.redirect('hacker', user);
-    }
-  }
-  this.next();
-}
-
 // GAnalytics
 var pageView = function(route) {
   GAnalytics.pageview(route);
@@ -112,13 +41,6 @@ var pageView = function(route) {
 // set meta data
 Router.onRun(setMetaData);
 
-// make sure the user is logged in, except for the pages below
-Router.onRun(loginRequired, {except: noLoginRequired});
-Router.onBeforeAction(loginRequired, {except: noLoginRequired});
-
-// make sure that user is allowed to enter the site
-Router.onBeforeAction(allowedAccess, {except: noLoginRequired });
-
 // log pageview to Google Analytics
 Router.onRun(pageView);
 
@@ -127,9 +49,7 @@ Router.onRun(pageView);
 
 
 // save and restore scroll state for every page
-var scrollState = new State('routerScrollState', {
-  routes: {}
-});
+var scrollState;
 
 var scrollHandler = function(event) {
   var route = Router.current().url;
@@ -138,6 +58,9 @@ var scrollHandler = function(event) {
 }
 
 Meteor.startup(function() {
+  scrollState = new State('routerScrollState', {
+    routes: {}
+  });
   $(window).on("scrollstop", scrollHandler);
 });
 
@@ -145,13 +68,16 @@ Meteor.startup(function() {
 Router.restoreScrollState = function() {
   var params = Router.current().getParams();
   var route = Router.current().url;
-  var top = scrollState.get(route);
 
-  Tracker.afterFlush(function() {
-    if (top === 0 && params.hash)
-      $(window).scrollTo($("#"+params.hash), {duration: 0, offset: 0});
-    else
-      $(window).scrollTop(top || 0);  
+  Tracker.nonreactive(function() {
+    Tracker.afterFlush(function() {
+      if (params.hash) {
+        $(document).scrollTo("#"+params.hash, {duration: 800, offset: 0});
+      } else {
+        var top = scrollState.get(route);
+        $(document).scrollTop(top || 0);
+      }
+    });
   });
 }
 

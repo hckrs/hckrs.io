@@ -8,71 +8,53 @@ var serviceOptions = {
 }
 
 
-
-Login.init = function() {
-  
-  // Observe if user is logging in
-  observeLoggingIn();
-}
-
-
-/* OBSERVE Login State */
-
-// observe if user is logging in
-var observeLoggingIn = function() {
-  var startLogin;
-  Deps.autorun(function() {
-    if (Meteor.loggingIn()) {
-      startLogin = true;
-      if (!Session.get('redirectUrl'))
-        Session.set('redirectUrl', location.pathname + location.search + location.hash);
-    } else if(startLogin && Meteor.userId() && Subscriptions.ready()) {
-      startLogin = false;
-      Tracker.nonreactive(function() {
-        loggedIn();
-      });
-    }
-  });
+Login.verifiedEmail = function() {
+  verifiedEmail();
 }
 
 
 /* LOGIN EVENT handlers */
 
-// when user becomes logged in
-var loggedIn = function() {
+// redirect after login
+// and do access checks
+Login.callback = function(router) {
 
   // log
   GAnalytics.event("LoginService", "login", "automatically");
 
-  // set currentCity (which user is visiting) based on city in the url
-  if (Meteor.user().isAdmin)
-    Users.update(Meteor.userId(), {$set: {currentCity: Session.get('currentCity')}})
+  // redirect
+  var redirectUrl = Session.get('redirectUrl');
+  if (!redirectUrl && location.pathname == '/')
+    redirectUrl = 'highlights';
+  if (redirectUrl) {
+    router.redirect(redirectUrl);
+    Session.set('redirectUrl', null);
+  } else {
+    router.next();
+  }
 
+  // access checks
+  accessChecks();
+}
+
+// when user becomes logged in
+var accessChecks = function() {
+
+  // set currentCity (which user is visiting) based on city in the url
+  Tracker.afterFlush(function() {
+    Tracker.nonreactive(function(){
+      if (Meteor.user().isAdmin)
+        Users.update(Meteor.userId(), {$set: {currentCity: Session.get('currentCity')}})
+    })
+  });
 
   // XXX maybe we can do this on the server side, because
   // meteor introduces a function called Accounts.validateLoginAttempt()
   checkInvitation();
   checkGrowthPhrase();
   checkAccess();
-
-  // if a redirectUrl is present, redirect to that url
-  // otherwise if also no route is setted to the hackers list
-  var redirectUrl = Session.get('redirectUrl');
-  
-  if (redirectUrl && !_.contains(['/','/logout'], redirectUrl)) {
-    Session.set('redirectUrl', null);
-    Router.go(redirectUrl);
-  } else {
-    goToEntryPage();
-  }
-
 }
 
-// which page should be loaded for logged in users which enter the site
-goToEntryPage = function() {
-  var entryPage = 'highlights';
-  Router.go(entryPage);
-}
 
 
 
@@ -113,12 +95,11 @@ checkGrowthPhrase = function() {
 // check if he has signed up with a valid invite code
 checkInvitation = function() {
   var bitHash = Session.get('inviteBitHash');
-  
+
   if (!bitHash)
     return;
 
   var phrase = Url.bitHashInv(bitHash);
-  var broadcastUser = Users.findOne({invitationPhrase: phrase});
 
   if (phrase) {
 
@@ -135,10 +116,6 @@ checkInvitation = function() {
           Session.set('invitationLimitReached', false);
         }, 5 * 60 * 1000);
 
-        // log to google analytics
-        if (broadcastUser)
-          GAnalytics.event('Invitations', 'limit reached for user', broadcastUser._id);
-
       } else if (err) {
 
         Router.scrollToTop();
@@ -150,11 +127,10 @@ checkInvitation = function() {
 
       } else { //on success
 
-        goToEntryPage();
+        Router.go('highlights');
 
         // log to google analytics
-        if (broadcastUser)
-          GAnalytics.event('Invitations', 'invited by user', broadcastUser._id);
+        GAnalytics.event('Invitations', 'invited by user');
       }
 
       // clean
@@ -181,7 +157,7 @@ checkCompletedProfile = function() { /* GLOBAL, called from hacker.js */
           console.log(err);
         } else {
           Session.set('isIncompleteProfileError', false);
-          goToEntryPage();
+          Router.go('highlights');
         }
       });
     });
@@ -204,7 +180,7 @@ checkAccess = function() { /* GLOBAL, called from router.js */
           Router.scrollToTop();
           console.log(err);
         } else {
-          goToEntryPage();
+          Router.go('highlights');
         }
       });
     }
@@ -270,13 +246,16 @@ var loginCallback = function(err) {
 
     // when the merged user account is located in an other city
     // we have to redirect the subdomain
-    if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
-      Router.goToCity(Meteor.user().city);
+    // if (Meteor.user().city !== Session.get('currentCity') && !Meteor.user().isAdmin)
+    //   Router.goToCity(Meteor.user().city);
   }
 }
 
 // login by using a external service
 var loginWithService = function(event) {
+  if (!Session.get('currentCity'))
+    return alert('Specify where do you hack in order to continue.');
+
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
   var options = serviceOptions[service];
@@ -286,8 +265,8 @@ var loginWithService = function(event) {
   GAnalytics.event("LoginService", "login", service);
 
   // login
-  Meteor["loginWith"+Service](options, loginCallback);  
-  
+  Meteor["loginWith"+Service](options, loginCallback);
+
 }
 
 

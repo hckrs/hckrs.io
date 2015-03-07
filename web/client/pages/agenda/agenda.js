@@ -1,11 +1,4 @@
-// Route Controller
 
-AgendaController = DefaultController.extend({
-  template: 'agenda',
-  waitOn: function () {
-    return [];
-  }
-});
 
 
 Template.agenda.helpers({

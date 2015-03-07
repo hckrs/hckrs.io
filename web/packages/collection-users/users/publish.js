@@ -1,7 +1,7 @@
 
 /* Publish */
 
-// Publish the users to the client. A detailed specification of 
+// Publish the users to the client. A detailed specification of
 // which fields will be published is given here
 
 
@@ -62,13 +62,13 @@ var userFieldsCurrentUser = [
 ];
 
 var allUserFields = _.union(
-  userFieldsGlobal, 
-  userFieldsData, 
-  userFieldsEmail, 
-  userFieldsCall, 
-  userFieldsAmbassador, 
+  userFieldsGlobal,
+  userFieldsData,
+  userFieldsEmail,
+  userFieldsCall,
+  userFieldsAmbassador,
   userFieldsCurrentUser
-);  
+);
 
 // properties of the current logged in user that determine the user's permissions (in filterUserFields()).
 // When one of these properties changes it affects the visible fields of other users.
@@ -85,13 +85,23 @@ var permissionDeps = [
 ];
 
 
-Meteor.publish('userData', function() {
+// publish all fields of the logged in user
+Meteor.publish('currentUser', function(userId) {
+  var fields = {
+    "services": 0
+  }
+  return !userId ? [] : Users.find({_id: userId}, {fields: fields, limit: 1});
+});
+
+
+// publish specific fields of all users
+Meteor.publish('users', function() {
   var self = this;
   var queryOptions = {fields: Query.fieldsArray(allUserFields)};
-  
+
   // initial permissions (can be changed below)
   var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(permissionDeps)}) || {};
-  
+
   // observe docs changes and push the changes to the client
   // only include fields that are allowed to publish, this can vary between users
   // and will be handled by the filterUserFields() function.
@@ -135,7 +145,7 @@ Meteor.publish('userData', function() {
 // it depends on the permissions of the logged in user
 // and the privacy settings of the published user docs.
 var excludeUserFields = function(permissions, doc, isUpdate) {
-  
+
   // first determine current user's permission before continue.
   var hasAccess = permissions.isAccessDenied != true;
   var isSameCity = cityMatch(permissions.city, doc.city);
@@ -143,17 +153,17 @@ var excludeUserFields = function(permissions, doc, isUpdate) {
   var isAmbassador = permissions.isAmbassador;
 
 
-  // holds which fields to publish        
+  // holds which fields to publish
   var useFields = [];
 
-  
+
   // publish this data of all users anyway
   useFields.push(userFieldsGlobal);
-  
+
   if (doc.isAmbassador)
     useFields.push(userFieldsAmbassador);
 
-  
+
   // publish this data only if
   // current user has access to the site
   // and the published user is in the same city
@@ -161,11 +171,11 @@ var excludeUserFields = function(permissions, doc, isUpdate) {
     useFields.push(userFieldsData);
 
     var available = Object.property(doc, 'profile.available') || [];
-    
+
     // only publish e-mailadresses of user who accepted that
     if (Array.someIn(['drink','lunch','email','cowork','couchsurf'], available))
       useFields.push(userFieldsEmail);
-  
+
     // only publish phone/skype information of user who accepted that
     if (Array.someIn(['call', 'couchsurf'], available))
       useFields.push(userFieldsCall);
@@ -173,8 +183,8 @@ var excludeUserFields = function(permissions, doc, isUpdate) {
 
   // include all user data when logged in as admin or ambassador
   // and also for the logged in user itself.
-  if (isAdmin || 
-      (isAmbassador && isSameCity) || 
+  if (isAdmin ||
+      (isAmbassador && isSameCity) ||
       (permissions && permissions._id === doc._id)) {
     useFields.push(userFieldsData); // include user data
     useFields.push(userFieldsEmail); // include e-mail
@@ -183,19 +193,19 @@ var excludeUserFields = function(permissions, doc, isUpdate) {
   }
 
 
-  
+
   // returning the user doc with only visible fields included
   // this doc is send to the client and only may contain the data
   // that the logged in user is allowed to see from this user doc.
   // mark all other fields as undefined, to make sure they will me removed from client db
 
   var undefinedUser = {};
-  _.each(allUserFields, function(field) { 
-    _.deep(undefinedUser, field, undefined); 
+  _.each(allUserFields, function(field) {
+    _.deep(undefinedUser, field, undefined);
   });
-  
+
   var publishUser = _.deepPick(doc, _.union.apply(this, useFields));
-  
+
   return isUpdate ? _.extend(undefinedUser, publishUser) : publishUser;
 }
 

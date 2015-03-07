@@ -19,12 +19,6 @@ Meteor.startup(function() {
   // extract city from domain
   checkCurrentCity();
 
-  // subscribe to global subscriptions
-  Subscriptions.init();
-
-  // observer login state
-  Login.init();
-
   // Facebook SDK
   initFacebook();
 
@@ -40,9 +34,7 @@ var checkCurrentCity = function() {
   var subdomain = Url.city()
   var city = City.lookup(subdomain);
 
-  if (subdomain === 'www')
-    return Util.exec(function() { Router.go('frontpage'); });
-  else if (!city)
+  if (!city)
     return;
 
   // set current city in session

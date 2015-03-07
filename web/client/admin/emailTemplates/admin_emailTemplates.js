@@ -5,15 +5,6 @@ var state = new State('adminEmailTemplates', {
   'previewContent': "",
 });
 
-AdminEmailTemplatesController = DefaultAdminController.extend({
-  template: 'admin_emailTemplates',
-  waitOn: function () {
-    return [ 
-      Meteor.subscribe('emailTemplates'),
-    ];
-  }
-});
-
 
 Template.admin_emailTemplates.helpers({
   'tableFormat': function() {
@@ -21,9 +12,9 @@ Template.admin_emailTemplates.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        'groups', 
+        'groups',
         'subject',
-        'identifier', 
+        'identifier',
         Field.edit,
       ],
     }
@@ -77,7 +68,7 @@ Template.admin_emailTemplates.events({
     $(window).scrollTo($("#adminEmailTemplatesForm")) // scroll down
   },
   'click [action="preview"]': function(evt) {
-    // Send preview of this template to the staff member 
+    // Send preview of this template to the staff member
     // (XXX not used right now)
 
     var city = Session.get('currentCity');
@@ -122,13 +113,13 @@ Template.admin_emailTemplates.rendered = function() {
   var contentChanged = function() {
     state.set('previewContent', $body.code());
   }
-  
+
   // init wysiwyg
   var init = function(content) {
     var $body = $('#body');
     $body.destroy();
     $body.summernote({
-      toolbar: [  
+      toolbar: [
         ['style', ['bold', 'italic', 'underline', 'strikethrough', 'fontsize']],
         ['color', ['color']],
         ['clear', ['clear']],
@@ -136,11 +127,11 @@ Template.admin_emailTemplates.rendered = function() {
         ['insert', ['link', 'picture']],
         ['code', ['codeview']],
       ],
-      codemirror: { 
+      codemirror: {
         mode: 'text/html',
         htmlMode: true,
         lineNumbers: true,
-        theme: 'monokai' 
+        theme: 'monokai'
       },
       onfocus: contentChanged,
       onChange: contentChanged,
@@ -167,15 +158,15 @@ Template.admin_emailTemplates.rendered = function() {
 /* form hooks */
 AutoForm.hooks({
   // need to extract wysiwyg content
-  "adminEmailTemplatesForm": { 
+  "adminEmailTemplatesForm": {
     before: {
-      insert: function(doc, tmpl) { 
+      insert: function(doc, tmpl) {
         var emailTmpl = _.first(state.get('groups') || []);
         var content = tmpl.$('#body').code()
         doc.body = removeUrlPrefix(content, emailTmpl);
         return doc;
       },
-      update: function(docId, modifier, tmpl) { 
+      update: function(docId, modifier, tmpl) {
         var emailTmpl = _.first(state.get('groups') || []);
         var content = tmpl.$('#body').code()
         modifier.$set.body = removeUrlPrefix(content, emailTmpl);
@@ -204,7 +195,7 @@ var removeUrlPrefix = function(content, template) {
   _.each(data || {}, function(val, key) {
     if (_.isString(val) && (val.indexOf('http://') === 0 || val.indexOf('https://') === 0)) {
       var regex = new RegExp('http(s?)://\\*\\|'+key+'\\|\\*', 'g');
-      content = content.replace(regex, "*|"+key+"|*");  
+      content = content.replace(regex, "*|"+key+"|*");
     }
   });
 

@@ -1057,6 +1057,18 @@ cities = [
       twitter: ""
   },
   {
+      key:  "shanghai",
+      name: "Shanghai",
+      country: "CN",
+      latitude: 31.230416,
+      longitude: 121.473701,
+      backgroundImage: "",
+      backgroundImageNight: "",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_jf47cel01tq1pqlf1e291qdqks@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
+      mapbox: "",
+      twitter: "hckrsShanghai"
+  },
+  {
       key:  "sheffield",
       name: "Sheffield",
       country: "GB",

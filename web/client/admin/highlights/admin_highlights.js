@@ -1,15 +1,4 @@
-// Route Controller
 
-AdminHighlightsController = DefaultAdminController.extend({
-  template: 'admin_highlights',
-  waitOn: function () {
-    var city = Session.get('currentCity');
-    var isAdmin = Users.hasAdminPermission();
-    return [ 
-      Meteor.subscribe('highlights', isAdmin ? 'all' : city),
-    ];
-  }
-});
 
 
 Template.admin_highlights.helpers({
@@ -21,12 +10,12 @@ Template.admin_highlights.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        Field.date, 
-        Field.city, 
-        Field.private, 
-        'title', 
-        'subtitle', 
-        Field.url, 
+        Field.date,
+        Field.city,
+        Field.private,
+        'title',
+        'subtitle',
+        Field.url,
       ],
     }
   }

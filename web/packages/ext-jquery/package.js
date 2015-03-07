@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ext-jquery',
   summary: ' /* Fill me in! */ ',
-  version: '1.0.0'
+  version: '1.1.0'
 });
 
 Package.onUse(function(api) {
@@ -21,6 +21,5 @@ Package.onUse(function(api) {
   api.addFiles('plugins/scrollTo.js', 'client');
   api.addFiles('plugins/serializeObject.js', 'client');
   api.addFiles('plugins/typewriter.js', 'client');
-
-  
+  api.addFiles('plugins/scrollspy.js', 'client');
 });
