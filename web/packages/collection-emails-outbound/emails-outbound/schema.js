@@ -5,12 +5,12 @@
 var eventSchema = new SimpleSchema({ /* events from mandrill (webhook) */
   "event": { type: String }, /* send, deferral, hard-bounce, soft-bounce, open, click, spam, unsub, reject */
   "url": { type: String, optional: true}, /* url clicked in the message */
-  "agent": { 
+  "agent": {
     type: new SimpleSchema({
-      "mobile": { type: Boolean }, 
-      "os": { type: String }, /* linux, mac, windows */
-      "client": { type: String }, /* Firefox, Chrome, Safari */
-      "version": { type: String }, 
+      "mobile": { type: Boolean },
+      "os": { type: String, optional: true }, /* linux, mac, windows */
+      "client": { type: String, optional: true }, /* Firefox, Chrome, Safari */
+      "version": { type: String, optional: true },
     }),
     optional: true
   },
@@ -22,12 +22,12 @@ Schemas.EmailsOutbound = new SimpleSchema([
     "kind"            : { type: String, optional: true, allowedValues: ['news', 'transactional', 'notification', 'growth'] },
     "type"            : { type: String, optional: true },
     "city"            : { type: String, optional: true, allowedValues: City.identifiers() },
-    "from": { 
+    "from": {
       type: new SimpleSchema({
         "email"       : { type: String },
         "name"        : { type: String, optional: true },
         "userId"      : { type: String, optional: true },
-      }) 
+      })
     },
     "to": {
       type: [new SimpleSchema({
@@ -45,7 +45,7 @@ Schemas.EmailsOutbound = new SimpleSchema([
     "body"            : { type: String, optional: true },
     "tags"            : { type: [String], optional: true },
     "mergeVarsGlobal" : { type: [new SimpleSchema({"name": {type: String}, "content": {type: String}})], optional: true },
-    "mergeVars": { 
+    "mergeVars": {
       type: [new SimpleSchema({
         "rcpt"        : { type: String },
         "vars"        : { type: [new SimpleSchema({"name": {type: String}, "content": {type: String}})], optional: true },
