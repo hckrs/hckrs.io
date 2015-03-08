@@ -7,9 +7,9 @@
  * @param {String} options.to_name to name
  * @param {String} options.subject subject
  * @param {String} options.html html email
- * @param {Object} options.segments 
+ * @param {Object} options.segments
  * Object containing 2 fields, `match` (String) and `conditions` (Array of Objects).
- * 
+ *
  * * **match**; "all" *OR* "any"
  * * **conditions**; Array containing matching conditions. Some possible condition:  `{ field: 'CITY_ID', op: 'eq', value: 'utrecht' }`
  * @param {String} options.test email adress where test email should be send to
@@ -69,7 +69,7 @@ Mailing.send = function(options) {
         }
       });
     }
-  }) 
+  })
 }
 
 
@@ -94,24 +94,24 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
   if (selector.userId && (Users.findOne(selector.userId) || {}).city !== city)
     throw new Meteor.Error(500, "not allowed", "Ambassador not allowed to mail this user");
 
-  if (selector.mailing && !_.contains(MAILING_VALUES, selector.mailing)) 
+  if (selector.mailing && !_.contains(MAILING_VALUES, selector.mailing))
     throw new Meteor.Error(500, "no allowed", "no valid group specified");
 
   // on test environments, send always test e-mails. Never mail the users
   if (Settings['environment'] !== 'production')
     isTest = true;
 
-  var html = Assets.getText('email-wrappers/html-email.html')
+  var html = HTMLEmailTemplates.baseTemplate();
   html = html.replace(/{{subject}}/g, subject);
   html = html.replace(/{{content}}/g, content);
-  html = html.replace(/{{unsubscribe}}/g, 'if you don\'t want to receive this kind of emails you can <a href="http://hckrs.io">change your email settings</a>');
+  html = html.replace(/{{unsubscribe}}/g, 'if you don\'t want to receive this kind of emails you can <a href="http://hckrs.io">change your email settings</a><div style="height:0px;overflow:hidden;">*|HTML:REWARDS|* <br/><a href="*|UNSUB|*">unsubscribe</a></div>');
 
   // segments
   // e.g. {match: 'all', conditions: [{field: 'HACKING', op: 'like', value: "%'apps'%%'web'%" }]}
   var segments;
   if (selector.userId) {
     segments = {
-      match: 'all', 
+      match: 'all',
       conditions: [
         { field: 'USER_ID', op: 'eq', value: selector.userId }
       ]
@@ -119,15 +119,15 @@ Mailing.ambassadorMail = function(subject, content, selector, isTest) {
   }
   if (selector.mailing) {
     segments = {
-      match: 'all', 
+      match: 'all',
       conditions: [
         { field: 'CITY_ID', op: 'eq', value: city },
         { field: 'interests-' + MailChimpOptions['group-mailings'], op: 'one', value: selector.mailing },
       ]
-    } 
+    }
   }
 
-  if (!segments) 
+  if (!segments)
     throw new Meteor.Error(500, "no segement", "no valid segment specified");
 
   Mailing.send({
