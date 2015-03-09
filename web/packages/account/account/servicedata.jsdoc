@@ -10,7 +10,7 @@ Account.serviceData = {};
 Account.serviceData.fetchUserData = function(user, service) {
 
   var services = {
-  
+
     "github": function(user) {
       var fields = ["id","accessToken","email", "privateEmails","username","login","avatar_url","gravatar_id","html_url","name","company","blog","location"]
       var data = HTTP.get("https://api.github.com/user", {
@@ -23,13 +23,13 @@ Account.serviceData.fetchUserData = function(user, service) {
       }).data; // XXX API response format for /user/emails will change in the future
       return _.pick(data, fields);;
     },
-    
+
     "facebook": function(user) {
       var url = "https://graph.facebook.com/me";
       var fields = ['id', 'email', 'name', 'locale', 'picture', 'link', 'username', 'location', 'birthday', 'gender', 'website', 'work'];
       return OAuth.userCall(user, 'facebook', 'GET', url, {fields: fields}).data;
     },
-    
+
     "twitter": function(user) {
       var url = "https://api.twitter.com/1.1/account/verify_credentials.json";
       var fields = ['id','id_str','accessToken','profile_image_url','name','screen_name','location','entities'];
@@ -40,7 +40,7 @@ Account.serviceData.fetchUserData = function(user, service) {
   }
 
   if (!services[service])
-    throw new Meteor.Error(500, "Unknow how to fetch user data from " + service);    
+    throw new Meteor.Error(500, "Unknow how to fetch user data from " + service);
 
   // return the fetched data
   return services[service](user);
@@ -58,7 +58,7 @@ Account.serviceData.fetchUserData = function(user, service) {
 Account.serviceData.unify = function(data, service) {
 
   var services = {
-  
+
     "github": function(data) {
 
       if (data.avatar_url)
@@ -68,7 +68,7 @@ Account.serviceData.unify = function(data, service) {
         data.location = Geo.geocode(data.location);
 
       // check for private mailaddress when public email isn't setted
-      if (!data.email && data.privateEmails) { 
+      if (!data.email && data.privateEmails) {
         var emails = _.filter(data.privateEmails, function(email) {
           return _.isString(email) && email.indexOf("@users.noreply.github.com") === -1;
         });
@@ -83,7 +83,7 @@ Account.serviceData.unify = function(data, service) {
         'company': data.company,
         'homepage': data.blog,
         'location': data.location,
-        
+
         // 'username': data.login,
         // 'birthday': data.birthday || null,
         // 'city': data.location,
@@ -92,7 +92,7 @@ Account.serviceData.unify = function(data, service) {
 
       return userData;
     },
-    
+
     "facebook": function(data) {
 
       if (data.birthday) {
@@ -108,7 +108,7 @@ Account.serviceData.unify = function(data, service) {
 
       if (data.work && data.work[0] && data.work[0].employer)
         data.company = data.work[0].employer.name;
-      
+
       var userData = {
         'email': data.email,
         'name': data.name,
@@ -117,22 +117,22 @@ Account.serviceData.unify = function(data, service) {
         'company': data.company, // XXX TODO ? working???
         'homepage': data.website,
         'location': data.location,
-        
+
         // 'username': data.username,
         // 'birthday': data.birthday,
-        // 'city': data.location && data.location.name, //XXX TODO: use additional data.location.id 
+        // 'city': data.location && data.location.name, //XXX TODO: use additional data.location.id
         // 'lang': data.locale && data.locale.substr(0,2)
       };
 
       return userData;
     },
-    
-    "twitter": function(data) {
-    
-      if (!data.default_profile_image && data.profile_image_url)
-        // remove '_normal' from url to get original size
-        data.picture = data.profile_image_url.replace(/_normal(.{0,5})$/, '$1');
 
+    "twitter": function(data) {
+
+      if (!data.default_profile_image && data.profile_image_url) {
+        // remove '_normal' from url to get original size and use a size of 200x200
+        data.picture = data.profile_image_url.replace(/_normal(.{0,5})$/, '_200x200$1');
+      }
       var urls = Object.property(data, 'entities.url.urls');
       if (urls && urls[0])
         data.homepage = urls[0].expanded_url;
@@ -151,7 +151,7 @@ Account.serviceData.unify = function(data, service) {
         'company': null, // not available
         'homepage': data.homepage,
         'location': data.location,
-        
+
         // 'username': data.screen_name,
         // 'birthday': data.birthday || null,
         // 'city': data.location,
@@ -163,7 +163,7 @@ Account.serviceData.unify = function(data, service) {
   }
 
   if (!services[service])
-    throw new Meteor.Error(500, "Unknow service " + service);    
+    throw new Meteor.Error(500, "Unknow service " + service);
 
   // return the fetched data
   return Object.omitNull(services[service](data));

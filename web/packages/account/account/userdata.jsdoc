@@ -10,7 +10,7 @@ Account.userData = {};
  * @return {Object} The same user object with additional info attached to it
  */
 Account.userData.extendUserByFetchingService = function(user, service) {
-  
+
   // fetch additional user data from service
   var serviceData = Account.serviceData.fetchUserData(user, service);
 
@@ -22,11 +22,11 @@ Account.userData.extendUserByFetchingService = function(user, service) {
 
   // extending the user's profile
   user = extendUserProfile(user, userData, service);
-  
+
   return user;
 }
 
- 
+
 /**
  * @summary Merge two user objects. Merge the second user in the first one, returning a copy of the result. Notice that some properties must be handled manually.
  * @locus Server
@@ -36,7 +36,7 @@ Account.userData.extendUserByFetchingService = function(user, service) {
 Account.userData.mergeUserData = function(firstUser, secondUser) {
 
   // merge 2 objects (copy right properties to left, it will override always)
-  var mergedData = _.deepExtend(_.deepClone(secondUser), _.deepClone(firstUser)); 
+  var mergedData = _.deepExtend(_.deepClone(secondUser), _.deepClone(firstUser));
 
   // XXX arrays are considered as sets when working with primitives.
   // but objects in arrays are compared on their pointer (no deep equality testing)
@@ -47,18 +47,18 @@ Account.userData.mergeUserData = function(firstUser, secondUser) {
   // properties that must take the highest value of the two users
   // this is required for some Boolean / Number types.
   mergedData.invitations = Math.max(firstUser.invitations, secondUser.invitations) || firstUser.invitations || secondUser.invitations || 0;
-  
+
   if (!_.isUndefined(mergedData.isAccessDenied))
     mergedData.isAccessDenied = !!(firstUser.isAccessDenied && secondUser.isAccessDenied);
 
   if (!_.isUndefined(mergedData.isIncompleteProfile))
     mergedData.isIncompleteProfile = !!(firstUser.isIncompleteProfile && secondUser.isIncompleteProfile);
-  
+
   if (!_.isUndefined(mergedData.isUninvited))
     mergedData.isUninvited = !!(firstUser.isUninvited && secondUser.isUninvited);
 
   if (!_.isUndefined(mergedData.isHidden))
-    mergedData.isHidden = !!(firstUser.isHidden && secondUser.isHidden);  
+    mergedData.isHidden = !!(firstUser.isHidden && secondUser.isHidden);
 
   if (!_.isUndefined(mergedData.isAdmin))
     mergedData.isAdmin = !!(firstUser.isAdmin || secondUser.isAdmin);
@@ -74,7 +74,7 @@ Account.userData.mergeUserData = function(firstUser, secondUser) {
 
 
 /**
- * @summary Find an existing user that matches the identity of the given user data. 
+ * @summary Find an existing user that matches the identity of the given user data.
  * The identity will be checked by verifying equal email addresses.
  * @locus Server
  * @param {Object} userData The user object containing the emails field.
@@ -84,13 +84,13 @@ Account.userData.findExistingUser = function(userData) {
   // we matching on emailaddresses
   var emails = userData.emails ? _.pluck(userData.emails, 'address') : [];
   var existingUser = Meteor.users.findOne({
-    '_id': {$ne: userData._id}, 
+    '_id': {$ne: userData._id},
     'emails.address': {$in: emails}
   });
 
   if (!existingUser)
     return false;
-  
+
   // if one of the matched e-mails isn't verified
   // we can not merge the user
   // also meteor don't allow to create users with the same e-mail
@@ -108,9 +108,9 @@ Account.userData.findExistingUser = function(userData) {
 var _lastUsedToken;
 /**
  * @summary Existing users can link additional social services to their accounts.
- * Therefor a service token is required to fetch user data from the external service. 
+ * Therefor a service token is required to fetch user data from the external service.
  * This token can obtained on the client-side when the user authenticate the service.
- * After the token is obtained, the server method below can be called and it will fetch 
+ * After the token is obtained, the server method below can be called and it will fetch
  * user information from the external service and update user's profile.
  *
  * It will result in an updated user object with the service attached.
@@ -132,12 +132,12 @@ Account.userData.addServiceToCurrentUser = function(token, secret, service) {
   var extendedUser = _.clone(user);
 
 
-  // XXX Meteor issue, this method is called a second time 
+  // XXX Meteor issue, this method is called a second time
   // when we change the current logged in user below with this.setUserId()
   // we must prevent from running again and not throwing errors
-  if (_lastUsedToken === token) 
+  if (_lastUsedToken === token)
     return;
-  else _lastUsedToken = token; 
+  else _lastUsedToken = token;
 
 
   if (!userId || !user)
@@ -170,16 +170,16 @@ Account.userData.addServiceToCurrentUser = function(token, secret, service) {
 
   // check if the requested external account is already assigned to an other user account
   var existingUser1 = Meteor.users.findOne(_.object([
-    ["services."+service+".id", serviceData.id], 
+    ["services."+service+".id", serviceData.id],
     ['_id', {$ne: userId}]
   ]));
 
   // check if there is an other user with the same email -> merge
   var existingUser2 = Account.userData.findExistingUser(extendedUser);
-  
 
-  
-    
+
+
+
   if (existingUser1) {
 
     // service data already present in an other user account
@@ -191,7 +191,7 @@ Account.userData.addServiceToCurrentUser = function(token, secret, service) {
     // there is an account that uses the same emailadress
     // merge with that account AND include the new service data
     // merge 2 accounts
-    var mergedUser = mergeUsers.call(this, extendedUser, existingUser2);    
+    var mergedUser = mergeUsers.call(this, extendedUser, existingUser2);
 
   } else {
 
@@ -201,7 +201,7 @@ Account.userData.addServiceToCurrentUser = function(token, secret, service) {
   }
 }
 
- 
+
 /**
  * @summary Remove a external service from user's account
  * this will not remove the actual service data
@@ -220,7 +220,7 @@ Account.userData.removeServiceFromCurrentUser = function(service) {
     throw new Meteor.Error(500, "Unknow user: " + userId);
 
   if (!user.services[service])
-    throw new Meteor.Error(500, "Service isn't linked to : " + userId);     
+    throw new Meteor.Error(500, "Service isn't linked to : " + userId);
 
   // create modifiers
   var unsetModifier = _.object([
@@ -230,7 +230,7 @@ Account.userData.removeServiceFromCurrentUser = function(service) {
   ]);
 
   // remove service data
-  Meteor.users.update(userId, {$unset: unsetModifier}); 
+  Meteor.users.update(userId, {$unset: unsetModifier});
 }
 
 
@@ -256,49 +256,44 @@ Account.userData.updateServiceProfilePicture = function(userId, serviceName) {
  * @locus Server
  */
 Account.userData.updateProfilePictures = function() {
-  
+
   var users = Users.find({}, {fields: {
-    "profile.socialPicture": 1, 
-    "profile.picture": 1, 
+    "profile.socialPicture": 1,
+    "profile.picture": 1,
     "profile.name": 1,
   }}).fetch();
 
   // update twitter images if needed
-  async.forEachLimit(users, 4, function(user, cb) {
-
+  async.forEachLimit(users, 100000, function(user, cb) {
     var serviceName = "twitter";
     var image = user.profile.socialPicture[serviceName];
     var isCurrentPicture = image === user.profile.picture;
-    
-    if (!image) 
+    if (!image)
       return cb(); // go to next user
 
     var update = function() {
-
         // get new picture
         var picture = Account.userData.updateServiceProfilePicture(user._id, serviceName);
-
-        if (!picture) 
-          return;
-        
+        if (!picture)
+            return;
         // update user's picture
         var modifier = {};
         modifier["profile.socialPicture."+serviceName] = picture;
         if (isCurrentPicture)
           modifier["profile.picture"] = picture; // also change current picture
-        Users.update(user._id, {$set: modifier});  
-        
+        Users.update(user._id, {$set: modifier});
+
         // log
         console.log("Update "+serviceName+" profile picture of user " + user.profile.name);
     }
 
-    // check if image exists, if not exists it means 
+    // check if image exists, if not exists it means
     // that image has changed and we have to update!
-    HTTP.get(image, function(err){ 
-      if (err && err.response && err.response.statusCode === 404) 
+    HTTP.get(image, function(err){
+      if (err && err.response && err.response.statusCode === 404 || !_.contains(image, '_200x200'))
         update(); // update required
       cb(); // go to next user
-    });  
+    });
 
   });
 }
@@ -309,13 +304,13 @@ Account.userData.updateProfilePictures = function() {
  * @locus Server
  * @param {String} userId Some userId.
  */
-Account.userData.cleanEmailAddress = function(userId) { 
+Account.userData.cleanEmailAddress = function(userId) {
   var user = Meteor.users.findOne(userId);
-  
+
   var usedEmails = _.map(user.services, function(s) { return s.email; });
   usedEmails.push(user.profile.email);
   usedEmails = _.compact(usedEmails);
-  
+
   // remove emails that arn't in use
   Meteor.users.update(userId, {$pull: {'emails': {'address': {$nin: usedEmails}}}});
 }
@@ -328,29 +323,29 @@ Account.userData.cleanEmailAddress = function(userId) {
 // extending the user's profile with the given data
 // the given data must be in uniform format
 var extendUserProfile = function(user, userData, service) {
-  
+
   // data used for creating the user profile
   var extract = ['name', 'email', 'company', 'homepage', 'location' /*, 'gender', 'birthday'*/];
   var data = _.pick(userData, extract);
-  
+
   // fill undefined or null properties in user's profile with the new user data
-  user.profile = _.defaults(Object.omitNull(user.profile), data); 
- 
+  user.profile = _.defaults(Object.omitNull(user.profile), data);
+
   // default required properties
-  if (!user.profile.social) 
+  if (!user.profile.social)
     user.profile.social = {};
 
-  if (!user.profile.socialPicture) 
+  if (!user.profile.socialPicture)
     user.profile.socialPicture = {};
-  
+
   // customized profile properties
-  if (userData.link) 
+  if (userData.link)
     user.profile.social[service] = userData.link;
 
   if (userData.picture) {
     var isCurrentPicture = user.profile.picture === user.profile.socialPicture[service];
     user.profile.socialPicture[service] = userData.picture;
-    if (!user.profile.picture || isCurrentPicture) 
+    if (!user.profile.picture || isCurrentPicture)
       user.profile.picture = userData.picture;
   }
 
@@ -376,7 +371,7 @@ var mergeUsers = function(user, existingUser) {
   var zombieUser = currentIsNewer ? user : existingUser; // newest account (will be removed)
 
   // login the merged user (probably the same as currect session)
-  this.setUserId(surviveUser._id); 
+  this.setUserId(surviveUser._id);
 
   // merge the user data into the oldest user
   var mergedUserData = Account.userData.mergeUserData(surviveUser, zombieUser);
@@ -399,4 +394,3 @@ var removeUser = function(userId) {
   Meteor.users.update(userId, {$set: {'isHidden': true, 'isDeleted': true, 'deletedAt': new Date(), 'emails': [], 'services': {}}});
   Meteor.users.update(userId, {$set: {'services.resume.loginTokens': []}});
 }
-
