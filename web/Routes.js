@@ -114,7 +114,6 @@ DefaultAdminController = DefaultController.extend({
 
 FrontpageController = DefaultController.extend({
   template: 'frontpage',
-  fastRender: true,
   waitOn: function() {
     return [
       Meteor.subscribe('currentUser'),
