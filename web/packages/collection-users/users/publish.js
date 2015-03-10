@@ -86,11 +86,11 @@ var permissionDeps = [
 
 
 // publish all fields of the logged in user
-Meteor.publish('currentUser', function(userId) {
+Meteor.publish('currentUser', function() {
   var fields = {
     "services": 0
   }
-  return !userId ? [] : Users.find({_id: userId}, {fields: fields, limit: 1});
+  return !this.userId ? [] : Users.find({_id: this.userId}, {fields: fields, limit: 1});
 });
 
 
@@ -213,7 +213,3 @@ var excludeUserFields = function(permissions, doc, isUpdate) {
 var cityMatch = function(city1, city2) {
   return city1 && city2 && city1 === city2;
 }
-
-
-
-

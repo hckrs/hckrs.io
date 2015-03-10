@@ -117,7 +117,7 @@ FrontpageController = DefaultController.extend({
   fastRender: true,
   waitOn: function() {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('staff'),
       Meteor.subscribe('ambassadors')
     ];
@@ -133,7 +133,7 @@ AgendaController = DefaultController.extend({
   template: 'agenda',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ];
   }
@@ -143,7 +143,7 @@ BooksController = DefaultController.extend({
   template: 'books',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ];
   }
@@ -154,7 +154,7 @@ DealsController = DefaultController.extend({
   waitOn: function () {
     var city = Url.city();
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ].concat(!city ? [] : [
       Meteor.subscribe('deals', city),
@@ -167,7 +167,7 @@ HackerController = DefaultController.extend({
   template: 'hacker',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ];
   },
@@ -186,7 +186,7 @@ HackersController = DefaultController.extend({
   template: 'hackers',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('invitations'),
       Meteor.subscribe('users') // XXX be more precise
     ];
@@ -199,7 +199,7 @@ HighlightsController = DefaultController.extend({
   waitOn: function() {
     var city = Url.city();
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ].concat(!city ? [] : [
       Meteor.subscribe('highlights', city),
@@ -226,7 +226,7 @@ InvitationsController = DefaultController.extend({
   template: 'invitations',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('invitations'),
       Meteor.subscribe('users') // XXX be more precise
     ];
@@ -238,7 +238,7 @@ MapController = DefaultController.extend({
   waitOn: function () {
     var city = Url.city();
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ].concat(!city ? [] : [
       Meteor.subscribe('places', city),
@@ -326,7 +326,7 @@ AdminDealsController = DefaultAdminController.extend({
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('deals', isAdmin ? 'all' : city),
       Meteor.subscribe('users') // XXX be more precise
     ];
@@ -337,7 +337,7 @@ AdminEmailTemplatesController = DefaultAdminController.extend({
   template: 'admin_emailTemplates',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('emailTemplates'),
       Meteor.subscribe('users') // XXX be more precise
     ];
@@ -351,7 +351,7 @@ AdminGrowthController = DefaultAdminController.extend({
   },
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       // load all github users from the selected city
       Meteor.subscribe('growthGithub', AdminGrowth.getCity()),
       Meteor.subscribe('emailTemplates'),
@@ -364,7 +364,7 @@ AdminHackersController = DefaultAdminController.extend({
   template: 'admin_hackers',
   waitOn: function () {
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('users') // XXX be more precise
     ];
   }
@@ -376,7 +376,7 @@ AdminHighlightsController = DefaultAdminController.extend({
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('highlights', isAdmin ? 'all' : city),
       Meteor.subscribe('users') // XXX be more precise
     ];
@@ -390,7 +390,7 @@ AdminPlacesController = DefaultAdminController.extend({
     var city = Session.get('currentCity');
     var isAdmin = Users.hasAdminPermission();
     return [
-      Meteor.subscribe('currentUser', Meteor.userId()),
+      Meteor.subscribe('currentUser'),
       Meteor.subscribe('places', isAdmin ? 'all' : city),
       Meteor.subscribe('users') // XXX be more precise
     ];
