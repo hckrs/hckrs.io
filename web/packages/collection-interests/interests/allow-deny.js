@@ -1,9 +1,7 @@
 
 /* Permissions */
 
-// Debug settings; Later this should be changed to only allow updating 
-// and removing of a user's own interests, and maybe let their city's
-// admins change them.
+// Debug settings; 
 
 InterestCollection.allow({
 	'insert': function(userId, doc) {

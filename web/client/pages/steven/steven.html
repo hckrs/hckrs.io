@@ -16,7 +16,7 @@
 	{{#each allInfo}}
 	{{globalId}}:  <button class="btn testbutton" id="{{_id}}" >Delete</button><br>
 	<div class="indiv_interests" data-id="{{_id}}">
-	  {{#each interests}}
+	  {{#each Interests}}
 	    {{this.Name}}    
 	    <a href="#" class="intbutton" data-interest="{{this.Name}}">
 	    <i class="glyphicon glyphicon-remove glyphicon-white" ></i></a><br> 	  
@@ -26,16 +26,27 @@
       
     </div>
     
-    <div class="ordercontainer">       
-    Placeholder text: Hier komen straks allemaal buttons om te kiezen enzo
-    {{#if initializedButtons}}
-      {{#with preferenceButtons}}
-	<button class="btn leftbutton selectorbuttons">{{this.Left}}</button>
-	CHOOSE
-	<button class="btn rightbutton selectorbuttons">{{this.Right}}</button><br>
-      {{/with}}
+    <div class="ordercontainer">           
+    {{#if recordExists}}
+      {{#if fullyOrdered}}
+	Your interests are already fully ordered!
+      {{else}}
+	{{#if notEnoughRecords}}
+	There are not enough interests selected yet!
+	{{else}}
+	  {{#if initializedButtons}}
+	    {{#with preferenceButtons}}
+	      <button class="btn leftbutton selectorbuttons">{{this.Left}}</button>
+	      CHOOSE
+	      <button class="btn rightbutton selectorbuttons">{{this.Right}}</button><br>
+	    {{/with}}
+	  {{else}}
+	    <button class="btn initializer selectorbuttons"> Click to initialize buttons</button>
+	  {{/if}}
+	{{/if}}
+      {{/if}}
     {{else}}
-      <button class="btn initializer selectorbuttons"> Click to initialize buttons</button>
+      No record
     {{/if}}
     <br><br>
     {{> OrderedBox}}  
@@ -63,8 +74,8 @@
 <template name="OrderedBox">
       <div class="orderedInterests">
       {{#with interest}}
-	{{#each this.interests}}
-	  {{this.Name}} <span>({{this.Order}})</span><br>
+	{{#each this.Interests}}
+	  {{this.Name}} <span>({{this.Map}})</span><br>
 	{{/each}}
       {{/with}}
       </div>      

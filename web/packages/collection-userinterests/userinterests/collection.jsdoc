@@ -1,0 +1,7 @@
+/**
+ * @summary Interests
+ * @locus Anywhere
+ */
+Collection.UserInterests = new Meteor.Collection('userinterests');
+UserInterests = Collection.UserInterests;
+

@@ -1,3 +1,7 @@
+
+this.N4JDB = Meteor.npmRequire('neo4j');
+db = new N4JDB.GraphDatabase("http://Interestrelations:0NKzYBRfnnpWQ7f2dSID@interestrelations.sb04.stations.graphenedb.com:24789");
+
 Meteor.publish("interestcollection", function(searchInput, alreadySelected, limit) {
   
   //This is currently the code for using recommendations from the Neo4J database
@@ -123,7 +127,7 @@ Meteor.publish("interestcollection", function(searchInput, alreadySelected, limi
 });
 
 var buildCypherQuery = function(tagArray, searchInput, maxAmount)
-{
+{  
    var tagsstring = '["';
     for (i=0;i<tagArray.length;i++)
     {
@@ -136,11 +140,8 @@ var buildCypherQuery = function(tagArray, searchInput, maxAmount)
   var query ='match (t:Tag) where t.name IN '+tagsstring+
   ' match (t)-[r:Relation]-(s) where (s.name =~ "'+searchString+
   '") AND (NOT s.name IN '+tagsstring+
-  ') return distinct s.name as Interest,sum(r.count) as relationcount ORDER BY relationcount desc limit '+maxAmount;
+  ') return distinct s.name as Interest,sum(r.count) as relationcount ORDER BY relationcount desc limit '+maxAmount;  
   return query;
-  
-  
-  
 }
 
 Meteor.publish("interestcount", function(searchInput) {
