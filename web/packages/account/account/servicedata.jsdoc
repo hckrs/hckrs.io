@@ -131,7 +131,7 @@ Account.serviceData.unify = function(data, service) {
 
       if (!data.default_profile_image && data.profile_image_url) {
         // remove '_normal' from url to get original size and use a size of 200x200
-        data.picture = data.profile_image_url.replace(/_normal(.{0,5})$/, '_200x200$1');
+        data.picture = data.profile_image_url.replace(/(_normal)?(.{0,5})$/, '_200x200$2');
       }
       var urls = Object.property(data, 'entities.url.urls');
       if (urls && urls[0])
