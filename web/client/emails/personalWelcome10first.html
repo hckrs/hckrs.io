@@ -1,17 +1,21 @@
 <template name="emailSubject_personalWelcome10first">
-Welcome *|FNAME|*
+Hi *|FNAME|*
 </template>
 
 <template name="emailContent_personalWelcome10first">
-{{name}}, it’s cool to see you are joining in {{city}}. Sorry for the emptiness ;) To make sure {{citykey}}.hckrs.io can grow we gave you some additional invite slots!
+It’s cool to see you are joining us in {{city}}, you are one of the first in your city, witch makes you one of the founders of {{city}}.
 
-You can invite {{inviteSlots}} friends with you personal activation URL : {{inviteUrl}}
-If you need more slots please reply to this email.
-            
-<a href="http://{{citykey}}.hckrs.io" class="button">hckrs.io</a>
+{{name}}, would you be willing to become a local ambassador to <a href="http://assets.hckrs.io/documents/meetup.pdf">organize</a> a hckrs {{city}} meetup?
 
-&mdash; {{staffName}}
+Thank you &#60;3
+
+{{staffName}}
 {{{staffTwitter}}}
 <a href="https://github.com/hckrs/hckrs.io">source code</a>
+
+<br />
+<br />
+PS: To make sure hckrs {{citykey}} can grow we gave you some additional invite slots!
+You can invite {{inviteSlots}} other hackers with your personal activation URL : {{inviteUrl}}
 
 </template>

@@ -1,17 +1,21 @@
 <template name="emailSubject_personalWelcome">
-Welcome *|FNAME|*
+*|FNAME|*, you are in
 </template>
 
 <template name="emailContent_personalWelcome">
-Congrats {{name}}, you are now a member of {{citykey}}.hckrs.io.
-
-You can invite {{inviteSlots}} friends with you personal activation URL : {{inviteUrl}}
-If you need more slots please reply to this email.
+Congrats, you are now a validated member of <a href="http://{{citykey}}.hckrs.io">{{citykey}}.hckrs.io</a>. Enjoy.
             
-<a href="http://{{citykey}}.hckrs.io" class="button">hckrs.io</a>
+*|FNAME|*, can you do me a favour ?
 
-&mdash; {{staffName}}
+<a href="https://github.com/hckrs/hckrs.io" class="button">Star hckrs.io on Github</a>
+
+Thank you &#60;3
+
+{{staffName}}
 {{{staffTwitter}}}
 <a href="https://github.com/hckrs/hckrs.io">source code</a>
+<br />
+<br />
+PS: You can invite {{inviteSlots}} friends with you personal activation URL : {{inviteUrl}}
 
 </template>
