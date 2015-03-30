@@ -264,7 +264,7 @@ Account.userData.updateProfilePictures = function() {
   }}).fetch();
 
   // update twitter images if needed
-  async.forEachLimit(users, 100000, function(user, cb) {
+  async.forEachLimit(users, 4, function(user, cb) {
     var serviceName = "twitter";
     var image = user.profile.socialPicture[serviceName];
     var isCurrentPicture = image === user.profile.picture;
