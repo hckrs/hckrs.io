@@ -1,5 +1,15 @@
 var spawn = require('child_process').spawn;
 
+oldSpawn = childProcess.spawn;
+function mySpawn() {
+    console.log('spawn called');
+    console.log(arguments);
+    var result = oldSpawn.apply(this, arguments);
+    return result;
+}
+childProcess.spawn = mySpawn;
+
+
 var workingDir = process.env.WORKING_DIR || './';
 var args = [];
 
