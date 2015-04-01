@@ -94,8 +94,9 @@ Template.frontpage.rendered = function() {
 
   // focus location finder
   Meteor.setTimeout(function() {
+    var isEmpty = _.isEmpty($("#welcome input").val());
     var hash = Router.current().getParams().hash;
-    if (!hash || hash == 'welcome')
+    if (isEmpty && (!hash || hash == 'welcome'))
       $("#welcome input").focus();
   }, 3500);
 

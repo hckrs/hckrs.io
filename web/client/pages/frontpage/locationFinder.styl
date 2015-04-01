@@ -1,0 +1,53 @@
+@import "nib"
+@import "../../style.import"
+
+#locationFinder {
+  #locationAutoComplete {
+    width: 100%;
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 1px solid white;
+    font-size: 1.8em;
+  }
+  .suggestions {
+    button {
+      margin-top: 10px;
+    }
+    .close-suggestions {
+      position: relative;
+      top: 5px;
+      left: 5px;
+    }
+  }
+}
+
+/* see reference: https://developers.google.com/maps/documentation/javascript/places-autocomplete#style_autocomplete */
+.pac-container {
+  frontpage-blur-background-soft()
+  // box-shadow: 0px 0px 15px black;
+  border: 0px;
+  height: 100%;
+  .pac-icon {
+    display: none;
+  }
+  .pac-item {
+    color: $hover;
+    padding-left: 15px;
+    border-top: 0px;
+    &:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    &.pac-item-selected {
+      background-color: rgba(255,255,255,0.3);
+    }
+    .pac-item-query {
+      color: white;
+    }
+    .pac-matched {
+
+    }
+  }
+  &::after {
+    background-image: none;
+  }
+}

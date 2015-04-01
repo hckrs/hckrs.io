@@ -1,0 +1,19 @@
+<template name="frontpageLocationFinder">
+  <div id="locationFinder">
+
+    <input type="text" id="locationAutoComplete" placeholder="Search for your city" value="{{CurrentCity.name}}" style="display:{{displayInput}};" autocomplete="off">
+
+    <div class="suggestions" style="display:{{displaySuggestions}};">
+      <div>Choose a hckrs city nearby</div>
+      <div>
+        {{#each suggestions}}
+          <button class="btn btn-default" city="{{key}}">{{name}}</button>
+        {{/each}}
+        <a class="close-suggestions" href="#">
+          <img src="/img/close.svg" alt="Don't enroll now." width="20" />
+        </a>
+      </div>
+    </div>
+
+  </div>
+</template>
