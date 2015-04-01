@@ -6,4 +6,4 @@ node_js:
 before_install:
   - "curl https://install.meteor.com | /bin/sh"
 
-env: TEST_COMMAND=./travis.sh WORKING_DIR=./web METEOR_RELEASE=1.0.5
+env: TEST_COMMAND=./travis.sh WORKING_DIR=./web

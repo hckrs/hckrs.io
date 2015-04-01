@@ -1,3 +1,3 @@
 test:
-	node start_test.js
+	./travis.sh
 .PHONY: test
