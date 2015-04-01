@@ -35,3 +35,7 @@ meteor.stdout.on('data', function startTesting(data) {
     meteor.stdout.removeListener('data', startTesting);
   }
 });
+
+ls.stderr.on('data', function (data) {
+  console.log('stderr: ' + data);
+});
