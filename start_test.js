@@ -1,8 +1,7 @@
 var spawn = require('child_process').spawn;
 
-var workingDir = process.env.WORKING_DIR || process.env.PACKAGE_DIR || './';
-var args = ['-p', 10015];
-
+var workingDir = process.env.WORKING_DIR || './';
+var args = [];
 
 if (typeof process.env.METEOR_RELEASE !== 'undefined' &&
     process.env.METEOR_RELEASE !== '') {
@@ -10,13 +9,6 @@ if (typeof process.env.METEOR_RELEASE !== 'undefined' &&
     args.push(process.env.METEOR_RELEASE);
 }
 
-
-if (typeof process.env.PACKAGES === 'undefined') {
-  args.push('./');
-}
-else if (process.env.PACKAGES !== '') {
-  args = args.concat(process.env.PACKAGES.split(';'));
-}
 
 var meteor = spawn((process.env.TEST_COMMAND || 'meteor'), args, {cwd: workingDir});
 meteor.stdout.pipe(process.stdout);
