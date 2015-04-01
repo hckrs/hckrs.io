@@ -22,7 +22,7 @@ if (typeof process.env.METEOR_RELEASE !== 'undefined' &&
 
 var meteor = spawn((process.env.TEST_COMMAND || 'meteor'), args, {cwd: workingDir});
 meteor.stdout.pipe(process.stdout);
-meteor.stderr.pipe(process.stderr);
+//meteor.stderr.pipe(process.stderr);
 meteor.on('close', function (code) {
   console.log('meteor exited with code ' + code);
   process.exit(code);
