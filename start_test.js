@@ -1,6 +1,6 @@
-var spawn = require('child_process').spawn;
-
-oldSpawn = childProcess.spawn;
+var childProcess = require('child_process');
+var spawn = childProcess.spawn;
+var oldSpawn = childProcess.spawn;
 function mySpawn() {
     console.log('spawn called');
     console.log(arguments);
