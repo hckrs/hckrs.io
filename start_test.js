@@ -36,6 +36,6 @@ meteor.stdout.on('data', function startTesting(data) {
   }
 });
 
-ls.stderr.on('data', function (data) {
+meteor.stderr.on('data', function (data) {
   console.log('stderr: ' + data);
 });
