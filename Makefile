@@ -1,3 +1,3 @@
 test:
-    ./travis.sh
+	./travis.sh
 .PHONY: test
