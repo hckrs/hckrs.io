@@ -1,2 +1,2 @@
 cd web
-meteor "$@" --settings ../settings/dev.json --release 1.0.5
+meteor run --test --once --settings ../settings/dev.json

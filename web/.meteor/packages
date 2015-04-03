@@ -14,7 +14,8 @@ twitter
 oauth1
 http
 email
-
+mike:mocha
+velocity:console-reporter
 amplify
 jquery
 underscore
