@@ -396,6 +396,18 @@ cities = [
       twitter: ""
   },
   {
+      key:  "hongkong",
+      name: "Hong Kong",
+      country: "CN",
+      latitude: 22.2785481 ,
+      longitude: 114.1746348,
+      backgroundImage: "",
+      backgroundImageNight: "hongkong_night",
+      agenda: "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=1&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=2&amp;hl=en_GB&amp;bgcolor=%23CCCCCC&amp;src=startupdigest.com_8gsalrksdo985bkn2fav1nnrkg@group.calendar.google.com&amp;color=%238D6F47&amp;ctz=Europe%2FParis",
+      mapbox: "",
+      twitter: "hckrsHongKong"
+  },
+  {
       key:  "tallinn", /* original Estonia */
       name: "Tallinn",
       country: "EE",
