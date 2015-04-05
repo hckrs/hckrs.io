@@ -1,7 +1,14 @@
-sudo: required
 language: node_js
 node_js:
   - "0.10"
-
 before_install:
-  - "curl https://install.meteor.com | /bin/sh"
+  - curl https://install.meteor.com | /bin/sh
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  # Add testing package since it's not currently enabled in hckrs
+  - printf "sanjo:jasmine@0.11.0" >> .meteor/packages
+
+script:
+  - cd web && JASMINE_BROWSER=Firefox meteor --test --settings ../settings/dev.json
