@@ -11,6 +11,23 @@
 // and the privacy settings of the published user docs.
 // this will be handled by the filterUserFields function
 
+// exported user fields
+UserFields = {
+  // properties of the current logged in user that determine the user's permissions (in filterUserFields()).
+  // When one of these properties changes it affects the visible fields of other users.
+  // So when an dependency changes, we have to republish the whole collection to test
+  // each user doc against the new permission rights.
+  // Only first-level properties are allowed, such as 'profile', but NOT 'profile.name'
+  permissionDeps: [
+    '_id',
+    'isAccessDenied',
+    'isAdmin',
+    'city',
+    'currentCity',
+    'isAmbassador'
+  ]
+}
+
 var userFieldsGlobal = [
   "city",
   "currentCity",
@@ -70,21 +87,6 @@ var allUserFields = _.union(
   userFieldsCurrentUser
 );
 
-// properties of the current logged in user that determine the user's permissions (in filterUserFields()).
-// When one of these properties changes it affects the visible fields of other users.
-// So when an dependency changes, we have to republish the whole collection to test
-// each user doc against the new permission rights.
-// Only first-level properties are allowed, such as 'profile', but NOT 'profile.name'
-var permissionDeps = [
-  '_id',
-  'isAccessDenied',
-  'isAdmin',
-  'city',
-  'currentCity',
-  'isAmbassador'
-];
-
-
 // publish all fields of the logged in user
 Meteor.publish('currentUser', function() {
   var fields = {
@@ -100,7 +102,7 @@ Meteor.publish('users', function() {
   var queryOptions = {fields: Query.fieldsArray(allUserFields)};
 
   // initial permissions (can be changed below)
-  var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(permissionDeps)}) || {};
+  var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(UserFields.permissionDeps)}) || {};
 
   // observe docs changes and push the changes to the client
   // only include fields that are allowed to publish, this can vary between users
@@ -129,7 +131,7 @@ Meteor.publish('users', function() {
   // Check if depended permissions fields from current user changes
   // if so, we have to republish the whole user collection
   if (self.userId)
-    var myObserver = Users.find({_id: self.userId}, {fields: Query.fieldsArray(permissionDeps)}).observe({'changed': republish});
+    var myObserver = Users.find({_id: self.userId}, {fields: Query.fieldsArray(UserFields.permissionDeps)}).observe({'changed': republish});
 
 
   // handlers

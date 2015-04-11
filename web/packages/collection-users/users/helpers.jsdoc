@@ -4,32 +4,32 @@
 
 
 /**
- * @summary Get property from the specified user, without reactive 
+ * @summary Get property from the specified user, without reactive
  * dependencies on the other user properties.
  * @locus Anywhere
  * @param {String|Object} user userId or user object
  * @param {String} field Name of the property that you want to obtain
  * @param {Object} [opts] Options passed to `cursor.findOne(..., options)`
- * @example 
+ * @example
  * ```
  * Users.prop('srX87t29FW7CCYbjd', 'city');  // 'utrecht'
  * ```
  */
 Users.prop = function(user, field, options) {
-  
+
   // memorized
   var prop = _.isObject(user) ? Object.property(user, field) : undefined;
   if (!_.isUndefined(prop))
     return prop;
-  
+
   var userId = _.isObject(user) ? user._id : user;
   var opt = {fields: _.object([field], [true])};
   user = Meteor.users.findOne(userId, _.extend(options || {}, opt));
-  return Object.property(user, field); 
+  return Object.property(user, field);
 }
 
 /**
- * @summary Get multiple properties from the specified user, without reactive 
+ * @summary Get multiple properties from the specified user, without reactive
  * dependencies on the other properties.
  * @locus Anywhere
  * @param {String|Object} user userId or user object
@@ -52,16 +52,16 @@ Users.props = function(user, fields, options) {
 
   var userId = _.isObject(user) ? user._id : user;
   var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};
-  return Meteor.users.findOne(userId, _.extend(options || {}, opt));  
+  return Meteor.users.findOne(userId, _.extend(options || {}, opt));
 }
 
 /**
- * @summary Get property from current logged in user, without reactive 
+ * @summary Get property from current logged in user, without reactive
  * dependencies on the other properties.
  * @locus Anywhere
  * @param {String} field Name of the property that you want to obtain
  * @param {Object} [opts] Options passed to `cursor.findOne(..., options)`
- * @example 
+ * @example
  * ```
  * Users.myProp('city');  // 'utrecht'
  * ```
@@ -71,14 +71,14 @@ Users.myProp = function(field, options) {
 }
 
 /**
- * @summary Get multiple properties from current logged in user, without reactive 
+ * @summary Get multiple properties from current logged in user, without reactive
  * dependencies on the other properties.
  * @locus Anywhere
  * @param {String[]} fields Names of the properties that you want to obtain
  * @param {Object} [opts] Options passed to `cursor.find(..., options)`
  * @example
  * ```
- * Users.myProps(['city', 'isAdmin']); 
+ * Users.myProps(['city', 'isAdmin']);
  * //=> {_id: "srX87t29FW7CCYbjd", city: 'utrecht', isAdmin: true}
  * ```
  */
@@ -92,15 +92,15 @@ Users.myProps = function(fields, options) {
 /* permission helpers */
 
 /**
- * @summary Check if the given user is an admin.  
- * 
+ * @summary Check if the given user is an admin.
+ *
  * * If no user is spcified, the logged in user will be used instead.
- * 
+ *
  * @locus Anywhere
  * @param {String|Object} [user] Some userId or user object.
  * @example
  * ```
- * Users.isAdmin("srX87t29FW7CCYbjd"); 
+ * Users.isAdmin("srX87t29FW7CCYbjd");
  * //=> true
  * ```
  */
@@ -120,7 +120,7 @@ Users.isAdmin = function(user) {
  * @param {String} [city] City identifier.
  * @example
  * ```
- * Users.isAmbassador("srX87t29FW7CCYbjd", "utrecht"); 
+ * Users.isAmbassador("srX87t29FW7CCYbjd", "utrecht");
  * //=> false
  * ```
  */
@@ -145,7 +145,7 @@ Users.isAmbassador = function(user, city) {
  * @example
  * ```
  * var doc = {city: "utrecht", userId: "srX87t29FW7CCYbjd"};
- * Users.isOwner("srX87t29FW7CCYbjd", doc); 
+ * Users.isOwner("srX87t29FW7CCYbjd", doc);
  * //=> true
  * ```
  */
@@ -215,7 +215,7 @@ Users.hasOwnerPermission = function(user, doc) {
  * @summary If Users.isAdminPermission() return false this function will trhow an error.
  *
  * * If no user is spcified, the logged in user will be used instead.
- * 
+ *
  * @locus Anywhere
  * @param {String|Object} [user] Some userId or user object.
  */
@@ -229,7 +229,7 @@ Users.checkAdminPermission = function(user) {
  *
  * * If no user is specified, the logged in user will be used instead.
  * * If no city is specified, the current city (of logged in user) will be used instead.
- * 
+ *
  * @locus Anywhere
  * @param {String|Object} [user] Some userId or user object.
  * @param {String} [city] City identifier.
@@ -243,17 +243,16 @@ Users.checkAmbassadorPermission = function(user, city) {
  * @summary Check if the user has access to the site, by checking the **isAccessDenied** property.
  *
  * The **isAccessDenied** property can be false if:
- * 
+ *
  * * The user isn't invited.
  * * The user has an incomplete profile.
  * * The user hasn't validate his email address.
  * * The user is blocked.
- * 
+ *
  * @locus Anywhere
- * @param {String} [user] Some userId.
+ * @param {Object} [user] Some user.
  */
-Users.allowedAccess = function(userId) {
-  var user = Users.findOne(userId);
+Users.allowedAccess = function(user) {
   return user && user.isAccessDenied != true;
 }
 
@@ -290,7 +289,7 @@ Users.userIsForeign = function(user) {
 
 var _userRanks = {};
 /**
- * @summary Get the user rank. Ranks are numbers in ascending order starting from 1, 
+ * @summary Get the user rank. Ranks are numbers in ascending order starting from 1,
  * given to every user within a city, based on their registration date.
  * @locus Anywhere
  * @param {String|Object} [user] Some userId or user object.
@@ -311,7 +310,7 @@ Users.userRank = function(user) {
 }
 
 /**
- * @summary Display representation of user's *picture label* which will be visible in the profile picture of this user. 
+ * @summary Display representation of user's *picture label* which will be visible in the profile picture of this user.
  * The label will contain of one of the following information:
  *
  * * **merged with #id**, if user account is merged with an other one.
@@ -321,7 +320,7 @@ Users.userRank = function(user) {
  * * ***city name***, if user belongs to an other city.
  * * ***staff title***, in the case this user is an ambassador.
  * * otherwise the user rank (***#id***) is shown.
- * 
+ *
  * @locus Anywhere
  * @param {String|Object} [user] Some userId or user object.
  */
@@ -351,8 +350,8 @@ Users.userPictureLabel = function(user) {
  * * If user hasn't access to the site, **no access** (orange).
  * * If user isn't visible for normal users, **hidden** (orange).
  * * If user is an admin, **admin** (green).
- * * If user is an ambassador, **ambassador** (green). 
- * 
+ * * If user is an ambassador, **ambassador** (green).
+ *
  * @locus Anywhere
  * @param {String|Object} [user] Some userId or user object.
  */
@@ -430,7 +429,7 @@ Users.userSocialName = function(user, service) {
 /* find users */
 
 /**
- * @summary Get the user corresponding to the given unique bithash representation. 
+ * @summary Get the user corresponding to the given unique bithash representation.
  * The bitHash is used in URL's to indentify some user's profile page.
  * @locus Anywhere
  * @param {String} bitHash A bitHash representation string for some user.
