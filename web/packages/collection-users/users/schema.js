@@ -102,6 +102,7 @@ Schemas.User = new SimpleSchema([Schemas.default, {
 
   "city": {             // the city where this hacker is registered to (lowercase)
     type: String,
+    index: 1,
     allowedValues: City.identifiers()
   },
   "currentCity": {      // the city this (admin) user is visiting
@@ -214,9 +215,3 @@ Users._transform = function(u) {
     u.bitHash = Url.bitHash(u.globalId);
   return u;
 }
-
-
-
-
-
-

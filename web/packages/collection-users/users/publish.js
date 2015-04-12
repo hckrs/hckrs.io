@@ -97,17 +97,29 @@ Meteor.publish(null, function() {
 
 
 // publish specific fields of all users
-Meteor.publish('users', function() {
+Meteor.publish('users', function(city) {
   var self = this;
   var queryOptions = {fields: Query.fieldsArray(allUserFields)};
 
   // initial permissions (can be changed below)
   var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(UserFields.permissionDeps)}) || {};
 
+  var selector = {};
+
+  if(!permissions || !Users.allowedAccess(permissions))
+    return [];
+
+  if (typeof city === 'string' && (permissions.city === city || Users.isAdmin(permissions))) {
+    selector.city = city;
+  }
+  else { // not allowed to see users of city
+    return [];
+  }
+
   // observe docs changes and push the changes to the client
   // only include fields that are allowed to publish, this can vary between users
   // and will be handled by the filterUserFields() function.
-  var observer = Users.find({}, queryOptions).observe({
+  var observer = Users.find(selector, queryOptions).observe({
     added: function(doc) {
       self.added('users', doc._id, excludeUserFields(permissions, doc, false));
     },
@@ -123,7 +135,7 @@ Meteor.publish('users', function() {
   // because permission of current user have changed
   var republish = function(newPermissions) {
     permissions = newPermissions; // ! set new permissions
-    Users.find({}, queryOptions).forEach(function(doc) {
+    Users.find(selector, queryOptions).forEach(function(doc) {
       self.changed('users', doc._id, excludeUserFields(permissions, doc, false));
     });
   }

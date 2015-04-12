@@ -129,9 +129,11 @@ FrontpageController = DefaultController.extend({
 
 AgendaController = DefaultController.extend({
   template: 'agenda',
+
   waitOn: function () {
+    var city = Url.city();
     return [
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ];
   }
 });
@@ -139,8 +141,9 @@ AgendaController = DefaultController.extend({
 BooksController = DefaultController.extend({
   template: 'books',
   waitOn: function () {
+    var city = Url.city();
     return [
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ];
   }
 });
@@ -150,7 +153,7 @@ DealsController = DefaultController.extend({
   waitOn: function () {
     var city = Url.city();
     return [
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ].concat(!city ? [] : [
       Meteor.subscribe('deals', city),
       Meteor.subscribe('dealsSort', city)
@@ -161,8 +164,9 @@ DealsController = DefaultController.extend({
 HackerController = DefaultController.extend({
   template: 'hacker',
   waitOn: function () {
+    var city = Url.city();
     return [
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ];
   },
   onBeforeAction: function() {
@@ -179,9 +183,10 @@ HackerController = DefaultController.extend({
 HackersController = DefaultController.extend({
   template: 'hackers',
   waitOn: function () {
+    var city = Url.city();
     return [
       Meteor.subscribe('invitations'),
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ];
   }
 });
@@ -192,7 +197,7 @@ HighlightsController = DefaultController.extend({
   waitOn: function() {
     var city = Url.city();
     return [
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ].concat(!city ? [] : [
       Meteor.subscribe('highlights', city),
       Meteor.subscribe('highlightsSort', city)
@@ -217,9 +222,10 @@ HighlightsController = DefaultController.extend({
 InvitationsController = DefaultController.extend({
   template: 'invitations',
   waitOn: function () {
+    var city = Url.city();
     return [
       Meteor.subscribe('invitations'),
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ];
   }
 });
@@ -229,7 +235,7 @@ MapController = DefaultController.extend({
   waitOn: function () {
     var city = Url.city();
     return [
-      Meteor.subscribe('users') // XXX be more precise
+      Meteor.subscribe('users', city)
     ].concat(!city ? [] : [
       Meteor.subscribe('places', city),
       Meteor.subscribe('mapHackersLocations', {excludeCity: city}) // load anonym location data of all users world wide (XXX TODO: async)
