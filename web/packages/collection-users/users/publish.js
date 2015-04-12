@@ -88,7 +88,7 @@ var allUserFields = _.union(
 );
 
 // publish all fields of the logged in user
-Meteor.publish('currentUser', function() {
+Meteor.publish(null, function() {
   var fields = {
     "services": 0
   }
