@@ -9,13 +9,13 @@ var fetchGithubUsersInAllCities = function() {
 // These usernames will be stored in the database.
 var fetchGithubUsersInCity = function(city) {
   check(city, Match.In(City.identifiers()));
-  
+
   if (_busy)
     throw new Meteor.Error(500, "busy");
 
   // don't wait on response
   this.unblock();
-  
+
   // query
   var cityName = City.lookup(city).name;
   var query = "type:user location:" + cityName.replace(' ', '+');
@@ -34,9 +34,9 @@ var fetchGithubUsersInCity = function(city) {
 
 
 var forEachQueriedUser = function(query, page, iterator, cb) {
-  
-  if (page > 10) 
-    return cb && cb();
+
+  // if (page > 10)
+  //   return cb && cb();
 
   console.log('fetch github search', query, page);
 
@@ -45,21 +45,21 @@ var forEachQueriedUser = function(query, page, iterator, cb) {
     page: page,
     q: query,
   }
-  
+
   // make reruest
   var users = request('GET', "https://api.github.com/search/users", params).items || [];
   users = _.pluck(users, 'login');
-  
+
   // store users
-  _.each(users, iterator);  
+  _.each(users, iterator);
 
   // recurse
   if (users.length) {
     setTimeout(Meteor.bindEnvironment(function(){
       forEachQueriedUser(query, page + 1, iterator, cb);
-    }), 60 * 1000); // 80s timeout because rate limit is fetching 5.000 users per hour
+    }), 80 * 1000); // 80s timeout because rate limit is fetching 5.000 users per hour
   }
-  else 
+  else
     cb && cb();
 }
 
@@ -77,12 +77,12 @@ var fetchSingleUser = function(city, userLogin) {
       "email": true,
       "avatar_url": "avatarUrl",
       "bio": "biography",
-      "created_at": "createdAt",  
-      "updated_at": "updatedAt",  
+      "created_at": "createdAt",
+      "updated_at": "updatedAt",
       "followers": true,
       "following": true,
-      "public_repos": "repos",       
-      "public_gists": "gists",      
+      "public_repos": "repos",
+      "public_gists": "gists",
       "hireable": true,
       "name": true,
       "blog": "website",
@@ -94,25 +94,25 @@ var fetchSingleUser = function(city, userLogin) {
     user.updatedAt = new Date(user.updatedAt);
     user.city = city;
     user = Object.omitEmpty(user);
-    
+
     if (!user.email)
       return; // user don't have email
 
     // check if user already signed up at hckrs.io
     var userDoc;
     if (userDoc = Users.findOne({'emails.address': user.email}, {fields: {'_id': true, 'createdAt': true}})) {
-      user.signupAt = userDoc.createdAt; 
+      user.signupAt = userDoc.createdAt;
       user.userId = userDoc._id;
     }
 
     try {
       GrowthGithub.insert(user);
-    } catch(e) { 
-      console.log("Invalid schema", user, e);   
+    } catch(e) {
+      console.log("Invalid schema", user, e);
     }
 
-  } catch(e) { 
-    console.log("failed crawling", userLogin, e); 
+  } catch(e) {
+    console.log("failed crawling", userLogin, e);
   }
 }
 
@@ -123,7 +123,7 @@ var request = function(method, url, params) {
       client_id: Settings['github']['clientId'],
       client_secret: Settings['github']['secret'],
     })
-  };  
+  };
   return HTTP.call(method, url, options).data;
 }
 
