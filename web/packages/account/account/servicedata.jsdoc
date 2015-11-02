@@ -26,7 +26,7 @@ Account.serviceData.fetchUserData = function(user, service) {
 
     "facebook": function(user) {
       var url = "https://graph.facebook.com/me";
-      var fields = ['id', 'email', 'name', 'locale', 'picture', 'link', 'username', 'location', 'birthday', 'gender', 'website', 'work'];
+      var fields = ['id', 'email', 'name', 'locale', 'picture', 'link', 'location', 'birthday', 'gender', 'website', 'work'];
       return OAuth.userCall(user, 'facebook', 'GET', url, {fields: fields}).data;
     },
 
@@ -100,8 +100,8 @@ Account.serviceData.unify = function(data, service) {
         data.birthday = new Date(p[2], p[0], p[1]);
       }
 
-      if (data.username && data.picture && data.picture.data && !data.picture.data.is_silhouette)
-        data.picture = "https://graph.facebook.com/" + data.username + "/picture?type=large";
+      if (data.id)
+        data.picture = "http://graph.facebook.com/" + data.id + "/picture?type=large";
 
       if (data.location && data.location.name)
         data.location = Geo.geocode(data.location.name);
