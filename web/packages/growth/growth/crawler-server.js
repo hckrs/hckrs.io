@@ -35,8 +35,12 @@ var fetchGithubUsersInCity = function(city) {
 
 var forEachQueriedUser = function(query, page, iterator, cb) {
 
-  // if (page > 10)
-  //   return cb && cb();
+  // Github only present the first 1000 search results.
+  // We should stop after retrieving 1000 results.
+  // A better way is to make the search more specific to find all users in a city.
+  // For example we can alphabetic search usernames, so we can get 1000 results per letter.
+  if (page > 10)
+    return cb && cb();
 
   console.log('fetch github search', query, page);
 
