@@ -1,22 +1,22 @@
 <template name="admin_emailTemplates">
   <div id="admin_emailTemplates" class="page">
-   
+
     {{> reactiveTable collection=collection settings=tableFormat}}
-    
+
     <div class="page-space"></div>
-    
+
     {{#autoForm collection="EmailTemplates" id="adminEmailTemplatesForm" doc=doc type=type}}
       {{#if equals type "insert"}}
         <h2>Add new Templates</h2>
       {{else}}
         <h2>
-          Update Template / 
+          Update Template /
           <button action="new-template" class="btn">New Template</button>
         </h2>
       {{/if}}
       <div class="row">
-        <div class="col-lg-4">  
-          {{> afQuickField name="groups" id="groups" options=groupOptions}}
+        <div class="col-lg-4">
+          {{> afQuickField name="groups" id="groups"}}
           {{#if equals type "insert"}}
             {{> afQuickField name="identifier" id="identifier"}}
           {{/if}}
@@ -43,7 +43,7 @@
       </div>
       <div class="row">
         <div class="col-lg-6">
-          {{> afQuickField name="body" id="body" rows="6"}}          
+          {{> afQuickField name="body" id="body" rows="6"}}
           <em>Use ctrl+enter for normal line break.</em>
         </div>
         <div class="col-lg-6">
@@ -68,9 +68,9 @@
             <table class="main" width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td class="content-wrap">
-                  
+
                   {{content}}
-                  
+
                 </td>
               </tr>
             </table>
@@ -78,7 +78,7 @@
               <table width="100%">
                 <tr>
                   <td class="aligncenter content-block">
-                    
+
                   </td>
                 </tr>
               </table>

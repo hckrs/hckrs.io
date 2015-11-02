@@ -1,15 +1,15 @@
 /* Template Groups */
 
-// These Array of usage options describes for groups of 
+// These Array of usage options describes for groups of
 // email templates which variables may be used.
 EMAIL_TEMPLATE_GROUPS_OPTIONS = [
-  
+
   // "growthGithub" is located within the admin panel
   // and allows us to mail a group of github users.
   // The variables corresponds to the user data from Github.
-  { 
-    value: "growthGithub", 
-    label: "Growth Github", 
+  {
+    value: "growthGithub",
+    label: "Growth Github",
     vars: [ /* automatic extracted from example */ ],
     example: {
       'SIGNUP_URL': 'http://utrecht.hckrs.io/gh/FDMwdYYXxMY7dLcD4',
@@ -41,5 +41,5 @@ _.each(EMAIL_TEMPLATE_GROUPS_OPTIONS, function(group) {
   group.vars = _.keys(group.example);
 });
 
-// List containing names of all different template groups 
+// List containing names of all different template groups
 EMAIL_TEMPLATE_GROUPS_VALUES = _.pluck(EMAIL_TEMPLATE_GROUPS_OPTIONS, 'value');
