@@ -42,12 +42,14 @@ Field.fn.avatar = function(val) {
 /* DATA FIELD templates */
 
 Field.edit = {
+  fieldId: 'id',
   key: 'id',
   label: 'edit',
   tmpl: Template.reactiveTable_editButton
 }
 
 Field.date = {
+  fieldId: 'createdAt',
   key: 'createdAt',
   label: 'date',
   sortByValue: true,
@@ -56,6 +58,7 @@ Field.date = {
 }
 
 Field.city = {
+  fieldId: 'city',
   key: 'city',
   label: 'city',
   fn: function(val, obj) {
@@ -65,6 +68,7 @@ Field.city = {
 }
 
 Field.private = {
+  fieldId: 'private',
   key: 'private',
   label: 'private',
   fn: function(val, obj) {
@@ -74,6 +78,7 @@ Field.private = {
 }
 
 Field.url = {
+  fieldId: 'url',
   key: 'url',
   label: 'url',
   fn: function(val, obj) {

@@ -13,8 +13,8 @@ Template.admin_highlights.helpers({
         Field.date,
         Field.city,
         Field.private,
-        'title',
-        'subtitle',
+        {fieldId: 'title', key: 'title', label: 'title'},
+        {fieldId: 'subtitle', key: 'subtitle', label: 'subtitle'},
         Field.url,
       ],
     }

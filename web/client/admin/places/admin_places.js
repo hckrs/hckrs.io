@@ -13,9 +13,9 @@ Template.admin_places.helpers({
         Field.date,
         Field.city,
         Field.private,
-        'type',
-        'title',
-        'description',
+        {fieldId: 'type', key: 'type', label: 'type'},
+        {fieldId: 'title', key: 'title', label: 'title'},
+        {fieldId: 'description', key: 'description', label: 'description'},
         Field.url,
       ],
     }

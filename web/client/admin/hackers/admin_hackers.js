@@ -15,11 +15,11 @@ Template.admin_hackers.helpers({
       fields: [
         Field.date,
         Field.city,
-        { key: 'globalId', label: '#', sortByValue: true, fn: function(val, obj) { return Safe.url(Users.userProfileUrl(obj), {text: Users.userRank(obj) ? '#'+Users.userRank(obj) : '-'}); } },
-        { key: 'profile.name', label: 'name', sortByValue: true, fn: function(val, obj) { return Safe.url(Users.userProfileUrl(obj), {text: val || '-'}); } },
-        { key: 'profile.email', label: 'e-mail', sortByValue: true, fn: Field.fn.email },
-        { key: 'invitations', label: 'free invites' },
-        { key: '_id', label: 'status',
+        { fieldId: 'globalId', key: 'globalId', label: '#', sortByValue: true, fn: function(val, obj) { return Safe.url(Users.userProfileUrl(obj), {text: Users.userRank(obj) ? '#'+Users.userRank(obj) : '-'}); } },
+        { fieldId: 'profile.name', key: 'profile.name', label: 'name', sortByValue: true, fn: function(val, obj) { return Safe.url(Users.userProfileUrl(obj), {text: val || '-'}); } },
+        { fieldId: 'profile.email', key: 'profile.email', label: 'e-mail', sortByValue: true, fn: Field.fn.email },
+        { fieldId: 'invitations', key: 'invitations', label: 'free invites' },
+        { fieldId: '_id', key: '_id', label: 'status',
           fn: function(val, obj) {
             var labels = Users.userStatusLabel(obj);
             var makeLabel = function(label) { return '<span class="label label-'+label.style+'">'+label.text+'</span>'; }

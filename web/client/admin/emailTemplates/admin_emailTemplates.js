@@ -12,9 +12,9 @@ Template.admin_emailTemplates.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        'groups',
-        'subject',
-        'identifier',
+        { fieldId: 'groups', key: 'groups', label: 'groups'},
+        { fieldId: 'subject', key: 'subject', label: 'subject'},
+        { fieldId: 'identifier', key: 'identifier', label: 'identifier'},
         Field.edit,
       ],
     }

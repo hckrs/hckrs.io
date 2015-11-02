@@ -13,10 +13,10 @@ Template.admin_deals.helpers({
         Field.date,
         Field.city,
         Field.private,
-        'title',
-        'description',
+        { fieldId: 'title', key: 'title', label: 'title'},
+        { fieldId: 'description', key: 'description', label: 'description'},
         Field.url,
-        'code'
+        { fieldId: 'code', key: 'code', label: 'code'},
       ],
     }
   }
