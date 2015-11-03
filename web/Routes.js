@@ -161,11 +161,11 @@ HackerController = DefaultController.extend({
     ];
   },
   onBeforeAction: function() {
-    if (this.ready() && !this.initialized) {
+    if (this.ready()) {
       var userId = (Users.userForBitHash(this.params.bitHash) || {})._id;
       Session.set('hackerId', userId);
-      Session.set('hackerEditMode', Users.myProp('isAccessDenied'));
-      this.initialized = true;
+      if (Users.myProp('isAccessDenied'))
+        Session.set('hackerEditMode', true);
     }
     this.next();
   }
