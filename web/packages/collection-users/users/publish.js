@@ -11,6 +11,23 @@
 // and the privacy settings of the published user docs.
 // this will be handled by the filterUserFields function
 
+// exported user fields
+UserFields = {
+  // properties of the current logged in user that determine the user's permissions (in filterUserFields()).
+  // When one of these properties changes it affects the visible fields of other users.
+  // So when an dependency changes, we have to republish the whole collection to test
+  // each user doc against the new permission rights.
+  // Only first-level properties are allowed, such as 'profile', but NOT 'profile.name'
+  permissionDeps: [
+    '_id',
+    'isAccessDenied',
+    'isAdmin',
+    'city',
+    'currentCity',
+    'isAmbassador'
+  ]
+}
+
 var userFieldsGlobal = [
   "city",
   "currentCity",
@@ -70,23 +87,8 @@ var allUserFields = _.union(
   userFieldsCurrentUser
 );
 
-// properties of the current logged in user that determine the user's permissions (in filterUserFields()).
-// When one of these properties changes it affects the visible fields of other users.
-// So when an dependency changes, we have to republish the whole collection to test
-// each user doc against the new permission rights.
-// Only first-level properties are allowed, such as 'profile', but NOT 'profile.name'
-var permissionDeps = [
-  '_id',
-  'isAccessDenied',
-  'isAdmin',
-  'city',
-  'currentCity',
-  'isAmbassador'
-];
-
-
 // publish all fields of the logged in user
-Meteor.publish('currentUser', function() {
+Meteor.publish(null, function() {
   var fields = {
     "services": 0
   }
@@ -94,18 +96,60 @@ Meteor.publish('currentUser', function() {
 });
 
 
+
+// Here we publish specific users when client request them.
+// We haven't to check for permission in order to publish the users, because the local function 'publish' below
+// will remove all fields which may not been seen by the current logged in user.
+
+Meteor.publish('user', function(userId) {
+  return publish.call(this, {_id: userId});
+});
+
+Meteor.publish('userByBitHash', function(bitHash) {
+  var user = Users.userForBitHash(bitHash);
+  if (!user) return [];
+  return publish.call(this, {_id: user._id});
+});
+
+Meteor.publish('usersInvitedByUser', function(userId) {
+  var userIds = Invitations.find({broadcastUser: userId}, {fields: {receivingUser: 1}}).map(function(inv) { return inv.receivingUser; });
+  return publish.call(this, {_id: {$in: userIds}});
+});
+
+Meteor.publish('users', function(userIds) {
+  return publish.call(this, {_id: {$in: userIds}});
+});
+
+Meteor.publish('usersOfCity', function(city) {
+  return publish.call(this, {city: city});
+});
+
+Meteor.publish('usersOfHighlightsOfCity', function(city) {
+  var userIds = Highlights.find({$or: [{private: false}, {city: city}]}).map(function(x) { return x.userId; });
+  return publish.call(this, {_id: {$in: userIds}});
+});
+
+Meteor.publish('usersAll', function() {
+  return publish.call(this, {});
+});
+
+
 // publish specific fields of all users
-Meteor.publish('users', function() {
+var publish = function(selector) {
   var self = this;
   var queryOptions = {fields: Query.fieldsArray(allUserFields)};
 
   // initial permissions (can be changed below)
-  var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(permissionDeps)}) || {};
+  var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(UserFields.permissionDeps)}) || {};
+
+  if(!permissions || !Users.allowedAccess(permissions))
+    return [];
+
 
   // observe docs changes and push the changes to the client
   // only include fields that are allowed to publish, this can vary between users
   // and will be handled by the filterUserFields() function.
-  var observer = Users.find({}, queryOptions).observe({
+  var observer = Users.find(selector, queryOptions).observe({
     added: function(doc) {
       self.added('users', doc._id, excludeUserFields(permissions, doc, false));
     },
@@ -121,7 +165,7 @@ Meteor.publish('users', function() {
   // because permission of current user have changed
   var republish = function(newPermissions) {
     permissions = newPermissions; // ! set new permissions
-    Users.find({}, queryOptions).forEach(function(doc) {
+    Users.find(selector, queryOptions).forEach(function(doc) {
       self.changed('users', doc._id, excludeUserFields(permissions, doc, false));
     });
   }
@@ -129,7 +173,7 @@ Meteor.publish('users', function() {
   // Check if depended permissions fields from current user changes
   // if so, we have to republish the whole user collection
   if (self.userId)
-    var myObserver = Users.find({_id: self.userId}, {fields: Query.fieldsArray(permissionDeps)}).observe({'changed': republish});
+    var myObserver = Users.find({_id: self.userId}, {fields: Query.fieldsArray(UserFields.permissionDeps)}).observe({'changed': republish});
 
 
   // handlers
@@ -138,7 +182,7 @@ Meteor.publish('users', function() {
     if (myObserver) myObserver.stop();
   });
   self.ready();
-});
+};
 
 
 // determine which user fields to publish.

@@ -6,7 +6,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('hckrs:docs');
-  
+
   api.use('base');
   api.use('collection-base');
   api.use('cities');
@@ -24,9 +24,9 @@ Package.onUse(function(api) {
   api.addFiles('users/hooks.js', 'server');
   api.addFiles('users/tmpl-helpers.js', 'client');
 
-  api.imply('collection-base');  
+  api.imply('collection-base');
   api.export([
-    'Users',
+    'Users', 'UserFields',
     'HACKING_OPTIONS', 'HACKING_VALUES', 'HACKING',
     'AVAILABLE_OPTIONS', 'AVAILABLE_VALUES', 'AVAILABLE',
     'MAILING_OPTIONS', 'MAILING_VALUES',

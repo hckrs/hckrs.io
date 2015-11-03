@@ -63,8 +63,3 @@ Meteor.publish('inviteBroadcastUser', function(inviteBitHash) {
   var fields = Query.fieldsArray(_.union(userFields, ['invitationPhrase']));
   return !invitePhrase ? [] : Users.find({invitationPhrase: invitePhrase}, {fields: fields, limit: 1});
 });
-
-
-
-
-
