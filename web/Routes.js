@@ -299,7 +299,7 @@ AdminController = DefaultAdminController.extend({
     return [];
   },
   onBeforeAction: function() {
-    this.redirect('admin_hackers');
+    this.redirect('admin_highlights');
   }
 });
 
