@@ -96,25 +96,55 @@ Meteor.publish(null, function() {
 });
 
 
+
+// Here we publish specific users when client request them.
+// We haven't to check for permission in order to publish the users, because the local function 'publish' below
+// will remove all fields which may not been seen by the current logged in user.
+
+Meteor.publish('user', function(userId) {
+  return publish.call(this, {_id: userId});
+});
+
+Meteor.publish('userByBitHash', function(bitHash) {
+  var user = Users.userForBitHash(bitHash);
+  if (!user) return [];
+  return publish.call(this, {_id: user._id});
+});
+
+Meteor.publish('usersInvitedByUser', function(userId) {
+  var userIds = Invitations.find({broadcastUser: userId}, {fields: {receivingUser: 1}}).map(function(inv) { return inv.receivingUser; });
+  return publish.call(this, {_id: {$in: userIds}});
+});
+
+Meteor.publish('users', function(userIds) {
+  return publish.call(this, {_id: {$in: userIds}});
+});
+
+Meteor.publish('usersOfCity', function(city) {
+  return publish.call(this, {city: city});
+});
+
+Meteor.publish('usersOfHighlightsOfCity', function(city) {
+  var userIds = Highlights.find({$or: [{private: false}, {city: city}]}).map(function(x) { return x.userId; });
+  return publish.call(this, {_id: {$in: userIds}});
+});
+
+Meteor.publish('usersAll', function() {
+  return publish.call(this, {});
+});
+
+
 // publish specific fields of all users
-Meteor.publish('users', function(city) {
+var publish = function(selector) {
   var self = this;
   var queryOptions = {fields: Query.fieldsArray(allUserFields)};
 
   // initial permissions (can be changed below)
   var permissions = Users.findOne(this.userId, {fields: Query.fieldsArray(UserFields.permissionDeps)}) || {};
 
-  var selector = {};
-
   if(!permissions || !Users.allowedAccess(permissions))
     return [];
 
-  if (typeof city === 'string' && (permissions.city === city || Users.isAdmin(permissions))) {
-    selector.city = city;
-  }
-  else { // not allowed to see users of city
-    return [];
-  }
 
   // observe docs changes and push the changes to the client
   // only include fields that are allowed to publish, this can vary between users
@@ -152,7 +182,7 @@ Meteor.publish('users', function(city) {
     if (myObserver) myObserver.stop();
   });
   self.ready();
-});
+};
 
 
 // determine which user fields to publish.
