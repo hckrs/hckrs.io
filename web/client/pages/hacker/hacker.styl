@@ -41,6 +41,11 @@
     }
   }
 
+  .help-inline{
+    color: orange;
+    font-weight: normal;
+  }
+
   #mapWrapper.edit {
     position: relative;
     width: 200px;
@@ -185,6 +190,7 @@
   .edit-social {
     .disabled {
       opacity: 0.6;
+      margin-right: 10px;
     }
     .icon {
       position: relative;
@@ -253,12 +259,10 @@
   }
 
   .profile-ready {
-    margin-top: 25px;
-    font-size: 22px;
+    margin-top: 40px;
+    font-size: 18px;
     .button-ready {
-      margin-left: 10px;
       position: relative;
-      top: -3px;
     }
   }
 
@@ -288,8 +292,16 @@
         margin-top: 6px;
       }
     }
+
     label > .details{
       display: block;
+    }
+
+    .details{
+      padding-top: 6px;
+      input{
+        margin-left: 9px;
+      }
     }
   }
 
@@ -329,7 +341,6 @@
 
     .hacking-container{
       float:left;
-      font-size: 18px;
       clear:left;
       margin-bottom: 12px;
       margin-top: 20px;
@@ -337,12 +348,10 @@
 
     .hacking-tag{
       float:left;
-      line-height: 32px;
       background-color: rgba(0,0,0,0.45);
-      border-radius: 18px;
-      padding: 0px 13px 2px 14px;
+      border-radius: 3px;
+      padding: 1px 11px 0px 10px;
       margin-right: 6px;
-      font-weight: 700;
     }
 
     .hacker-number{

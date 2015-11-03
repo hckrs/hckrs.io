@@ -12,6 +12,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-size: 14px;
 }
 body{
   font-family: 'Tiempos Text', 'open sans';
@@ -31,7 +32,13 @@ a img {
   border:0px;
 }
 
-
+/* bootstrap adjustments */
+.control-label{
+  padding-top: 6px !important;
+}
+.btn{
+  padding: 6px 12px 4px 12px !important;
+}
 
 #iron-router-progress {
   background-color: #fff;
@@ -97,7 +104,6 @@ a img {
 
   .alert h1 {
     font-size: 26px;
-    margin-top: 5px;
     margin-bottom: 5px;
   }
   .alert p {
@@ -107,10 +113,22 @@ a img {
   .main-alerts,
   .alert-wrapper {
     width: 100%;
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(255,255,255,0.15);
+    /*animation: fadeIn 2s;    
+    @keyframes fadeIn {
+      from {
+        background-color: rgba(255, 249, 208, 1)
+      }
+      to {
+        background-color: rgba(255,255,255,0.15)
+      }
+    }*/
     .alert {
       margin: 10px 0px;
       width: 550px;
+      h1{
+        margin-top: -20px;
+      }
     }
   }
 
@@ -471,7 +489,7 @@ a img {
       text-overflow: "";  /*Removes default arrow from firefox*/
       padding-left: 12px;
       font-size: 18px;
-      line-height: 18px;
+      line-height: 35px;
       height: 33px;
 
       optgroup{
@@ -510,6 +528,6 @@ a img {
 }
 /* Replacement for button-inverse of bootstrap 2 */
 a.btn.btn-inverse, button.btn.btn-inverse {
-    background-color:#444;
-    color:#fff;
+    background-color: rgba(255,255,255,0.15);
+    color:#fff9d0;
 }

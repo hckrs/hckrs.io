@@ -10,38 +10,38 @@
 
           {{#if invitationLimitReached}}
             <div class="alert alert-error">
-              <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
+              <p>The personal invitation URL you are trying to use has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
             </div>
           {{/if}}
 
           {{#if isUnverifiedEmail}}
             <div class="access-denied alert alert-info">
-              <h1>Check your e-mail :)</h1>
-              <p>We have sent you an email with a validation link</p>
+              <h1>Check your inbox !</h1>
+              <p>We just send you an email with a validation link.</p>
             </div>
           {{else}}
             {{#if tellUsMore}}
               {{#if isInvited}}
                 {{! XXX user must only complete his profile to enter website (already invited) }}
                 <div class="access-denied alert alert-info">
-                  <h1>Tell us more</h1>
-                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+                  <h1>psssst !</h1>
+                  <p>Please provide <strong>some more information</strong>,<br />so that other users can relate to you :)</p>
                 </div>
               {{else}}
                 {{! XXX user must complete his profile AND needs to be invited by someone }}
                 <div class="access-denied alert alert-info">
                   <h1>Tell us more</h1>
-                  <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
-                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
+                  <p>To enter the wailting list please complete your profile, there is a good chance we will activate your account in matter of days.</p>
+                  <p>To have instant acces you can also ask a member you know to vouch for you, by providing you his invitation url. (this works before and after completing your profile)</p>
                 </div>
               {{/if}}
             {{else}}
               {{#unless isInvited}}
                 {{! XXX profile is completely filled in but user needs to be invited by someone }}
                 <div class="access-denied alert alert-success">
-                  <h1>Thank you</h1>
-                  <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
-                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
+                  <h1>Profile complte</h1>
+                  <p>Right now there are no open slots in the community. There is a good chance we will activate your account in matter of days. If this is the case we will notify you by email.</p>
+                  <p>For instant acces you can also ask a member you know to vouch for you, by providing you his invitation url.</p>
                 </div>
               {{/unless}}
             {{/if}}
@@ -83,8 +83,8 @@
           <div class="form-group">
             <label class="control-label col-sm-2"></label>
             <div class="controls col-sm-8 profile-ready">
-              Are you ready to enter the website?
-              <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
+              Is your profile complete?<br /><br />
+              <button class="button-ready btn btn-large btn-success">I'm ready</button>
             </div>
           </div>
         </form>
@@ -151,7 +151,7 @@
 
       </div>
       <div class="controls col-sm-8" style="padding-top:76px;">
-        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:-15px;" required />
+        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px; padding: 7px 0px 0px 18px !important; width:350px; line-height:36px; margin-left:-18px;" required />
       </div>
     </div>
 
@@ -160,7 +160,7 @@
       <label class="control-label col-sm-2" for="inputCity">city</label>
       <div class="controls col-sm-8">
         {{> citySelect}}
-        <span class="description hover">— Choose your local city</span>
+        <span class="description hover" style="margin-left:12px;">your primary city</span>
       </div>
     </div>
     {{/unless}}
@@ -173,7 +173,7 @@
           <span class="description hover">— email will be not visible by other users</span><br/>
         {{/if}}
         {{#if isDuplicateEmail}}
-          <span class="help-inline">Already used in another account!</span>
+          <span class="help-inline"><br />this email adress is used by another account!<br />You can merge your accounts by using the social connect underneath.</span>
         {{/if}}
         {{#if isNotValidEmail}}
           <span class="help-inline">invalid email!</span>
@@ -269,7 +269,7 @@
 
         <label for="inputAvailableCall" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
-          call <span class="description hover">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
+          call <span class="description hover">— hackers in {{CurrentCity.name}} can see your Skype handle and phone number</span>
         </label>
         <div class="clear details {{#unless checked 'profile.available' 'call'}}hide{{/unless}}">
           <input type="text" name="profile.skype" class="text save" autosave value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
@@ -289,7 +289,7 @@
 
         <label for="inputAvailableCouchsurf" class="checkbox">
           <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
-          couchsurfing <span class="description hover">— hackers traveling to {{CurrentCity.name}} can see your email address and/or phone number to get in touch to stay at your place</span>
+          couchsurfing <span class="description hover">— hackers traveling to {{CurrentCity.name}} can see your email address and phone number to get in touch to stay at your place</span>
           <div class="details"></div>
         </label>
       </div>
@@ -309,7 +309,7 @@
           <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
           <a href="#" class="toggle toggleService" data-service="facebook"><span class="glyphicon glyphicon-remove icon-white"></span></a>
         {{else}}
-          <span class="disabled">none</span>
+          <span class="disabled">no account</span>
           <a href="#" class="toggle toggleService" data-service="facebook"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'facebook'}}
@@ -325,7 +325,7 @@
           <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
           <a href="#" class="toggle toggleService" data-service="twitter"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
-          <span class="disabled">none</span>
+          <span class="disabled">no account</span>
           <a href="#" class="toggle toggleService" data-service="twitter"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'twitter'}}
@@ -341,7 +341,7 @@
           <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
           <a href="#" class="toggle toggleService" data-service="github"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
-          <span class="disabled">none</span>
+          <span class="disabled">no account</span>
           <a href="#" class="toggle toggleService" data-service="github"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'github'}}
