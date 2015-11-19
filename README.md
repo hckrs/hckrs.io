@@ -2,7 +2,7 @@ hckrs.io ![hckrs icon](https://s3.amazonaws.com/hckrs.io/static/logo/logo-icon-v
 =========
 ![Build status](https://api.travis-ci.org/hckrs/hckrs.io.svg)
 
-[**hckrs.io**](http://hckrs.io) is an invite only platform for hackers; for basicly anyone who has to make stuff, somehow related to technology. ***#web #design #growth #hardware #life...***  
+[**hckrs.io**](http://hckrs.io) is an invite only platform for hackers; for basicly anyone who has to make stuff, somehow related to technology. ***#web #design #growth #hardware #life...***
 [**Join your local city**](http://hckrs.io) to see it in action. *(Europe only for now)*
 
 <a href="http://hckrs.io"><img src="https://s3.amazonaws.com/hckrs.io/static/preview/preview1.jpg" alt="Screenshot hckrs.io" ></a>
@@ -19,7 +19,7 @@ Get you hacking
 ######1. [Download](https://github.com/Jarnoleconte/hckrs.io/archive/development.zip) / clone this repo.
 ######2. Go to the ***hckrs*** folder in your terminal.
 ######3. Install dependencies: `source ./tools/install.sh`
-######4. Move to the project `cd web` and startup a local server `hckrs run`
+######4. Start up a local server `hckrs run`
 ######5. Open [http://localhost:3000](http://localhost:3000) in your browser and login with ***Twitter*** ([why?](https://github.com/Jarnoleconte/hckrs.io/wiki/Run-Project#login-at-the-site))
 
 *Support for* ***OS X*** *and* ***Linux*** *right now.*
@@ -50,10 +50,10 @@ Roadmap
 Documentation
 --------------
 
-Read the [wiki](https://github.com/Jarnoleconte/hckrs.io/wiki) to get understanding of the project structure.  
+Read the [wiki](https://github.com/Jarnoleconte/hckrs.io/wiki) to get understanding of the project structure.
 
-Techniqual documentation is available during development.  
-Start up a local server and navigate in your browser to:  
+Techniqual documentation is available during development.
+Start up a local server and navigate in your browser to:
 [http://localhost:3000/docs](http://localhost:3000/docs)
 
 
