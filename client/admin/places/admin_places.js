@@ -1,13 +1,4 @@
-// Route Controller
 
-AdminPlacesController = DefaultAdminController.extend({
-  template: 'admin_places',
-  waitOn: function () {
-    return [ 
-      Meteor.subscribe('places', 'all'),
-    ];
-  }
-});
 
 
 Template.admin_places.helpers({
@@ -19,12 +10,12 @@ Template.admin_places.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        Field.date, 
-        Field.city, 
+        Field.date,
+        Field.city,
         Field.private,
-        'type', 
-        'title', 
-        'description', 
+        {fieldId: 'type', key: 'type', label: 'type'},
+        {fieldId: 'title', key: 'title', label: 'title'},
+        {fieldId: 'description', key: 'description', label: 'description'},
         Field.url,
       ],
     }

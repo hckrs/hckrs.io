@@ -1,0 +1,43 @@
+Array = this.Array || {};
+
+/**
+ * @summary Check if ALL of the values are present in the array of allValues.
+ * @param  {Value[]} values All of these values must be present in allValues.
+ * @param  {Value[]} allValues An array of values that will be inspected.
+ * @locus Anywhere
+ */
+Array.allIn = function(values, allowedValues) {
+  return _.all(values, function(v) { return _.contains(allowedValues, v); });
+}
+
+/**
+ * @summary Check if SOME of the values are present in the array of allValues.
+ * @param  {Value[]} values One or more of these values must be present in allValues.
+ * @param  {Value[]} allValues An array of values that will be inspected.
+ * @locus Anywhere
+ */
+Array.someIn = function(values, allValues) {
+  return _.some(values, function(v) { return _.contains(allValues, v); });
+}
+
+/**
+ * @summary Turn a single value into an array. If the value is already an array, it will not be transformed.
+ * @param  {Value} value Some value
+ * @locus Anywhere
+ */
+Array.array = function(val) {
+  if (_.isArray(val)) return val;
+  return _.compact([val]);
+}
+
+
+
+/**
+ * @summary Return an array with unique values.
+ * The `_.isEqual` function will be used for comparison, so we don't match pointers, but only pure values.
+ * @param  {Value[]} array The array containing duplicate values.
+ * @locus Anywhere
+ */
+Array.uniqFilter = function(arr) {
+  return _.reject(arr, function(val, i) { return _.some(_.first(arr, i), _.partial(_.isEqual, val)); });
+}

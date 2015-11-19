@@ -1,77 +1,261 @@
 <template name="frontpage">
-  <div id="frontpage" class="page">
-    <div class="logo-large"></div>
-  
-    {{#if invitationBroadcastUser}}
-      {{#with invitationBroadcastUser}}
-        <div class="invited-by-container">
-          <div style="background-image:url({{profile.picture}});float:left;" class="pictureView"></div>
-          <div style="" class="speach-bubble"><div class="larger">... welcome</div><br/><div class="name">— {{profile.name}}</div></div>
-        </div>
-      {{/with}}
-    {{/if}}
+  <div id="frontpage">
 
-    {{> citySelect}} {{!-- defined in main.js --}}
-    
-    {{#if CurrentUserId}}
-      <div class="frontpage-login" style="visibility:hidden;margin:0px;"></div>
-    {{else}}
-      {{#if CurrentCity}}
-        {{#if serviceLoginError}}
-          <div class="error">{{{serviceLoginError}}}</div>
-        {{/if}}
-        <div class="frontpage-login"> 
-          <a href="#" class="signupService" data-service="facebook"><div class="social-logo social-logo-facebook social-logo-line"></div></a>
-          <a href="#" class="signupService" data-service="twitter"><div class="social-logo social-logo-twitter social-logo-line"></div></a>
-          <a href="#" class="signupService" data-service="github"><div class="social-logo social-logo-github"></div></a>
-          <div class="frontpage-join-us"></div>
-        </div>
-      {{/if}}
-    {{/if}}
+    <a id="logo" href="#welcome">
+      <img src="/img/frontpage/logo.svg" alt="hckrs.io" />
+    </a>
 
-    {{> ambassadors}}
+    <a id="enroll-btn" href="#enroll" class="button {{enrollActive}}">
+      enroll
+    </a>
 
-    {{#if CurrentCity}}
-      <H1 class="frontpage-headline">join {{totalHackers}} other <span id="target"></span><span class="blink">_</span>hackers in {{CurrentCity.name}}<br></H1>
-    {{/if}}
-    <div class="page-space"></div>
-    <div class="footer"><a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#105;&#108;&#064;&#104;&#099;&#107;&#114;&#115;&#046;&#105;&#111;">contact</a> • <a href="{{pathFor 'about'}}">about hckrs</a></div>
-  </div>
-</template>
-
-
-<template name="ambassadors">
-  <div class="ambassadors-container">
-    
-    {{#if CurrentCity.twitter}}
-    <div class="city-twitter">
-      <a href="https://twitter.com/{{CurrentCity.twitter}}" target="_blank" class="action action-tweet">@{{CurrentCity.twitter}}</a>
+    <div id="welcomeOverlay" class="overlay {{hideWelcomeScreen}}">
+      <div><span id="typer-target"></span><span id="typer-blink"></span></div>
     </div>
-    {{else}}
-      {{#if ambassadors}}
-        <div class="city-twitter">
-          Ambassadors of {{CurrentCity.name}}
-        </div>
-      {{/if}}
-    {{/if}}
-    
-    <div class="ambassadors">
-      {{#each ambassadors}}
-      <div class="hacker">
-        <div style="background-image:url({{profile.picture}});" class="pictureView route-transition"></div>
-        <div class="name">{{profile.name}}</div>
-        <div class="ambassador">
-            {{staff.title}}
-        </div>
-        {{#if twitter}}
-          <a href="https://twitter.com/{{twitter}}" target="_blank" class="action action-tweet">@{{twitter}}</a> 
-        {{/if}}
-        <a href="#" class="action action-email">e-mail</a>
 
+    <div id="frontpage-slide-nav" class="slide-nav">
+      <a href="#welcome" class="active"></a>
+      <a href="#tools"></a>
+      <a href="#video"></a>
+      <a href="#manifesto"></a>
+      <a href="#influencers"></a>
+      <a href="#about"></a>
+    </div>
+
+    <div id="welcome" class="slide" index="0">
+      <div id="enroll"><!-- scroll #target --></div>
+      <a id="opensource" href="https://github.com/hckrs/hckrs.io" target="_blank">
+        <img src="/img/frontpage/icon-opensoure.svg" alt="Open Source" />
+      </a>
+      <div class="content-block">
+        <div id="location-block">
+          <h3>Where do you hack?</h3>
+          {{> citySelect}} {{!-- defined in main.js --}}
+        </div>
+        <div id="enroll-block">
+          {{#if invitationBroadcastUser}}
+            {{#with UserView invitationBroadcastUser._id}}
+              <div class="invitation-container">
+                <div class="picture">{{> pictureView}}</div>
+                <div class="bubble">You are whitelisted!</div>
+              </div>
+            {{/with}}
+          {{/if}}
+          <a id="enroll-btn-large" href="#enroll" class="button">
+            {{#if invitationBroadcastUser}}
+              Accept invitation
+            {{else}}
+              I wanna enroll
+            {{/if}}
+          </a>
+          <small>Join your local hacker tribe.</small>
+          <a id="video-btn-small" href="#video">
+            <img src="/img/frontpage/icon-playbutton.svg" alt="View hckrs.io trailer." />
+            <span>watch video</span>
+          </a>
+        </div>
       </div>
-      {{/each}}
-      <div class="clear"></div>
+      <div id="login-block" class="{{enrollActive}}">
+        <div class="content">
+          <div class="title">
+            <div class="line-filler {{loginFailure}}"></div>
+            <div class="text {{loginFailure}}">
+              {{#if loginFailure}}
+                something went wrong
+              {{else}}
+                <em>{{#if enrollActive}}enroll{{else}}sign in{{/if}}</em>
+              {{/if}}
+            </div>
+            <div class="line-filler {{loginFailure}}"></div>
+          </div>
+          <div class="sign-in-buttons">
+            <a href="#" class="signupService" data-service="github"><img src="/img/frontpage/login-github.svg" alt="Sign in with Github." /></a>
+            <a href="#" class="signupService" data-service="twitter"><img src="/img/frontpage/login-twitter.svg" alt="Sign in with Twitter." /></a>
+            <a href="#" class="signupService" data-service="facebook"><img src="/img/frontpage/login-facebook.svg" alt="Sign in with Facebook." /></a>
+          </div>
+        </div>
+        <a id="enroll-exit" href="#">
+          <img src="/img/close.svg" alt="Don't enroll now." />
+        </a>
+      </div>
     </div>
+
+    <div id="tools" class="slide">
+      <div class="content-block">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-offset-1 col-xs-2">
+                <img src="/img/frontpage/tools-1.svg" alt="drink-up" />
+                <h3>drinkup gatherings</h3>
+                <p>meet &amp; drink with fellow hackers in your city</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-2.svg" alt="drink-up" />
+                <h3>hackup gatherings</h3>
+                <p>bring your laptop and hack along, at gatherings organised by an algorithm</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-3.svg" alt="drink-up" />
+                <h3>couchsurf network</h3>
+                <p>stay with local hackers abroad and share your home</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-4.svg" alt="drink-up" />
+                <h3>cowork network</h3>
+                <p>adopt a nomad work style and invite other hackers over for the afternoon</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-5.svg" alt="drink-up" />
+                <h3>discount partners</h3>
+                <p>we have partnered up with startups to offer you special deals</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-offset-1 col-xs-2">
+                <img src="/img/frontpage/tools-6.svg" alt="drink-up" />
+                <h3>hacker friendly</h3>
+                <p>discover and share the finest spots to work, learn and socialize</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-7.svg" alt="drink-up" />
+                <h3>demo days</h3>
+                <p>show what you’ve made and discover what your peers have hacked together</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-8.svg" alt="drink-up" />
+                <h3>book review</h3>
+                <p>a curated list of books that feeds the hacker in you</p>
+            </div>
+            <div class="col-xs-2">
+                <a href="https://itunes.apple.com/en/podcast/hackers-podcast/id951449193" target="_blank"><img src="/img/frontpage/tools-9.svg" alt="drink-up" /></a>
+                <h3>podcast interviews</h3>
+                <p>discussions with hackers about how they work and live</p>
+            </div>
+            <div class="col-xs-2">
+                <img src="/img/frontpage/tools-10.svg" alt="drink-up" />
+                <h3>peers</h3>
+                <p>find out whom of your friends are already in</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="video" class="slide">
+
+      <a id="video-play" href="#" title="Play video">
+        <img src="/img/frontpage/icon-video.svg" alt="Play video">
+      </a>
+
+      <!-- hidden by default -->
+      <video id="video-player">
+        <source src="http://assets.hckrs.io/video/hckrs-teaser3.mp4" type="video/mp4">
+        <source src="http://assets.hckrs.io/video/hckrs-teaser3.webm" type="video/webm">
+        <source src="http://assets.hckrs.io/video/hckrs-teaser3.ogg" type="video/ogg">
+      </video>
+      <a id="video-exit" href="#">
+        <img src="/img/close.svg" alt="Close video." />
+      </a>
+
+    </div>
+
+    <div id="manifesto" class="slide">
+      <div class="content-block">
+        <h2>Hackers manifesto</h2>
+        <ol>
+          <li>Hackers are people with an urge for creating, learning, and providing value as a result.</li>
+          <li>Hackers live in a world led by their peers rather that institutions.</li>
+          <li>Hackers are intrigued with less, rather than more.</li>
+          <li>Hackers are willing to do the hard work required to ship.</li>
+          <li>Hackers have faith in their ability to create our future.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div id="influencers" class="slide">
+      <div class="content-block">
+        <div class="container">
+          <div class="row intro">
+            <div class="col-xs-offset-3 col-xs-6">
+              <h2>Influencers</h2>
+              <p>These people influence our vision on where things are going, and help us define our mission.</p>
+            </div>
+          </div>
+          <div class="row items">
+            <div class="col-xs-3">
+                <img src="/img/frontpage/influencers-1.png" width="132" alt="drink-up" />
+                <h3>Seth Godin</h3>
+                <p><a href="http://sethgodin.typepad.com" target="_blank">writes</a> about the post-industrial revolution, the way ideas spread, quitting and most of all, changing everything.</p>
+            </div>
+            <div class="col-xs-3">
+                <img src="/img/frontpage/influencers-2.png" width="132" alt="drink-up" />
+                <h3>Kai Brach</h3>
+                <p>single-handedly crafts the <a href="http://www.offscreenmag.com" target="_blank">Offscreen mag</a> that ships worldwide from Berlin.</p>
+            </div>
+            <div class="col-xs-3">
+                <img src="/img/frontpage/influencers-3.png" width="132" alt="drink-up" />
+                <h3>Gary Vaynerchuck</h3>
+                <p>writes about social media, hustling and being real.</p>
+            </div>
+            <div class="col-xs-3">
+                <img src="/img/frontpage/influencers-4.png" width="132" alt="drink-up" />
+                <h3>Jason Fried</h3>
+                <p>writes about collaboration, productivity and the nature of work.</p>
+            </div>
+          </div>
+          <div class="row extro">
+            <div class="col-xs-offset-3 col-xs-6">
+              <p>These people are not related to hckrs in any way.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="about" class="slide">
+      <div class="content-block">
+        <div class="content">
+          <h2>About</h2>
+          <p>We are a group of likeminded hackers on a mission. <br />hckrs is a platform to make you a better hacker, through empowering tools and meaningfull connections.</p>
+          <p>You already know what one determined hacker can do. <br />But do you realize what we can do together ?</p>
+          <p class="spacer">
+            <small>
+              We are in permanent beta, so feel free to experiment with us.<br/>
+              <a href="https://github.com/hckrs/hckrs.io" target="_blank"><em>contribute</em></a>
+            </small>
+          </p>
+        </div>
+        <div id="staff">
+          <div class="desc">hckrs team</div>
+          <div class="members">
+          {{#each staff}}
+            {{#with UserView this._id}}
+              {{> pictureView}}
+            {{/with}}
+          {{/each}}
+          </div>
+          <div class="desc">admins</div>
+          <div class="members">
+          {{#each admins}}
+            {{#with UserView this._id}}
+              {{> pictureView}}
+            {{/with}}
+          {{/each}}
+          </div>
+        </div>
+      </div>
+      <a id="to-top" href="#welcome">
+        <img src="/img/frontpage/icon-arrowdown.svg" alt="Go to top" />
+      </a>
+    </div>
+
 
   </div>
 </template>
+
+<template name="pictureView">
+  <a href="{{pathFor 'hacker'}}" {{foreign}} class="picture-view pictureViewLink" title="{{profile.name}}">
+    <div style="background-image:url({{profile.picture}});" class="pictureView small {{#unless profile.picture}}empty{{/unless}}" {{foreign}} label="{{label}}"></div>
+  </a>
+</template>
+

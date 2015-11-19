@@ -2,8 +2,8 @@
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
-var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
+var hackerProp = function(field) { return Users.prop(hackerId(), field); }
+var hackerProps = function (fields) { return Users.props(hackerId(), fields); }
 
 
 // state
@@ -71,11 +71,11 @@ Template.hackerToolbar.events({
   },
   'keyup #invitationsNumber, change #invitationsNumber': function(evt) {
     var $target = $(evt.currentTarget);
-    var invitations = $target.val();
+    var invitations = parseInt($target.val());
     var userId = hackerId();
 
     // update invitations count
-    exec(function() {
+    Util.exec(function() {
       Users.update(userId, {$set: {invitations: invitations}});
     });
 
@@ -83,7 +83,7 @@ Template.hackerToolbar.events({
   },
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
-    var cityName = CITYMAP[city].name;
+    var cityName = City.lookup(city).name;
     var userId = hackerId();
     var userName = hackerProp('profile.name');
 
@@ -135,7 +135,7 @@ Template.hackerToolbarPanelMail.events({
     var formData = $form.serializeObject();
 
     // validate email
-    if (!AutoForm.validateForm("hackerMailForm"))
+    if (! AutoForm.getValidationContext("hackerMailForm").validate(formData))
       return;
 
     // disable button for a few seconds
@@ -161,7 +161,7 @@ Template.hackerToolbar.helpers({
     return _.findWhere(hackerProp('emails'), {address: hackerProp('profile.email'), verified: false});
   },
   'statusLabels': function() {
-    return userStatusLabel(hackerId());
+    return Users.userStatusLabel(hackerId());
   },
   'active': function(panel) {
     return state.equals('activePanel', panel) ? 'active' : '';
@@ -170,20 +170,28 @@ Template.hackerToolbar.helpers({
     return hackerProp(flag) ? 'active' : '';
   },
   'staff': function() {
-    return hasAmbassadorPermission(hackerId());
+    return Users.hasAmbassadorPermission(hackerId());
   }
 });
 
 Template.hackerToolbarPanelMail.helpers({
-  'first': function() {
-    var city = Session.get('currentCity');
-    return Users.find({city: city}).count() <= 10 ? '10first' : '';
-  },
   'mailSchema': function() {
     return new SimpleSchema({
-      "group": { type: String },
       "subject": { type: String },
-      "message": { type: String }
+      "message": { type: String },
+      "group": { 
+        type: String, 
+        autoform: { 
+          type: "select",
+          firstOption: false,
+          options: [
+            {value: 'personalMessage', label: 'message'},
+            {value: 'personalMissingInfo', label: 'missing information'},
+            {value: 'personalWelcome', label: 'welcome'},
+            {value: 'personalInviteSlots', label: 'invite slots added'},
+          ] 
+        },
+      },
     });
   }
 });
@@ -202,16 +210,11 @@ Template.hackerToolbar.rendered = function() {
 // after doing some actions, we directly open a mail template
 // so that the ambassador can notify the user about the changes.
 var openMailTemplate = function(requestTmpl) {
-  var city = Session.get('currentCity');
-
   setTimeout(function() {
     // if 'welcome' message requested, but user still haven't access
     // because of missing info, we should open the 'missingInfo' template.
     if (requestTmpl === 'personalWelcome' && hackerProp('isIncompleteProfile'))
       requestTmpl = 'personalMissingInfo';
-
-    if (requestTmpl === 'personalWelcome' && Users.find({city: city}).count() <= 10)
-      requestTmpl = 'personalWelcome10first';
 
     state.set('activePanel', 'mail');
     Tracker.flush();
@@ -222,19 +225,24 @@ var openMailTemplate = function(requestTmpl) {
 var setTemplate = function(tmpl) {
   var $mailing = $("#hackerMailForm"),
       $select = $mailing.find('[name="group"]'),
-      $option = $select.find('option[template="'+tmpl+'"]');
+      $option = $select.find('option[value="'+tmpl+'"]');
   $select.val(''); // reset current selected template
   $option.attr('selected', 'selected'); // select correct template
   fillTemplate();
 }
 
 var fillTemplate = function() {
-  var $mailing = $("#hackerMailForm"),
+  var cityUsersCount = Users.find({city: Session.get('currentCity')}).count(),
+      $mailing = $("#hackerMailForm"),
       $subject = $mailing.find('[name="subject"]'),
       $message = $mailing.find('[name="message"]'),
       $option = $mailing.find('[name="group"] option:selected'),
-      templateName = $option.attr('template'),
-      template = loadEmailTemplate(templateName);
+      templateName = $option.val();
+
+      if (templateName === 'personalWelcome' && cityUsersCount <= 10)
+        templateName = 'personalWelcome10first';
+
+  var template = loadEmailTemplate(templateName);
   $subject.val(template.subject);
   $message.val(template.message);
 }

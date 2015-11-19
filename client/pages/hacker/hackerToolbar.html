@@ -2,7 +2,7 @@
   <div id="hackerToolbar" class="toolbar-section">
 
     {{#if hasAmbassadorPermission}}
-    
+
       {{#if active "mail"}}
         {{> hackerToolbarPanelMail}}
       {{/if}}
@@ -36,7 +36,7 @@
 
       <div class="toolbar">
         <div class="pull-right">
-          
+
           {{#if statusLabels}}
             {{#each statusLabels}}
               <span class="text label label-{{style}}">{{text}}</span>
@@ -51,7 +51,7 @@
             <button action="sendVerificationEmail" class="btn btn-inverse  btn-small light" data-toggle="tooltip" title="Resend verification email to this user"><span class="glyphicon-white glyphicon-envelope" ></span> Verify</button>
             <button action="verifyEmail" class="btn btn-inverse btn-small light" data-toggle="tooltip" title="Skip verification of user's email address [NOT RECOMMENDED]"><span class="glyphicon-white glyphicon-envelope"></span> Force</button>
           {{/if}}
-          
+
           <input class="input-sm" type="number" id="invitationsNumber" value="{{HackerProp 'invitations'}}" style="width:35px;" data-toggle="tooltip" title="#number of free invite slots" />
 
 
@@ -70,7 +70,7 @@
         </div>
         <div class="clear"></div>
       </div>
-    
+
     {{/if}}
 
   </div>
@@ -81,14 +81,9 @@
     <div class="title">{{profile.name}}</div>
     {{#autoForm id="hackerMailForm" schema=mailSchema}}
       <label for="template">Template</label>
-      {{#afFieldSelect name="group" id="template" style="width:240px"}}
-        <option template="personalMessage">message</option>
-        <option template="personalMissingInfo">missing information</option>
-        <option template="personalWelcome{{first}}">welcome</option>
-        <option template="personalInviteSlots">invite slots added</option>
-      {{/afFieldSelect}}
+      {{> afFieldInput name="group" id="template"}}
       {{> afQuickField name="subject" id="subject" style="width:540px"}}
-      {{> afQuickField name="message" id="message" style="width:540px" rows="10"}}
+      {{> afQuickField name="message" id="message" style="width:540px" rows=10}}
       <button action="submit" class="btn btn-primary">Send</button>
     {{/autoForm}}
   </div>

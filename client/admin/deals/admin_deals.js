@@ -1,13 +1,4 @@
-// Route Controller
 
-AdminDealsController = DefaultAdminController.extend({
-  template: 'admin_deals',
-  waitOn: function () {
-    return [ 
-      Meteor.subscribe('deals', 'all'),
-    ];
-  }
-});
 
 
 Template.admin_deals.helpers({
@@ -19,13 +10,13 @@ Template.admin_deals.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        Field.date, 
-        Field.city, 
-        Field.private, 
-        'title', 
-        'description', 
-        Field.url, 
-        'code'
+        Field.date,
+        Field.city,
+        Field.private,
+        { fieldId: 'title', key: 'title', label: 'title'},
+        { fieldId: 'description', key: 'description', label: 'description'},
+        Field.url,
+        { fieldId: 'code', key: 'code', label: 'code'},
       ],
     }
   }

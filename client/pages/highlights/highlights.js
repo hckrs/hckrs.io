@@ -1,7 +1,7 @@
 
 var selector = function() {
   var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+  return Users.hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
 }
 
 // get sorted highlights
@@ -9,36 +9,12 @@ HighlightsSorted = function(options) {
   var city = Session.get('currentCity');
   var highlights = Highlights.find(selector(), options).fetch();
   var sort = (HighlightsSort.findOne({city: city}) || {}).sort || [];
-  return sortedDocs(highlights, sort);
+  return Query.sortedDocs(highlights, sort);
 }
 
 
-// Route Controller
 
-HighlightsController = DefaultController.extend({
-  template: 'highlights',
-  waitOn: function() {
-    var city = Session.get('currentCity');
-    return [ 
-      Meteor.subscribe('highlights', city),
-      Meteor.subscribe('highlightsSort', city),
-    ];
-  },
-  onBeforeAction: function() {
-
-    // redirect to hackers page if there are no highlights
-    // except for ambassadors and admins
-    if (this.ready() && Highlights.find(selector()).count() === 0 && !hasAmbassadorPermission())
-      Router.go('hackers');
-    
-  },
-  onAfterAction: function() {
-    Interface.setHeaderStyle('fixed');
-  }
-});
-
-
-// editor 
+// editor
 
 var editor = new Editor('Highlights');
 
@@ -74,7 +50,7 @@ Template.highlights.events({
 
 // after cancel form which is in add-mode
 // we select the previous selected highlight item
-Template.highlights.events({ 
+Template.highlights.events({
   "click [action='cancel']": function() {
     editor.select(indexToId(1));
   },
@@ -120,9 +96,9 @@ var setupOnePageScroll = function(tmpl) {
   });
 
   // make sortable for ambassadors
-  if (hasAmbassadorPermission())
+  if (Users.hasAmbassadorPermission())
     HighlightEditor.initSortable();
-  
+
   return $onePageScroll;
 }
 
@@ -131,8 +107,8 @@ var setupOnePageScroll = function(tmpl) {
 Template.highlights.rendered = function() {
   var self = this;
 
-  this.onePageScroll = setupOnePageScroll(this);  
-  
+  this.onePageScroll = setupOnePageScroll(this);
+
   var initialized = false;
   this.observer = Highlights.find().observe({
     'added': function() { if (initialized) Router.reload(); },
@@ -147,16 +123,16 @@ Template.highlights.rendered = function() {
   }
   this.selectedObserver = editor.observe('selectedId', move);
 
-  
+
   // move to selected first
   if (editor.selectedId())
     move(editor.selectedId())
 
   // set first selected
   if (!editor.selectedId())
-    editor.select(indexToId(1))  
+    editor.select(indexToId(1))
 
-  
+
 }
 
 Template.highlights.destroyed = function() {
@@ -189,18 +165,17 @@ HighlightEditor.initSortable = function() {
 
   // set highlight id attributes on pagenation circles
   var ids = _.pluck(HighlightsSorted(), '_id');
-  $pagenation.find("li").each(function(i) { 
-    $(this).attr('data-id', ids[i]); 
+  $pagenation.find("li").each(function(i) {
+    $(this).attr('data-id', ids[i]);
   });
 
   // init sortable
-  $pagenation.sortable({ 
+  $pagenation.sortable({
     axis: "y",
-    cursor: 'move', 
+    cursor: 'move',
     stop: function(event, ui) {
       var sort = $pagenation.sortable('toArray', {attribute: 'data-id'});
       updateSort(sort);
     }
   });
 }
-

@@ -38,13 +38,17 @@
     {{#if userId}}
     {{#with UserView userId}}
       <div class="user">
-        <a href="{{pathFor 'hacker'}}" class="hackers-name pictureViewLink" {{foreign}}>
-          <div style="background-image:url({{profile.picture}});" class="pictureView small clickable" {{foreign}} label="{{label}}"></div>
+        <a href="{{pathFor 'hacker'}}" class="hackers-name pictureViewLink" {{foreign}}><div style="background-image:url({{profile.picture}});" class="pictureView small clickable" {{foreign}} label="{{label}}"></div>
         </a>
       </div>
     {{/with}}
     {{/if}}
-            
+      
+
+    {{#if url}}
+      <div class="url">{{Domain url}}</div>
+    {{/if}}
+
     {{#if title}}
       <span class="title">{{title}}</span>
     {{/if}}
@@ -65,9 +69,6 @@
       <div class="description">{{description}}</div>
     {{/if}}
 
-    {{#if url}}
-      <div class="url">{{Domain url}}</div>
-    {{/if}}
 
   </div>        
 </template>

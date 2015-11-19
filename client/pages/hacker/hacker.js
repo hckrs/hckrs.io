@@ -1,24 +1,10 @@
-// Route Controller
-
-HackerController = DefaultController.extend({
-  template: 'hacker',
-  waitOn: function () {
-    return [];
-  },
-  onRun: function() {
-    Session.set('hackerId', Url.userIdFromUrl());
-    Session.set('hackerEditMode', UserProp('isAccessDenied'));  
-  }
-});
 
 
 
-
-
-/* HACKER 
+/* HACKER
    - general user info
    - skills & favorites
-   - map to pick a location 
+   - map to pick a location
    - link external social services
 */
 
@@ -26,8 +12,8 @@ HackerController = DefaultController.extend({
 // get the information of the hacker on the current page
 // this session variable 'hacker' is setted in the router
 var hackerId = function () { return Session.get('hackerId'); }
-var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
-var hackerProps = function (fields) { return OtherUserProps(hackerId(), fields); }
+var hackerProp = function(field) { return Users.prop(hackerId(), field); }
+var hackerProps = function (fields) { return Users.props(hackerId(), fields); }
 
 Template.registerHelper('HackerProp', function(prop) {
   return hackerProp(prop);
@@ -46,8 +32,8 @@ var addToSet = function(event) {
   var field = $elm.attr('name');
   var value = $elm.val();
   var checked = $elm.is(':checked');
-  
-  exec(function() {
+
+  Util.exec(function() {
     var action = checked ? '$addToSet' : '$pull';
     var modifier = _.object([ action ], [ _.object([field], [value]) ]);
     Users.update(hackerId(), modifier);
@@ -60,7 +46,7 @@ var addToSet = function(event) {
 
 // DB: input-to-string
 // when user input field becomes unfoccused
-// update the user info in the database  
+// update the user info in the database
 //
 // this is how the html is related to the database
 // input[name]  --> database field name
@@ -69,11 +55,11 @@ var saveChangedField = function(event, cb) {
   var $elm = $(event.currentTarget); //input element
   var field = $elm.attr('name');
   var value = $elm.val();
-  
-  // show feedback on input element
-  addTemporaryClass($elm, 'saved');
 
-  exec(function() {
+  // show feedback on input element
+  Util.addTemporaryClass($elm, 'saved');
+
+  Util.exec(function() {
     var modifier = _.object([ value ? '$set' : '$unset' ], [ _.object([field], [value]) ]);
     Users.update(hackerId(), modifier, cb);
   });
@@ -92,11 +78,11 @@ var fieldChanged = function(event) {
 
 // special case when autosaving email field
 // callback after email field updated in the database
-var updateEmailCallback = function(err) { 
+var updateEmailCallback = function(err) {
   Session.set('isDuplicateEmail', false);
   Session.set('isNotValidEmail', false);
   if (err) {
-    if (err.reason === "Access denied") { 
+    if (err.reason === "Access denied") {
       // possible no valid e-mailaddress
       Session.set('isNotValidEmail', true);
     } else {
@@ -105,6 +91,16 @@ var updateEmailCallback = function(err) {
       Session.set('isDuplicateEmail', true);
     }
   }
+
+  // scroll to top to see the message about verifying your email.
+  Tracker.autorun(function(c) {
+    if (!Login.verifiedEmail()) {
+      Meteor.setTimeout(function() {
+        Router.scrollToTop();
+        c.stop();
+      }, 1000);
+    }
+  });
 }
 
 // show picture choser when user clicked on the current profile picture
@@ -135,7 +131,7 @@ var pictureChanged = function(event) {
   $picture.css('background-image', "url('"+value+"')");
 
   // store in database
-  exec(function() {
+  Util.exec(function() {
     Meteor.users.update(hackerId(), {$set: {'profile.picture': value}});
   });
 }
@@ -145,7 +141,7 @@ var moveCity = function(evt) {
   Meteor.call('moveUserToCity', hackerId(), city, function(err) {
     if (err) return;
     Router.goToCity(city); // redirect to new city
-  }); 
+  });
 }
 
 
@@ -175,16 +171,16 @@ Template.hacker.events({
   // general autosave input fields
   "blur input[autosave]": function(evt) {
     var callback;
-    
+
     // callback after changing email field
-    if ($(evt.currentTarget).hasClass('email')) 
+    if ($(evt.currentTarget).hasClass('email'))
       callback = updateEmailCallback;
 
     saveChangedField(evt, callback);
-    
+
   },
   "keyup input[autosave]": fieldChanged,
-  "click input[type='checkbox'][autosave]": addToSet,
+  "click input[type='checkbox'][autosave-set]": addToSet,
 });
 
 Template.hackerEdit.events({
@@ -206,10 +202,10 @@ Template.hackerEdit.events({
 
 Template.hacker.helpers({
   'hacker': function() { return hackerProps(); },
-  'canEdit': function() { return isCurrentUser() || hasAmbassadorPermission(); },
+  'canEdit': function() { return isCurrentUser() || Users.hasAmbassadorPermission(); },
   'isCurrentUser': function() { return isCurrentUser(); },
   'isEditMode': function() { return Session.get('hackerEditMode'); },
-  'activeMode': function(mode) { 
+  'activeMode': function(mode) {
     var currentMode = Session.get('hackerEditMode') ? 'edit' : 'preview';
     return currentMode === mode ? 'active' : '';
   }
@@ -218,9 +214,9 @@ Template.hacker.helpers({
 Template.hackerEdit.helpers({
   'required': function(field) {
     // indicate required field after user try to proceed without filling in this field
-    return !pathValue(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
+    return !Object.property(this, field) && Session.get('isIncompleteProfileError') ? 'required' : '';
   },
-  "selected": function(socialPicture) { 
+  "selected": function(socialPicture) {
     var isSelected = hackerProp('profile.picture') == socialPicture;
     return  isSelected ? 'checked' : "";
   },
@@ -245,8 +241,8 @@ Template.hackerEdit.helpers({
 });
 
 Template.hackerView.helpers({
-  "urlCurrentUser": function() { 
-    return Router.routes['hacker'].url(UserProp("_id")); 
+  "urlCurrentUser": function() {
+    return Users.userProfileUrl(Meteor.userId());
   },
   "isCompanyOrLocation": function() {
     return !!(this.profile.company || this.profile.location);
@@ -257,10 +253,10 @@ Template.hackerView.helpers({
 // RENDERING
 
 Template.hackerEdit.rendered = function() {
-  initializeAutoGrow();
+  Util.initializeAutoGrow();
 
   if (this.find('#editMap')) {
-    var city = CITYMAP[Session.get('currentCity')] || {};
+    var city = City.lookup(Session.get('currentCity')) || {};
     var latlng = {lat: city.latitude, lng: city.longitude};
     initializeMap(this.find('#editMap'), latlng, hackerProp('profile.location'), true); // initialize map
   }
@@ -274,8 +270,8 @@ Template.hackerView.rendered = function() {
   }
 
   // render social follow buttons
-  FB.XFBML.parse();
-  twttr.widgets.load();
+  window.FB && FB.XFBML.parse();
+  window.twttr && twttr.widgets.load();
 }
 
 

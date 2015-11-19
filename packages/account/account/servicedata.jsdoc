@@ -1,0 +1,170 @@
+Account.serviceData = {};
+
+
+/**
+ * @summary Fetch user information from external service
+ * @locus Server
+ * @param {Object} user An user object.
+ * @param {String} service facebook, github, twitter, etc.
+ */
+Account.serviceData.fetchUserData = function(user, service) {
+
+  var services = {
+
+    "github": function(user) {
+      var fields = ["id","accessToken","email", "privateEmails","username","login","avatar_url","gravatar_id","html_url","name","company","blog","location"]
+      var data = HTTP.get("https://api.github.com/user", {
+        headers: {"User-Agent": "Meteor/"+Meteor.release},
+        params: {access_token: user.services[service].accessToken}
+      }).data;
+      data.privateEmails = HTTP.get("https://api.github.com/user/emails", {
+        headers: {"User-Agent": "Meteor/"+Meteor.release},
+        params: {access_token: user.services[service].accessToken}
+      }).data; // XXX API response format for /user/emails will change in the future
+      return _.pick(data, fields);;
+    },
+
+    "facebook": function(user) {
+      var url = "https://graph.facebook.com/me";
+      var fields = ['id', 'email', 'name', 'locale', 'picture', 'link', 'location', 'birthday', 'gender', 'website', 'work'];
+      return OAuth.userCall(user, 'facebook', 'GET', url, {fields: fields}).data;
+    },
+
+    "twitter": function(user) {
+      var url = "https://api.twitter.com/1.1/account/verify_credentials.json";
+      var fields = ['id','id_str','accessToken','profile_image_url','name','screen_name','location','entities'];
+      var data = OAuth.userCall(user, 'twitter', 'GET', url).data;
+      data.id = data.id_str;
+      return _.pick(data, fields);
+    }
+  }
+
+  if (!services[service])
+    throw new Meteor.Error(500, "Unknow how to fetch user data from " + service);
+
+  // return the fetched data
+  return services[service](user);
+}
+
+
+/**
+ * @summary Transform the raw service data into a uniform format
+ * that is the same for all services. The transformed data
+ * can be used to make user's profile complete.
+ * @locus Server
+ * @param {Object} data Raw data fetched from the service
+ * @param {String} service Specify where data come from facebook, github, twitter, etc.
+ */
+Account.serviceData.unify = function(data, service) {
+
+  var services = {
+
+    "github": function(data) {
+
+      if (data.avatar_url)
+        data.picture = data.avatar_url + "&size=180"
+
+      if (data.location)
+        data.location = Geo.geocode(data.location);
+
+      // check for private mailaddress when public email isn't setted
+      if (!data.email && data.privateEmails) {
+        var emails = _.filter(data.privateEmails, function(email) {
+          return _.isString(email) && email.indexOf("@users.noreply.github.com") === -1;
+        });
+        data.email = _.first(emails);
+      }
+
+      var userData = {
+        'email': data.email,
+        'name': data.name,
+        'picture': data.picture,
+        'link': data.html_url,
+        'company': data.company,
+        'homepage': data.blog,
+        'location': data.location,
+
+        // 'username': data.login,
+        // 'birthday': data.birthday || null,
+        // 'city': data.location,
+        // 'lang': data.lang || null
+      };
+
+      return userData;
+    },
+
+    "facebook": function(data) {
+
+      if (data.birthday) {
+        var p = data.birthday.split('/');
+        data.birthday = new Date(p[2], p[0], p[1]);
+      }
+
+      if (data.id)
+        data.picture = "http://graph.facebook.com/" + data.id + "/picture?type=large";
+
+      if (data.location && data.location.name)
+        data.location = Geo.geocode(data.location.name);
+
+      if (data.work && data.work[0] && data.work[0].employer)
+        data.company = data.work[0].employer.name;
+
+      var userData = {
+        'email': data.email,
+        'name': data.name,
+        'picture': data.picture,
+        'link': data.link,
+        'company': data.company, // XXX TODO ? working???
+        'homepage': data.website,
+        'location': data.location,
+
+        // 'username': data.username,
+        // 'birthday': data.birthday,
+        // 'city': data.location && data.location.name, //XXX TODO: use additional data.location.id
+        // 'lang': data.locale && data.locale.substr(0,2)
+      };
+
+      return userData;
+    },
+
+    "twitter": function(data) {
+
+      if (!data.default_profile_image && data.profile_image_url) {
+        // remove '_normal' from url to get original size and use a size of 200x200
+        data.picture = data.profile_image_url.replace(/(_normal)?(\..{0,4})$/, '_200x200$2');
+      }
+      var urls = Object.property(data, 'entities.url.urls');
+      if (urls && urls[0])
+        data.homepage = urls[0].expanded_url;
+
+      if (data.location)
+        data.location = Geo.geocode(data.location);
+
+      if (data.screen_name)
+        data.link = "http://twitter.com/" + data.screen_name
+
+      var userData = {
+        'email': null, // not available
+        'name': data.name,
+        'picture': data.picture,
+        'link': data.link,
+        'company': null, // not available
+        'homepage': data.homepage,
+        'location': data.location,
+
+        // 'username': data.screen_name,
+        // 'birthday': data.birthday || null,
+        // 'city': data.location,
+        // 'lang': data.lang
+      };
+
+      return userData;
+    }
+  }
+
+  if (!services[service])
+    throw new Meteor.Error(500, "Unknow service " + service);
+
+  // return the fetched data
+  return Object.omitNull(services[service](data));
+}

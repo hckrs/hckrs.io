@@ -41,9 +41,34 @@
     margin: 0px;
   }
 
-  
+  /* popup */
   .leaflet-popup-content {
     padding: 10px;
+    .profile-picture {
+      float: left;
+      width: 100px;
+      img { width: 100%; }
+      margin-right: 10px;
+    }
+    .company {
+      a {
+        color: #333;
+        text-decoration: underline;
+        font-weight: normal;
+      }
+    }
+    .available-buttons .btn {
+      margin-top: 5px;
+      height: 20px;
+      font-size: 1em;
+      padding: 2px 4px;
+      background-color: #eee;
+      color: #888;
+      font-weight: normal;
+      &:hover {
+        background-color: #bbb;
+      }
+    }
   }
 
   .filter-ui {
@@ -54,10 +79,10 @@
     right: 0px;
     width: 210px;
     .labels {
-      margin: 32px;  
+      margin: 32px;
     }
   }
-  
+
   .marker-hacker.picture {
     border-radius: 90px;
     background-color: rgba(255,255,255,0.1);

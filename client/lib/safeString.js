@@ -18,13 +18,3 @@ Safe.email = function(email, options) {
   text = options.text || email;
   return email ? Safe.string('<a href="mailto:'+email+'">'+text+'</a>') : '';
 }
-
-Safe.hackerUrl = function(user, options) {
-  var url = Router.routes['hacker'].url(user);
-  return Safe.url(url, options);
-}
-
-Safe.hackerPath = function(user, options) {
-  var path = Router.routes['hacker'].path(user);
-  return Safe.url(path, options);
-}

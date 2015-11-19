@@ -1,5 +1,0 @@
-if (Settings['environment'] === 'local') {
-
-
-
-}

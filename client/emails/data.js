@@ -32,7 +32,7 @@ var templates = [
 // XXX currently hack in hacker data
 // in future meteor releases we can make use of Blaze.toHTMLWithData
 var hackerId = function () { return Session.get('hackerId'); }
-var hackerProp = function(field) { return OtherUserProp(hackerId(), field); }
+var hackerProp = function(field) { return Users.prop(hackerId(), field); }
 
 var data = {
   'name': function() {
@@ -42,30 +42,30 @@ var data = {
     return hackerProp('invitations') || 0;
   },
   'inviteUrl': function() {
-    return userInviteUrl(hackerId());
+    return Users.userInviteUrl(hackerId());
   },
   'city': function() {
-    return CITYMAP[Session.get('currentCity')].name;
+    return City.lookup(Session.get('currentCity')).name;
   },
   'citykey': function() { // lower case city name
     return Session.get('currentCity');
   },
   'staffName': function() {
-    return property(Meteor.user(), 'profile.name').split(' ')[0];
+    return Object.property(Meteor.user(), 'profile.name').split(' ')[0];
   },
   'staffTitle': function() {
-    return property(Meteor.user(), 'staff.title');
+    return Object.property(Meteor.user(), 'staff.title');
   },
   'staffEmail': function() {
-    return property(Meteor.user(), 'staff.email');
+    return Object.property(Meteor.user(), 'staff.email');
   },
   'staffTwitter': function() {
-    var twitter = CITYMAP[Session.get('currentCity')].twitter;
+    var twitter = City.lookup(Session.get('currentCity')).twitter;
     return Safe.string(twitter ? '<a href="https://twitter.com/'+twitter+'">@'+twitter+'</a>' : ''); 
   },
   'staffPhone': function() {
-    var phone = property(Meteor.user(), 'profile.phone');
-    var available = property(Meteor.user(), 'profile.available');
+    var phone = Object.property(Meteor.user(), 'profile.phone');
+    var available = Object.property(Meteor.user(), 'profile.available');
     var visible = _.contains(available, 'call');
     return visible && phone ? phone : ''; 
   },

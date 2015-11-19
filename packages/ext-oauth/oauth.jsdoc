@@ -1,0 +1,42 @@
+
+
+/**
+ * @summary Manually creating OAuth requests to the external services.
+ * In this manner you can obtain all information about a user
+ * Don't forget to set requestPermission that the user must accept.
+ *
+ * Note: that the accessToken you use have to correspondent with the
+ * ServiceConfiguration settings. So you cann't do requests on a development
+ * machine while using the accessTokens from production machine.
+ * @locus Server
+ * @param {String|Object} user Either a userId or an user object
+ * @param {String} service facebook, github, twitter, etc.
+ * @param {String} methods GET, POST, etc.
+ * @param {String} url URL of the resource you request.
+ * @param {Object} params Data send with the request.
+ */
+OAuth.userCall = function(user, service, method, url, params) {  
+  var config = Accounts.loginServiceConfiguration.findOne({service: service});
+
+  if (!config)
+    throw new Meteor.Error(500, "Service unknow: " + service);
+
+  if (_.isString(user))
+    user = Meteor.users.findOne(user);
+
+  if (!user)
+    throw new Meteor.Error(500, "User unknow");
+
+  if (!user.services[service] || !user.services[service].accessToken)
+    throw new Meteor.Error(500, "User not (yet) authenticated for this service.");
+
+  var oauth = new OAuth1Binding(config);
+  oauth.accessToken = user.services[service].accessToken;
+  oauth.accessTokenSecret = user.services[service].accessTokenSecret;
+
+  params = _.extend(params || {}, {oauth_token: oauth.accessToken});
+      
+  var headers = oauth._buildHeader(params);
+
+  return oauth._call(method, url, headers, params);
+}

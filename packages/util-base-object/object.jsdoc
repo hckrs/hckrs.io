@@ -1,0 +1,53 @@
+Object = this.Object || {};
+
+/**
+ * @summary Remove fields from an object that have as value **null** *OR* **undefined**.
+ * @param  {Object} obj The object to clean.
+ * @locus Anywhere
+ */
+Object.omitNull = function(obj) {
+  obj = _.clone(obj);
+  _.each(obj, function(val, key) {
+    if (_.isNull(val) || _.isUndefined(val)) delete obj[key];
+  }); return obj;
+}
+
+/**
+ * @summary Remove fields from an object that have as value an **empty string**.
+ * @param  {Object} obj The object to clean.
+ * @locus Anywhere
+ */
+Object.omitEmpty = function(o) {
+  o = Object.omitNull(o);
+  _.each(o, function(v, k){ if(_.isString(v) && !v) delete o[k]; });
+  return o;
+}
+
+// 
+/**
+ * @summary Get some (nested) value from an object by specifying the property path. This function will return undefined if the fields don't exist.
+ * @param {Object} object Some object to extract a value from.
+ * @param {String} path Specify a property path, using dot notation.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   // get nested properties by using dot notation
+ *   Object.property(user, "profile.name")  ==  user['profile']['name']
+ *
+ *   // this function don't crash if fields don't exist,
+ *   // while the normal javascript getters do.
+ *   Object.property(user, "undefined.name")  =>  undefined
+ *   user['undefined']['name']              =>  ERROR
+ *   ```  
+ */
+Object.property = function(obj, path) {
+  var paths = path.split('.')
+  var current = obj;
+  _.each(paths, function(path) {
+    if (!_.isObject(current)) 
+      return current = undefined;
+    current = current[path];
+  }); 
+  return current;
+}
+

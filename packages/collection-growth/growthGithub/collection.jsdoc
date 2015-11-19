@@ -1,0 +1,10 @@
+/**
+ * @summary Growth Github
+ * @locus Anywhere
+ */
+Collection.GrowthGithub = new Meteor.Collection('growthGithub');
+
+
+// alias
+GrowthGithub = Collection.GrowthGithub
+

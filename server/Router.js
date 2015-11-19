@@ -4,45 +4,86 @@ var URL = Npm.require('url');
 
 // SERVER SIDE routes
 
-Router.map(function () {
-  this.route('any', {
-    where: 'server',
-    path: '/*',
-    action: function () {
-      var url = getRequestUrl(this.request); 
-      var city = Url.city(url);
-      var isLocalhost = Url.isLocalhost(url);
+Router.route('/mandrill-webhook', function() {
+  var events = EJSON.parse(Object.property(this.request.body, 'mandrill_events') || "[]");
 
-      // check if there is a valid city present in the url
-      if (!city || !CITYMAP[city]) {
+  var addEvent = function(event) {
+    // event format: http://help.mandrill.com/entries/24466132-Webhook-Format
 
-        // this subdomain doesn't exist or isn't a valid city
-        
-        // we try to find the closest city
-        var userIp = getClientIp(this.request);
-        var location = requestLocationForIp(userIp);
-        var closestCity = findClosestCity(location);    
-        
-        if (closestCity) {
+    if (!event.event)
+      return; /* not a message event */
 
-          // if closest city is found we redirect the user to a new url
-          var cityUrl = Url.replaceCity(closestCity, url);
-          return redirect(cityUrl, this.response);
-          
-        } else if (city !== 'www') {
-  
-          // If closest city can't be found, we redirect to www.
-          // only if we are not already there.
-          var cityUrl = Url.replaceCity('www', url);
-          return redirect(cityUrl, this.response);
-        }
-      }
-      
-      // done!
-      this.next();
+    console.log('Email webhook event:', event.event);
+
+    var messageId = event._id;
+    var userAgent = event.user_agent_parsed && {
+      mobile: event.user_agent_parsed.mobile,
+      os: event.user_agent_parsed.os_family,
+      client: event.user_agent_parsed.ua_family,
+      version: event.user_agent_parsed.ua_version,
+    };
+
+    // link event to original message
+    EmailsOutbound.update({'to.messageId': messageId}, {
+      $push: { 'to.$.events': {
+        event: event.event,
+        url: event.url ? event.url : undefined,
+        agent: userAgent ? userAgent : undefined,
+      }}
+    });
+
+    // when it is a github growth mail, also register in growth collection
+    switch(event.event) {
+      case 'open': GrowthGithub.update({messageId: messageId}, {$set: {open: true}}); break;
+      case 'click': GrowthGithub.update({messageId: messageId}, {$inc: {clicks: 1}}); break;
     }
-  });
-});
+  }
+
+  // store events
+  _.each(events, addEvent);
+
+  // end incoming request
+  this.response.end();
+
+}, {where: 'server'});
+
+
+Router.route('/:catchAll?', function () {
+    var url = getRequestUrl(this.request);
+    var city = Url.city(url);
+    var isLocalhost = Url.isLocalhost(url);
+
+    // check if there is a valid city present in the url
+    if (!city || !City.lookup(city)) {
+
+      // this subdomain doesn't exist or isn't a valid city
+
+      // we try to find the closest city
+      var userIp = getClientIp(this.request);
+      var location = Geo.requestLocationForIp(userIp);
+      var closestCity = Geo.findClosestCity(location);
+
+      if (closestCity) {
+
+        // if closest city is found we redirect the user to a new url
+        var cityUrl = Url.replaceCity(closestCity, url);
+        return redirect(cityUrl, this.response);
+
+      } else if (city !== 'www') {
+
+        // If closest city can't be found, we redirect to www.
+        // only if we are not already there.
+        var cityUrl = Url.replaceCity('www', url);
+        return redirect(cityUrl, this.response);
+      }
+    }
+
+    // done!
+    this.next();
+
+}, {where: 'server'});
+
+
 
 
 
@@ -52,7 +93,8 @@ var getRequestUrl = function(request) {
   // XXX: not all properties can be resolved through '_parsedUrl'
   // Therefor we try to add some properties ourself.
   var parsed = {};
-  parsed.protocol = request.headers['x-forwarded-proto'] || "http";
+  parsed.protocol = (request.headers['x-forwarded-proto'] &&
+                    request.headers['x-forwarded-proto'].split(",")[0]) || "http";
   parsed.host     = request.headers['host'];
   parsed.hostname = request.headers.host.split(':')[0];
   parsed.port     = request.headers.host.split(':')[1] || null;

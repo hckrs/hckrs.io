@@ -1,0 +1,12 @@
+/**
+ * @summary Deals containing discount items.
+ * @locus Anywhere
+ */
+Collection.Deals = new Meteor.Collection('deals');
+Collection.DealsSort = new Meteor.Collection('dealsSort');
+
+
+// alias
+Deals = Collection.Deals;
+DealsSort = Collection.DealsSort;
+

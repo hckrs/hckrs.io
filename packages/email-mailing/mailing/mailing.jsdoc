@@ -1,0 +1,3 @@
+MailChimpOptions = Settings['MailChimpOptions'] || {};
+
+Mailing = {};

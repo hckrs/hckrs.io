@@ -1,6 +1,10 @@
 // State
 var map, featureLayer;
 
+// collection containing only coordinate documents
+// representing all hackers from other cities.
+var hackersLocations = new Mongo.Collection('mapHackersLocations');
+
 var state = new State("map", {
   city: undefined,          // String
   location: undefined,      // Object {lat: Number, lng, Number}
@@ -8,23 +12,9 @@ var state = new State("map", {
   selected: null,           // Object? {filter: String, id: String}
 });
 
-var zoomLevelPictures = 14;
+var zoomLevelPictures = 13;
 
 
-// Route Controller
-
-MapController = DefaultController.extend({
-  template: 'map',
-  waitOn: function () {
-    var city = Session.get('currentCity');
-    return [
-      Meteor.subscribe('places', city)
-    ];
-  },
-  onAfterAction: function() {
-    Interface.setHeaderStyle('fixed');
-  }
-});
 
 
 // editor
@@ -59,7 +49,7 @@ Template.map.events({
       featureLayer.eachLayer(function(marker) {
         var dist = map.getCenter().distanceTo(marker.getLatLng());
         var isPlace = marker.feature.properties.filter === 'places';
-        var permission = hasOwnerPermission(marker.feature.properties);
+        var permission = Users.hasOwnerPermission(marker.feature.properties);
         if (isPlace && permission && (!min || dist < minDist)) {
           min = marker;
           minDist = dist;
@@ -79,14 +69,14 @@ Template.map.created = function() {
   var city = Session.get('currentCity');
   if (!state.equals('city', city)) {
     state.set('city', city);
-    state.set('location', getCityLocation(city));
+    state.set('location', Geo.getCityLocation(city));
     state.set('zoom', state.defaults.zoom);
   }
 }
 
 
 Template.map.rendered = function() {
-  
+
   // Setup map
   map           =  setupMap();
   featureLayer  =  setupFeatureLayer(map);
@@ -104,7 +94,7 @@ Template.map.rendered = function() {
 
   this.modeObserver = editor.observe('mode', function(mode) {
     reload();
-    if (!mode) 
+    if (!mode)
       clear();
   });
 
@@ -115,7 +105,7 @@ Template.map.rendered = function() {
   this.selectedObserver = state.observe('selected', function(selected) {
     openFeaturePopup(featureLayer, selected);
     editor.select(selected && selected.id);
-    if (selected) 
+    if (selected)
       clear(selected.id);
   });
 
@@ -160,14 +150,14 @@ var setupMap = function() {
   map.on('zoomend', function(e) { // save zoom state
     var prevZoom = state.get('zoom');
     var newZoom = map.getZoom();
-    
+
     // save zoom level
     state.set('zoom', newZoom)
 
     // reload data when certain zoom level is passed
     if (newZoom < zoomLevelPictures && zoomLevelPictures <= prevZoom
       || newZoom >= zoomLevelPictures && zoomLevelPictures > prevZoom) {
-      reload(); 
+      reload();
     }
   });
 
@@ -177,14 +167,14 @@ var setupMap = function() {
 var setupFeatureLayer = function(map) {
 
   // create marker layer
-  var featureLayer = L.mapbox.featureLayer().addTo(map);  
+  var featureLayer = L.mapbox.featureLayer().addTo(map);
 
   // icon based on feature properties
   featureLayer.on('layeradd', function(e) {
     var marker = e.layer;
     var props = marker.feature.properties;
     var type = props.type;
-    
+
     if (props.filter === 'places') {
 
       // places marker
@@ -204,14 +194,15 @@ var setupFeatureLayer = function(map) {
         if (props.url)         popup.push(Safe.url(props.url));
         marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
       }
-    
+
     } else if (props.filter === 'hackers') {
-      
-      if (state.get('zoom') >= zoomLevelPictures && props.image) { // show picture
+      var user = props.user;
+
+      if (state.get('zoom') >= zoomLevelPictures && user.profile.picture) { // show picture
 
         // hacker image
         marker.setIcon(L.icon({
-          iconUrl:      props.image,
+          iconUrl:      user.profile.picture,
           className:    "marker-hacker picture",
           iconSize:     [40, 40], // size of the icon
           iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
@@ -231,10 +222,33 @@ var setupFeatureLayer = function(map) {
       }
 
       // make popup
-      var popup = [];
-      popup.push("<strong>"+props.title+"</strong>");
-      popup.push(Safe.hackerPath(props.id, {text: 'hacker #'+userRank(props.id), target: 'self'}));
-      marker.bindPopup(popup.join('<br/>'), {closeButton: false, closeOnClick: false, minWidth: 20});
+      var html = "";
+
+      html += "<div class='profile-picture'><img src='"+user.profile.picture+"' /></div>";
+      html += Safe.url(Users.userProfilePath(user._id), {text: user.profile.name, target: 'self'});
+
+      if (user.profile.companyUrl)
+        html += ' @ <span class="company">'+Safe.url(user.profile.companyUrl, {text: user.profile.company, target: 'blank'})+'</span>';
+      else if (user.profile.company)
+        html += ' @ <span class="company">'+user.profile.company+'</span>';
+
+      if (user.profile.available && user.profile.available.length)
+        html += '<div class="available-buttons">'+Blaze.toHTMLWithData(Template.userAvailableButtons, user)+'</div>';
+
+      html += "<div class='clear'></div>";
+
+      marker.bindPopup(html, {closeButton: false, closeOnClick: false, minWidth: 300});
+
+    } else if (props.filter === 'hackers-all') {
+
+      // hacker point
+      marker.setIcon(L.icon({
+        iconUrl:      "/img/markers/point.png",
+        className:    "marker-hacker point",
+        iconSize:     [6, 6], // size of the icon
+        iconAnchor:   [3, 3], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -3] // point from which the popup should open relative to the iconAnchor
+      }));
     }
   });
 
@@ -245,8 +259,8 @@ var setupFilters = function(featureLayer, $) {
 
   // // which filters are active/checked?
   // var getActiveFilters = function() {
-  //   return $("[filter]:checked").map(function() { 
-  //     return $(this).attr('filter'); 
+  //   return $("[filter]:checked").map(function() {
+  //     return $(this).attr('filter');
   //   });
   // }
 
@@ -272,7 +286,7 @@ var openFeaturePopup = function(featureLayer, selected) {
       marker.openPopup();
 
       // ambassador can move markers
-      if (hasOwnerPermission(props) && editor.mode() === 'edit' && props.filter === 'places')
+      if (Users.hasOwnerPermission(props) && editor.mode() === 'edit' && props.filter === 'places')
         marker.dragging.enable();
     }
     else {
@@ -324,7 +338,7 @@ var setDefaultEvents = function(map, featureLayer) {
   // dragging
   featureLayer.eachLayer(function(marker) {
     var markerId = marker.feature.properties.id;
-    
+
     // update location
     marker.on('dragend', function(e) {
       updateLocation(markerId, _.pick(marker.getLatLng(), 'lat', 'lng'));
@@ -339,23 +353,24 @@ var setDefaultEvents = function(map, featureLayer) {
 
 // load data and add markers to map
 var setData = function(featureLayer) {
-  var geoHackers = hackersFeatures();
+  var geoCityHackers = cityHackersFeatures();
+  var geoOtherCityHackers = otherCityHackersFeatures();
   var geoPlaces = placesFeatures();
-  var geojson = geoHackers.concat(geoPlaces);
+  var geojson = geoOtherCityHackers.concat(geoCityHackers, geoPlaces);
   featureLayer.setGeoJSON(geojson);
 }
 
-// create a geojson feature for each hacker 
+// create a geojson feature for each hacker (of the current city)
 // who have specified a location in their profile
-var hackersFeatures = function() {
+var cityHackersFeatures = function() {
 
   // select only users with specified location
   var selector = {
     "city": Session.get('currentCity'),
-    "profile.location.lat": {$type: 1}, 
+    "profile.location.lat": {$type: 1},
     "profile.location.lng": {$type: 1},
   };
-   
+
   return Users.find(selector).map(function(user) {
     return {  // geojson feature object
       "type": "Feature",
@@ -365,11 +380,36 @@ var hackersFeatures = function() {
       },
       "properties": {
         "filter": "hackers",
-        "title": user.profile.name,
-        "image": user.profile.picture,
-        "url": Router.routes['hacker'].path(user),
+        "user": user,
         "id": user._id,
         // "marker-symbol": "marker-stroked",
+        "marker-size": "small",
+        "marker-color": "#fff",
+      },
+    };
+  });
+}
+
+// create a geojson feature for each hacker (from other cities)
+// who have specified a location in their profile
+var otherCityHackersFeatures = function() {
+
+  // select only users with specified location
+  var selector = {
+    "city": {$ne: Session.get('currentCity')},
+    "profile.location.lat": {$type: 1},
+    "profile.location.lng": {$type: 1},
+  };
+
+  return hackersLocations.find().map(function(doc) {
+    return {  // geojson feature object
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [doc.lng, doc.lat]
+      },
+      "properties": {
+        "filter": "hackers-all",
         "marker-size": "small",
         "marker-color": "#fff",
       },
@@ -408,7 +448,7 @@ var placesFeatures = function() {
 
 var selector = function() {
   var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+  return Users.hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
 }
 
 // create marker on clicked location

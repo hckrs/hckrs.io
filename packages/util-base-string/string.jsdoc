@@ -1,0 +1,54 @@
+String = this.String || {};
+
+
+String.prototype.trim = function() {
+  return this.replace(/^\s+|\s+$/g, '');
+}
+
+/**
+ * @summary Capitalize first letter of a string.
+ * @param  {String} string Some string.
+ * @locus Anywhere
+ */
+String.capitaliseFirstLetter = function(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * @summary Decode HTML entities
+ * @param  {String} string Some string.
+ * @locus Anywhere
+ */
+String.decodeHtmlEntities = function(str) {
+  return $('<div />').html(str).text();
+}
+
+/**
+ * @summary Wrap strings around some string, by specifying a prefix and postfix string.
+ * @param {String} string String to be wrapped.
+ * @param {String} prefix String to prepend.
+ * @param {String} postfix String to append.
+ * @locus Anywhere
+ */
+String.wrap = function(val, wrap1, wrap2) {
+  return [wrap1, val, wrap2].join('');
+}
+
+/**
+ * @summary Turn a array of values into a readable string by using seperator-1 between the values and a seperator-2 before the last value. Optionally you can wrap the resulting string by specifying a prefix and postfix.
+ * @param {String[]} values Array of values to be turned into a string.
+ * @param {String} seperator1 A string or character to put between the values.
+ * @param {String} seperator2 A string used as last seperator (before the last value).
+ * @param {String} [prefix] String to prepend.
+ * @param {String} [postfix] String to append.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   String.sentenceFromList(['web','apps','games'], ', ', ' and ', '<', '>')
+ *   => "<web, apps and games>"
+ *   ```
+ */
+String.sentenceFromList = function(val, sep, sep2, wrap1, wrap2) {
+  val = _.map(val, function(v) { return String.wrap(v, wrap1, wrap2); });
+  return _.compact([_.initial(val).join(sep), _.last(val)]).join(sep2);
+}

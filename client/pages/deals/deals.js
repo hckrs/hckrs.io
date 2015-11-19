@@ -1,34 +1,22 @@
 
-// Route Controller
-
-DealsController = DefaultController.extend({
-  template: 'deals',
-  waitOn: function () {
-    var city = Session.get('currentCity');
-    return [ 
-      Meteor.subscribe('deals', city),
-      Meteor.subscribe('dealsSort', city) 
-    ];
-  }
-});
 
 
 // query
 
 var selector = function() {
   var city = Session.get('currentCity');
-  return hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
+  return Users.hasAmbassadorPermission() ? {} : {hiddenIn: {$ne: city}};
 }
 
 DealsSorted = function() {
   var city = Session.get('currentCity');
   var deals = Deals.find(selector()).fetch();
   var sort = (DealsSort.findOne({city: city}) || {}).sort || [];
-  return sortedDocs(deals, sort);
+  return Query.sortedDocs(deals, sort);
 }
 
 
-// editor 
+// editor
 
 var editor = new Editor('Deals');
 
@@ -76,7 +64,7 @@ Template.deals.events({
     // select first deal
     if (!editor.selectedId()) {
       var firstDealId = $("#dealsContainer .deal").onScreen().data('id');
-      if (firstDealId) 
+      if (firstDealId)
         editor.select(firstDealId);
     }
   },
@@ -100,14 +88,14 @@ var updateSort = function(sort) {
 // Template instance
 
 Template.deals.rendered = function() {
-  
+
   // make deals sortable for ambassadors
-  if (hasAmbassadorPermission()) {
+  if (Users.hasAmbassadorPermission()) {
     var $deals = this.$('#dealsContainer');
     $deals.addClass('draggable');
-    $deals.sortable({ 
+    $deals.sortable({
       axis: "y",
-      cursor: 'move', 
+      cursor: 'move',
       handle: '.drag-handle',
       stop: function(event, ui) {
         var sort = $deals.sortable('toArray', {attribute: 'data-id'});

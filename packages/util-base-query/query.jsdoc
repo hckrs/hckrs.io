@@ -1,0 +1,69 @@
+Query = {}
+
+/**
+ * @summary Sort array with docs, by specifying the id ordering within the second array. Unspecified ids will be listed at the front by using `{createdAt: -1}`.
+ * @param docs {Object[]} A list of documents.
+ * @param ids {String[]} A ordered list of document ID  (`_id`).
+ * @locus Anywhere
+ */
+Query.sortedDocs = function(docs, ids) {
+  docs = _.sortBy(docs, function(doc){  // ASC
+    var date = doc && doc['createdAt']; 
+    if (!date) console.log('WARNING:', 'Date attribute not present in doc that must be sorted.')
+    return date && date.getTime(); 
+  }); 
+  return _.sortBy(docs, function(doc, i) {
+    var idx = _.indexOf(ids, doc._id);
+    return idx < 0 ? -i : idx; // not(present) ? DESC : indexOf
+  });
+}
+
+
+/**
+ * @summary Create a mongo field specifier object from an (possibly nested) object with field names.
+ * 
+ * At this time meteor is only reactive on top-level properties, so defining
+ * nested objects is not leading to better performance.
+ * @param obj {Object} The keys of this object specify the fieldnames for the query.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Query.fieldsObj({
+ *     city: true,
+ *     profile: {
+ *       name: true,
+ *       company: true,
+ *     }
+ *   });
+ *   => {"city": 1, "profile.name": 1, "profile.company": 1}
+ *   ```
+ */
+Query.fieldsObj = function(obj) {
+  var objToArray = function(obj) {
+    var field = function(val, prefix) {
+      var arr;
+      if (_.isArray(val))       arr = val;
+      else if (_.isObject(val)) arr = objToArray(val);
+      else return prefix;
+      return _.map(arr, function(postfix) { return prefix+'.'+postfix; });  
+    }
+    return _.flatten(_.map(obj, field));
+  }
+  return Query.fieldsArray(objToArray(obj));
+}
+
+/**
+ * @summary Create a mongo field specifier object from an array of field names.
+ * @param fields {String[]} Fields to include in the query.
+ * @locus Anywhere
+ * @example
+ *   ```
+ *   Query.fieldsArray(["city", "profile.name", "profile.company"]);
+ *   => {"city": 1, "profile.name": 1, "profile.company": 1}
+ *   ```
+ */
+Query.fieldsArray = function(fields) {
+ return _.object(fields, _.map(fields, function() { return 1; })); 
+}
+
+

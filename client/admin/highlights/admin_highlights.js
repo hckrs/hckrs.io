@@ -1,13 +1,4 @@
-// Route Controller
 
-AdminHighlightsController = DefaultAdminController.extend({
-  template: 'admin_highlights',
-  waitOn: function () {
-    return [ 
-      Meteor.subscribe('highlights', 'all'),
-    ];
-  }
-});
 
 
 Template.admin_highlights.helpers({
@@ -19,12 +10,12 @@ Template.admin_highlights.helpers({
       showFilter: false,
       rowsPerPage: 500,
       fields: [
-        Field.date, 
-        Field.city, 
-        Field.private, 
-        'title', 
-        'subtitle', 
-        Field.url, 
+        Field.date,
+        Field.city,
+        Field.private,
+        {fieldId: 'title', key: 'title', label: 'title'},
+        {fieldId: 'subtitle', key: 'subtitle', label: 'subtitle'},
+        Field.url,
       ],
     }
   }

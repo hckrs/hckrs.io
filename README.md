@@ -1,40 +1,106 @@
-hckrs.io
+hckrs.io ![hckrs icon](https://s3.amazonaws.com/hckrs.io/static/logo/logo-icon-vector-mini.png)
 =========
-Developing hckrs.io
+
+[**hckrs.io**](http://hckrs.io) is an invite only platform for hackers; for basicly anyone who has to make stuff, somehow related to technology. ***#web #design #growth #hardware #life...***
+[**Join your local city**](http://hckrs.io) to see it in action. *(Europe only for now)*
+
+<a href="http://hckrs.io"><img src="https://s3.amazonaws.com/hckrs.io/static/preview/preview1.jpg" alt="Screenshot hckrs.io" ></a>
+
+[ [Live Demo](http://hckrs.io) ]
+
+The project is completely **open source**, meaning that you will have full insight on the development progress and are very welcome to contribute. Together we can build better **tools for local ecosystems**, for hackers at least ;)
 
 
-Requirements
+
+Get you hacking
+================
+
+######1. [Download](https://github.com/Jarnoleconte/hckrs.io/archive/development.zip) / clone this repo.
+######2. Go to the ***hckrs*** folder in your terminal.
+######3. Install dependencies: `source ./tools/install.sh`
+######4. Start up a local server `hckrs run`
+######5. Open [http://localhost:3000](http://localhost:3000) in your browser and login with ***Twitter*** ([why?](https://github.com/Jarnoleconte/hckrs.io/wiki/Run-Project#login-at-the-site))
+
+*Support for* ***OS X*** *and* ***Linux*** *right now.*
+*Meteor has no solid support for windows yet.*
+
+
+
+
+Roadmap
+--------
+
+* Subcultures with meetups
+* Gather interests — based on the Stack Overflow tags
+* Go mobile — a hybrid application
+
+
+**Parallel things we need help with**
+
+* Build a CalDAV / CardDAV server per city
+* Aggregation of different agenda feeds into a single one
+* Building a social invite plugin
+* Integrating http://telescope.meteor.com/
+* Finding parners that want to give discounts to hackers.
+
+
+
+
+Documentation
+--------------
+
+Read the [wiki](https://github.com/Jarnoleconte/hckrs.io/wiki) to get understanding of the project structure.
+
+Techniqual documentation is available during development.
+Start up a local server and navigate in your browser to:
+[http://localhost:3000/docs](http://localhost:3000/docs)
+
+
+![Logo](https://s3.amazonaws.com/hckrs.io/static/logo/logo1.jpg)
+
+
+
+
+Partners in crime
+==================
+
+The [hckrs.io](http://hckrs.io) core team is open.
+
+Toon | Jarno | Daan | Daniël | Steven
+:---:|:-----:|:----:|:------:|:------:
+<a href="https://github.com/ramshorst"><img src="https://avatars0.githubusercontent.com/u/5200239?v=3&s=80" width="80" alt="Toon van Ramshorst" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Jarnoleconte"><img src="https://avatars0.githubusercontent.com/u/279767?v=3&s=80" alt="Jarno Le Conté" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/daanvr"><img src="https://avatars0.githubusercontent.com/u/4609765?v=3&s=80" alt="Daan van Ramshorst" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Dandandan"><img src="https://avatars0.githubusercontent.com/u/163737?v=3&s=80" alt="Daniël Heres" width="80" style="width:80px;height:80px;border-radius: 40px;"></a> | <a href="https://github.com/Mellowlicious"><img src="https://avatars0.githubusercontent.com/u/8102336?v=3&s=80" alt="Steven den Hartog" width="80" style="width:80px;height:80px;border-radius: 40px;"></a>
+co-founder | lead-dev | growth | core-dev | core-dev
+
+
+Getting involved?
+------------------
+
+No need to be a developer to contribute. We have ambitous plans that require all kinds of skills, you may be good in ***video, story telling, copywriting, blogging, interviewing/podcasting, mobile apps, events, curation, hackatons, recruitment***.
+
+We are looking for people that make things happen. (**BAM!**)
+
+It's also okay to just start developing (making changes to this repo). Feel free to work on issues or add your own. Do a pull request when you are done.
+
+**GO!**
+
+You can also contact toon@hckrs.io, or take a look in the *parallel things we need help with* section above.
+
+
+Local Admins
 ------------
-First you have to make sure you have [node.js] installed on your system.
-Then you can install [meteor]. For Window support please check out [win.meteor.com]
 
-Run
----
-OS X users can simply run the shell script named ``start-local-server.command`` located in the `/tools` folder by simply double-click the file. It will locally start a server and opens the hckrs website in your browser.
+Because each city has it's own identity, they are led by local admins.
 
-If you prefer to start the server manually you can run ``meteor --settings settings/local.json``. Make sure you have exported the following environment variable `ROOT_URL=http://10.0.0.2.xip.io:3000`. Replace `10.0.0.2` with your local IP.
+**These local admins need to :**
 
-Only Twitter can be used by default to login on your hckrs account. If you like to login through Facebook or Github you must make sure your local IP is 10.0.0.2, because they recognize http://10.0.0.2.xip.io:3000 as the only valid URL.
+* activate signups with a hacker profile
+* reply to local email
 
-When you like to interact with JavaScript on your local server you can start a REPL by running `nc localhost 5001` form the terminal.
+**and sometimes go the extra mile :**
 
+* plan the monthly hckrs meetup (BEER + GEEKS = ♥ MEETUP)
+* manage local Twitter account
 
-Project structure
------------------
-Client code is in the `client` directory, server code is in the `server` directory, and all other code is shared between client and server.
+**Want to found your city?**
 
-The `model` directory contains the database collections and schemas. It is also the place containing allow and deny rules to check untrusted client actions.
-
-The directories named `lib` are loaded first. We can put there our own libraries. Third-party libraries are placed there within a subfolder called `vendor`.
-
-All client-side routes are listed in the file `/client/router.js`. Every route in that file corresponds with a single web page, each located in its own folder `/client/pages/*` containing html, javascript en stylus files.
-
-The `public` directory serves static files to the client. All accessible via the browser relatively to the root URL.
-
-The `private` directory contains static files that are accessible from server code only.
-
-
-[node.js]:http://nodejs.org/download/
-[meteor]:http://docs.meteor.com/#quickstart
-[meteorite]:https://github.com/oortcloud/meteorite/
-[win.meteor.com]:http://win.meteor.com
+Wow, that's awesome, lets kickstart your city, get in touch with toon@hckrs.io

@@ -1,0 +1,11 @@
+Number = this.Number || {};
+
+/**
+ * @summary Convert number to floating point with the specified number of decimals.
+ * @param  {Number} value Some number.
+ * @param {Number} decimals Number of decimals.
+ * @locus Anywhere
+ */
+Number.fixedDecimals = function(value, decimals) {
+  return parseFloat(value).toFixed(decimals);
+}

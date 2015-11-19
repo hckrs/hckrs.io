@@ -1,7 +1,6 @@
+\#private*
 .npm
 .build*
 .DS_Store
+.demeteorized
 node_modules
-.docs
-.tools
-.backup

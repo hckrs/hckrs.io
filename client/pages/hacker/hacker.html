@@ -10,43 +10,43 @@
 
           {{#if invitationLimitReached}}
             <div class="alert alert-error">
-              <p>This personal invitation URL has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
+              <p>The personal invitation URL you are trying to use has reached its maximum. When the person who gave you this URL will get new slots you will se it here. You can also apply trough the application process on the homepage.</p>
             </div>
           {{/if}}
-          
+
           {{#if isUnverifiedEmail}}
             <div class="access-denied alert alert-info">
-              <h1>Check your e-mail :)</h1>
-              <p>We have sent you an email with a validation link</p>
+              <h1>Check your inbox !</h1>
+              <p>We just send you an email with a validation link.</p>
             </div>
           {{else}}
             {{#if tellUsMore}}
-              {{#if isInvited}} 
+              {{#if isInvited}}
                 {{! XXX user must only complete his profile to enter website (already invited) }}
                 <div class="access-denied alert alert-info">
-                  <h1>Tell us more</h1>
-                  <p>Before you start using the website we need you to give us <strong>some more information</strong>, so that other hackers can get a feel for who you are :)</p>
+                  <h1>psssst !</h1>
+                  <p>Please provide <strong>some more information</strong>,<br />so that other users can relate to you :)</p>
                 </div>
               {{else}}
                 {{! XXX user must complete his profile AND needs to be invited by someone }}
                 <div class="access-denied alert alert-info">
                   <h1>Tell us more</h1>
-                  <p>To enter the wailting list please complete your profile. Every now an then we handpick some of you to become members.</p>
-                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url. (before or after completing your profile)</p>
+                  <p>To enter the wailting list please complete your profile, there is a good chance we will activate your account in matter of days.</p>
+                  <p>To have instant acces you can also ask a member you know to vouch for you, by providing you his invitation url. (this works before and after completing your profile)</p>
                 </div>
               {{/if}}
             {{else}}
               {{#unless isInvited}}
                 {{! XXX profile is completely filled in but user needs to be invited by someone }}
                 <div class="access-denied alert alert-success">
-                  <h1>Thank you</h1>
-                  <p>Right now there are no open slots in the community. Every now an then we handpick some of the people like you who entered the waiting list. If this is the case we will notify you.</p>
-                  <p>To ensure acces you can also ask a member you know, to vouch for you, by providing you his invitation url.</p>
+                  <h1>Profile complte</h1>
+                  <p>Right now there are no open slots in the community. There is a good chance we will activate your account in matter of days. If this is the case we will notify you by email.</p>
+                  <p>For instant acces you can also ask a member you know to vouch for you, by providing you his invitation url.</p>
                 </div>
               {{/unless}}
             {{/if}}
           {{/if}}
-        
+
         </div>
         <div class="clear"></div>
 
@@ -55,9 +55,9 @@
   </div>
 
   <div id="hacker" class="page">
-    {{!-- 
+    {{!--
       This template is rendering a hacker's profile.
-      When the logged in user ownes the profile he has the 
+      When the logged in user ownes the profile he has the
       possibility to edit his data.
     --}}
 
@@ -83,8 +83,8 @@
           <div class="form-group">
             <label class="control-label col-sm-2"></label>
             <div class="controls col-sm-8 profile-ready">
-              Are you ready to enter the website? 
-              <button class="button-ready btn btn-large btn-success">yes, I'm ready</button>
+              Is your profile complete?<br /><br />
+              <button class="button-ready btn btn-large btn-success">I'm ready</button>
             </div>
           </div>
         </form>
@@ -97,8 +97,8 @@
 </template>
 
 
-<template name="hackerEdit">  
-    
+<template name="hackerEdit">
+
   <form class="form-horizontal">
 
     <div class="form-group">
@@ -107,14 +107,14 @@
         <div id="profilePicture">
           <div class="current-picture {{changePictureAllowed}}">
             <div class="change hide">change</div>
-            <div style="background-image:url({{profile.picture}});" class="picture"></div>    
+            <div style="background-image:url({{profile.picture}});" class="picture"></div>
           </div>
           <div class="picture-choser" id="pictureChoser">
             {{#with profile.socialPicture}}
               {{#if facebook}}
                 <div class="choice-wrapper">
                   <label for="inputPictureFacebook" class="radio">
-                    <div style="background-image:url({{facebook}});" class="picture"></div>    
+                    <div style="background-image:url({{facebook}});" class="picture"></div>
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{facebook}}" id="inputPictureFacebook" class="imputPictureRadio" {{selected facebook}} />
                       Facebook
@@ -125,7 +125,7 @@
               {{#if twitter}}
                 <div class="choice-wrapper">
                   <label for="inputPictureTwitter" class="control-label radio">
-                    <div style="background-image:url({{twitter}});" class="picture"></div>    
+                    <div style="background-image:url({{twitter}});" class="picture"></div>
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{twitter}}" id="inputPictureTwitter" class="imputPictureRadio" {{selected twitter}} />
                       Twitter
@@ -136,7 +136,7 @@
               {{#if github}}
                 <div class="choice-wrapper">
                   <label for="inputPictureGithub" class="radio">
-                    <div style="background-image:url({{github}});" class="picture"></div>    
+                    <div style="background-image:url({{github}});" class="picture"></div>
                     <div class="label-text">
                       <input type="radio" name="picture" value="{{github}}" id="inputPictureGithub" class="imputPictureRadio" {{selected github}} />
                       Github
@@ -151,7 +151,7 @@
 
       </div>
       <div class="controls col-sm-8" style="padding-top:76px;">
-        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px;padding: 6px 21px; width:350px; line-height:36px; margin-left:-15px;" required />
+        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px; padding: 7px 0px 0px 18px !important; width:350px; line-height:36px; margin-left:-18px;" required />
       </div>
     </div>
 
@@ -159,8 +159,8 @@
     <div class="form-group" id="register-city-move">
       <label class="control-label col-sm-2" for="inputCity">city</label>
       <div class="controls col-sm-8">
-        {{> citySelect}} 
-        <span class="description hover">— Choose your local city</span>
+        {{> citySelect}}
+        <span class="description hover" style="margin-left:12px;">your primary city</span>
       </div>
     </div>
     {{/unless}}
@@ -173,7 +173,7 @@
           <span class="description hover">— email will be not visible by other users</span><br/>
         {{/if}}
         {{#if isDuplicateEmail}}
-          <span class="help-inline">Already used in another account!</span>
+          <span class="help-inline"><br />this email adress is used by another account!<br />You can merge your accounts by using the social connect underneath.</span>
         {{/if}}
         {{#if isNotValidEmail}}
           <span class="help-inline">invalid email!</span>
@@ -185,39 +185,39 @@
       <label class="control-label col-sm-2">hacking</label>
       <div class="controls col-sm-8">
         <label for="inputHackingWeb" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingWeb" value="web" {{checked "profile.hacking" "web"}} />
           web
         </label>
         <label for="inputHackingApp" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingApp" value="apps" {{checked "profile.hacking" "apps"}} />
           apps
         </label>
         <label for="inputHackingSoftware" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingSoftware" value="software" {{checked "profile.hacking" "software"}} />
           software
         </label>
         <label for="inputHackingGame" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingGame" value="game" {{checked "profile.hacking" "game"}} />
           games
         </label>
         <label for="inputHackingDesign" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingDesign" value="design" {{checked "profile.hacking" "design"}} />
           design
         </label>
         <label for="inputHackingLife" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingLife" value="life" {{checked "profile.hacking" "life"}} />
           life
         </label>
         <label for="inputHackingHardware" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingHardware" value="hardware" {{checked "profile.hacking" "hardware"}} />
           hardware
         </label>
         <label for="inputHackingOpenSource" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingOpenSource" value="opensource" {{checked "profile.hacking" "opensource"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingOpenSource" value="opensource" {{checked "profile.hacking" "opensource"}} />
           open source
         </label>
         <label for="inputHackingGrowth" class="checkbox inline">
-          <input type="checkbox" name="profile.hacking" class="save" autosave id="inputHackingGrowth" value="growth" {{checked "profile.hacking" "growth"}} />
+          <input type="checkbox" name="profile.hacking" class="save" autosave-set id="inputHackingGrowth" value="growth" {{checked "profile.hacking" "growth"}} />
           growth
         </label>
       </div>
@@ -231,11 +231,11 @@
 
 
     <div class="form-group">
-      <label class="control-label col-sm-2" for="inputCompany">company / school</label>
+      <label class="control-label col-sm-2" for="inputCompany">daytime location</label>
       <div class="controls col-sm-8">
         <input type="text" name="profile.company" class="text save" autosave value="{{profile.company}}" placeholder="name" id="inputCompany" /><br>
         <input type="url" name="profile.companyUrl" class="text save" autosave value="{{profile.companyUrl}}" placeholder="website" style="" id="inputCompanyUrl" /><br/>
-        <div id="mapWrapper" class="edit {{mapFullscreenActive}}"> 
+        <div id="mapWrapper" class="edit {{mapFullscreenActive}}">
           <div class="event-catch-overlay"></div>
           <div id="editMap" class="map"></div>
           <a class="close-map"><img src="img/close.svg" /></a>
@@ -247,40 +247,40 @@
       <label class="control-label col-sm-2">open to</label>
       <div class="controls col-sm-8">
         <label for="inputAvailableDrink" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableDrink" value="drink" {{checked "profile.available" "drink"}} />
           have a drink <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to meet for a drink</span>
         </label>
-        
+
         <div class="clear"></div>
 
         <label for="inputAvailableLunch" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableLunch" value="lunch" {{checked "profile.available" "lunch"}} />
           have lunch <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to have lunch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableEmail" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableEmail" value="email" {{checked "profile.available" "email"}} />
           e-mail <span class="description hover">— hackers in {{CurrentCity.name}} can see your email address to get in touch</span>
         </label>
 
         <div class="clear"></div>
 
         <label for="inputAvailableCall" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
-          call <span class="description hover">— hackers in {{CurrentCity.name}} can see your Skype handle and/or phone number</span>
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCall" value="call" {{checked "profile.available" "call"}} />
+          call <span class="description hover">— hackers in {{CurrentCity.name}} can see your Skype handle and phone number</span>
         </label>
         <div class="clear details {{#unless checked 'profile.available' 'call'}}hide{{/unless}}">
           <input type="text" name="profile.skype" class="text save" autosave value="{{profile.skype}}" placeholder="skype" id="inputSkype" /><br>
           <input type="text" name="profile.phone" class="text save" autosave value="{{profile.phone}}" placeholder="phone" id="inputPhone" />
         </div>
-        
+
 
         <div class="clear"></div>
 
         <label for="inputAvailableCowork" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCowork" value="cowork" {{checked "profile.available" "cowork"}} />
           co-work <span class="description hover">— hackers can see your email address to get in touch to come work at your place</span>
           <div class="details"></div>
         </label>
@@ -288,8 +288,8 @@
         <div class="clear"></div>
 
         <label for="inputAvailableCouchsurf" class="checkbox">
-          <input type="checkbox" name="profile.available" class="save" autosave id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
-          couchsurfing <span class="description hover">— hackers traveling to {{CurrentCity.name}} can see your email address and/or phone number to get in touch to stay at your place</span>
+          <input type="checkbox" name="profile.available" class="save" autosave-set id="inputAvailableCouchsurf" value="couchsurf" {{checked "profile.available" "couchsurf"}} />
+          couchsurfing <span class="description hover">— hackers traveling to {{CurrentCity.name}} can see your email address and phone number to get in touch to stay at your place</span>
           <div class="details"></div>
         </label>
       </div>
@@ -309,7 +309,7 @@
           <a href="{{profile.social.facebook}}" target="_blank">{{ShowUrl profile.social.facebook}}</a>
           <a href="#" class="toggle toggleService" data-service="facebook"><span class="glyphicon glyphicon-remove icon-white"></span></a>
         {{else}}
-          <span class="disabled">none</span>
+          <span class="disabled">no account</span>
           <a href="#" class="toggle toggleService" data-service="facebook"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'facebook'}}
@@ -322,10 +322,10 @@
       <label class="control-label col-sm-2">Twitter</label>
       <div class="controls col-sm-8">
         {{#if profile.social.twitter}}
-          <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a> 
+          <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
           <a href="#" class="toggle toggleService" data-service="twitter"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
-          <span class="disabled">none</span>
+          <span class="disabled">no account</span>
           <a href="#" class="toggle toggleService" data-service="twitter"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'twitter'}}
@@ -341,7 +341,7 @@
           <a href="{{profile.social.github}}" target="_blank">{{ShowUrl profile.social.github}}</a>
           <a href="#" class="toggle toggleService" data-service="github"><span class="glyphicon glyphicon-remove glyphicon-white"></span></a>
         {{else}}
-          <span class="disabled">none</span>
+          <span class="disabled">no account</span>
           <a href="#" class="toggle toggleService" data-service="github"><i class="glyphicon glyphicon-plus glyphicon-white"></i> add</a>
         {{/if}}
         {{#if serviceError 'github'}}
@@ -356,7 +356,7 @@
       <div class="controls col-sm-8">
         {{#each Constant "MAILING_OPTIONS"}}
           <label for="inputMailing-{{value}}" class="checkbox">
-            <input type="checkbox" name="mailings" class="save" autosave id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
+            <input type="checkbox" name="mailings" class="save" autosave-set id="inputMailing-{{value}}" value="{{value}}" {{checked "mailings" value}} />
             {{label}} <span class="description hover">{{description}}</span>
           </label>
           <div class="clear"></div>
@@ -368,12 +368,12 @@
   </form>
 
 </template>
-  
+
 
 
 <template name="hackerView">
   <div id="hackerView">
-    
+
 
     <div class="form-group">
       <label class="control-label col-sm-2">
@@ -397,12 +397,12 @@
         </div>
       </div>
     </div>
-    
+
     <div style="clear:both;margin-bottom: 20px;"></div>
 
     <form class="form-horizontal">
-    
-      {{#if profile.skills}}  
+
+      {{#if profile.skills}}
       <div class="form-group">
         <label class="control-label col-sm-2">skillset</label>
         <div class="controls col-sm-8 skillset">
@@ -453,7 +453,7 @@
 
       {{#if isCompanyOrLocation}}
       <div class="form-group">
-        <label class="control-label col-sm-2">company / school</label>
+        <label class="control-label col-sm-2">daytime location</label>
         <div class="controls col-sm-8">
           {{#if profile.company}}
             {{#if profile.companyUrl}}
@@ -462,7 +462,7 @@
               {{profile.company}}
             {{/if}}
           {{/if}}
-          {{#if profile.location}}    
+          {{#if profile.location}}
             <div id="mapWrapper" class="view">
               <div id="viewMap" class="map"></div>
             </div>
@@ -470,35 +470,13 @@
         </div>
       </div>
       {{/if}}
-      
+
       {{#if profile.available}}
       <div class="spacer"></div>
       <div class="form-group">
         <label class="control-label col-sm-2">open to</label>
         <div class="controls col-sm-8">
-          {{#if contains profile.available "drink"}}
-          <a href="mailto:{{profile.email}}?subject=Lets drink something&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have a drink</a>
-          {{/if}}
-          {{#if contains profile.available "lunch"}}
-          <a href="mailto:{{profile.email}}?subject=Lets have lunch&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">have lunch</a>
-          {{/if}}
-          {{#if contains profile.available "email"}}
-          <a href="mailto:{{profile.email}}?body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">e-mail</a>
-          {{/if}}
-          {{#if contains profile.available "call"}}
-            {{#if profile.phone}}
-            <a href="call:{{profile.phone}}" class="btn btn-inverse btn-opacity">call</a>
-            {{/if}}
-            {{#if profile.skype}}
-            <a href="skype:{{profile.skype}}" class="btn btn-inverse btn-opacity">skype</a>
-            {{/if}}
-          {{/if}}
-          {{#if contains profile.available "cowork"}}
-          <a href="mailto:{{profile.email}}?subject=Can I co-work at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">co-work</a>
-          {{/if}}
-          {{#if contains profile.available "couchsurf"}}
-          <a href="mailto:{{profile.email}}?subject=Can I couchsurf at your place ?&body=My profile : {{urlCurrentUser}}" class="btn btn-inverse btn-opacity">host traveling hackers</a>
-          {{/if}}
+          {{> userAvailableButtons}}
         </div>
       </div>
       {{/if}}

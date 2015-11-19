@@ -1,0 +1,41 @@
+<template name="admin_growth">
+  <div id="admin_growth" class="page">
+
+    <div class="row">
+      <div class="col-lg-4">
+        {{> admin_growthEmail city=city}}
+      </div>
+    </div>
+
+    <div class="page-space"></div>
+
+    <h2>Github users {{city.name}}</h2>
+    <div class="pull-right" style="text-align:right;">
+      <button class="btn" action="crawl">crawl "{{city.name}}"</button>
+    </div>
+    <div id="growthCityChooser">
+      {{> citySelect city=city.key}}
+    </div>
+    {{> reactiveTable collection=collection settings=tableFormat}}
+    <div class="page-space"></div>
+  </div>
+</template>
+
+
+
+<template name="admin_growthEmail">
+  <div id="admin_growthEmail">
+
+    <h2>From: {{city.key}}@hckrs.io</h2>
+    {{#autoForm id="adminGrowthEmailForm" schema=schema}}
+      {{> afQuickField name="subject" id="subject" options=subjects}}
+      {{> afQuickField name="body" id="body" options=bodies}}
+      <div class="form-group">
+        Invite <input type="number" name="number" style="width: 60px;" value="20"> github users from top of the list.
+        <button action="submit" class="btn btn-primary">Send</button>
+      </div>
+    {{/autoForm}}
+    
+  </div>
+</template>
+
