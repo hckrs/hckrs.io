@@ -53,15 +53,13 @@ Template.hackers.helpers({
 
     var order = function(user) {
       var createdAt = new Date(user.createdAt).getTime();
-      var inactiveNewUser = !!user.isAccessDenied && createdAt > _timeInPast; // new user who didn't finish signup
-      var inactiveOldUser = !!user.isAccessDenied && !inactiveNewUser; // old user who didn't finish signup
-      var isAdmin = !!user.isAmbassador;
+      var inactiveUser = !!user.isAccessDenied && createdAt < _timeInPast; // old user who didn't finish signup
+      var isAdmin = !!Users.hasAmbassadorPermission(user);
       var rank = 1/user.globalId; // use floating point between 0-1
 
-      return inactiveNewUser*-3 +  // new inactive users first
-             isAdmin*-2 +  // then ambassadors
-             rank +  // then by rank in DESC order
-             inactiveOldUser*1; // show old inactive users at the end
+      return isAdmin*-1 +  // first show ambassadors
+             (isAdmin ? -rank : rank) +  // then by rank (ASC for admin / DESC for users)
+             inactiveUser*1; // show old inactive users at the end
     }
 
     var users = Users.find(selector(true)).fetch();
