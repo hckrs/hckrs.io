@@ -56,16 +56,17 @@ Template.hackers.helpers({
       var inactiveNewUser = !!user.isAccessDenied && createdAt > _timeInPast; // new user who didn't finish signup
       var inactiveOldUser = !!user.isAccessDenied && !inactiveNewUser; // old user who didn't finish signup
       var isAdmin = !!user.isAmbassador;
-      var rank = createdAt/100000000000000; // use floating point between 0-1
+      var rank = 1/user.globalId; // use floating point between 0-1
 
       return inactiveNewUser*-3 +  // new inactive users first
              isAdmin*-2 +  // then ambassadors
-             rank*-1 +  // then by rank in DESC order
+             rank +  // then by rank in DESC order
              inactiveOldUser*1; // show old inactive users at the end
     }
 
-    var users = Users.find(selector(true)).map(getUserView);
-    return _.sortBy(users, order);
+    var users = Users.find(selector(true)).fetch();
+    return _.chain(users).sortBy(order).map(getUserView).value();
+
   },
   'hacking': function() {
     var hacking = state.get('filter').hacking;
