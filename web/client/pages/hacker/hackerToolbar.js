@@ -135,7 +135,7 @@ Template.hackerToolbarPanelMail.events({
     var formData = $form.serializeObject();
 
     // validate email
-    if (!AutoForm.validateForm("hackerMailForm"))
+    if (! AutoForm.getValidationContext("hackerMailForm").validate(formData))
       return;
 
     // disable button for a few seconds

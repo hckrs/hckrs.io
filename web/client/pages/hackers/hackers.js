@@ -119,7 +119,7 @@ Template.hackersToolbar.events({
     var formData = $form.serializeObject();
     var isPreview = $button.attr('preview') === "true";
 
-    if (!AutoForm.validateForm("hackersNewsletterEditorForm"))
+    if (! AutoForm.getValidationContext("hackersNewsletterEditorForm").validate(formData))
       return;
 
     // disable button for a few seconds
