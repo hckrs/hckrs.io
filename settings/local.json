@@ -1,0 +1,33 @@
+{
+  "public": {
+    "environment": "local",
+    "simpleSchemeDebug": true,
+
+    "NEO4J_AUTH": "Interestrelations:0NKzYBRfnnpWQ7f2dSID",
+    "NEO4J_URL": "http://Interestrelations:0NKzYBRfnnpWQ7f2dSID@interestrelations.sb04.stations.graphenedb.com:24789",
+
+    "mapbox": {
+      "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
+    },
+
+    "facebook": {
+      "appId": "1529025657336189"
+    },
+    "github": {
+      "clientId": "566d7cc5b6742dc15e87"
+    },
+    "twitter": {
+      "consumerKey": "JKgQ2DhqaJ1a0w6MM2FjtgVCX"
+    }
+  },
+
+  "facebook": {
+    "secret": "3b3798d13e812c350e676a731fea5df9"
+  },
+  "github": {
+    "secret": "cc3e60ac27bd096cd3fc91299d66377cbe805c8a"
+  },
+  "twitter": {
+    "secret": "DDb42zwoqoKywsiJOwwjk04CqteTYNuodV0MZnj3SYLD9rrPNc"
+  }
+}

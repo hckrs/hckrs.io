@@ -1,0 +1,46 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+standard-app-packages
+accounts-password
+accounts-facebook
+accounts-github
+accounts-twitter
+facebook
+github
+twitter
+oauth1
+http
+email
+
+amplify
+jquery
+underscore
+stylus
+mrt:collection-hooks
+iron:router
+datariot:ganalytics
+aslagle:reactive-table
+kidovate:pnotify
+aldeed:autoform
+aldeed:collection2
+oauth
+mizzao:bootstrap-3
+reactive-var
+chrismbeckett:fontawesome4
+digioak:codemirror
+hckrs:summernote
+hckrs:spin
+hckrs
+momentjs:moment
+peerlibrary:async
+alanning:roles
+meteorhacks:fast-render
+meteorhacks:kadira
+
+peerlibrary:xml2js
+meteorhacks:npm
+npm-container
+matb33:collection-hooks
