@@ -31,7 +31,7 @@ Geo = {}
 Geo.geocode = function(address, cb) {
   var url = "http://api.tiles.mapbox.com/v4/geocode/mapbox.places-v1/"+address+".json";
   var options = {params: { format: "json", access_token: Settings['mapbox'].token }};
-  
+
   var response = function(res) {
     var data = res && res.content && JSON.parse(res.content);
     var feature = data && data.features && data.features[0];
@@ -39,7 +39,7 @@ Geo.geocode = function(address, cb) {
     if (center)
       return { lat: center[1], lng: center[0] };
   }
-  
+
   if (Meteor.isServer)
     return response(HTTP.get(url, options));
   else
@@ -73,13 +73,13 @@ Geo.getDistanceFromLatLonObj = function(latlong1, latlong2) {
 Geo.getDistanceFromLatLon = function(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = Geo.deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = Geo.deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = Geo.deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(Geo.deg2rad(lat1)) * Math.cos(Geo.deg2rad(lat2)) * 
+    Math.cos(Geo.deg2rad(lat1)) * Math.cos(Geo.deg2rad(lat2)) *
     Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d; // km
 }
@@ -104,10 +104,13 @@ Geo.deg2rad = function(deg) {
  *   ```
  */
 Geo.requestLocationForIp = function(ip) {
-  if (ip === "127.0.0.1") 
+  if (ip === "127.0.0.1")
     ip = ""; // if on localhost, let telize determine my ip.
   try {
-    var data = HTTP.get("http://www.telize.com/geoip/" + ip, {timeout: 2000}).data;
+    var url = "http://www.telize.com/geoip/" + ip; // service discontinued since 15th november 2015
+    url = "http://freegeoip.net/json/" + ip;
+
+    var data = HTTP.get(url, {timeout: 2000}).data;
     return _.pick(data, 'longitude', 'latitude');
   } catch(err) {
     console.log("request client-IP error:", err);

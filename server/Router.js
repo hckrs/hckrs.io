@@ -8,9 +8,9 @@ Router.route('/mandrill-webhook', function() {
   var events = EJSON.parse(Object.property(this.request.body, 'mandrill_events') || "[]");
 
   var addEvent = function(event) {
-    // event format: http://help.mandrill.com/entries/24466132-Webhook-Format 
-    
-    if (!event.event) 
+    // event format: http://help.mandrill.com/entries/24466132-Webhook-Format
+
+    if (!event.event)
       return; /* not a message event */
 
     console.log('Email webhook event:', event.event);
@@ -22,7 +22,7 @@ Router.route('/mandrill-webhook', function() {
       client: event.user_agent_parsed.ua_family,
       version: event.user_agent_parsed.ua_version,
     };
-    
+
     // link event to original message
     EmailsOutbound.update({'to.messageId': messageId}, {
       $push: { 'to.$.events': {
@@ -49,26 +49,26 @@ Router.route('/mandrill-webhook', function() {
 
 
 Router.route('/:catchAll?', function () {
-    var url = getRequestUrl(this.request); 
+    var url = getRequestUrl(this.request);
     var city = Url.city(url);
     var isLocalhost = Url.isLocalhost(url);
-    
+
     // check if there is a valid city present in the url
     if (!city || !City.lookup(city)) {
 
       // this subdomain doesn't exist or isn't a valid city
-      
+
       // we try to find the closest city
       var userIp = getClientIp(this.request);
       var location = Geo.requestLocationForIp(userIp);
-      var closestCity = Geo.findClosestCity(location);    
-      
+      var closestCity = Geo.findClosestCity(location);
+
       if (closestCity) {
 
         // if closest city is found we redirect the user to a new url
         var cityUrl = Url.replaceCity(closestCity, url);
         return redirect(cityUrl, this.response);
-        
+
       } else if (city !== 'www') {
 
         // If closest city can't be found, we redirect to www.
@@ -77,7 +77,7 @@ Router.route('/:catchAll?', function () {
         return redirect(cityUrl, this.response);
       }
     }
-    
+
     // done!
     this.next();
 
