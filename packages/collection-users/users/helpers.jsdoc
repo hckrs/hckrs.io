@@ -1,0 +1,440 @@
+
+
+/* QUERY - helpers */
+
+
+/**
+ * @summary Get property from the specified user, without reactive
+ * dependencies on the other user properties.
+ * @locus Anywhere
+ * @param {String|Object} user userId or user object
+ * @param {String} field Name of the property that you want to obtain
+ * @param {Object} [opts] Options passed to `cursor.findOne(..., options)`
+ * @example
+ * ```
+ * Users.prop('srX87t29FW7CCYbjd', 'city');  // 'utrecht'
+ * ```
+ */
+Users.prop = function(user, field, options) {
+
+  // memorized
+  var prop = _.isObject(user) ? Object.property(user, field) : undefined;
+  if (!_.isUndefined(prop))
+    return prop;
+
+  var userId = _.isObject(user) ? user._id : user;
+  var opt = {fields: _.object([field], [true])};
+  user = Meteor.users.findOne(userId, _.extend(options || {}, opt));
+  return Object.property(user, field);
+}
+
+/**
+ * @summary Get multiple properties from the specified user, without reactive
+ * dependencies on the other properties.
+ * @locus Anywhere
+ * @param {String|Object} user userId or user object
+ * @param {String[]} fields Names of the properties that you want to obtain
+ * @param {Object} [opts] Options passed to `cursor.find(..., options)`
+ * @example
+ * ```
+ * Users.props('srX87t29FW7CCYbjd', ['city', 'isAdmin']);
+ * //=> {_id: "srX87t29FW7CCYbjd", city: 'utrecht', isAdmin: true}
+ * ```
+ */
+Users.props = function(user, fields, options) {
+
+  // memorized
+  if (_.isObject(user) && fields) {
+    var userHasProp = function(field) { return !_.isUndefined(Object.property(user, field)); };
+    if (_.all(_.union(['_id'], fields), userHasProp))
+      return user;
+  }
+
+  var userId = _.isObject(user) ? user._id : user;
+  var opt = {fields: _.object(fields, _.map(fields, function() { return true; }))};
+  return Meteor.users.findOne(userId, _.extend(options || {}, opt));
+}
+
+/**
+ * @summary Get property from current logged in user, without reactive
+ * dependencies on the other properties.
+ * @locus Anywhere
+ * @param {String} field Name of the property that you want to obtain
+ * @param {Object} [opts] Options passed to `cursor.findOne(..., options)`
+ * @example
+ * ```
+ * Users.myProp('city');  // 'utrecht'
+ * ```
+ */
+Users.myProp = function(field, options) {
+  return Users.prop(Meteor.userId(), field, options);
+}
+
+/**
+ * @summary Get multiple properties from current logged in user, without reactive
+ * dependencies on the other properties.
+ * @locus Anywhere
+ * @param {String[]} fields Names of the properties that you want to obtain
+ * @param {Object} [opts] Options passed to `cursor.find(..., options)`
+ * @example
+ * ```
+ * Users.myProps(['city', 'isAdmin']);
+ * //=> {_id: "srX87t29FW7CCYbjd", city: 'utrecht', isAdmin: true}
+ * ```
+ */
+Users.myProps = function(fields, options) {
+  return Users.props(Meteor.userId(), fields, options)
+}
+
+
+
+
+/* permission helpers */
+
+/**
+ * @summary Check if the given user is an admin.
+ *
+ * * If no user is spcified, the logged in user will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @example
+ * ```
+ * Users.isAdmin("srX87t29FW7CCYbjd");
+ * //=> true
+ * ```
+ */
+Users.isAdmin = function(user) {
+  user = user || Meteor.userId();
+  return Users.prop(user, 'isAdmin');
+}
+
+/**
+ * @summary Check if the given user is ambassador within a particular city.
+ *
+ * * If no user is specified, the logged in user will be used instead.
+ * * If no city is specified, the current city (of logged in user) will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {String} [city] City identifier.
+ * @example
+ * ```
+ * Users.isAmbassador("srX87t29FW7CCYbjd", "utrecht");
+ * //=> false
+ * ```
+ */
+Users.isAmbassador = function(user, city) {
+  if (_.contains(City.identifiers(), user)) {
+    city = user;
+    user = null;
+  }
+  user = user || Meteor.userId();
+  city = city || (this['Session'] && Session.get('currentCity')) || Users.myProp('currentCity');
+  return Users.prop(user, 'isAmbassador') && Users.prop(user, 'city') === city;
+}
+
+/**
+ * @summary Check if the given user ownes some document/record.
+ *
+ * * If no user is spcified, the logged in user will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {Object} doc Some document from a collection containing a *userId* field.
+ * @example
+ * ```
+ * var doc = {city: "utrecht", userId: "srX87t29FW7CCYbjd"};
+ * Users.isOwner("srX87t29FW7CCYbjd", doc);
+ * //=> true
+ * ```
+ */
+Users.isOwner = function(user, doc) {
+  if (!user) return false;
+  if (!doc) {
+    doc = user;
+    user = Meteor.userId();
+  }
+  docUserId = _.isObject(doc) ? doc.userId : doc;
+  var userId = _.isObject(user) ? user._id : user;
+  return docUserId === userId;
+}
+
+/**
+ * @summary The same as Users.isAdmin()
+ * @locus Anywhere
+ */
+Users.hasAdminPermission = function(user) {
+  return Users.isAdmin(user);
+}
+
+/**
+ * @summary Check if the given user has ambassador permission
+ *
+ * * *true* if user is an ambassador in the specified city.
+ * * *true* if user is an admin.
+ *
+ * * If no user is specified, the logged in user will be used instead.
+ * * If no city is specified, the current city (of logged in user) will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {String} [city] City identifier.
+ */
+Users.hasAmbassadorPermission = function(user, city) {
+  return Users.hasAdminPermission(user) || Users.isAmbassador(user, city);
+}
+
+/**
+ * @summary Check if the given user has permission to modify this doc.
+ *
+ * * *true* if user is admin.
+ * * *true* if user is ambassador in the city where this document belongs to.
+ * * *true* if user ownes this document.
+ *
+ * * If no user is spcified, the logged in user will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {Object} doc Some document from a collection containing a *userId* field.
+ */
+Users.hasOwnerPermission = function(user, doc) {
+  if (!user) return false;
+  if (!doc) {
+    doc = user;
+    user = Meteor.userId();
+  }
+  if (!_.isObject(doc)) return;
+
+  if (doc.userId && Users.isOwner(user, doc)) return true;
+  else if (doc.city && Users.isAmbassador(user, doc.city)) return true;
+  else return Users.isAdmin(user);
+}
+
+/**
+ * @summary If Users.isAdminPermission() return false this function will trhow an error.
+ *
+ * * If no user is spcified, the logged in user will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.checkAdminPermission = function(user) {
+  if (!Users.hasAmbassadorPermission(user))
+    throw new Meteor.Error(500, 'No privilege');
+}
+
+/**
+ * @summary If Users.isAmbassadorPermission() return false this function will trhow an error.
+ *
+ * * If no user is specified, the logged in user will be used instead.
+ * * If no city is specified, the current city (of logged in user) will be used instead.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {String} [city] City identifier.
+ */
+Users.checkAmbassadorPermission = function(user, city) {
+  if (!Users.hasAmbassadorPermission(user, city))
+    throw new Meteor.Error(500, 'No privilege');
+}
+
+/**
+ * @summary Check if the user has access to the site, by checking the **isAccessDenied** property.
+ *
+ * The **isAccessDenied** property can be false if:
+ *
+ * * The user isn't invited.
+ * * The user has an incomplete profile.
+ * * The user hasn't validate his email address.
+ * * The user is blocked.
+ *
+ * @locus Anywhere
+ * @param {Object} [user] Some user.
+ */
+Users.allowedAccess = function(user) {
+  return user && user.isAccessDenied != true;
+}
+
+
+
+/* data helpers */
+
+/**
+ * @summary Get an user object containing the minimal properties for diplaying,
+ * such as name, picture and status label.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {String[]} [fields] Additional fields to include.
+ */
+Users.userView = function(user, additionalFields) {
+  user = Users.props(user, _.union(['globalId','profile.name','profile.picture'], additionalFields || []));
+  if (user) {
+    user.foreign = Users.userIsForeign(user) ? {foreign: "", disabled: ""} : '';
+    user.label = Users.userPictureLabel(user);
+  }
+  return user;
+}
+
+/**
+ * @summary Check if user belongs to an other city than which you are visiting right now.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userIsForeign = function(user) {
+  var city = Users.prop(user, 'city');
+  return Util.isForeignCity(city);
+}
+
+
+var _userRanks = {};
+/**
+ * @summary Get the user rank. Ranks are numbers in ascending order starting from 1,
+ * given to every user within a city, based on their registration date.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userRank = function(user) {
+  user = user || Meteor.userId();
+  var userId = _.isObject(user) ? user._id : user;
+
+  // calculate
+  if (!_userRanks[userId]) {
+    var userCity = Users.prop(user, 'city', {reactive: false});
+    var memo = function(user, i) { _userRanks[user._id] = i+1; };
+    Users.find({city: userCity, isHidden: {$ne: true}}, {sort: {accessAt: 1}, fields: {_id: 1}, reactive: false}).forEach(memo);
+  }
+
+  // memo
+  return _userRanks[userId];
+}
+
+/**
+ * @summary Display representation of user's *picture label* which will be visible in the profile picture of this user.
+ * The label will contain of one of the following information:
+ *
+ * * **merged with #id**, if user account is merged with an other one.
+ * * **deleted**, in the case this account is deleted.
+ * * **no access**, if user doesn't have access to the site.
+ * * **hidden**, user will be invisible for normal users.
+ * * ***city name***, if user belongs to an other city.
+ * * ***staff title***, in the case this user is an ambassador.
+ * * otherwise the user rank (***#id***) is shown.
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userPictureLabel = function(user) {
+  user = user || Meteor.userId();
+  var userId = _.isObject(user) ? user._id : user;
+  user = Users.props(user, ['city','mergedWith','isDeleted','isAccessDenied','isHidden','isAmbassador','staff'])
+  if (user.mergedWith)             return "merged with #"+Users.userRank(user.mergedWith);
+  if (user.isDeleted)              return "deleted";
+  if (user.isAccessDenied)         return "no access";
+  if (user.isHidden)               return "hidden";
+  if (Users.userIsForeign(userId))       return City.lookup(user.city).name;
+  if (user.isAmbassador)           return Object.property(user, 'staff.title'); // ambassador displayed as 'admin'
+  else                             return "#"+Users.userRank(user);
+}
+
+/**
+ * @summary Display representation of user's *status label*.
+ * The status label is visible for ambassadors and will contain one
+ * of the following information:
+ *
+ * * If not yet accept any invitation, **not invited** (red).
+ * * If no name is given, **no name** (red).
+ * * If no email address is provided, **no email** (red).
+ * * If email isn't verified yet, **email unverified** (red).
+ * * If profile isn't completly filled in, **incomplete profile** (orange).
+ * * If user hasn't access to the site, **no access** (orange).
+ * * If user isn't visible for normal users, **hidden** (orange).
+ * * If user is an admin, **admin** (green).
+ * * If user is an ambassador, **ambassador** (green).
+ *
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userStatusLabel = function(user) {
+  user = user || Meteor.userId();
+  user = Users.props(user, undefined); // XXX TODO, SPECIFY fields
+  var labels = [];
+
+  var unverifiedEmail = !_.findWhere(user.emails, {address: user.profile.email, verified: true});
+  if (user.isUninvited)         labels.push({style: 'important', text: 'not invited'});
+  if (!user.profile.name)       labels.push({style: 'important', text: 'no name'});
+  if (!user.profile.email)      labels.push({style: 'important', text: 'no email'});
+  if (unverifiedEmail)          labels.push({style: 'important', text: 'email unverified'});
+  if (user.isIncompleteProfile) labels.push({style: 'warning', text: 'incomplete profile'});
+  if (user.isAccessDenied)      labels.push({style: 'warning', text: 'no access'});
+  if (user.isHidden)            labels.push({style: 'warning', text: 'hidden'});
+  if (user.isAdmin)             labels.push({style: 'success', text: 'admin'});
+  if (user.isAmbassador)        labels.push({style: 'success', text: 'ambassador'});
+  return labels;
+}
+
+/**
+ * @summary Return URL path *(path only)* to the profile of the given user. This corresponds with
+ * the unique bithash representation of this user.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userProfilePath = function(user) {
+  user = user || Meteor.userId();
+  user = Users.props(user, ['city','globalId']);
+  if (!user) return "";
+  return Url.bitHash(user.globalId);
+}
+
+/**
+ * @summary Return full URL to the profile of the given user. This URL will
+ * contain the unique bithash of that user AND contains the city origin.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userProfileUrl = function(user) {
+  user = user || Meteor.userId();
+  user = Users.props(user, ['city','globalId']);
+  if (!user) return "";
+  var hash = Url.bitHash(user.globalId);
+  return Url.replaceCity(user.city, Meteor.absoluteUrl(hash));
+}
+
+/**
+ * @summary Invitation URL for the given user, which he can use to invite others.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ */
+Users.userInviteUrl = function(user) {
+  user = user || Meteor.userId();
+  var phrase = Users.prop(user, 'invitationPhrase');
+  var bitHash = Url.bitHash(phrase);
+  return Router.routes['invite'].url({inviteBitHash: bitHash});
+}
+
+/**
+ * @summary Get user's username for specified external service.
+ * @locus Anywhere
+ * @param {String|Object} [user] Some userId or user object.
+ * @param {String} service Choose one of **facebook**, **twitter**, **github**.
+ */
+Users.userSocialName = function(user, service) {
+  user = user || Meteor.userId();
+  var socialUrl = Users.prop(user, 'profile.social.'+service)
+  return Util.socialNameFromUrl(service, socialUrl);
+}
+
+
+
+/* find users */
+
+/**
+ * @summary Get the user corresponding to the given unique bithash representation.
+ * The bitHash is used in URL's to indentify some user's profile page.
+ * @locus Anywhere
+ * @param {String} bitHash A bitHash representation string for some user.
+ */
+Users.userForBitHash = function(bitHash) {
+  var globalId = Url.bitHashInv(bitHash);
+  return Users.findOne({globalId: globalId})
+}
