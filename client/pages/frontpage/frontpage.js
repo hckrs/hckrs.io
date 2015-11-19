@@ -83,6 +83,7 @@ Template.frontpage.events({
 
 Template.frontpage.rendered = function() {
   var tmpl = this;
+  $('head').append('<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>');
 
   // drop welcome screen with animation
   Util.exec(function() {
