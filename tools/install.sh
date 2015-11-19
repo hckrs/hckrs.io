@@ -40,7 +40,9 @@ if ! command -v meteor > /dev/null ; then
 fi
 
 # Install hckrs executable
+echo ""
 echo "Install hckrs..."
+echo ""
 
 # Add executable to $PATH
 EXPORT="export PATH=$PATH:$HOME/.hckrs"
@@ -63,8 +65,7 @@ chmod +x $HOME/.hckrs/hckrs
 # Start hckrs
 echo "hckrs.io development bundle successfully installed!"
 echo ""
-echo "Now move to the project folder:"
-echo "    cd web"
-echo "And start up a local server:"
+echo "Start up a local server by entering:"
+echo ""
 echo "    hckrs run"
 echo ""
