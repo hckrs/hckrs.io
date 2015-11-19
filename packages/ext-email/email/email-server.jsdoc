@@ -11,7 +11,7 @@ Email.send = function(options, forceSendingInDevelopMode) {
 
   // In development mode emails will be outputed to console
   // as long the user don't specify the flag forceSendingInDevelopMode
-  if (Settings['environment'] === 'dev' || (Settings['environment'] !== 'production' && !forceSendingInDevelopMode))
+  if (Settings['environment'] === 'local' || (Settings['environment'] !== 'production' && !forceSendingInDevelopMode))
     console.log("SEND EMAIL:\n", options); // output in console
   else
     _EmailSend(options); // sending email over smtp
@@ -20,11 +20,11 @@ Email.send = function(options, forceSendingInDevelopMode) {
 
 Meteor.methods({
   'EmailSend': function(options, forceSendingInDevelopMode) {
-    if (!self.Users) 
+    if (!self.Users)
       throw new Meteor.Error(500, 'Users package not included.');
     else {
       Users.checkAmbassadorPermission();
-      Email.send(options, forceSendingInDevelopMode);   
+      Email.send(options, forceSendingInDevelopMode);
     }
   }
 })

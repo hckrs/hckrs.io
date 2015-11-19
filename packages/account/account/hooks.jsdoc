@@ -23,17 +23,17 @@ Accounts.onCreateUser(function (options, user) {
     user.emails = [];
 
   // find an existing user that probaly match this identity
-  var existingUser = Account.userData.findExistingUser(user);  
+  var existingUser = Account.userData.findExistingUser(user);
 
 
-  if (existingUser) { 
+  if (existingUser) {
 
     // merge data from existing user if exists
     user = Account.userData.mergeUserData(existingUser, user);
     Meteor.users.remove(existingUser._id);
 
-  } else { 
-    // additional information, for new user only!  
+  } else {
+    // additional information, for new user only!
 
     // don't allow access until user completes his profile
     user.isUninvited = true;
@@ -55,19 +55,19 @@ Accounts.onCreateUser(function (options, user) {
     user.mailings = _.chain(MAILING_OPTIONS).where({checked: true}).pluck('value').value();
 
     // new users on development have direct access and become admin
-    if (_.contains(["dev","local"], Settings['environment'])) {
+    if (_.contains(["local"], Settings['environment'])) {
       user.isAdmin = true;
       user.isUninvited = false;
       user.staff = {
-        title: "staff", 
+        title: "staff",
         email: "mail@hckrs.io",
       };
     }
 
   }
-  
+
   // create new user account
-  return user; 
+  return user;
 });
 
 
@@ -87,8 +87,8 @@ Accounts.validateLoginAttempt(function(info) {
     var userIp = info.connection.clientAddress;
     var location = Geo.requestLocationForIp(userIp);
     currentCity = Geo.findClosestCity(location);
-  } 
-  
+  }
+
   if (!currentCity) { // we can't verify if user is logged in at correct city
     return;
   } else if (!userCity) { // this new user isn't attached to a city yet, attach now!
@@ -96,6 +96,6 @@ Accounts.validateLoginAttempt(function(info) {
   } else if (userCity !== currentCity && !info.user.isAdmin) { // check if existing user is logging in at his own city (or is admin)
     throw new Meteor.Error(1, "city unmatch", userCity);
   }
-    
+
   return true;
 });

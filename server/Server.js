@@ -2,13 +2,13 @@
 
 // server startup
 Meteor.startup(function() {
-  
+
   /* server startup */
 
   // add environment variables from settings file to current process environment
   if (Settings.env)
     _.extend(process.env, Settings.env);
-  
+
   // print uptime to console
   uptimeLogging();
 
@@ -16,9 +16,9 @@ Meteor.startup(function() {
   // taken into account that the Heroku server
   // is restarted once every day
   Meteor.setTimeout(runAfterStartupDelayed, 1000 * 60 * 15);
-  
-  // info about development mode
-  if (Settings['environment'] === 'dev')
+
+  // info about local mode
+  if (Settings['environment'] === 'local')
     console.info("Mailservers aren't configured in development mode. You can ignore the warnings.")
 });
 
@@ -38,8 +38,8 @@ var runAfterStartupDelayed = function() {
 // show server uptime in console
 var uptimeLogging = function() {
   var startupDate = new Date();
-  var logging = function() { 
-    console.log("[Server Uptime]: " + moment(startupDate).fromNow(true)); 
+  var logging = function() {
+    console.log("[Server Uptime]: " + moment(startupDate).fromNow(true));
   }
   Meteor.setInterval(logging, 15 * 60 * 1000);
 }

@@ -11,7 +11,7 @@ Url = {}
  * @locus Anywhere
  * @example
  *   ```
- *   Url.city("http://utrecht.staging.hckrs.io")
+ *   Url.city("http://utrecht.dev.hckrs.io")
  *   => utrecht
  *   ```
  */
@@ -28,8 +28,8 @@ Url.city = function(url) {
  * @locus Anywhere
  * @example
  *   ```
- *   Url.replaceCity("http://www.staging.hckrs.io") 
- *   => http://lyon.staging.hckrs.io
+ *   Url.replaceCity("http://www.dev.hckrs.io")
+ *   => http://lyon.dev.hckrs.io
  *   ```
  */
 Url.replaceCity = function(city, url) {
@@ -120,8 +120,8 @@ Url.bitHashInv = function(hash) {
  * @locus Anywhere
  * @example
  *   ```
- *   // staging server
- *   Url.root();  => staging.hckrs.io
+ *   // dev server
+ *   Url.root();  => dev.hckrs.io
  *
  *   // production server
  *   Url.root();  => hckrs.io
@@ -138,8 +138,8 @@ Url.root = function() {
  * @locus Anywhere
  * @example
  *   ```
- *   Url.hostname("http://lyon.staging.hckrs.io/-_-");  
- *   => lyon.staging.hckrs.io
+ *   Url.hostname("http://lyon.dev.hckrs.io/-_-");
+ *   => lyon.dev.hckrs.io
  *   ```
  */
 Url.hostname = function(url) {
@@ -153,8 +153,8 @@ Url.hostname = function(url) {
  * @locus Anywhere
  * @example
  *   ```
- *   Url.baseUrl("http://lyon.staging.hckrs.io/-_-");  
- *   => http://lyon.staging.hckrs.io
+ *   Url.baseUrl("http://lyon.dev.hckrs.io/-_-");
+ *   => http://lyon.dev.hckrs.io
  *   ```
  */
 Url.baseUrl = function(url) {
@@ -169,7 +169,7 @@ Url.baseUrl = function(url) {
  * @locus Anywhere
  * @example
  *   ```
- *   Url.domain("http://lyon.staging.hckrs.io/-_-");  
+ *   Url.domain("http://lyon.dev.hckrs.io/-_-");
  *   => hckrs.io
  *   ```
  */
@@ -185,8 +185,8 @@ Url.domain = function(url) {
  * @locus Anywhere
  * @example
  *   ```
- *   Url.show("http://lyon.staging.hckrs.io/-_-");  
- *   => lyon.staging.hckrs.io/-_-
+ *   Url.show("http://lyon.dev.hckrs.io/-_-");
+ *   => lyon.dev.hckrs.io/-_-
  *   ```
  */
 Url.show = function(url) {
@@ -200,8 +200,8 @@ Url.show = function(url) {
  * @locus Anywhere
  * @example
  *   ```
- *   Url.externUrl("lyon.staging.hckrs.io/-_-");  
- *   => http://lyon.staging.hckrs.io/-_-
+ *   Url.externUrl("lyon.dev.hckrs.io/-_-");
+ *   => http://lyon.dev.hckrs.io/-_-
  *   ```
  */
 Url.externUrl = function(url) {
@@ -234,7 +234,7 @@ Url.addParams = function(properties, url) {
   return Url.replace(url, function(o) {
     o.search = searchString;
     return o;
-  });  
+  });
 }
 
 /**
@@ -279,8 +279,8 @@ Url.removeParam = function(key, url) {
 /**
  * @summary This function will parse a url and give it to the specified delegate function.arsing and will give the parsed url to the delegate function.
  * The delegate function can modify the url object and give it back. This functional will format it again to make a url string.
- * you can ONLY edit the following properties: 
- * 
+ * you can ONLY edit the following properties:
+ *
  * * protocol
  * * host
  * * pathname
@@ -334,7 +334,7 @@ if (Meteor.isClient) {
     parser.pathname; // => "/pathname/"
     parser.search;   // => "?search=test"
     parser.hash;     // => "#hash"
-    parser.host;     // => "example.com:3000"  
+    parser.host;     // => "example.com:3000"
     return parser;
   }
 

@@ -128,8 +128,8 @@ var githubGrowthMail = function(city, userIds, subjectIdentifier, bodyIdentifier
     console.log('Because you are on a development environment, this email will be only send to you. Users will not receive them.');
   }
 
-  // don't proceed on development machines
-  if (Settings['environment'] === 'dev')
+  // don't proceed on local machines
+  if (Settings['environment'] === 'local')
     return;
 
   // send email

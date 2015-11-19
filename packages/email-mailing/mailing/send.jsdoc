@@ -38,7 +38,7 @@ Mailing.send = function(options) {
   console.log('To users:', options.segments);
 
   // don't proceed on development machines
-  if (Settings['environment'] === 'dev')
+  if (Settings['environment'] === 'local')
     return;
 
   // on test environments, send always test e-mails. Never mail the users

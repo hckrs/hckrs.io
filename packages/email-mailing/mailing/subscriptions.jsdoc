@@ -62,23 +62,23 @@ var _subscribe = function(options, cb) {
     send_welcome: false,
   };
 
-  // don't proceed on development machines
-  if (Settings['environment'] === 'dev')
+  // don't proceed on local machines
+  if (Settings['environment'] === 'local')
     return;
 
   new MailChimp().call('lists', 'subscribe', params, cb);
 }
 
 
-// only send 5 subscribe tasks simultaneous to MailChimp. 
+// only send 5 subscribe tasks simultaneous to MailChimp.
 var _queue = async.queue(Meteor.bindEnvironment(_subscribe), 3);
 
 Mailing.subscribe = function(user, options, cb) {
   options = options || {};
   options.user = user;
 
-  // don't proceed on development machines
-  if (Settings['environment'] === 'dev')
+  // don't proceed on local machines
+  if (Settings['environment'] === 'local')
     return;
 
   // queue subscribe task
@@ -87,10 +87,10 @@ Mailing.subscribe = function(user, options, cb) {
 
 Mailing.unsubscribe = function(emailToDelete, keepInList, cb) {
 
-  // don't proceed on development machines
-  if (Settings['environment'] === 'dev')
+  // don't proceed on local machines
+  if (Settings['environment'] === 'local')
     return;
-  
+
   var params = {
     id: MailChimpOptions['listId'],
     email: {email: emailToDelete},
@@ -109,7 +109,7 @@ Meteor.startup(function() {
   var initialized = false;
 
   var selector = {
-    "city": {$exists: true, $ne: ""}, 
+    "city": {$exists: true, $ne: ""},
     "profile.email": {$exists: true, $ne: ""}
   };
 
@@ -120,13 +120,13 @@ Meteor.startup(function() {
     },
     changed: function(newUser, oldUser) {
       var options = {};
-      
-      if (newUser.profile.email !== oldUser.profile.email) 
+
+      if (newUser.profile.email !== oldUser.profile.email)
         options.previousEmail = oldUser.profile.email;
 
       Mailing.subscribe(newUser, options);
     }
   });
 
-  initialized = true;  
+  initialized = true;
 });

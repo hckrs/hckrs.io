@@ -1,12 +1,12 @@
 {
   "public": {
-    "environment": "dev",
+    "environment": "local",
     "simpleSchemeDebug": true,
-   
+
     "mapbox": {
       "token": "pk.eyJ1IjoiamFybm9sZWNvbnRlIiwiYSI6IjBXVXA5ZkEifQ.m_acUUqFwgzdmeRpX2lgUQ"
     },
-    
+
     "facebook": {
       "appId": "1529025657336189"
     },
@@ -15,7 +15,7 @@
     },
     "twitter": {
       "consumerKey": "JKgQ2DhqaJ1a0w6MM2FjtgVCX"
-    }   
+    }
   },
 
   "facebook": {

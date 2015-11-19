@@ -31,7 +31,7 @@ function is_meteor_running {
 function run {
   IP="$( ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:|adr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' )"
   URL=http://$IP.xip.io:3000
-  SETTINGS=$ROOT/settings/dev.json
+  SETTINGS=$ROOT/settings/local.json
 
   export ROOT_URL=$URL
   meteor run --settings $SETTINGS
@@ -43,7 +43,7 @@ function run {
 
 if [ "$1" = "" ] || [ "$1" = "run" ]; then
 
-  # Start local development server
+  # Start up local server
   require_project_directory
   run
 
