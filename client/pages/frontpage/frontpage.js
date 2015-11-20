@@ -11,7 +11,12 @@ var state = new State('frontpage', {
 
 Template.frontpage.helpers({
   'hideWelcomeScreen': function() {
-    return amplify.store('hideWelcomeScreen') ? 'hide' : '';
+    // Make sure the welcome screen pops up only once.
+    // Use localstorage to know the user have seen the screen already someday.
+    // But because local storage isn't shared between cities, we also detect browser redirect from another city.
+    var isRedirect = document.referrer && _.isEqual(Url.domain(), Url.domain(document.referrer));
+    var alreadyShown = amplify.store('hideWelcomeScreen');
+    return isRedirect || alreadyShown ? 'hide' : '';
   },
   'enrollActive': function() {
     return state.get('enrollActive') ? 'active' : '';
@@ -95,8 +100,9 @@ Template.frontpage.rendered = function() {
 
   // focus location finder
   Meteor.setTimeout(function() {
+    var isEmpty = _.isEmpty($("#welcome input").val());
     var hash = Router.current().getParams().hash;
-    if (!hash || hash == 'welcome')
+    if (isEmpty && (!hash || hash == 'welcome'))
       $("#welcome input").focus();
   }, 3500);
 
