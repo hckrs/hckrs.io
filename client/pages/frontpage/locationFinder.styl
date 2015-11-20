@@ -1,0 +1,71 @@
+@import "nib"
+@import "../../style.import"
+
+#locationFinder {
+  #locationAutoComplete {
+    width: 100%;
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 1px solid white;
+    font-size: 24px;
+    border-radius: 0px;
+    input-placeholder {
+        color:    #909;
+    }
+  }
+  .suggestions {
+    button {
+      margin-top: 10px;
+    }
+    .close-suggestions {
+      position: relative;
+      top: 5px;
+      left: 5px;
+    }
+  }
+}
+
+/* see reference: https://developers.google.com/maps/documentation/javascript/places-autocomplete#style_autocomplete */
+.pac-container {
+  font-family: 'Tiempos Headline' !important;
+  frontpage-blur-background-soft()
+  box-shadow: none !important;
+  border: 0px;
+  height: auto;
+  .pac-icon {
+    display: none;
+  }
+  .pac-item {
+    padding: 8px 15px;
+    border-top: 0px;
+    font-size: 24px !important;
+    color: rgba(255,255,255,0.5);
+    &:hover {
+      background-color: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,1);
+      .pac-item-query{
+        color: rgba(255,255,255,1);
+      }
+    }
+    :not(.pac-item-query):not(.pac-matched)::before { 
+        content: ", ";
+    }
+    &.pac-item-selected {
+      background-color: rgba(255,255,255,0.20);
+      .pac-item-query, .pac-matched{
+        color: $hover;
+      }
+    }
+    .pac-item-query {
+      font-size: 24px !important;
+      color: rgba(255,255,255,1); 
+    }
+    .pac-matched {
+      font-weight: normal;
+    }
+  }
+  &::after {
+    background-image: none;
+    height: 0px;
+  }
+}
