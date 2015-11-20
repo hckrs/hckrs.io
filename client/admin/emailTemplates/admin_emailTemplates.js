@@ -160,13 +160,15 @@ AutoForm.hooks({
   // need to extract wysiwyg content
   "adminEmailTemplatesForm": {
     before: {
-      insert: function(doc, tmpl) {
+      insert: function(doc) {
+        var tmpl = Template.instance();
         var emailTmpl = _.first(state.get('groups') || []);
         var content = tmpl.$('#body').code()
         doc.body = removeUrlPrefix(content, emailTmpl);
         return doc;
       },
-      update: function(docId, modifier, tmpl) {
+      update: function(modifier) {
+        var tmpl = Template.instance();
         var emailTmpl = _.first(state.get('groups') || []);
         var content = tmpl.$('#body').code()
         modifier.$set.body = removeUrlPrefix(content, emailTmpl);
