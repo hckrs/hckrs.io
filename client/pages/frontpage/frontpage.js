@@ -4,6 +4,7 @@
 // state
 var state = new State('frontpage', {
   "enrollActive": false,
+  "welcomeScreenHidden": false,
 });
 
 
@@ -11,12 +12,7 @@ var state = new State('frontpage', {
 
 Template.frontpage.helpers({
   'hideWelcomeScreen': function() {
-    // Make sure the welcome screen pops up only once.
-    // Use localstorage to know the user have seen the screen already someday.
-    // But because local storage isn't shared between cities, we also detect browser redirect from another city.
-    var isRedirect = document.referrer && _.isEqual(Url.domain(), Url.domain(document.referrer));
-    var alreadyShown = amplify.store('hideWelcomeScreen');
-    return isRedirect || alreadyShown ? 'hide' : '';
+    return state.get('welcomeScreenHidden') ? 'hide' : '';
   },
   'enrollActive': function() {
     return state.get('enrollActive') ? 'active' : '';
@@ -89,6 +85,21 @@ Template.frontpage.events({
 Template.frontpage.rendered = function() {
   var tmpl = this;
   $('head').append('<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>');
+
+  // How did the user comes onto the frontpage?
+  // Determine if he is redirected from another city by filling in his location.
+  var isRedirectedFromOtherCity = document.referrer
+                                  && Url.domain() === Url.domain(document.referrer)
+                                  && Url.hostname() !== Url.hostname(document.referrer);
+
+  // Don't show the welcome screen when browser redirects after filling in the location.
+  // Also don't show it again on the next visit by using a local storage flag.
+  if (isRedirectedFromOtherCity || amplify.store('hideWelcomeScreen'))
+    state.set('welcomeScreenHidden', true);
+
+  // Show the enrollment screen when user has filled in his location.
+  if (isRedirectedFromOtherCity)
+    state.set('enrollActive', true);
 
   // drop welcome screen with animation
   Util.exec(function() {
