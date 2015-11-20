@@ -254,7 +254,7 @@ var loginCallback = function(err) {
 // login by using a external service
 var loginWithService = function(event) {
   if (!Session.get('currentCity'))
-    return alert('Specify where do you hack in order to continue.');
+    return alert('Where do you hack? Please fill in before continue.');
 
   var $elm = $(event.currentTarget);
   var service = $elm.data('service');
