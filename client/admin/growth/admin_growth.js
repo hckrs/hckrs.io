@@ -100,6 +100,7 @@ Template.admin_growthEmail.helpers({
     return new SimpleSchema({
       "subject": { type: String, label: "Subject Template" },
       "body": { type: String, label: "Body Template" },
+      "number": { type: Number, label: "Number of users to invite" },
     });
   }
 })
@@ -128,14 +129,15 @@ Template.admin_growthEmail.events({
     var $button = tmpl.$(evt.currentTarget);
     var $form   = tmpl.$("#adminGrowthEmailForm");
 
-    var formData = $form.serializeObject()
-      , number   = parseInt(formData.number)
-      , userIds  = getUsersFromTop(number)
+    var formData = $form.serializeObject();
+    formData.number = parseInt(formData.number) || 0;
+
+    var userIds  = getUsersFromTop(formData.number)
       , subjectIdentifier  = formData.subject
       , bodyIdentifier     = formData.body;
 
     // validate email
-    if (!AutoForm.validateForm("adminGrowthEmailForm"))
+    if (! AutoForm.getValidationContext("adminGrowthEmailForm").validate(formData))
       return;
 
     // disable button for a few seconds
