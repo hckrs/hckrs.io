@@ -1,4 +1,3 @@
-
 .onepage-wrapper {
   display: block;
   position: static;
@@ -82,6 +81,7 @@
   display: none;
 }
 
+/*
 body.disabled-onepage-scroll, .disabled-onepage-scroll .onepage-wrapper, html {
   position: inherit;
-}
+}*/

@@ -198,7 +198,7 @@ exit-button()
       }
     }
     .content-block {
-      width: 440px;
+      max-width: $callToActionWidth;
       padding-left: 0px;
       padding-right: 0px;
     }
@@ -211,8 +211,10 @@ exit-button()
     #enroll-block {
       position: absolute;
       top: 57%;
-      width: inherit;
+      width: 100%;
+      max-width: $callToActionWidth;
       transform: translateY(-35%);
+
       #enroll-btn-large {
         display: block;
         font-size: 2.4em;
@@ -400,7 +402,7 @@ exit-button()
       letter-spacing: 2px;
       padding-left: 12px;
     }
-  } 
+  }
 
   #tools {
     background-image: url(/img/frontpage/bg2.jpg);
@@ -578,7 +580,7 @@ exit-button()
           .content{
             padding: 24px 24px 16px 24px;
             margin: auto;
-            
+
 
           }
 
