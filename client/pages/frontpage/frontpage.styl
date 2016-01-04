@@ -8,7 +8,7 @@ text-shadow()
 button()
   border: 1px solid white;
   border-radius: 2px;
-  padding: 5px;
+  padding: 4px 0px 3px 0px;
   text-align: center;
   text-shadow()
 
@@ -152,11 +152,11 @@ exit-button()
     bottom: 20px;
     right: 20px;
     width: 100px;
-    display: block;
     &.fixed {
       position: fixed;
       top: 20px;
       bottom: auto;
+      display: inline-block;
     }
     &.active { /* enroll mode already active */
       visibility: hidden;
@@ -220,6 +220,8 @@ exit-button()
         font-size: 2.4em;
         border-width: 3px;
         border-radius: 0px !important;
+        padding: 5px 0px 1px 0px;
+
       }
       #enroll-btn-large:hover{
           background-color:rgba(0,0,0,0.1);
@@ -528,6 +530,10 @@ exit-button()
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 
+  #opensource img, .menu, .slide-nav{
+    display: none;
+  }
+
   #frontpage {
     .frontpage-login {
       height: 40px;
@@ -546,40 +552,97 @@ exit-button()
         background-size: contain;
       }
     }
-  }
+  
 
-  #frontpage .logo-large {
-    height: 124px;
-    width: 100%;
-    margin: auto;
-    background: url("/img/logo.svg") no-repeat;
-    -webkit-background-size: contain;
-    -moz-background-size: contain;
-    background-size: contain;
-  }
+    .logo-large {
+      height: 124px;
+      width: 100%;
+      margin: auto;
+      background: url("/img/logo.svg") no-repeat;
+      -webkit-background-size: contain;
+      -moz-background-size: contain;
+      background-size: contain;
+    }
 
-  #frontpage #citySelect select {
-    margin: 0 auto;
-    margin-bottom: 12px;
-    height: 50px;
-    width: 100%;
-    font-weight: 100;
-    letter-spacing: 2px;
-    padding-left: 12px;
-  }
+    #citySelect select {
+      margin: 0 auto;
+      margin-bottom: 12px;
+      height: 50px;
+      width: 100%;
+      font-weight: 100;
+      letter-spacing: 2px;
+      padding-left: 12px;
+    }
 
-  #opensource img{
-    display: none;
-  }
+    #location-block {  
+      left: 24px;
+      right: 24px;
+      position: absolute;
+      width: auto !important;
+      margin: 0 auto;
+    }
 
-  #about{
-    .container{
-      width: 95%;
-      margin-top: 24px;
-      margin-bottom: 24px;
-      .content{
-        padding: 24px 24px 16px 24px;
-        margin: auto;
+    #enroll-block {
+      left: 24px;
+      right: 24px;
+      position: absolute;
+      top: 57%;
+      width: auto !important;
+      margin: 0 auto;
+    }
+
+    #enroll-btn{
+      opacity: 0 !important;
+      &.fixed {
+        opacity: 1 !important;
+      }
+    }
+
+    .title > div {
+
+      &.line-filler {
+        width: 100px !important;
+      }
+      &.line-filler.failure { width: 75px !important; }
+      &.text.failure { width: 150px !important; }
+    }
+
+    .sign-in-buttons a {
+      padding: 12px 24px 12px 24px !important;
+      width: 25% !important;
+      height: auto !important;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    #welcomeOverlay {
+      div {
+        font-size: 1.75em;
+        padding: 24px;
+      }
+    }
+
+    #influencers{
+      display: none;
+    }
+
+    #video{
+      #video-play {
+        width: 88% !important;
+      }
+    }
+
+    #about{
+      .container{
+        width: 95%;
+        margin-top: 24px;
+        margin-bottom: 24px;
+        .content{
+          padding: 24px 24px 16px 24px;
+          margin: auto;
+        }
       }
     }
   }
