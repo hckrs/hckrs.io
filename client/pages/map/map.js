@@ -224,7 +224,8 @@ var setupFeatureLayer = function(map) {
       // make popup
       var html = "";
 
-      html += "<div class='profile-picture' style='background-image:url(\'"+user.profile.picture+"\');'></div>";
+      if (user.profile.picture)
+        html += '<div class="profile-picture" style="background-image:url(\''+user.profile.picture+'\');"></div>';
       html += Safe.url(Users.userProfilePath(user._id), {text: user.profile.name, target: 'self'});
 
       if (user.profile.companyUrl)
