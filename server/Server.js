@@ -15,7 +15,7 @@ Meteor.startup(function() {
   // run after 15 minutes after startup
   // taken into account that the Heroku server
   // is restarted once every day
-  Meteor.setTimeout(runAfterStartupDelayed, 1000 * 60 * 15);
+  Meteor.setTimeout(runAfterStartupDelayed, 1000 * 60 * 1);
 
   // info about local mode
   if (Settings['environment'] === 'local')

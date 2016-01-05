@@ -261,40 +261,44 @@ Account.userData.updateProfilePictures = function() {
     "profile.socialPicture": 1,
     "profile.picture": 1,
     "profile.name": 1,
+    "services": 1
   }}).fetch();
 
   // update twitter images if needed
-  async.forEachLimit(users, 4, function(user, cb) {
-    var serviceName = "twitter";
-    var image = user.profile.socialPicture[serviceName];
-    var isCurrentPicture = image === user.profile.picture;
-    if (!image)
-      return cb(); // go to next user
+  async.forEach(["twitter", "facebook"], function(serviceName, cb) {
+    async.forEachLimit(users, 5, function(user, cb) {
 
-    var update = function() {
-        // get new picture
-        var picture = Account.userData.updateServiceProfilePicture(user._id, serviceName);
-        if (!picture)
-            return;
-        // update user's picture
-        var modifier = {};
-        modifier["profile.socialPicture."+serviceName] = picture;
-        if (isCurrentPicture)
-          modifier["profile.picture"] = picture; // also change current picture
-        Users.update(user._id, {$set: modifier});
+      // check if user uses this login service
+      if(user.services && !user.services[serviceName])
+        return cb();
 
-        // log
-        console.log("Update "+serviceName+" profile picture of user " + user.profile.name);
-    }
+      // get current profile picture
+      var socialPicture = user.profile.socialPicture && user.profile.socialPicture[serviceName];
+      var isCurrentPicture = socialPicture === user.profile.picture;
 
-    // check if image exists, if not exists it means
-    // that image has changed and we have to update!
-    HTTP.get(image, function(err){
-      if (err && err.response && err.response.statusCode === 404 || !_.contains(image, '_200x200'))
-        update(); // update required
-      cb(); // go to next user
+      // Retrieve new picture URL
+      var picture = Account.userData.updateServiceProfilePicture(user._id, serviceName);
+
+      // Verify retrieved information
+      if (!picture || !_.isString(picture) || _.contains(picture, '_200x200'))
+        return cb();
+
+      // Update user's picture
+      var modifier = {};
+      modifier["profile.socialPicture."+serviceName] = picture;
+      if (isCurrentPicture)
+        modifier["profile.picture"] = picture; // also change current picture
+      Users.update(user._id, {$set: modifier});
+
+      // log
+      console.log("Update "+serviceName+" profile picture of user " + user.profile.name);
+
+      // callback
+      cb();
+
+    }, function(err) {
+      return cb();
     });
-
   });
 }
 
