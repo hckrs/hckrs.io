@@ -83,6 +83,12 @@ exit-button()
     height: 100%;
     frontpage-blur-background()
 
+    /* for background:cover not working */
+    @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+      background-image: none !important;  
+      background-color: red !important;
+    }
+
     &.anim-dropout {
       transition: height 1s ease-in, visibility 0s 1s;
       height: 0%;
@@ -122,6 +128,9 @@ exit-button()
     min-width: 100%;
     min-height: 100%;
     background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
   }
@@ -362,6 +371,9 @@ exit-button()
 
   #tools {
     background-image: url(/img/frontpage/bg2.jpg);
+    .container-mobile{
+      display: none;
+    }
     .row {
       text-align: center;
       & > div {
@@ -530,9 +542,14 @@ exit-button()
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 
-  #opensource img, .menu, .slide-nav{
+  #opensource img, .menu, .slide-nav, #influencers{
     display: none;
   }
+
+  .slide, #login-block::after{
+    background-attachment: scroll !important;
+  }
+
 
   #frontpage {
     .frontpage-login {
@@ -552,7 +569,6 @@ exit-button()
         background-size: contain;
       }
     }
-  
 
     .logo-large {
       height: 124px;
@@ -562,6 +578,26 @@ exit-button()
       -webkit-background-size: contain;
       -moz-background-size: contain;
       background-size: contain;
+    }
+
+    .row {
+      margin-right: 0px;
+    }
+
+    #enroll-block {
+      left: 24px;
+      right: 24px;
+      position: absolute;
+      top: 57%;
+      width: auto !important;
+      margin: 0 auto;
+    }
+
+    #enroll-btn{
+      opacity: 0 !important;
+      &.fixed {
+        opacity: 1 !important;
+      }
     }
 
     #citySelect select {
@@ -582,24 +618,7 @@ exit-button()
       margin: 0 auto;
     }
 
-    #enroll-block {
-      left: 24px;
-      right: 24px;
-      position: absolute;
-      top: 57%;
-      width: auto !important;
-      margin: 0 auto;
-    }
-
-    #enroll-btn{
-      opacity: 0 !important;
-      &.fixed {
-        opacity: 1 !important;
-      }
-    }
-
     .title > div {
-
       &.line-filler {
         width: 100px !important;
       }
@@ -624,17 +643,48 @@ exit-button()
       }
     }
 
-    #influencers{
-      display: none;
+    #tools{
+      .container{
+        display: none;
+      }
+      .container-mobile{
+        display: inline-block;
+      }
+      .content-block{
+        padding: 48px 0px 0px 0px !important;
+      }
+      .row div{
+        padding-top: 0px;
+      }
     }
 
     #video{
+      &.slide{
+        height: 320px !important;
+        max-height: 320px !important;
+        min-height: 320px !important;
+      }
       #video-play {
         width: 88% !important;
       }
     }
 
+    #manifesto{
+      &.slide{
+        min-height: 100px !important;
+      }
+      .content-block{
+        padding: 48px 20px 0px 20px;
+      }
+      ol{
+        margin-bottom: 0px;
+      }
+    }
+
     #about{
+      .content-block{
+        padding: 48px 20px 0px 20px;
+      }
       .container{
         width: 95%;
         margin-top: 24px;
