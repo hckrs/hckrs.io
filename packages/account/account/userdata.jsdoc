@@ -257,12 +257,33 @@ Account.userData.updateServiceProfilePicture = function(userId, serviceName) {
  */
 Account.userData.updateProfilePictures = function() {
 
+  console.log("Update profile pictures ...")
+
   var users = Users.find({}, {fields: {
     "profile.socialPicture": 1,
     "profile.picture": 1,
     "profile.name": 1,
     "services": 1
   }}).fetch();
+
+  // Remove non-existing profile pictures
+  async.forEachLimit(users, 5, function(user, cb) {
+
+    if (!user.profile.picture)
+      return cb();
+
+    try {
+      HTTP.call("HEAD", user.profile.picture);
+    } catch (e) {
+      if (e && e.response && e.response.statusCode === 404) {
+        console.log("Remove profile picture for user", user.profile.name)
+        Users.update(user._id, {$set: {"profile.picture": ""}});
+      }
+    }
+
+    cb();
+  });
+
 
   // update twitter images if needed
   async.forEach(["twitter", "facebook"], function(serviceName, cb) {
