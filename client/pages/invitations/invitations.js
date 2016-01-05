@@ -11,10 +11,10 @@ Template.invitations_partial.helpers({
     var getUserView = function(u) {
       return Users.userView(u.receivingUser);
     };
-    return Invitations.find({broadcastUser: Meteor.userId()}, {fields: {receivingUser: 1}, sort: {createdAt: 1}}).map(getUserView);
+    return Invitations.find({broadcastUser: Meteor.userId()}, {limit: 100, fields: {receivingUser: 1}, sort: {createdAt: -1}}).map(getUserView);
   },
   'availableSlots': function() {
-    return _.range(Users.myProp('invitations'));
+    return _.first(_.range(Users.myProp('invitations')), 3);
   },
   'link': function() {
     var inviteUrl = Users.userInviteUrl(Users.myProps(['invitationPhrase']));
