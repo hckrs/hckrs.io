@@ -102,7 +102,7 @@
   <form class="form-horizontal">
 
     <div class="form-group">
-      <div class="control-label col-sm-2">
+      <div class="control-label col-sm-2 picture-container">
 
         <div id="profilePicture">
           <div class="current-picture {{changePictureAllowed}}">
@@ -150,8 +150,8 @@
         </div>
 
       </div>
-      <div class="controls col-sm-8" style="padding-top:76px;">
-        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" style="height:50px;font-size:36px;font-weight:700;border-radius: 24px; padding: 7px 0px 0px 18px !important; width:350px; line-height:36px; margin-left:-18px;" required />
+      <div class="controls col-sm-8 name-field">
+        <input type="text" name="profile.name" class="text save {{required 'profile.name'}}" autosave value="{{profile.name}}" placeholder="full name" id="inputName" required />
       </div>
     </div>
 
@@ -176,7 +176,7 @@
           <span class="help-inline"><br />this email adress is used by another account!<br />You can merge your accounts by using the social connect underneath.</span>
         {{/if}}
         {{#if isNotValidEmail}}
-          <span class="help-inline">invalid email!</span>
+          <span class="help-inline">invalid email address</span>
         {{/if}}
       </div>
     </div>
@@ -376,12 +376,12 @@
 
 
     <div class="form-group">
-      <label class="control-label col-sm-2">
+      <label class="control-label col-sm-2 picture-container">
         {{#with UserView _id}}
           <div style="background-image:url({{profile.picture}});margin: 0px; float:left;" class="pictureView" label="{{label}}"></div>
         {{/with}}
       </label>
-      <div class="controls col-sm-8">
+      <div class="controls col-sm-8 headline-container">
         <div class="headline">
           <div class="name">{{profile.name}}</div>
           <div class="hacking-container">
@@ -443,7 +443,7 @@
 
       {{#if profile.social.twitter}}
       <div class="form-group">
-        <label class="control-label col-sm-2">Twitter</label>
+        <label class="control-label col-sm-2 mobile-extraSpace">Twitter</label>
         <div class="controls col-sm-8">
           <a href="{{profile.social.twitter}}" target="_blank">{{ShowUrl profile.social.twitter}}</a>
           <a href="{{profile.social.twitter}}" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @{{UserSocialName _id 'twitter'}}</a>
@@ -453,7 +453,7 @@
 
       {{#if isCompanyOrLocation}}
       <div class="form-group">
-        <label class="control-label col-sm-2">daytime location</label>
+        <label class="control-label col-sm-2 mobile-extraSpace">daytime location</label>
         <div class="controls col-sm-8">
           {{#if profile.company}}
             {{#if profile.companyUrl}}

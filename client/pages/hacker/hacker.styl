@@ -35,6 +35,21 @@
     }
   }
 
+  .name-field{
+    padding-top: 76px;
+  }
+
+  #inputName{
+    height:50px;
+    font-size:36px;
+    font-weight:700;
+    border-radius: 24px;
+    padding: 7px 0px 0px 18px !important;
+    width:350px;
+    line-height:36px;
+    margin-left:-18px;
+  }
+
   #register-city-move {
     #citySelect {
       display: inline-block;
@@ -44,6 +59,7 @@
   .help-inline{
     color: orange;
     font-weight: normal;
+    display: block;
   }
 
   #mapWrapper.edit {
@@ -274,7 +290,10 @@
   DIV.controls{
     line-height: 30px;
     color: #e2e2e2;
-
+    > a{
+      border-bottom: 3px solid #ffea87;
+      padding-bottom: 3px;
+    }
     .description {
       color:#E2E2E2;
       font-style: italic;
@@ -282,7 +301,11 @@
     }
                 .description.hover { opacity: 0; }
     &:hover     .description.hover { opacity: 1; }
-    label       .description.hover { opacity: 0 !important; }
+    @media screen and (min-width: 480px) {
+      label .description.hover {
+        opacity: 0 !important; 
+      }
+    }
     label:hover .description.hover { opacity: 1 !important; }
 
     label{
@@ -351,7 +374,7 @@
       background-color: rgba(0,0,0,0.45);
       border-radius: 3px;
       padding: 1px 11px 0px 10px;
-      margin-right: 6px;
+      margin: 0px 6px 6px 0px;
     }
 
     .hacker-number{
@@ -371,6 +394,7 @@
 
   .btn-opacity{
     opacity: 0.8 !important;
+    margin-bottom: 6px !important;
   }
 
   .btn-opacity:hover{
@@ -389,6 +413,63 @@
     position: relative;
     top: 5px;
   }
+  .toggle{
+    border-bottom: 0px !important;
+  }
 
 
+}
+
+
+/* Responsive design */
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  #hacker{
+    .mode{
+      top: 12px;
+      right: 12px;
+      position: absolute !important;
+    }
+    .name-field{
+      padding-top: 12px !important;
+    }
+    .description.hover{
+      opacity: 0.5 !important;
+    }
+    .picture-container{
+      padding-top: 0px !important; 
+    }
+    label.checkbox.inline{
+      float: none !important;
+      margin-right: 0px;
+    }
+    #hackerView{
+      .picture-container{
+        padding: 0px !important;
+        margin: 0px !important;
+      }
+      .headline-container{
+        padding-left: 0px !important;
+        margin-left: 0px !important;
+        .headline{
+          margin-top: 12px;
+          .name{
+            line-height: 1.2em;
+            margin-left: 0px;
+          }
+          .hacker-number{
+            margin-left: 0px;
+            padding-top: 0px;
+          }
+        }
+      }
+      .mobile-extraSpace{
+        margin-top: 18px;
+      }
+      #mapWrapper.view{
+        width: 100%;
+      }
+    }
+  }
 }
