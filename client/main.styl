@@ -3,6 +3,9 @@
 
 $pagePaddingHeight = 20px;
 $pagePaddingWidth = 40px;
+$pagePaddingWidthMobile = 18px;
+$mobileMenuHeight = 60px;
+$mobileMenuPaddingTop = 18px;
 
 backgroundImage()
   background-image: url(/img/frontpage/bg1-blur.jpg);
@@ -543,31 +546,63 @@ a.btn.btn-inverse, button.btn.btn-inverse {
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-  body{
-    .page {
-      padding: 24px !important;
-      max-width: 100% !important;
+  .page {
+    padding: $pagePaddingHeight $pagePaddingWidthMobile !important;
+    max-width: 100% !important;
+  }
+  .logo-large{
+    width: 400px;
+  }
+  .session{
+    display: none;
+  }
+  #header{
+    height: $mobileMenuHeight !important;
+    .logo-small {
+      left: $pagePaddingWidthMobile !important;
+      top: $mobileMenuPaddingTop !important;
     }
-    .logo-large{
-      width: 400px;
+    .mobile-menu-button{
+      position: absolute;
+      top: $mobileMenuPaddingTop;
+      right: $pagePaddingWidthMobile;
+      height: 25px;
+      width: 32px;
+      background-image: url('/img/menu.svg');
     }
-    .session{
-      display: none;
+    .floating, .floating .background, .floating .content{
+      height: $mobileMenuHeight !important;
     }
-    .menu-mobile{
-      display: inline-block;
-      float: right;
-    }
-    .alert{
-      width: 100% !important;
-    }
-    .toolbar-section{
-      right: 3px;
-      bottom: 3px;
+  }
+  .mobile-menu{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+/*    display: none; */
+    background-color: rgba(0,0,0,0.8);
+    ul.links{
+      list-style-type: none;
       padding: 0px;
+      margin: 0px;
+      li{
+        height: 40px;
+        width: 100%;
+        padding: 12px $pagePaddingWidthMobile;
+      }
+      hr{
+        margin: 0px;
+      }
     }
-    input{
-      max-width: 100%;
-    }
+  }
+  .alert{
+    width: 100% !important;
+  }
+  .toolbar-section{
+    right: 3px;
+    bottom: 3px;
+    padding: 0px;
+  }
+  input{
+    max-width: 100%;
   }
 }

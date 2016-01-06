@@ -138,14 +138,14 @@
           </div>
 
           <!-- mobile menu -->
-          <div class="menu-mobile">
-            Menu
+          <div class="mobile-menu-button"></div>
+          <div class="mobile-menu">
             <ul class="links">
               <li><a href="{{UserProfileUrl CurrentUserId}}"><i class="glyphicon glyphicon-user"></i> {{MyProp 'profile.name'}}</a></li>
               {{#unless MyProp 'isAccessDenied'}}
                 <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite hackers ({{MyProp 'invitations'}})</a></li>
               {{/unless}}
-              <li class="divider"></li>
+              <hr>
               <li><a href="{{pathFor 'logout'}}" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>
             </ul>
           </div>
