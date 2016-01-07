@@ -37,6 +37,16 @@ Template.header.helpers({
 });
 
 Template.header.events({
+  "click .mobile-menu-button": function(evt) {
+    var $elm = $("#header .mobile-menu");
+    $elm.toggleClass('show');
+    var $page = $(".page");
+    $page.toggleClass('disapear');
+  },
+  "click .mobile-menu ul li a": function(evt) {
+    var $elm = $("#header .mobile-menu");
+    $elm.toggleClass('show');
+  },
   "change #citySelect select": function(evt) {
     var city = $(evt.currentTarget).val();
     Util.exec(function() {

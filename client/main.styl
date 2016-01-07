@@ -185,7 +185,7 @@ a img {
   /* HEADER */
   /* positioning of the header */
 
-  $headerHeight = 93px;
+  $headerHeight = 60px;
 
   #header {
     width: 100%;
@@ -576,10 +576,14 @@ a.btn.btn-inverse, button.btn.btn-inverse {
   }
   .mobile-menu{
     position: absolute;
-    top: 0px;
+    top: $mobileMenuHeight;
     width: 100%;
-/*    display: none; */
+    display: none;
     background-color: rgba(0,0,0,0.8);
+    padding: 16px 0px;
+    z-index: 1000; /* still not above map zoom buttons */
+    font-size: 18px;
+    font-weight: 700;
     ul.links{
       list-style-type: none;
       padding: 0px;
@@ -588,16 +592,29 @@ a.btn.btn-inverse, button.btn.btn-inverse {
         height: 40px;
         width: 100%;
         padding: 12px $pagePaddingWidthMobile;
+        .glyphicon{
+          margin-right: 10px;
+        }
+        a{
+          width: 100%;
+          display: block;
+        }
       }
       hr{
-        margin: 0px;
+        margin: 16px 0px 10px 0px;
       }
     }
+  }
+  .show{
+    display: block;
+  }
+  .disapear{
+    opacity: 0;
   }
   .alert{
     width: 100% !important;
   }
-  .toolbar-section{
+  .toolbar-editor, .toolbar-section{
     right: 3px;
     bottom: 3px;
     padding: 0px;

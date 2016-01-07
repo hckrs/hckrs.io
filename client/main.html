@@ -99,7 +99,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="{{UserProfileUrl CurrentUserId}}"><i class="glyphicon glyphicon-user"></i> {{MyProp 'profile.name'}}</a></li>
                   {{#unless MyProp 'isAccessDenied'}}
-                    <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite hackers ({{MyProp 'invitations'}})</a></li>
+                    <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite friends ({{MyProp 'invitations'}} left)</a></li>
                   {{/unless}}
                   <li class="divider"></li>
                   <li><a href="{{pathFor 'logout'}}" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>
@@ -141,11 +141,18 @@
           <div class="mobile-menu-button"></div>
           <div class="mobile-menu">
             <ul class="links">
+              <li><a href="{{pathFor 'hackers'}}">hackers</a></li>
+              {{#if CurrentCity.agenda}}
+                <li><a href="{{pathFor 'agenda'}}">agenda</a></li>
+              {{/if}}
+              <li><a href="{{pathFor 'map'}}">map</a></li>
+              <li><a href="{{pathFor 'deals'}}">deals</a></li>
+              <li><a href="{{pathFor 'books'}}">books</a></li>
+              <hr>
               <li><a href="{{UserProfileUrl CurrentUserId}}"><i class="glyphicon glyphicon-user"></i> {{MyProp 'profile.name'}}</a></li>
               {{#unless MyProp 'isAccessDenied'}}
-                <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite hackers ({{MyProp 'invitations'}})</a></li>
+                <li><a href="{{pathFor 'invitations'}}"><i class="glyphicon glyphicon-plus"></i> invite friends ({{MyProp 'invitations'}} left)</a></li>
               {{/unless}}
-              <hr>
               <li><a href="{{pathFor 'logout'}}" id="signOutButton"><i class="glyphicon glyphicon-remove"></i> sign out</a></li>
             </ul>
           </div>
