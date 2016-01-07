@@ -43,6 +43,12 @@ a img {
   padding: 6px 12px 4px 12px !important;
 }
 
+/* Replacement for button-inverse of bootstrap 2 */
+a.btn.btn-inverse, button.btn.btn-inverse {
+  background-color: rgba(255,255,255,0.15);
+  color:#fff9d0;
+}
+
 #iron-router-progress {
   background-color: #fff;
   opacity: 0.8;
@@ -117,7 +123,7 @@ a img {
   .alert-wrapper {
     width: 100%;
     background-color: rgba(255,255,255,0.15);
-    /*animation: fadeIn 2s;    
+    /*animation: fadeIn 2s;
     @keyframes fadeIn {
       from {
         background-color: rgba(255, 249, 208, 1)
@@ -201,140 +207,140 @@ a img {
 
       width: 100%;
       height: $headerHeight;
+    }
 
-      .background {
-        position: absolute;
-        z-index: 2;
-        left: 0px;
-        top: 0px;
-        width: 100%;
-        height: $headerHeight;
-        background-size: cover;
-        backgroundImage();
-        opacity: 0.95;
+    .background {
+      position: absolute;
+      z-index: 2;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: $headerHeight;
+      background-size: cover;
+      backgroundImage();
+      opacity: 0.95;
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      height: $headerHeight;
+    }
+
+    .logo-small { /* left */
+      position: absolute;
+      top: 32px;
+      left: $pagePaddingWidth;
+      height: 24px;
+      width: 137px;
+      background-image: url('/img/frontpage/logo.svg');
+    }
+
+    .menu { /* middle */
+      margin-top: 6px;
+      margin-left: 250px;
+      margin-right: 100px;
+      font-size: 18px;
+      font-weight: 700;
+
+       .menu-item {
+        display: block;
+        float: left;
+
+        a {
+          display: inline-block;
+          padding: 12px 0px;
+          color: #fff;
+          text-decoration: none;
+        }
+        a:hover{
+          text-decoration: none;
+          color: $hover;
+        }
+
+        &:after {
+          padding: 0px 10px 0px 9px;
+          content: '•';
+        }
+        &:last-of-type:after {
+          content: '';
+        }
+      }
+    }
+
+    .mobile-menu {
+      display: none
+    }
+
+    .session {
+      float: right;
+
+      & > * { // first items within .session
+        float: left;
       }
 
-      .content {
-        position: relative;
-        z-index: 3;
-        height: $headerHeight;
-      }
-
-      .logo-small { /* left */
-        position: absolute;
-        top: 32px;
-        left: $pagePaddingWidth;
-        height: 24px;
-        width: 137px;
-        background-image: url('/img/frontpage/logo.svg');
-      }
-
-      .menu { /* middle */
-        margin-top: 6px;
-        margin-left: 250px;
-        margin-right: 100px;
-        font-size: 18px;
-        font-weight: 700;
-
-         .menu-item {
-          display: block;
-          float: left;
-
-          a {
-            display: inline-block;
-            padding: 12px 0px;
-            color: #fff;
-            text-decoration: none;
-          }
-          a:hover{
-            text-decoration: none;
-            color: $hover;
-          }
-
-          &:after {
-            padding: 0px 10px 0px 9px;
-            content: '•';
-          }
-          &:last-of-type:after {
-            content: '';
-          }
+      .button {
+        margin: 32px 5px;
+        height: 32px;
+        background-color: rgba(0,0,0,0.1);
+        background-image: none;
+        .icon {
+          position: relative;
+          top: 2px;
+        }
+        &:hover {
+          background-color: rgba(0,0,0,0.3);
         }
       }
 
-      .menu-mobile {
-        display: none
-      }
-
-      .session {
-        float: right;
-
-        & > * { // first items within .session
-          float: left;
-        }
-
-        .button {
-          margin: 32px 5px;
-          height: 32px;
+      #citySelect {
+        margin: 32px 5px;
+        color: red;
+        select {
           background-color: rgba(0,0,0,0.1);
-          background-image: none;
-          .icon {
-            position: relative;
-            top: 2px;
-          }
-          &:hover {
-            background-color: rgba(0,0,0,0.3);
-          }
+          width: auto;
         }
-
-        #citySelect {
-          margin: 32px 5px;
-          color: red;
-          select {
-            background-color: rgba(0,0,0,0.1);
-            width: auto;
+        select:hover {
+          background-color: rgba(0,0,0,0.2);
+        }
+        @-moz-document url-prefix() {
+          optgroup{
+            background-color: #fff;
           }
           select:hover {
-            background-color: rgba(0,0,0,0.2);
-          }
-          @-moz-document url-prefix() {
-            optgroup{
-              background-color: #fff;
-            }
-            select:hover {
-              background-color: none;
-            }
+            background-color: none;
           }
         }
+      }
 
-        .account {
-          margin: 15px 15px;
-          margin-right: $pagePaddingWidth * 0.5;
-          .dropdown {
-            float: right;
-          }
-          .dropdown-toggle {
-            padding: 0px;
-            margin: 0px;
-          }
-          .dropdown-menu {
-            left: -110px;
-            margin-top: -13px;
-          }
-          .icon-user, .icon-remove, .icon-deal{
-            margin-top: 3px;
-          }
+      .account {
+        margin: 15px 15px;
+        margin-right: $pagePaddingWidth * 0.5;
+        .dropdown {
+          float: right;
         }
-
-        .karma{
-          font-size: 1.8em;
-          float: left;
-          margin-top: 27px;
-          margin-right: 24px;
+        .dropdown-toggle {
+          padding: 0px;
+          margin: 0px;
         }
+        .dropdown-menu {
+          left: -110px;
+          margin-top: -13px;
+        }
+        .icon-user, .icon-remove, .icon-deal{
+          margin-top: 3px;
+        }
+      }
 
+      .karma{
+        font-size: 1.8em;
+        float: left;
+        margin-top: 27px;
+        margin-right: 24px;
       }
 
     }
+
 
     /* transition */
     .floating {
@@ -350,17 +356,14 @@ a img {
         box-shadow: 0px 0px 10px rgba(0,0,0,0.15);
       }
     }
-
-
-  }
-
-  #header.fixed {
-    height: 0px;
-    .floating {
-      .background {
-        background-image: none !important;
-        background-color: black;
-        opacity: 0.4;
+    &.fixed {
+      height: 0px;
+      .floating {
+        .background {
+          background-image: none !important;
+          background-color: black;
+          opacity: 0.4;
+        }
       }
     }
   }
@@ -534,92 +537,94 @@ a img {
       padding-left: 12px;
     }
   }
-}
-/* Replacement for button-inverse of bootstrap 2 */
-a.btn.btn-inverse, button.btn.btn-inverse {
-    background-color: rgba(255,255,255,0.15);
-    color:#fff9d0;
-}
 
 
-/* Responsive design */
 
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-  .page {
-    padding: $pagePaddingHeight $pagePaddingWidthMobile !important;
-    max-width: 100% !important;
-  }
-  .logo-large{
-    width: 400px;
-  }
-  .session{
-    display: none;
-  }
-  #header{
-    height: $mobileMenuHeight !important;
-    .logo-small {
-      left: $pagePaddingWidthMobile !important;
-      top: $mobileMenuPaddingTop !important;
+  /* Responsive design */
+
+  /* Smartphones (portrait and landscape) ----------- */
+  @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+    .page {
+      padding: $pagePaddingHeight $pagePaddingWidthMobile;
+      max-width: 100%;
     }
-    .mobile-menu-button{
+    .logo-large{
+      width: 400px;
+    }
+    .session{
+      display: none;
+    }
+    #header {
+      height: $mobileMenuHeight;
+      .logo-small {
+        left: $pagePaddingWidthMobile;
+        top: $mobileMenuPaddingTop;
+      }
+      .mobile-menu-button{
+        position: absolute;
+        top: $mobileMenuPaddingTop;
+        right: $pagePaddingWidthMobile;
+        height: 25px;
+        width: 32px;
+        background-image: url('/img/menu.svg');
+      }
+      .floating, .floating .background, .floating .content{
+        height: $mobileMenuHeight;
+      }
+    }
+    .mobile-menu{
       position: absolute;
-      top: $mobileMenuPaddingTop;
-      right: $pagePaddingWidthMobile;
-      height: 25px;
-      width: 32px;
-      background-image: url('/img/menu.svg');
-    }
-    .floating, .floating .background, .floating .content{
-      height: $mobileMenuHeight !important;
-    }
-  }
-  .mobile-menu{
-    position: absolute;
-    top: $mobileMenuHeight;
-    width: 100%;
-    display: none;
-    background-color: rgba(0,0,0,0.8);
-    padding: 16px 0px;
-    z-index: 1000; /* still not above map zoom buttons */
-    font-size: 18px;
-    font-weight: 700;
-    ul.links{
-      list-style-type: none;
-      padding: 0px;
-      margin: 0px;
-      li{
-        height: 40px;
-        width: 100%;
-        padding: 12px $pagePaddingWidthMobile;
-        .glyphicon{
-          margin-right: 10px;
-        }
-        a{
+      top: $mobileMenuHeight;
+      width: 100%;
+      display: none;
+      background-color: rgba(0,0,0,0.8);
+      padding: 16px 0px;
+      z-index: 1000; /* still not above map zoom buttons */
+      font-size: 18px;
+      font-weight: 700;
+      ul.links{
+        list-style-type: none;
+        padding: 0px;
+        margin: 0px;
+        li{
+          height: 40px;
           width: 100%;
-          display: block;
+          padding: 12px $pagePaddingWidthMobile;
+          .glyphicon{
+            margin-right: 10px;
+          }
+          a{
+            width: 100%;
+            display: block;
+          }
+        }
+        hr{
+          margin: 16px 0px 10px 0px;
         }
       }
-      hr{
-        margin: 16px 0px 10px 0px;
+    }
+    .show{
+      display: block;
+    }
+    .disapear{
+      opacity: 0;
+    }
+    .main-alerts,
+    .alert-wrapper {
+      .alert{
+        width: 100%;
       }
     }
+    .toolbar-editor, .toolbar-section{
+      right: 3px;
+      bottom: 3px;
+      padding: 0px;
+    }
+    input{
+      max-width: 100%;
+    }
   }
-  .show{
-    display: block;
-  }
-  .disapear{
-    opacity: 0;
-  }
-  .alert{
-    width: 100% !important;
-  }
-  .toolbar-editor, .toolbar-section{
-    right: 3px;
-    bottom: 3px;
-    padding: 0px;
-  }
-  input{
-    max-width: 100%;
-  }
+  /* END media query */
+
 }
+
